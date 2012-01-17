@@ -1,0 +1,114 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Title</TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.2  (Unix)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Matthew Gerring">
+	<META NAME="CHANGED" CONTENT="20110901;14291800">
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<H2>Shared Memory Source Attributes</H2>
+<TABLE WIDTH=100% BORDER=1 CELLPADDING=4 CELLSPACING=3>
+	<COL WIDTH=70*>
+	<COL WIDTH=186*>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27% BGCOLOR="#c0c0c0">
+			<P ALIGN=CENTER><B>Attribute</B></P>
+		</TD>
+		<TD WIDTH=73% BGCOLOR="#c0c0c0">
+			<P ALIGN=CENTER><B>Usage</B></P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27%>
+			<P>Name</P>
+		</TD>
+		<TD WIDTH=73%>
+			<P>Sets the name used in the workflow. Set to something short or
+			it will truncate (the tooltip shows the full name in this case).</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27%>
+			<P>Chunk Size</P>
+		</TD>
+		<TD WIDTH=73%>
+			<P>The chunk of array data to read from the stack. Each data in
+			the chunk will be forwarded on with a variable named using the
+			'Output Name'  parameter and an 1-based integer for the chunk
+			index.  For instance 'shared1' for the first item and 'shared10'
+			for the last when output name = “shared” and chunk size is 10.</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27%>
+			<P>Data Type</P>
+		</TD>
+		<TD WIDTH=73%>
+			<P>Either a stack of 1D data or a 2D image.</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27%>
+			<P>Inactive After    (expert parameter)</P>
+		</TD>
+		<TD WIDTH=73%>
+			<P>Set to -1 for infinite monitoring or a positive value in ms to
+			define a period beyond which if the data does not change, the
+			workflow will exit.</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27%>
+			<P>Output Name</P>
+		</TD>
+		<TD WIDTH=73%>
+			<P>The variable name which should be used for output data read.</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27%>
+			<P>Source Frequency</P>
+		</TD>
+		<TD WIDTH=73%>
+			<P>The period of checking for new data .If data has changed, it
+			will be read and sent on, if not this actor will wait until
+			another interval of 'Source Frequncy' has passed. Units in ms.</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27%>
+			<P>Spec Name</P>
+		</TD>
+		<TD WIDTH=73%>
+			<P>The name of the spec session to connect to. NOTE you cannot
+			currently connect to arbitrary spec sessions they have to be made
+			available by your beamline contact(s).</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27%>
+			<P>Spec Tango URI</P>
+		</TD>
+		<TD WIDTH=73%>
+			<P>The portion of the URI to identify the spec tango server used,
+			for instance 'spec/shm'.</P>
+		</TD>
+	</TR>
+	<TR VALIGN=TOP>
+		<TD WIDTH=27%>
+			<P>Spec Variable</P>
+		</TD>
+		<TD WIDTH=73%>
+			<P>The spec variable in the spec session to monitor. Providing the
+			other attributes are filled in, the system will connect to spec
+			and offer a drop down for this parameter.</P>
+		</TD>
+	</TR>
+</TABLE>
+<H2><BR><BR>
+</H2>
+</BODY>
+</HTML>

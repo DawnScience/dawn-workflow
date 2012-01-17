@@ -1,0 +1,35 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Title</TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.2  (Unix)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Matthew Gerring">
+	<META NAME="CHANGED" CONTENT="20110901;13235800">
+	<META NAME="CHANGEDBY" CONTENT="Matthew Gerring">
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<H2>Tango Motor  
+</H2>
+<P>This actor is a transformer type meaning it receives and transmits
+messages but does not create messages or act as a sink. The actor
+attaches to a Tango server which provides an attribute for setting
+value of hardware and reading value. In fact the Tango attribute does
+not have to move a motor, it can result in any action when the
+attribute changes. 
+</P>
+<P>To set up the Tango connection go to Window-&gt;Preferences-&gt;Data
+Analysis-&gt;Tango. The system will attempt to automatically set the
+correct properties on a beamline by reading the environment variables
+when it starts for the first time. You will likely need to set the
+spec session name however.</P>
+<P>The 'Motors' attribute in the actor optionally sets the motors and
+always reads their value, passing this downstream in the pipeline.
+Typically the 'Motor Name' will be the URL to the TangoDevice after
+the beamline name. Something like 'motors/phi' normally. Currently
+the connection is not generic, only exposed motors in tango can be
+connected to - not everything. However arbitrary spec commands can be
+sent with the 'Spec Command' transformer.</P>
+</BODY>
+</HTML>

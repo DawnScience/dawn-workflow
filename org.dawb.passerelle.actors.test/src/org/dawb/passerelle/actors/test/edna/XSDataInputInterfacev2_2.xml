@@ -1,0 +1,8 @@
+<?xml version="1.0" ?>
+<XSDataInputInterfacev2_2>
+  <imagePath>
+    <path>
+      <value>${file_path}</value>
+    </path>
+  </imagePath>
+</XSDataInputInterfacev2_2>

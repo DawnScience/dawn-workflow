@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Monitoring folders">
+
+	<intro>
+		<description>
+		    In this tutorial we will look at using a file monitor actor to trigger a pipeline with new files appearing in a directory.
+	    </description>
+	</intro>
+		
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Monitoring Example">
+      <description>
+         Please open the folder monitor example which looks for new files appearing in a folder (or directory).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/folder_monitor_example.moml)"/>
+   </item>
+
+   <item title="Check out new actors">
+      <description>
+         Look at the 'Folder Monitor' actor and look at its attributes. When the workflow is going it will check the folder every 100ms and when new files appear there, trigger the pipeline.
+      </description>
+   </item>
+   
+   <item title="Try some polling">
+      <description>
+         Now start the workflow, nothing will happen as the monitored directory does not yet have new files.<br/><br/>
+         Now right click on the 'data' folder in your workflow project and copy the location part of the path. Go to a
+         shell window or dos prompt in windows. Type <b>cd</b> and paste your copied path.<br/><b>Note</b> that if you
+         have spaces in the path, you may need to put quotation  marks around it.<br/><br/>
+         Now we will write a new file to the directory.<br/><br/>
+         On Linux/Mac type: <b>ls > test.txt</b><br/><br/>
+         On Windows type: <b>dir > test.txt</b><br/><br/>
+         The 'Folder Monitor' will pass the new file into the pipeline, and the 'Open File' actor will open it.<br/><br/>
+         <b>Note</b> it will also do this for existing files which are overwritten.
+      </description>
+   </item>
+   
+   <item title="Try with images">
+      <description>
+         In the shell try copying in some image files to the monitored folder. For instance the command:<br/><br/>
+         <b>cp ./results/billeA_4201_EF_XRD_5998.edf</b> on linux.<br/><br/>
+         Notice that the application uses the default editor for a given file type in the 'Open File' actor.
+      </description>
+    <onCompletion>
+      Congratulations, you can now monitor folders using pipelines.
+    </onCompletion>
+   </item>
+   
+</cheatsheet>

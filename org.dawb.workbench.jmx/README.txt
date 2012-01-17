@@ -1,0 +1,1 @@
+Please ensure that this plugin has no dependencies apart from slf4j.

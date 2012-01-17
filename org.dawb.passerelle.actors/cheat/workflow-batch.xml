@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Running in Batch Mode">
+
+	<intro>
+		<description>
+		    In this tutorial we will look at running workflows from the command line without the user interface. When the user interface runs a workflow, it does so by running it in a separate process. In this section we will do the same from a shell script or windows batch file.
+	    </description>
+	</intro>
+		
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Maths Example">
+      <description>
+         We will look at the math example again. This is the workflow which we will run in batch. Run it and check that everything is running as expected.
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/maths_example.moml)"/>
+   </item>
+
+   <item title="Batch Execution">
+      <description>
+         There a script at the top level of the workbench called 'batch.sh' on linux and 'batch.bat' on windows. Please edit the paths at the top of the script and then execute the script to run in batch.
+      </description>
+    <onCompletion>
+      Congratulations, you can now run workflows without the need for a user interface. If you are a programmer you can also run and interact with your workflow running in a separate process from your python or Java code. Please contact your support representative if you would like further information.
+    </onCompletion>
+   </item>
+   
+</cheatsheet>

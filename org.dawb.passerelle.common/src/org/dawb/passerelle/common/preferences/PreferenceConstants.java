@@ -1,0 +1,17 @@
+/*
+ * Copyright (c) 2012 European Synchrotron Radiation Facility,
+ *                    Diamond Light Source Ltd.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */ 
+package org.dawb.passerelle.common.preferences;
+
+public class PreferenceConstants {
+
+	public static final String REMOTE_WORKBENCH_PORT = "org.dawb.workbench.application.preferences.workbench.port";
+	public static final String REMEMBER_WORKFLOWS_PERSPECTIVE = "org.dawb.passerelle.common.remember.workflowopening";
+
+}

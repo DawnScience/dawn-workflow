@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Folder Processing">
+
+	<intro>
+		<description>
+		    In this tutorial we will look at doing loops over folders of files. So processing large directories of files with our worflows in a multi-threaded system.
+	    </description>
+	</intro>
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Open File">
+      <description>
+         Under the 'File' main menu choose 'Close All' to close all the data file parts being shown.
+         We will start with the finished example file which processes a folder placing the results in a hdf5 file.
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/folder_example.moml)"/>
+   </item>
+   
+   <item
+         title="More New Actors">
+      <description>
+         There are two new actors introduced in this section.
+      </description>
+      <subitem
+            label="1. Select the actor called 'results'. This is an actor which sends each file from the folder referenced by the 'Path' attribute and filtered with the 'File Filter' attribute. You can also click and drag folders to the workflow from the 'Project Explorer'.">
+      </subitem>
+      <subitem
+            label="2. Select the actor called 'Monitor Directory'. This is an actor which opens a part looking at a folder of images. This part can monitor the directory for images and is efficient for large directories and fast image rates.">
+      </subitem>
+   </item>
+
+    <item
+         title="Understand Folder Example">
+      <description>
+         This example works by processing all the images in the 'folder' actor, subtracting the dark current images and dividing by the flat field images. All the images processed end up in a single hdf5 file which is opened at the end of the workflow. Click on the green play button to run the example. View the two images in the hdf5 file produced.
+      </description>
+    <onCompletion>
+      Congratulations, you have processed and monitored folder of images! But don't stop there - create your own workflow in the following steps.
+    </onCompletion>
+    </item>
+    
+  <item
+         title="Create a Workflow to Process a Folder">
+      <description>
+         Please follow these steps to create a workflow to process a whole directory using a multi-threaded algorithm.
+      </description>
+      <subitem
+            label="1. Start a new workflow file by using the wizard under &apos;File-&gt;New-&gt;Other-&gt;Workflows-&gt;Workflow Model&apos; as seen in the previous tutorial.">
+      </subitem>
+      <subitem
+            label="2. Click and drag the folder 'results' to the workflow from the 'data' folder, examples folder.">
+      </subitem>
+      <subitem
+            label="3. Enter the 'File Filter' attribute as 'billeA*.edf' for this actor.">
+      </subitem>
+      <subitem
+            label="4. Click and drag the file 'flat_0001.edf' to the workflow from the 'data/results' folder.">
+      </subitem>
+      <subitem
+            label="5. Click and drag a 'Subtract' actor to the workflow.">
+      </subitem>
+       <subitem
+            label="6. Click and drag in a 'Data Export' actor.">
+      </subitem>
+       <subitem
+            label="7. Click and drag in an 'Open File' actor.">
+      </subitem>
+       <subitem
+            label="8. Connect 'results' to 'a' of 'Subtract'. Connect 'flat_0001.edf' to 'b' of 'Subtract'. Connect the output of 'Subtract' to 'Data Export' and the output of 'Data Export' to 'Open File'.">
+      </subitem>
+       <subitem
+            label="9. Run the workflow and view the two images contained in the hdf5 file.">
+      </subitem>
+    <onCompletion>
+      Congratulations, you have completed this section. Now try the folder processing on your own folder of images.
+    </onCompletion>
+   </item>
+    
+   	
+</cheatsheet>

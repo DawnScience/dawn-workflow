@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Testing in Workflows">
+
+	<intro>
+		<description>
+		    In this tutorial we will look at testing values, conditional logic in the workflow.
+	    </description>
+	</intro>
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Open File">
+      <description>
+         We will start with the finished example file which processes contains an 'If' with two branches.
+         Under the 'File' main menu choose 'Close All' to close all the data file parts being shown. Then click below to open this tutorial file.
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/if_example.moml)"/>
+   </item>
+   
+   <item
+         title="How 'If' Works">
+      <description>
+         There is only one new actor in this tutorial - the 'If'. The test works by having many branches from one actor. You can create as many connections from an If actor to other actors, you must then create expressions which test values for each connection (they evaluate to 'true' by default). This is done by clicking the button on the 'Expressions' attribute of the 'Actor Attributes' part.
+      </description>
+      <subitem
+            label="1. Select the actor called 'If'. Go to the 'Actor Attributes' part and open the editor for the parameter 'Expressions' by using the button labelled '...' when you click in the 'Value' column.">
+      </subitem>
+      <subitem
+            label="2. You will see a popup form which shows the expressions for each branch of the output of the if. If you add new connections, these appear automatically in the 'Expressions' editor.">
+      </subitem>
+   </item>
+    
+    <item
+         title="Run the Workflow">
+      <description>
+         Find the green play button in the application main toolbar and run this workflow. It will run and open the error message. Fix this by setting the 'Scalar Value' attribute of 'Scalar' to 1. Run the workflow again and go to the tree of the hdf5 viewer when it is shown by the 'Open File' actor. Expand the 'Dictionary' node and view the scalar values and names/times of operations completed. Here you can find the time at which the operation was competed.
+      </description>
+   </item>
+
+    <item
+         title="Add a Branch">
+      <description>
+         In this step we will simply add another branch and complete its expression.
+      </description>
+      <subitem
+            label="1. Click and drag another 'Message' actor to the workflow, make it an INFORMATION message and fill in parameters indicating that a value of three or greater is ignored.">
+      </subitem>
+      <subitem
+            label="2. Connect the output of 'If' to the new message actors white 'input' port.">
+      </subitem>
+      <subitem
+            label="3. Edit the 'Expressions' attribute of 'If'. Change the expression value of 'Warning' to be x==2, change the expression parameter of your new message actor to be 'x&gt;=3' ">
+      </subitem>
+      <subitem
+            label="4. Experiment running the workflow with different x values until you are happy how the 'If' actor works.">
+      </subitem>
+    <onCompletion>
+      Congratulations, you can now test values and complete conditional branches in the workflow.
+    </onCompletion>
+   </item>
+   	
+</cheatsheet>

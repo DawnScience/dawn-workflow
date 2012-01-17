@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Mathematical Operations">
+
+	<intro>
+		<description>
+		    In this tutorial we will look at completing a simple maths algorithm to do basic operations on matrices. If you are familiar with numpy, you may wish to go to the python tutorial instead. However there is still a lot to learn by completing this tutorial.
+	    </description>
+	</intro>
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Open File">
+      <description>
+         We will start with the finished example file which does basic maths operations on two images, placing the results in a hdf5 (or nexus) file. Don't forget that your project must be called 'workflows' for the file to open automatically.
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/maths_example.moml)"/>
+   </item>
+  <item
+         title="Understanding the Workflow">
+      <description>
+         We start by selecting a few actors and explaining what they do.
+      </description>
+      <subitem
+            label="1. Select 'ref-testscale_1_001'. This is an actor reading the file 'ref-testscale_1_001.img' and passing it's two dimensional array of data on to the following nodes. Notice that its connections to the following nodes are highlighted when you select on the actor. Right click on the actor and choose the first option to open the file and view it.">
+      </subitem>
+      <subitem
+            label="2. Click on 'Subtract', notice that it has two inputs 'a' and 'b'. The operation done by this actor is 'a-b'. Look at the attributes of Subtract in the 'Actor Attributes' view. The parameter 'Expression Mode' is useful when subtracting many files, as is seen in a later example.">
+      </subitem>
+       <subitem
+            label="3. Click on the 'Data Export' actor. This actor writes a nexus compliant hdf5 file.">
+      </subitem>
+       <subitem
+            label="4. Click on the 'Open File' actor. This actor will open the hdf5 file written in a new part window when the workflow is run.">
+      </subitem>
+   </item>
+    <item
+         title="Run the Workflow">
+      <description>
+         Find the green play button in the application main toolbar and run this workflow. It will run and open the hdf5 file when completed. Now select the results of the various mathematical operations which you have just completed.
+      </description>
+   </item>
+  <item
+         title="Create it Yourself">
+      <description>
+         This workflow is a lot easier to create than you might imagine. Please follow these steps to create it by clicking and draging the various parts.
+      </description>
+      <subitem
+            label="1. Start a new workflow file by using the wizard under &apos;File-&gt;New-&gt;Other-&gt;Workflows-&gt;Workflow Model&apos; as seen in the previous tutorial.">
+      </subitem>
+      <subitem
+            label="2. Click and drag the file 'data/ref-testscale_1_001.img' and 'data/ref-testscale_1_002.img' to the workflow diagram from the 'data' folder.">
+      </subitem>
+       <subitem
+            label="3. Under the maths actor palette click and drag over 'Add' 'Substract' 'Multiply' 'Divide' and 'Median'.">
+      </subitem>
+       <subitem
+            label="4. Click and drag in a 'Data Export' actor. (NOTE there is a search box above the tree of actors to find things.)">
+      </subitem>
+       <subitem
+            label="5. Click and drag in an 'Open File' actor.">
+      </subitem>
+       <subitem
+            label="6. Create connections between the actors as they were before (ref-testscale_1_001.img going to 'a' and ref-testscale_1_002.img going to 'b'). You can position the actors using the blue lining up lines which automatically appear when you click and move an actor, to get the connections to run nicely.">
+      </subitem>
+       <subitem
+            label="7. The default values of the actor attributes are good enough for this example - hit run and run your version of the maths example!">
+      </subitem>
+       <subitem
+            label="8. If your connections are still untidy, try using the actions to the left of the workflow run button. These give different connection and router options.">
+      </subitem>
+    <onCompletion>
+      Congratulations, you can now complete simple maths in a workflow and visualize the results. Give it a try with some data from your experiment.
+    </onCompletion>
+   </item>
+    
+   	
+</cheatsheet>

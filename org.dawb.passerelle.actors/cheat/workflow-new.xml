@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Taking a Tour of Workflows">
+
+	<intro>
+		<description>
+		    This cheat sheet helps you to run a wizard for creating a new workflow and then shows some of the basic features.
+	    </description>
+	</intro>
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Create a workflow project">
+      <description>
+         If there is not already a workflow project (it must be called 'workflows' with the green workflow icon) then please create a new 'workflows' project including examples. These examples will be used for all the other tutorials.
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.newWizard(newWizardId=org.edna.passerelle.common.project.PasserelleWizard)"/>
+   </item>
+   <item
+         title="Create a workflow">
+      <description>
+         You can start the new workflow wizard to create a new workflow. Click to show the wizard, choose the 'workflow' project as the container and leave the file name field unchanged. Click finished in the wizard when done.
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.newWizard(newWizardId=com.isencia.passerelle.workbench.model.ui.wizards.PasserelleNewModelWizard)"/>
+   </item>
+   
+   <item
+         title="Workflow Basics">
+      <description>
+         We will take a tour of using the workflow system to create and run workflows. This section explains the various parts of creating workflows. Make sure you have selected the 'edit' tab in the workflow editor and can see the diagram of actors.
+      </description>
+      <subitem
+            label="1. Select the 'Palette' part next to the project explorer. This shows a list of all the actors possible to be added to the workflow. Actors are nodes used in the workflow graph. Note you can also add more actors by adding optional packages, the actual number of actors may vary. Older workbench versions (before 0.9) have the actors shown in the diagram palette.">
+      </subitem>
+      <subitem
+            label="2. Click the 'Director' in the diagram and look at the 'Actor Attributes' part. This part shows the attributes of any node or actor in the workflow. Click on the 'Name' parameter and rename the Director.">
+      </subitem>
+      <subitem
+            label="3. Go to the palette of actors and find the actor called 'Message'. Click on this actor and then drag to the workflow editor.">
+      </subitem>
+      <subitem
+            label="4. Go to the 'Actor Attributes' and change the 'Message' parameter to have the text 'Hello World'.">
+      </subitem>
+      <subitem
+            label="5. Change the message type to be INFORMATION.">
+      </subitem>
+      <subitem
+            label="6. Find the actor called 'Scalar' and click and drag it into the workflow.">
+      </subitem>
+      <subitem
+            label="7. Go to the palette part and find the 'Connection' mode. Create a connection between the output of 'Scalar' and the input to 'Message' by joining the white output arrow head of Scalar to the white input arrow head of Message. These arrow heads are known as 'Ports'.">
+      </subitem>
+      <subitem
+            label="8. Go to the main toolbar of the application and find the green play button labelled 'Run the workflow from start to end, until finished'. There may also be white play button with a green circular surround labeled 'Run'. We do not need this for now, just use the green play button.">
+      </subitem>
+      <subitem
+            label="9. Press this button to run your first workflow! You will see a message displayed in an information dialog. Don't worry that this takes a while, we will not normally be using workflows to show dialogs!">
+      </subitem>
+    <onCompletion>
+      Congratulations, you have run your first workflow - but don't stop there...
+    </onCompletion>
+
+   </item>
+   
+    <item
+         title="A Few More Things to See">
+      <description>
+         Select back on the 'Scalar' actor and look at the 'Actor Attributes' part. (You may need to choose 'Select' again in the palette if you are still in connection mode.) You will see that it creates a new scalar value called 'x'.
+      </description>
+      <subitem
+            label="1. Find the 'Value' part and select on it. This part shows inputs and outputs when used in the workflow.">
+      </subitem>
+      <subitem
+            label="2. Notice that the Scalar object has no inputs and one output called 'x' this is then passed to the future actors in the workflow.">
+      </subitem>
+      <subitem
+            label="3. Click on the 'Message' actor and view its inputs and outputs, there is one input 'x' and no outputs. In fact Message is known as a 'Sink', it does not have any outputs.">
+      </subitem>
+      <subitem
+            label="4. Click on the connection between Scalar and Message. This shows the variables flowing between actors. It is only 'x' travelling between Scalar and Message in this instance but many more will be there in later examples.">
+      </subitem>
+    <onCompletion>
+      Congratulations, you have seen the basic operations of creating a workflow. Now have look around at the system and the example files. The following tutorials focus on explaining these examples.
+    </onCompletion>
+    </item>
+   
+   	
+</cheatsheet>

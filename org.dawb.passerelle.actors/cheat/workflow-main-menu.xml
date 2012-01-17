@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<compositeCheatsheet name="Workflows">
+   <taskGroup kind="set" name="Workflow Tutorials" skip="false">
+      <intro>
+         <b>Introduction</b>
+      </intro>
+      <onCompletion>
+         <b>Conclusion</b>
+      </onCompletion>
+      <task kind="cheatsheet" name="Take a tour of workflows" skip="false">
+         <intro>
+            Getting to grips with the basics of workflows and creating a project to use in the other tutorials.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-new.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Some simple maths" skip="false">
+         <intro>
+            An introduction to completing maths on images in workflow pipelines.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-maths.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Creating conditional logic" skip="false">
+         <intro>
+            An introduction to the If actor and optional branches.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-if.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Processing folders" skip="false">
+         <intro>
+            An introduction to processing many images inside a folder
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-folder.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Monitoring folders" skip="false">
+         <intro>
+            An introduction to adding source actors which monitor a resource for a long period of time. In this case new files appearing in a directory.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-polling.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Slicing HDF5 / nexus files" skip="true">
+         <intro>
+            An introduction to sending images to and from hdf5/nexus files.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-h5-pipeline.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="User input in workflows" skip="true">
+         <intro>
+            An introduction to actors which prompt the user for input into the workflow.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-ui.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Python" skip="false">
+         <intro>
+            An introduction to running python and jython scripts which transform data in the workflows using any python based algorithm.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-python.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Batch" skip="true">
+         <intro>
+            A tutorial designed to familiarize you with the execution of workflows outside the user interface.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-batch.xml">
+         </param>
+      </task>
+   </taskGroup>
+</compositeCheatsheet>

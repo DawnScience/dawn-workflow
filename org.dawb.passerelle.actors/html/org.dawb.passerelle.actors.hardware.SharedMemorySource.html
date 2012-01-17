@@ -1,0 +1,27 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Title</TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.2  (Unix)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Matthew Gerring">
+	<META NAME="CHANGED" CONTENT="20110901;14250700">
+	<META NAME="CHANGEDBY" CONTENT="Matthew Gerring">
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<H2>Shared Memory Source 
+</H2>
+<P>This source monitors shared memory and whenever it changes (note
+it doe nothing when no change occurs), it fires the pipeline with the
+data read. By default the actor monitors until stopped, i.e. the
+workflow never stops unless a stop actor is used downstream. There is
+an expert parameter to specify a timeout if the data does not change
+for a given time. The monitor can deal with 1D and 2D data being
+stored in the shared memory. For 1D there is a chunk size to specify
+the number of 1D arrays to read from the stack of shared memory.
+Integer and floating point data is supported. The actor uses a Tango
+client so the correct tango server for reading spec shared memory
+should be installed.</P>
+</BODY>
+</HTML>

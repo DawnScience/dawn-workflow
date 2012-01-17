@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="User Input in Workflows">
+
+	<intro>
+		<description>
+		    In this tutorial we will look at adding actors which ask the user for input and block the worflow until the user has made the required decision.
+	    </description>
+	</intro>
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Open File">
+      <description>
+         We will start with the finished example file which asks the user for a few fields and simply writes them to an hdf5 file. However the user could also send these to a macro, spec for instance.
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/user_interface_example.moml)"/>
+   </item>
+      
+   <item title="Input Actor">
+      <description>
+         In this tutorial there is one new actor to learn. Click on the 'Input' actor and view the 'Actor Attributes'.
+      </description>
+      <subitem
+            label="1. Look at the 'User Input Type' attribute, this allows you to choose between a dialog or a part for data to be entered to the workflow. Both are non-blocking of the user interface but blocking of the workflow. This means that values can be checked in the user interface.">
+      </subitem>
+      <subitem
+            label="2. Look at the 'User Fields' attribute, this allows you to create the user interface that must be used to enter data. Click on the value and press the '...' button. You will see a form for configuring the scalar fields which will enter the workflow. Click on each field and familiarize yourself with how fields may be created.">
+      </subitem>
+   </item>
+   
+   <item title="Run Workflow">
+      <description>
+         Use the green play button in the main toolbar to run the workflow. You will be asked for values in a dialog, these will be written to a hdf5 file if you press 'Continue' on the dialog. Press 'Continue and go to the Tree tab and expand the 'Dictionary' tree node to view the scalar values in the hdf5 file produced.
+      </description>
+    <onCompletion>
+      Congratulations, you can now create user input to a workflow, if it is needed. Try creating a test workflow with different inputs.
+    </onCompletion>
+   </item>
+   	
+</cheatsheet>

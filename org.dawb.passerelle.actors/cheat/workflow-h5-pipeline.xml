@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Pipelines for H5 files">
+
+	<intro>
+		<description>
+		    In this tutorial we will look at running workflows for creating h5 files and for pipelining images from h5 files as if they are a directory.
+	    </description>
+	</intro>
+		
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Directory Packing Example">
+      <description>
+         We will run an example workflow to create a HDF5 file. These files are ways of collecting data efficiently in one file. They give the opportunity to slice data in different ways and to record clearly defined meta data in the file. One example of this kind of HDF5 file is the nexus data format.
+         Run the example workflow and look at the HDF5 file called 'export.h5' produced.
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/directory_packing_example.moml)"/>
+   </item>
+
+  <item
+         title="Crate a workflow to extract images">
+      <description>
+         Now we will do the reverse operation and extract the images back to tiff format.
+      </description>
+      <subitem
+            label="1. Start a new workflow file by using the wizard under &apos;File-&gt;New-&gt;Other-&gt;Workflows-&gt;Workflow Model&apos; as seen in a previous tutorial.">
+      </subitem>
+      <subitem
+            label="2. Click and drag the file 'output/export.h5' just written to the workflow. Don't forget to select the 'Edit' tab of the workflow editor.">
+      </subitem>
+      <subitem
+            label="3. Go to the 'Actor Attributes' and click on the 'Data Set Slice' attribute. Open the slice form and look at the slice properties. This table allows multi-dimensional data sets to be sliced into images. The values start at index 0 for the first dimension and slice with the other two as X and Y in the image. Move to 4. without closing the form.">
+      </subitem>
+      <subitem
+            label="4. Before closing the slice form, press the 'Open data set in a gallery' button. This shows thumbnails of all the slices that will run through the pipeline. Press ok on the form and slicing will be set up. Notice that the attribute shows the slice as '0;3;1', you can also set ranges using this syntax, for instance every second dataset from 200 images would be '0;199;2'">
+      </subitem>
+      <subitem
+            label="5. Add a data export actor (use the 'Pallette' and search for 'Data') and change the 'File Format' to be 'tiff (16-bit)' (you may need to scroll down the drop down box). Now change the 'Output' attribute to '/${project_name}/output/tiff' and connect 'output' port of 'export' to the 'input' port of 'Data Export'.">
+      </subitem>
+      <subitem
+            label="6. Add a 'Open Images Monitor' actor and connect 'output' of 'Data Export' to 'input' of your new 'Open Images Monitor'. In 'Open Images Monitor' change the 'Expression Mode' parameter to be 'Evaluate on first message and then never again' and change the 'Start Monitor' attribute to be true (ticked).">
+      </subitem>
+      <subitem
+        label="7. Now try running your new workflow. It will extract the HDF5 images to separate tiff files and show them appearing in the directory '/workflows/output/tiff'. Note that your algorithm is asynchronous, the images are added to the pipeline as fast as they can be extracted and queue into the downstream actors. There are expert parameters for controlling queue size to fit the memory available.">
+      </subitem>
+     
+      
+    </item>
+
+
+   <item title="Conclusion">
+      <description>
+         We have seen how to add images to a HDF5 file and how to expand them out again into tiff format. On its own this is not especially useful, however further maths can be completed within the workflows. In addition the workflow can be deployed as a service programatically. This means for instance that images can be processed on the fly during data collection.
+      </description>
+    <onCompletion>
+      Congratulations, you can now pipe-line images to and from HDF5!
+    </onCompletion>
+   </item>
+   
+</cheatsheet>

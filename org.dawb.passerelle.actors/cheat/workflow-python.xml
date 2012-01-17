@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Python">
+
+	<intro>
+		<description>
+		    In this tutorial we will look at running python and jython directy. This has the advantage that practically anything can be done, and that the workflow is documenting the algorithm parts as-well-as looking after threads. Jython is provided with this software, python however requires you to install a local python interpreter and ensure that it can be connected to.
+	    </description>
+	</intro>
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Run Python Workflow">
+      <description>
+         Open the python workflow below, take a look at what is happening and try running it. You will need numpy available to import in order to run this example. When it runs, the python code generates a new dataset which is passed back to the hdf5 file written and is available for plotting. Plot 'data/Energy' vs 'data/lnI0It' for instance. 
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/python_numpy_example1.moml)"/>
+   </item>
+   
+   
+   <item title="Python Actor">
+      <description>
+         In this section we will look at how to use python and try changing the python code in order to learn how python connects to the workflow.
+      </description>
+      <subitem
+            label="1. Select the 'MoKedge_1_15' actor and look at the attributes. It is extracting from the file some data sets 'I0, It, Iref, Energy'. These are being passed on to the python actor. You can right click and open the file that the actor is linked to and plot data sets from it.">
+      </subitem>
+      <subitem
+            label="2. Select the 'numpy' actor and right click. Choose the 'Open python_script2.py' menu and you will enter a python editor. This is an intelligent editor and does syntax highlighting. (If a popup appears asking you to create a python interpreter, it is safe to press 'Don't ask again' and not create one.)">
+      </subitem>
+      <subitem
+            label="3. Edit the python to change the numpy used. For instance change the / operator for a * one, and run the workflow again.">
+      </subitem>
+      <subitem
+            label="4. Look again at the attributes of actor 'numpy'. There is a 'Dataset Outputs' attribute. This is a comma separated list of the names of python variables to extract. Try changing the python variable name 'lnI0It' in the python script to 'fred' and entering this new variable in the 'Dataset Outputs' attribute. Run the workflow again.">
+      </subitem>
+    </item>
+   
+   <item
+         title="Run Jython Workflow">
+      <description>
+         Open the jython workflow below, take a look at what is happening and try running it. You do not need to install anything in order to run this example.  
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/python_numjy_example1.moml)"/>
+   </item>
+ 
+  <item title="Jython Actor">
+      <description>
+         In this section we will look at how to use jython and try changing the jython code in order to learn how jython connects to the workflow. Note that the jython interpreter takes longer to start than the python one, however once going, it is comparable to standard python/numpy.
+      </description>
+      <subitem
+            label="1. Select the 'MoKedge_1_15' actor and look at the attributes. It is extracting from the file some data sets 'counterTimer01/I0, counterTimer01/It, counterTimer01/Iref, counterTimer01/Energy'. The 'Rename Data Sets' parameter is being used to filter the nexus tree names down to legal python variables. These are being passed on to the python actor again. You can right click and open the file that the actor is linked to and plot data sets from it, this time it is a hdf5 file.">
+      </subitem>
+      <subitem
+            label="2. Select the 'numjy' actor and right click. Choose the 'Open python_script1.py' menu and you will enter a python editor. This is an intelligent editor and does syntax highlighting.">
+      </subitem>
+      <subitem
+            label="3. Edit the python. For instance change the / operator for a * one, and run the workflow again.">
+      </subitem>
+      <subitem
+            label="4. Look again at the attributes of actor 'numjy'. There is a 'Dataset Outputs' attribute. This is a comma separated list of the names of jython variables to extract. Try changing the jython variable name 'lnI0It' in the python script to 'fred' and entering this new variable in the 'Dataset Outputs' attribute. Run the workflow again. Note: The input variables are also reread at the end, so if you want to transform these only, there is no need to use 'Dataset Outputs'.">
+      </subitem>
+    </item>
+   
+   <item title="Conclusion">
+      <description>
+         We have seen in this section that it is possible to run any python script and to know and change the values of variables in the workflow.
+      </description>
+    <onCompletion>
+      Congratulations, you can now insert python into a multi-threaded environment without the need for thread programming. Try creating a test workflow with much more complex python.
+    </onCompletion>
+   </item>
+   
+</cheatsheet>

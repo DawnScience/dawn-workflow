@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XSDataInputThumbnail>
+  <inputImagePath>
+    <path><value>${file_path}${x}</value></path>
+  </inputImagePath>
+  <outputPath>
+    <path><value>${file_dir}</value></path>
+  </outputPath>
+  <levelsInvert><value>1</value></levelsInvert>  <levelsGamma><value>0.8</value></levelsGamma>  <thumbHeight><value>512</value></thumbHeight>  <levelsMax><value>1000</value></levelsMax></XSDataInputThumbnail>
