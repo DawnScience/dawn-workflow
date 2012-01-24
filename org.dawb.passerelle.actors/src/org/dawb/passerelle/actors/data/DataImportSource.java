@@ -26,6 +26,7 @@ import org.dawb.common.ui.slicing.DimsDataList;
 import org.dawb.common.ui.slicing.SliceUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.SortingUtils;
+import org.dawb.gda.extensions.loaders.H5LazyDataset;
 import org.dawb.gda.extensions.loaders.H5Loader;
 import org.dawb.gda.extensions.util.DatasetTitleUtils;
 import org.dawb.passerelle.actors.data.config.SliceParameter;
@@ -538,38 +539,42 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		}
 		
 		
-		Map<String,Object> ret = raw;
 		final Map<String,String> nameMap = getDataSetNameMap();
-		if (nameMap!=null) {
-			ret = new HashMap<String,Object>(raw.size());
-			ret.putAll(raw);
-		}
+		final Map<String,Object> ret = new HashMap<String,Object>(raw.size());
 		
 		// Set name and not to print data in string
-		for (Iterator<String> iterator = raw.keySet().iterator(); iterator.hasNext();) {
+		for (String name : raw.keySet()) {
 
-			final String name = iterator.next();
-			final AbstractDataset set = (AbstractDataset)raw.get(name);
-			if (set==null) {
-				iterator.remove();
-				continue;
-			}
-			set.setStringPolicy(AbstractDataset.STRING_SHAPE);
-			set.setName(name);
+			final ILazyDataset lazy = (ILazyDataset)raw.get(name);
+			if (lazy==null) continue;
 			
-
 			if (nameMap!=null) {
 				final String newName = nameMap.get(name);
 				if (newName!=null && !"".equals(newName)) {
-					ret.remove(name);
-					set.setName(newName);
-					ret.put(newName, set);
+					name = newName;
 				}
 			}
+
+			/**
+			 * We load the data, this is an import actor
+			 */
+			final AbstractDataset set = getLoadedData(lazy);
+			set.setStringPolicy(AbstractDataset.STRING_SHAPE);
+			set.setName(name);
 			
+			ret.put(name, set);
+
 		}
 		
 	    return ret;
+	}
+
+	private AbstractDataset getLoadedData(ILazyDataset lazy) throws Exception {
+		
+		if (lazy instanceof H5LazyDataset) {
+		    return ((H5LazyDataset)lazy).getCompleteData(null);
+		}
+		return (AbstractDataset)lazy;
 	}
 
 	private Map<String, String> getDataSetNameMap() {
