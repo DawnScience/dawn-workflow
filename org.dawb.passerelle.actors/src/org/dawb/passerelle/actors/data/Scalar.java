@@ -62,6 +62,8 @@ public class Scalar extends AbstractDataMessageSource {
 	private String           strName, strValue;
 	private List<? extends Number> rangeQueue;
 	
+	protected boolean firedStringValueAlready;
+	
 	/** Construct a constant source with the given container and name.
 	 *  Create the <i>value</i> parameter, initialize its value to
 	 *  the default value of an IntToken with value 1.
@@ -105,7 +107,7 @@ public class Scalar extends AbstractDataMessageSource {
 	protected void doInitialize() throws InitializationException {
 	
 		super.doInitialize();
-		
+		firedStringValueAlready = false;
 		try {
 		    rangeQueue = DOEUtils.expand(strValue);
 		} catch (Throwable ne) {
@@ -121,8 +123,12 @@ public class Scalar extends AbstractDataMessageSource {
 	@Override
 	protected ManagedMessage getDataMessage() throws ProcessingException {
         
+		if (rangeQueue==null && firedStringValueAlready) return null;
+		if (rangeQueue!=null && rangeQueue.isEmpty())    return null;
+		
         Object value;
-        if (rangeQueue==null || rangeQueue.isEmpty()) {
+        if (rangeQueue==null) {
+        	firedStringValueAlready = true;
         	value = strValue;
         } else {
         	value = rangeQueue.remove(0);
