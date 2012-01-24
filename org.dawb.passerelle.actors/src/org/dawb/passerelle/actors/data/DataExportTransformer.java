@@ -34,6 +34,7 @@ import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
+import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawb.tango.extensions.editors.SharedMemoryUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
@@ -331,21 +332,37 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				file.setNexusAttribute(s, Nexus.SDS);
 			}
 
-			boolean separateSets = (datasetName.getExpression()==null || "".equals(datasetName.getExpression()));
+			final String datasetNameStr = getDatasetName(cache);
+			boolean separateSets = (datasetNameStr==null || datasetNameStr.endsWith("/"));
 			if (separateSets) {
-				final Group data = file.group("data", entry);
-				file.setNexusAttribute(data, Nexus.DATA);
+				Group group=entry;
+				if (datasetNameStr!=null && datasetNameStr.endsWith("/")) {
+					final String[]  paths = datasetNameStr.split("/");
+					if (paths.length>0) {
+						for (int i = 0; i < paths.length; i++) {
+	                        final String path = paths[i];
+							group = file.group(path, group);
+							if (i<(paths.length-1)) file.setNexusAttribute(group, Nexus.ENTRY);
+						}
+					
+					} else {
+						group = file.group("data", entry);
+					}
+				} else {
+					group = file.group("data", entry);
+				}
+				
+				file.setNexusAttribute(group, Nexus.DATA);
 				if (sets!=null) for (IDataset set : sets) {
 					final AbstractDataset a = (AbstractDataset)set;
 					final Datatype        d = H5Utils.getDatatype(a);
 					final long[]      shape = new long[a.getShape().length];
 					for (int i = 0; i < shape.length; i++) shape[i] = a.getShape()[i];
-					final Dataset s = file.createDataset(a.getName(),  d, shape, a.getBuffer(), data);
+					final Dataset s = file.createDataset(a.getName(),  d, shape, a.getBuffer(), group);
 					file.setNexusAttribute(s, Nexus.SDS);
 				}		
 			} else {
-				final String setName = datasetName.getExpression();
-				final String[]  path = setName.split("/");
+				final String[]  path = datasetNameStr.split("/");
 				Group group = entry;
 				if (path.length>2) {
 					for (int i = 0; i < (path.length-2); i++) {
@@ -362,7 +379,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				}
 				
 				
-				final String datasetName = path[path.length-1];
+				final String name = path[path.length-1];
 				if (sets!=null) for (IDataset set : sets) {
 					final AbstractDataset a = (AbstractDataset)set;
 					final Datatype        d = H5Utils.getDatatype(a);
@@ -370,7 +387,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 					for (int i = 0; i < shape.length; i++) shape[i] = a.getShape()[i];
 					
 					// TODO Assumes all sets going through pipeline are same size
-					final Dataset s = file.appendDataset(datasetName,  d, shape, a.getBuffer(), group);
+					final Dataset s = file.appendDataset(name,  d, shape, a.getBuffer(), group);
 					file.setNexusAttribute(s, Nexus.SDS);
 				}	
 			}
@@ -384,6 +401,10 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				throw createDataMessageException("Cannot close "+filePath, e);
 			}
 		}
+	}
+	
+	private String getDatasetName(final List<DataMessageComponent> cache) throws Exception {
+		return ParameterUtils.getSubstituedValue(datasetName, cache);
 	}
 	
 	private boolean isWritingSingleFile() {

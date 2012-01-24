@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -545,8 +546,14 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		}
 		
 		// Set name and not to print data in string
-		for (String name : raw.keySet()) {
+		for (Iterator<String> iterator = raw.keySet().iterator(); iterator.hasNext();) {
+
+			final String name = iterator.next();
 			final AbstractDataset set = (AbstractDataset)raw.get(name);
+			if (set==null) {
+				iterator.remove();
+				continue;
+			}
 			set.setStringPolicy(AbstractDataset.STRING_SHAPE);
 			set.setName(name);
 			

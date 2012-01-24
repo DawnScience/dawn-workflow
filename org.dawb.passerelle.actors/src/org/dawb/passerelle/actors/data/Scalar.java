@@ -106,7 +106,11 @@ public class Scalar extends AbstractDataMessageSource {
 	
 		super.doInitialize();
 		
-		rangeQueue = DOEUtils.expand(strValue);
+		try {
+		    rangeQueue = DOEUtils.expand(strValue);
+		} catch (Throwable ne) {
+			rangeQueue = null;			
+		}
 	}
 
 	public boolean hasNoMoreMessages() {
@@ -116,14 +120,16 @@ public class Scalar extends AbstractDataMessageSource {
 	
 	@Override
 	protected ManagedMessage getDataMessage() throws ProcessingException {
-
-        if (rangeQueue==null)     return null;
-        if (rangeQueue.isEmpty()) return null;
         
-        final Number num = rangeQueue.remove(0);
+        Object value;
+        if (rangeQueue==null || rangeQueue.isEmpty()) {
+        	value = strValue;
+        } else {
+        	value = rangeQueue.remove(0);
+        }
         
 		DataMessageComponent despatch = new DataMessageComponent();
-		despatch.putScalar(strName, num.toString());
+		despatch.putScalar(strName, value.toString());
 
 		try {
 			return MessageUtils.getDataMessage(despatch);
