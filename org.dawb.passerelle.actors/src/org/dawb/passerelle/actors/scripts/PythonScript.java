@@ -10,6 +10,7 @@
 package org.dawb.passerelle.actors.scripts;
 
 import java.io.FileInputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -374,7 +375,7 @@ public class PythonScript extends AbstractScriptTransformer {
 		if (file.exists()) interpreter.execfile(new FileInputStream(file.getLocation().toOSString()));
 				
 		final DataMessageComponent ret = new DataMessageComponent();		
-		final Map<String,Object>  data = new HashMap<String, Object>(7);
+		final Map<String,Serializable>  data = new HashMap<String, Serializable>(7);
 		if (outputs==null) outputs=Collections.emptyList();
 		final List<String>         out = new ArrayList<String>(outputs.size()+inputs.size());
 		out.addAll(outputs);

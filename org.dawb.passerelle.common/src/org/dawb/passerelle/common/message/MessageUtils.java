@@ -9,6 +9,7 @@
  */ 
 package org.dawb.passerelle.common.message;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -72,7 +73,7 @@ public class MessageUtils {
             return comp;
 		
 		} else {
-			final Map<String, Object>  hash = MessageUtils.coerceData(message);
+			final Map<String, Serializable>  hash = MessageUtils.coerceData(message);
 			final IMetaData            meta = MessageUtils.coerceMeta(message);
 			final DataMessageComponent comp = new DataMessageComponent();
 			comp.setList(hash);
@@ -139,7 +140,7 @@ public class MessageUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static Map<String, Object> coerceData(final ManagedMessage message) throws Exception {
+	public static Map<String, Serializable> coerceData(final ManagedMessage message) throws Exception {
 		
 		final Object data = message.getBodyContent();
 		
@@ -148,10 +149,10 @@ public class MessageUtils {
 			return ((DataMessageComponent)data).getList();
 			
 		} else if (data instanceof Map) {
-			return (Map<String,Object>)data;
+			return (Map<String,Serializable>)data;
 
 		} else if (data instanceof IDataset) {
-			final Map<String, Object> d = new HashMap<String,Object>(1);
+			final Map<String, Serializable> d = new HashMap<String,Serializable>(1);
 			final IDataset set = (IDataset)data;
 			d.put(set.getName()!=null?set.getName():"sum", set);
 			return d;
@@ -187,7 +188,7 @@ public class MessageUtils {
 			String name = message.getBodyHeader("name")[0];
 			if (name==null) name = "data";
 			
-			final Map<String,Object> ret = new HashMap<String,Object>(1);
+			final Map<String,Serializable> ret = new HashMap<String,Serializable>(1);
 			ret.put(name, set);
 			return ret;
 		}
@@ -228,7 +229,7 @@ public class MessageUtils {
 		List<IDataset> ret = null;
 		if (comp==null||comp.getList()==null) return null;
 		if (ret==null) ret = new ArrayList<IDataset>(7);
-		final Collection<Object> values = comp.getList().values();
+		final Collection<Serializable> values = comp.getList().values();
 		for (Object object : values) {
 			if (object instanceof IDataset) ret.add((IDataset)object);
 		}
@@ -273,6 +274,24 @@ public class MessageUtils {
 		}
 		return ret;
 	}
+	
+
+	/**
+	 * 
+	 * @param cache
+	 * @return
+	 */
+	public static Map<String, Serializable> getList(List<DataMessageComponent> cache) {
+		Map<String, Serializable> ret = null;
+		for (DataMessageComponent comp : cache) {
+			if (comp==null||comp.getList()==null) continue;
+			if (ret==null) ret = new HashMap<String,Serializable>(7);
+			final Map<String,Serializable> list = comp.getList();
+			if (list!=null) ret.putAll(list);
+		}
+		return ret;
+	}
+
 
 	/**
 	 * 
@@ -287,7 +306,7 @@ public class MessageUtils {
         return message;
 	}
 
-	public static String getNames(Collection<IDataset> sets) {
+	public static String getNames(Collection<? extends Serializable> sets) {
 		if (sets==null||sets.isEmpty()) return null;
 	    return getNames(sets.toArray(new IDataset[sets.size()]));
 	}

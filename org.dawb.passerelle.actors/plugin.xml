@@ -216,6 +216,14 @@
             id="org.dawb.passerelle.actors.expression"
             name="Expression">
       </actor>
+      <actor
+            class="org.dawb.passerelle.actors.data.TileDatasets"
+            figureCustomizer="org.dawb.passerelle.actors.data.MathCustomizer"
+            group="org.dawb.passerelle.actors.actorgroup.maths"
+            icon="icons/tile.png"
+            id="org.dawb.passerelle.actors.mathsTile"
+            name="Tile">
+      </actor>
    </extension>
    <extension
          name="Process Actors"

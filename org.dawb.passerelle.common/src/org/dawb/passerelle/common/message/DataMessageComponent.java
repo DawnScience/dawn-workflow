@@ -9,6 +9,7 @@
  */ 
 package org.dawb.passerelle.common.message;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedHashMap;
@@ -51,7 +52,7 @@ public class DataMessageComponent {
 	/**
 	 * The data is either primitive array or IDataset
 	 */
-	private Map<String,Object> list;
+	private Map<String,Serializable> list;
 	/**
 	 * What we did to the data in the pipeline
 	 */
@@ -74,7 +75,7 @@ public class DataMessageComponent {
 	private boolean error = false;
 
 
-	public Map<String, Object> getList() {
+	public Map<String, Serializable> getList() {
 		return list;
 	}
 	
@@ -83,7 +84,7 @@ public class DataMessageComponent {
 		return null;
 	}
 
-	public void setList(Map<String, Object> data) {
+	public void setList(Map<String, Serializable> data) {
 		this.list = data;
 	}
 
@@ -96,7 +97,7 @@ public class DataMessageComponent {
 	}
 	
 	public void setList(final IDataset set) {
-		if (list==null) list = new LinkedHashMap<String,Object>(1);
+		if (list==null) list = new LinkedHashMap<String,Serializable>(1);
 		String name = set.getName();
 		if (name==null||"".equals(name)) name = "Unknown";
 		MapUtils.putUnique(list, name, set);
@@ -240,7 +241,7 @@ public class DataMessageComponent {
 	public void add(DataMessageComponent a) {
 		
 		if (a.list!=null) {
-			if (list==null) list = new LinkedHashMap<String, Object>(a.list.size());
+			if (list==null) list = new LinkedHashMap<String, Serializable>(a.list.size());
 		    list.putAll(a.list);
 		}
 		
@@ -261,7 +262,7 @@ public class DataMessageComponent {
 	}
 
 	public void addList(String name, AbstractDataset a) {
-		if (list==null) list = new LinkedHashMap<String,Object>(1);
+		if (list==null) list = new LinkedHashMap<String,Serializable>(1);
 		list.put(name, a);
 	}
 

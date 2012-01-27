@@ -10,6 +10,7 @@
 package org.dawb.passerelle.actors.data;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -456,7 +457,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		final ManagedMessage       triggerMsg= trigOb.getTrigger();
 		final String               filePath  = file.getAbsolutePath();
         
-		final Map<String,Object>   datasets;
+		final Map<String,Serializable>   datasets;
 		if (trigOb.getSlice()!=null) {
 			final SliceObject slice = trigOb.getSlice();
 			slice.setPath(file.getAbsolutePath());
@@ -467,7 +468,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				
 			final AbstractDataset set = SliceUtils.getSlice(slice, null);
 			set.setName(pyName);
-			datasets = new HashMap<String,Object>(1);
+			datasets = new HashMap<String,Serializable>(1);
 			datasets.put(pyName, set);
 			
 		} else {
@@ -507,7 +508,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		return names.getValue();
 	}
 	
-	private Map<String,Object> getDatasets(String filePath) throws Exception {
+	private Map<String,Serializable> getDatasets(String filePath) throws Exception {
 		
 		if (!DATA_TYPES[0].equals(dataType.getExpression())) return null; 
 		
@@ -540,7 +541,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		
 		
 		final Map<String,String> nameMap = getDataSetNameMap();
-		final Map<String,Object> ret = new HashMap<String,Object>(raw.size());
+		final Map<String,Serializable> ret = new HashMap<String,Serializable>(raw.size());
 		
 		// Set name and not to print data in string
 		for (String name : raw.keySet()) {
