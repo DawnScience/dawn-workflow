@@ -395,7 +395,9 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		} finally {
 			try {
 				if (file!=null) {
-					if (!isWritingSingleFile()) file.close();
+					if (!isWritingSingleFile()) {
+						file.close();
+					}
 				}
 			} catch (Exception e) {
 				throw createDataMessageException("Cannot close "+filePath, e);
