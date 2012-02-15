@@ -23,6 +23,11 @@ public class ParameterUtils {
 
 	public static final String VARIABLE_EXPRESSION = "\\$\\{([a-zA-Z0-9_ ]+)\\}";
 	
+	
+	public static String getSubstituedValue(final Parameter parameter) throws Exception {
+        return getSubstituedValue(parameter, (DataMessageComponent)null);
+	}
+	
 	public static String getSubstituedValue(final Parameter parameter, final DataMessageComponent comp) throws Exception {
 		
 	    final String       stringValue = parameter.getExpression();
