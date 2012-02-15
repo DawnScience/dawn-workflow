@@ -336,7 +336,7 @@ public class MessageUtils {
 
 	/**
 	 * Returns a map of the values of vars contained in DataMessageComponent
-	 * @param comp
+	 * @param comp may be null
 	 * @param vars may be null in which case all are sent.
 	 * @return
 	 * @throws Exception 

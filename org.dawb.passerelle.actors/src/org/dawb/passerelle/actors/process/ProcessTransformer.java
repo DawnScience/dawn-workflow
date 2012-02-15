@@ -55,6 +55,7 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 	private static final long serialVersionUID = -6156476506138933499L;
 	
 	private final StringParameter cmdParam;
+	private final StringParameter outputVar;
 	private final StringParameter winCmdParam;
 	private final Parameter       waitParam;
 	private final StringParameter dirParam;
@@ -78,6 +79,10 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 		
 		waitParam = new Parameter(this,"Wait",new BooleanToken(true));
 		registerConfigurableParameter(waitParam);
+		
+	    outputVar = new StringParameter(this, "Output Variable");
+		registerConfigurableParameter(outputVar);
+
 
 		// Control parent parameters
 		memoryManagementParam.setVisibility(Settable.NONE);
@@ -93,7 +98,7 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 		try {
 			
 			final String                 cmd;
-			if (OSUtils.isWindowsOS() && winCmdParam.getExpression()!=null) {
+			if (OSUtils.isWindowsOS() && winCmdParam.getExpression()!=null && !"".equals(winCmdParam.getExpression())) {
 				cmd = ParameterUtils.getSubstituedValue(winCmdParam, cache);
 			} else {
 				cmd = ParameterUtils.getSubstituedValue(cmdParam, cache);
@@ -105,7 +110,14 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 			} else {
 				command.addArguments(new String[]{"cmd.exe", "/C", cmd});
 			}
-            command.setStreamLogsToLogging(true);
+			
+			
+			final String outputExpressionName = ParameterUtils.getSubstituedValue(outputVar, cache);
+			if (outputExpressionName!=null) {
+				command.setStreamLogsToLoggingAndSaved(true);
+			} else {
+                command.setStreamLogsToLogging(true);
+			}
             command.setEnv(System.getenv());
             
 			final long time = System.currentTimeMillis();
@@ -136,6 +148,10 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 			
 			AbstractPassModeTransformer.refreshResource(ModelUtils.getProject(this));
 			
+			if (outputExpressionName!=null) {
+				ret.putScalar(outputExpressionName, command.getStdoutAsString());
+			}
+			
 			return ret; 
 			
 		} catch (Exception ne) {
@@ -154,6 +170,15 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 		final long time = System.currentTimeMillis();
 		ret.add(new Variable("execution_time", VARIABLE_TYPE.SCALAR, time));
 		ret.add(new Variable("execution_date", VARIABLE_TYPE.SCALAR, dateFormat.format(time)));
+		
+		try {
+			final String outputExpressionName = ParameterUtils.getSubstituedValue(outputVar);
+			if (outputExpressionName!=null) ret.add(new Variable(outputExpressionName, VARIABLE_TYPE.SCALAR, "stdout"));
+
+		} catch (Exception e) {
+			logger.error("Cannot get expression name for "+outputVar.getDisplayName());
+		}
+
         return ret;
 	}
 

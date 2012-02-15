@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -104,6 +103,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	
 	
 	private static final String[] DATA_TYPES = new String[] {"Complete data as numerical arrays", "Just path and file name"};
+	private static final String[] SLICE_TYPES = new String[] {"Unique name for each slice", "Same name for each slice"};
 	
 	// Read internally
 	protected Parameter           folderParam;
@@ -121,6 +121,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	private final StringChoiceParameter   names;
 	private final StringMapParameter      rename;
 	private final StringParameter         dataType;
+	private final StringParameter         sliceNameType;
 	private final SliceParameter          slicing;
 	
 	private List<TriggerObject> fileQueue;
@@ -211,7 +212,15 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		};
 		dataType.setExpression(DATA_TYPES[0]);
 		registerConfigurableParameter(dataType);
-		
+	
+		sliceNameType = new StringParameter(this,"Slice Name Type") {
+			public String[] getChoices() {
+				return SLICE_TYPES;
+			}
+		};
+		sliceNameType.setExpression(SLICE_TYPES[0]);
+		registerConfigurableParameter(sliceNameType);
+
 	}
 	
 	/**
@@ -461,9 +470,15 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		if (trigOb.getSlice()!=null) {
 			final SliceObject slice = trigOb.getSlice();
 			slice.setPath(file.getAbsolutePath());
-			slice.setName(getDataSetNames()[0]);
 			
-			final String sliceName = getDataSetNames()[0]+"_slice_"+trigOb.getIndex();
+			final String datasetPath = getDataSetNames()[0];
+			slice.setName(datasetPath);
+			
+			String sliceName = getMappedName(datasetPath);
+			if (SLICE_TYPES[0].equals(sliceNameType.getExpression())) {
+				sliceName = sliceName+"_slice_"+trigOb.getIndex();
+			} 
+			
 			final String pyName    = PythonUtils.getLegalVarName(sliceName, null);
 				
 			final AbstractDataset set = SliceUtils.getSlice(slice, null);
@@ -584,6 +599,13 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		final Map<String,String> nameMap = MapUtils.getMap(map);
 		if (nameMap==null || nameMap.isEmpty()) return null;
 		return nameMap;
+	}
+	
+	private String getMappedName(final String hdfName) {
+		final Map<String,String> nameMap = getDataSetNameMap();
+        if (nameMap==null) return hdfName;
+        if (!nameMap.containsKey(hdfName)) return hdfName;
+        return nameMap.get(hdfName);
 	}
 	
 	@Override
