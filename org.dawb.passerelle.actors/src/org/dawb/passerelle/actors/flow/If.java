@@ -15,15 +15,13 @@ import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 
-import ptolemy.data.Token;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import ptolemy.kernel.util.NamedObj;
 import ptolemy.kernel.util.Settable;
 
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.core.PasserelleToken;
+import com.isencia.passerelle.actor.dynaport.OutputPortConfigurationExtender;
 import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.message.ManagedMessage;
 
@@ -34,7 +32,8 @@ public class If extends AbstractDataMessageTransformer {
 	 */
 	private static final long serialVersionUID = 626830385195273355L;
 
-	protected ExpressionParameter expressions;
+	public ExpressionParameter expressions;
+	public OutputPortConfigurationExtender outputPortCfgExt;
 	
 	public If(final CompositeEntity container, final String name) throws NameDuplicationException, IllegalActionException {
 		
@@ -45,6 +44,8 @@ public class If extends AbstractDataMessageTransformer {
 		
 		memoryManagementParam.setVisibility(Settable.NONE);
 		dataSetNaming.setVisibility(Settable.NONE);
+		
+	    outputPortCfgExt = new OutputPortConfigurationExtender(this, "output port configurer");
 	}
 
 	/**
@@ -55,9 +56,16 @@ public class If extends AbstractDataMessageTransformer {
         return MessageUtils.mergeAll(cache);
 	}
 	
+	/**
+	 * The If actor will send an outgoing message to a specific output port, as defined in the actor's "routing expression".
+	 * It is indeed a special kind of Message Router.
+	 * <br/>
+	 * When the expression can not find a matching port, or when it comes up with a name of a non-existing port,
+	 * the message is sent out via the default output port.
+	 */
 	protected void sendOutputMsg(Port port, ManagedMessage message) throws ProcessingException, IllegalArgumentException {
 		
-		//boolean nothingFired = true;
+		boolean nothingFired = true;
 		
 		if (port == output && MessageUtils.isDataMessage(message) && expressions.getExpression()!=null && !"".equals(expressions.getExpression())) {
 			
@@ -65,15 +73,12 @@ public class If extends AbstractDataMessageTransformer {
 			try {
 				final ExpressionContainer cont = (ExpressionContainer)expressions.getBeanFromValue(ExpressionContainer.class);
 			    
-				final List channels = port.connectedPortList();
-			    for (int channel = 0; channel < channels.size(); channel++) {
-					
-			    	final NamedObj       dest = ((NamedObj)channels.get(channel)).getContainer();
-			    	final ExpressionBean bean = cont.getBean(dest.getName());
+				List<Port> outputPorts = outputPortCfgExt.getOutputPorts();
+				for (Port outputPort : outputPorts) {
+			    	final ExpressionBean bean = cont.getBean(outputPort.getName());
 			    	if (bean!=null && MessageUtils.isExpressionTrue(bean.getExpression(), message)) {
-			    		//nothingFired = false;
-				    	Token token = new PasserelleToken(message);
-				    	port.send(channel, token);
+			    		super.sendOutputMsg(outputPort,message);
+			    		nothingFired = false;
 			    	}
 				}
 			    
@@ -83,9 +88,9 @@ public class If extends AbstractDataMessageTransformer {
 			}
 		}
 
-//		if (nothingFired) {
-//		    super.sendOutputMsg(port,message);
-//		}
+		if (nothingFired) {
+		    super.sendOutputMsg(port,message);
+		}
 	}
 
 	@Override

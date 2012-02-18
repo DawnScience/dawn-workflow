@@ -22,6 +22,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
+import com.isencia.passerelle.core.Port;
+
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.gda.richbeans.components.selector.VerticalListEditor;
 import uk.ac.gda.richbeans.dialog.BeanDialog;
@@ -34,11 +36,11 @@ public class ExpressionDialog extends BeanDialog {
 	/**
 	 * Used to check expressions entered.
 	 */
-	private AbstractDataMessageTransformer parent;
+	private If parent;
 	
 	protected ExpressionDialog(Shell parentShell, NamedObj container) {
 		super(parentShell);
-		this.parent = (AbstractDataMessageTransformer)container;
+		this.parent = (If)container;
 	}
 
 	public void setNameLabel(String nameParameter) {
@@ -57,12 +59,12 @@ public class ExpressionDialog extends BeanDialog {
 		expressions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		expressions.setMinItems(0);
 		expressions.setMaxItems(25);
-		expressions.setDefaultName(getActorName());
+		expressions.setDefaultName(getOutputPortName());
 		expressions.setEditorClass(ExpressionBean.class);
 		expressions.setEditorUI(createExpressionComposite());
-		expressions.setNameField("actorName");
+		expressions.setNameField("outputPortName");
 		expressions.setAdditionalFields(new String[]{"expression"});
-		expressions.setColumnWidths(new int[]{100, 300});
+		expressions.setColumnWidths(new int[]{150, 300});
 		expressions.setListHeight(150);
 		
 		GridUtils.setVisibleAndLayout(expressions, true);
@@ -94,10 +96,10 @@ public class ExpressionDialog extends BeanDialog {
 	}
 
 
-	private String getActorName() {
-		final List connections = parent.output.connectedPortList();
-		if (connections!=null&&!connections.isEmpty()) return ((NamedObj)connections.get(0)).getContainer().getName();
-		return "actor_name";
+	private String getOutputPortName() {
+		final List<Port> outputPorts = parent.outputPortCfgExt.getOutputPorts();
+		if (outputPorts!=null && !outputPorts.isEmpty()) return (outputPorts.get(0).getName());
+		return "outputPort";
 	}
 
 	public VerticalListEditor getExpressions() {
@@ -114,12 +116,16 @@ public class ExpressionDialog extends BeanDialog {
 	public void setBean(final Object bean) {
 		
 		final ExpressionContainer eBean = (ExpressionContainer)bean;
-		final List connections = parent.output.connectedPortList();
 
-		if (connections!=null && !connections.isEmpty()) {
-	        for (NamedObj obj : (List<NamedObj>)connections) {
-	        	final String name = obj.getContainer().getName();
-				if (!eBean.containsActor(name)) {
+		// First item the default output port
+		eBean.addExpression(new ExpressionBean("output", "true"));
+
+		// Then the defined output ports
+		List<Port> outputPorts = parent.outputPortCfgExt.getOutputPorts();
+		if (outputPorts!=null && !outputPorts.isEmpty()) {
+	        for (Port port : (List<Port>)outputPorts) {
+	        	final String name = port.getName();
+				if (!eBean.containsOutputPort(name)) {
 					eBean.addExpression(new ExpressionBean(name, "true"));
 				}
 			}

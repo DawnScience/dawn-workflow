@@ -58,7 +58,7 @@ public class ExpressionContainer {
 		return true;
 	}
 
-	public boolean containsActor(String name) {
+	public boolean containsOutputPort(String name) {
 		return getBean(name)!=null;
 	}
 
@@ -71,7 +71,7 @@ public class ExpressionContainer {
 		if (name==null)        return null;
 		if (expressions==null) return null;
 		for (ExpressionBean b : expressions) {
-			if (name.equals(b.getActorName())) return b;
+			if (name.equals(b.getOutputPortName())) return b;
 		}
 		return null;
 	}
@@ -87,7 +87,7 @@ public class ExpressionContainer {
 			buf.append(b.getExpression());
 			buf.append(")");
 			buf.append("{");
-			buf.append(b.getActorName());
+			buf.append(b.getOutputPortName());
 			buf.append("}   ");
 		}
 		return buf.toString();
