@@ -10,21 +10,19 @@
 package org.dawb.passerelle.actors.flow;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.dawb.common.ui.util.GridUtils;
-import org.dawb.passerelle.common.message.IVariable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
-import com.isencia.passerelle.core.Port;
-
 import ptolemy.kernel.util.NamedObj;
+
+
 import uk.ac.gda.richbeans.components.selector.VerticalListEditor;
 import uk.ac.gda.richbeans.dialog.BeanDialog;
 
@@ -84,39 +82,54 @@ public class ExpressionDialog extends BeanDialog {
 	}
 	
 	public Object getBean() {
-		List<String> names = new ArrayList<String>();
 		ExpressionContainer eBean = (ExpressionContainer)super.getBean();
+		if (eBean.getExpressions().size() == 0) {
+			// All output port removed from the expression container! Force expression output = true
+			// TODO: Popup window
+			ExpressionBean expression = new ExpressionBean();
+			expression.setExpression("true");
+			expression.setOutputPortName("output");
+			eBean.addExpression(expression);
+		}
+		// Check that a output port with the name "output" exists
+		int index = 0;
+		boolean existOutput = false;
+		ArrayList<String> listOutputPortNames = new ArrayList<String>();
 		for (ExpressionBean expression : eBean.getExpressions()) {
-			String outputPortName = expression.getOutputPortName();
-			names.add(outputPortName);
+			listOutputPortNames.add(expression.getOutputPortName());
+			if (expression.getOutputPortName().equals("output")) {
+				existOutput = true;
+			}
+			index = index + 1;
 		}
-		String [] listNames = new String[names.size()];
-		for (int i=0; i<names.size(); i++) {
-			listNames[i] = names.get(i);
+		// Create a unique list (see http://www.theeggeadventure.com/wikimedia/index.php/Java_Unique_List)
+		Set<String> set = new HashSet<String>(listOutputPortNames);
+		ArrayList<String> uniqueListOutputPortNames = new ArrayList<String>(set);
+		// We must have at least one output port name = "output"! Warn the user if not
+		if (!existOutput) {
+			// TODO: Popup window
+			for (ExpressionBean expression : eBean.getExpressions()) {
+				if (expression.getOutputPortName().equals(uniqueListOutputPortNames.get(0)))
+					expression.setOutputPortName("output");
+			}
+			uniqueListOutputPortNames.set(0, "output");
 		}
-		parent.outputPortSetterBuilder.setOutputPortNames(listNames);
+		// Retrieve a list of all output port names except the name "output"
+		if  (uniqueListOutputPortNames.size() > 1) {
+			String[] listNames = new String[uniqueListOutputPortNames.size() - 1];
+			int index2 = 0;
+			for (String name : uniqueListOutputPortNames) {
+				if (!name.equals("output")) {
+					listNames[index2] = name;
+					index2 = index2+1;
+				} 
+			}
+			parent.outputPortSetterBuilder.setOutputPortNames(listNames);
+		} else {
+			parent.outputPortSetterBuilder.setOutputPortNames(new String[] {} );
+		}
 		return eBean;
 	}
 
 		
-		
-		
-	public void setBean(final Object bean) {
-		
-		final ExpressionContainer eBean = (ExpressionContainer)bean;
-
-		// The list of the defined output ports
-		List<Port> outputPorts = parent.outputPortSetterBuilder.getOutputPorts();
-		if (outputPorts!=null && !outputPorts.isEmpty()) {
-	        for (Port port : (List<Port>)outputPorts) {
-	        	final String name = port.getName();
-				if (!eBean.containsOutputPort(name)) {
-					eBean.addExpression(new ExpressionBean(name, "true"));
-				}
-			}
-		}
-		
-		super.setBean(eBean);
-	}
-
 }

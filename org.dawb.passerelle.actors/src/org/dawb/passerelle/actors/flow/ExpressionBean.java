@@ -11,8 +11,8 @@ package org.dawb.passerelle.actors.flow;
 
 public class ExpressionBean {
 
-	private String outputPortName;
-	private String expression;
+	private String outputPortName = "output";
+	private String expression = "true";
 	
 	public ExpressionBean() {}
 	public ExpressionBean(String name, String expr) {

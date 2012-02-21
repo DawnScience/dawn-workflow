@@ -42,11 +42,10 @@ public class If extends AbstractDataMessageTransformer {
 		
 		expressions = new ExpressionParameter(this, "Expressions");
 		registerConfigurableParameter(expressions);
-		
+				
 		memoryManagementParam.setVisibility(Settable.NONE);
 		dataSetNaming.setVisibility(Settable.NONE);
-		// Remove default output port
-		getPort("output").setContainer(null);
+		
 		// The OutputPortSetterBuilder will help us to dynamically create new output ports
 		outputPortSetterBuilder = new OutputPortSetterBuilder(this, "output port setter builder");
 	}
@@ -67,27 +66,31 @@ public class If extends AbstractDataMessageTransformer {
 	 * the message is sent out via the default output port.
 	 */
 	protected void sendOutputMsg(Port port, ManagedMessage message) throws ProcessingException, IllegalArgumentException {
-		
-		boolean nothingFired = true;
-		
+		String expression, outputPortName;
 		if (port == output && MessageUtils.isDataMessage(message) && expressions.getExpression()!=null && !"".equals(expressions.getExpression())) {
 			
 			// Process if clauses and only dispatch to true ones.
 			try {
 				final ExpressionContainer cont = (ExpressionContainer)expressions.getBeanFromValue(ExpressionContainer.class);
 			    
-				for (ExpressionBean expression : cont.getExpressions() ) {
-					if (MessageUtils.isExpressionTrue(expression.getExpression(), message)) {
-						for (Object outputPort : this.portList()) {
-							if (((Port)outputPort).getName().equals(expression.getOutputPortName())) {
-								super.sendOutputMsg(((Port)outputPort),message);
+				for (ExpressionBean expressionBean : cont.getExpressions() ) {
+					expression = expressionBean.getExpression();
+					if (!expression.equals("false")) {
+						if (expression.equals("true") || MessageUtils.isExpressionTrue(expression, message)) {
+							outputPortName = expressionBean.getOutputPortName();
+							if (((Port)output).getName().equals(outputPortName)) {
+								super.sendOutputMsg(((Port)output),message);
+							} else {
+								for (Object outputPort : this.portList()) {
+									if (((Port)outputPort).getName().equals(outputPortName)) {
+										super.sendOutputMsg(((Port)outputPort),message);
+									}
+								}
 							}
 						}
 					}
 				}
-				
-			    
-			    
+
 			} catch (Exception e) {
 				throw createDataMessageException("Cannot decode bean from parameter!", e);
 			}
