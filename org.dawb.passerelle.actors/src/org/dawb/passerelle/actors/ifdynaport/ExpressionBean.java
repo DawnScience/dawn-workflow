@@ -7,23 +7,23 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */ 
-package org.dawb.passerelle.actors.flow;
+package org.dawb.passerelle.actors.ifdynaport;
 
 public class ExpressionBean {
 
-	private String actorName;
-	private String expression;
+	private String outputPortName = "output";
+	private String expression = "true";
 	
 	public ExpressionBean() {}
 	public ExpressionBean(String name, String expr) {
-		setActorName(name);
+		setOutputPortName(name);
 		setExpression(expr);
 	}
-	public String getActorName() {
-		return actorName;
+	public String getOutputPortName() {
+		return outputPortName;
 	}
-	public void setActorName(String actorName) {
-		this.actorName = actorName;
+	public void setOutputPortName(String outputPortName) {
+		this.outputPortName = outputPortName;
 	}
 	public String getExpression() {
 		return expression;
@@ -36,7 +36,7 @@ public class ExpressionBean {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((actorName == null) ? 0 : actorName.hashCode());
+				+ ((outputPortName == null) ? 0 : outputPortName.hashCode());
 		result = prime * result
 				+ ((expression == null) ? 0 : expression.hashCode());
 		return result;
@@ -50,10 +50,10 @@ public class ExpressionBean {
 		if (getClass() != obj.getClass())
 			return false;
 		ExpressionBean other = (ExpressionBean) obj;
-		if (actorName == null) {
-			if (other.actorName != null)
+		if (outputPortName == null) {
+			if (other.outputPortName != null)
 				return false;
-		} else if (!actorName.equals(other.actorName))
+		} else if (!outputPortName.equals(other.outputPortName))
 			return false;
 		if (expression == null) {
 			if (other.expression != null)

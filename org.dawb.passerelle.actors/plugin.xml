@@ -202,10 +202,18 @@
       </actor>
       <actor
             class="org.dawb.passerelle.actors.flow.If"
+            figureCustomizer="org.dawb.passerelle.actors.data.MathCustomizer"
             group="org.dawb.passerelle.actors.actorgroup.maths"
             icon="icons/if.png"
             id="org.dawb.passerelle.actors.if"
             name="If">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.ifdynaport.If"
+            group="org.dawb.passerelle.actors.actorgroup.maths"
+            icon="icons/if.png"
+            id="org.dawb.passerelle.actors.ifdynaport"
+            name="IfDynaPort">
       </actor>
       <actor
             class="org.dawb.passerelle.actors.data.Expression"

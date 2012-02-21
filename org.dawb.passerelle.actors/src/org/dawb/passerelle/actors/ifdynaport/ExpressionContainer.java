@@ -7,7 +7,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */ 
-package org.dawb.passerelle.actors.flow;
+package org.dawb.passerelle.actors.ifdynaport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +18,11 @@ public class ExpressionContainer {
 	
 	public ExpressionContainer() {
 		expressions = new ArrayList<ExpressionBean>();
+		// Add default expression output = true
+		ExpressionBean expression = new ExpressionBean();
+		expression.setExpression("true");
+		expression.setOutputPortName("output");
+		this.addExpression(expression);
 	}
 	
 	public void clear() {
@@ -58,7 +63,7 @@ public class ExpressionContainer {
 		return true;
 	}
 
-	public boolean containsActor(String name) {
+	public boolean containsOutputPort(String name) {
 		return getBean(name)!=null;
 	}
 
@@ -71,7 +76,7 @@ public class ExpressionContainer {
 		if (name==null)        return null;
 		if (expressions==null) return null;
 		for (ExpressionBean b : expressions) {
-			if (name.equals(b.getActorName())) return b;
+			if (name.equals(b.getOutputPortName())) return b;
 		}
 		return null;
 	}
@@ -87,7 +92,7 @@ public class ExpressionContainer {
 			buf.append(b.getExpression());
 			buf.append(")");
 			buf.append("{");
-			buf.append(b.getActorName());
+			buf.append(b.getOutputPortName());
 			buf.append("}   ");
 		}
 		return buf.toString();

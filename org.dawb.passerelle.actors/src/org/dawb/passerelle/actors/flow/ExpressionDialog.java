@@ -9,11 +9,13 @@
  */ 
 package org.dawb.passerelle.actors.flow;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.dawb.common.ui.util.GridUtils;
+import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
+import org.dawb.passerelle.common.message.IVariable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -21,23 +23,22 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import ptolemy.kernel.util.NamedObj;
-
-
 import uk.ac.gda.richbeans.components.selector.VerticalListEditor;
 import uk.ac.gda.richbeans.dialog.BeanDialog;
 
 public class ExpressionDialog extends BeanDialog {
 
 	private VerticalListEditor expressions;
+	private boolean automaticExpressionCreation=true;
 	
 	/**
 	 * Used to check expressions entered.
 	 */
-	private If parent;
+	private AbstractDataMessageTransformer parent;
 	
 	protected ExpressionDialog(Shell parentShell, NamedObj container) {
 		super(parentShell);
-		this.parent = (If)container;
+		this.parent = (AbstractDataMessageTransformer)container;
 	}
 
 	public void setNameLabel(String nameParameter) {
@@ -56,12 +57,12 @@ public class ExpressionDialog extends BeanDialog {
 		expressions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		expressions.setMinItems(0);
 		expressions.setMaxItems(25);
-		expressions.setDefaultName("");
+		expressions.setDefaultName(getActorName());
 		expressions.setEditorClass(ExpressionBean.class);
-		expressions.setEditorUI(new ExpressionComposite(expressions, SWT.NONE));
-		expressions.setNameField("outputPortName");
+		expressions.setEditorUI(createExpressionComposite());
+		expressions.setNameField("actorName");
 		expressions.setAdditionalFields(new String[]{"expression"});
-		expressions.setColumnWidths(new int[]{150, 300});
+		expressions.setColumnWidths(new int[]{100, 300});
 		expressions.setListHeight(150);
 		
 		GridUtils.setVisibleAndLayout(expressions, true);
@@ -69,6 +70,35 @@ public class ExpressionDialog extends BeanDialog {
 		return main;
 	}
 
+	private Object createExpressionComposite() {
+		
+		final ExpressionComposite expressionComposite = new ExpressionComposite(expressions, SWT.NONE);
+		
+		if (automaticExpressionCreation) {
+			final Map<String,Object> values = new HashMap<String,Object>(7);
+			final List<IVariable>    vars   = parent.getInputVariables();
+			for (IVariable var : vars) {
+				Object value = var.getExampleValue();
+				if (value instanceof String) {
+					try {
+						value = Double.parseDouble((String)value);
+					} catch (Exception igonred) {
+						// Nothing
+					}
+				}
+				values.put(var.getVariableName(), value);
+			}
+			expressionComposite.setExpressionVariables(values);
+		}
+		return expressionComposite;
+	}
+
+
+	private String getActorName() {
+		final List connections = parent.output.connectedPortList();
+		if (connections!=null&&!connections.isEmpty()) return ((NamedObj)connections.get(0)).getContainer().getName();
+		return "actor_name";
+	}
 
 	public VerticalListEditor getExpressions() {
 		return expressions;
@@ -81,55 +111,28 @@ public class ExpressionDialog extends BeanDialog {
         return ret;
 	}
 	
-	public Object getBean() {
-		ExpressionContainer eBean = (ExpressionContainer)super.getBean();
-		if (eBean.getExpressions().size() == 0) {
-			// All output port removed from the expression container! Force expression output = true
-			// TODO: Popup window
-			ExpressionBean expression = new ExpressionBean();
-			expression.setExpression("true");
-			expression.setOutputPortName("output");
-			eBean.addExpression(expression);
-		}
-		// Check that a output port with the name "output" exists
-		int index = 0;
-		boolean existOutput = false;
-		ArrayList<String> listOutputPortNames = new ArrayList<String>();
-		for (ExpressionBean expression : eBean.getExpressions()) {
-			listOutputPortNames.add(expression.getOutputPortName());
-			if (expression.getOutputPortName().equals("output")) {
-				existOutput = true;
+	public void setBean(final Object bean) {
+		
+		final ExpressionContainer eBean = (ExpressionContainer)bean;
+		final List connections = parent.output.connectedPortList();
+
+		if (connections!=null && !connections.isEmpty()) {
+	        for (NamedObj obj : (List<NamedObj>)connections) {
+	        	final String name = obj.getContainer().getName();
+				if (!eBean.containsActor(name)) {
+					eBean.addExpression(new ExpressionBean(name, "true"));
+				}
 			}
-			index = index + 1;
 		}
-		// Create a unique list (see http://www.theeggeadventure.com/wikimedia/index.php/Java_Unique_List)
-		Set<String> set = new HashSet<String>(listOutputPortNames);
-		ArrayList<String> uniqueListOutputPortNames = new ArrayList<String>(set);
-		// We must have at least one output port name = "output"! Warn the user if not
-		if (!existOutput) {
-			// TODO: Popup window
-			for (ExpressionBean expression : eBean.getExpressions()) {
-				if (expression.getOutputPortName().equals(uniqueListOutputPortNames.get(0)))
-					expression.setOutputPortName("output");
-			}
-			uniqueListOutputPortNames.set(0, "output");
-		}
-		// Retrieve a list of all output port names except the name "output"
-		if  (uniqueListOutputPortNames.size() > 1) {
-			String[] listNames = new String[uniqueListOutputPortNames.size() - 1];
-			int index2 = 0;
-			for (String name : uniqueListOutputPortNames) {
-				if (!name.equals("output")) {
-					listNames[index2] = name;
-					index2 = index2+1;
-				} 
-			}
-			parent.outputPortSetterBuilder.setOutputPortNames(listNames);
-		} else {
-			parent.outputPortSetterBuilder.setOutputPortNames(new String[] {} );
-		}
-		return eBean;
+		
+		super.setBean(eBean);
 	}
 
-		
+	public boolean isAutomaticExpressionCreation() {
+		return automaticExpressionCreation;
+	}
+
+	public void setAutomaticExpressionCreation(boolean automaticExpressionCreation) {
+		this.automaticExpressionCreation = automaticExpressionCreation;
+	}
 }

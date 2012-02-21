@@ -39,6 +39,7 @@ public class Expression extends AbstractDataMessageTransformer {
 		
 		expressions = new ExpressionParameter(this, "Expressions");
 		expressions.setNameParameter("Expression Result");
+		expressions.setAutomaticExpressionCreation(false);
 		registerConfigurableParameter(expressions);
 		
 		memoryManagementParam.setVisibility(Settable.NONE);
@@ -64,7 +65,7 @@ public class Expression extends AbstractDataMessageTransformer {
 
 			final List<ExpressionBean> beans = cont.getExpressions();
 			for (ExpressionBean eb : beans) {
-				ret.putScalar(eb.getOutputPortName(), String.valueOf(MessageUtils.evaluateExpression(eb.getExpression(), input)));
+				ret.putScalar(eb.getActorName(), String.valueOf(MessageUtils.evaluateExpression(eb.getExpression(), input)));
 			}
 			
 			return ret;
