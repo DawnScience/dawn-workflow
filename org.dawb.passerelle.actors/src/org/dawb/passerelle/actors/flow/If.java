@@ -21,7 +21,7 @@ import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
 
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.actor.dynaport.OutputPortConfigurationExtender;
+import com.isencia.passerelle.actor.dynaport.OutputPortSetterBuilder;
 import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.message.ManagedMessage;
 
@@ -33,7 +33,8 @@ public class If extends AbstractDataMessageTransformer {
 	private static final long serialVersionUID = 626830385195273355L;
 
 	public ExpressionParameter expressions;
-	public OutputPortConfigurationExtender outputPortCfgExt;
+
+	public OutputPortSetterBuilder outputPortSetterBuilder;
 	
 	public If(final CompositeEntity container, final String name) throws NameDuplicationException, IllegalActionException {
 		
@@ -44,8 +45,10 @@ public class If extends AbstractDataMessageTransformer {
 		
 		memoryManagementParam.setVisibility(Settable.NONE);
 		dataSetNaming.setVisibility(Settable.NONE);
-		
-	    outputPortCfgExt = new OutputPortConfigurationExtender(this, "output port configurer");
+		// Remove default output port
+		getPort("output").setContainer(null);
+		// The OutputPortSetterBuilder will help us to dynamically create new output ports
+		outputPortSetterBuilder = new OutputPortSetterBuilder(this, "output port setter builder");
 	}
 
 	/**
@@ -69,18 +72,20 @@ public class If extends AbstractDataMessageTransformer {
 		
 		if (port == output && MessageUtils.isDataMessage(message) && expressions.getExpression()!=null && !"".equals(expressions.getExpression())) {
 			
-			// Process if clauses and only dispatch to true or null ones.
+			// Process if clauses and only dispatch to true ones.
 			try {
 				final ExpressionContainer cont = (ExpressionContainer)expressions.getBeanFromValue(ExpressionContainer.class);
 			    
-				List<Port> outputPorts = outputPortCfgExt.getOutputPorts();
-				for (Port outputPort : outputPorts) {
-			    	final ExpressionBean bean = cont.getBean(outputPort.getName());
-			    	if (bean!=null && MessageUtils.isExpressionTrue(bean.getExpression(), message)) {
-			    		super.sendOutputMsg(outputPort,message);
-			    		nothingFired = false;
-			    	}
+				for (ExpressionBean expression : cont.getExpressions() ) {
+					if (MessageUtils.isExpressionTrue(expression.getExpression(), message)) {
+						for (Object outputPort : this.portList()) {
+							if (((Port)outputPort).getName().equals(expression.getOutputPortName())) {
+								super.sendOutputMsg(((Port)outputPort),message);
+							}
+						}
+					}
 				}
+				
 			    
 			    
 			} catch (Exception e) {
@@ -88,9 +93,6 @@ public class If extends AbstractDataMessageTransformer {
 			}
 		}
 
-		if (nothingFired) {
-		    super.sendOutputMsg(port,message);
-		}
 	}
 
 	@Override

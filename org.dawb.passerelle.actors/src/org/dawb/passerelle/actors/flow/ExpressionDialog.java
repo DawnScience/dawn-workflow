@@ -9,12 +9,12 @@
  */ 
 package org.dawb.passerelle.actors.flow;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.dawb.common.ui.util.GridUtils;
-import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.IVariable;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -31,7 +31,6 @@ import uk.ac.gda.richbeans.dialog.BeanDialog;
 public class ExpressionDialog extends BeanDialog {
 
 	private VerticalListEditor expressions;
-	private boolean automaticExpressionCreation=true;
 	
 	/**
 	 * Used to check expressions entered.
@@ -59,9 +58,9 @@ public class ExpressionDialog extends BeanDialog {
 		expressions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		expressions.setMinItems(0);
 		expressions.setMaxItems(25);
-		expressions.setDefaultName(getOutputPortName());
+		expressions.setDefaultName("");
 		expressions.setEditorClass(ExpressionBean.class);
-		expressions.setEditorUI(createExpressionComposite());
+		expressions.setEditorUI(new ExpressionComposite(expressions, SWT.NONE));
 		expressions.setNameField("outputPortName");
 		expressions.setAdditionalFields(new String[]{"expression"});
 		expressions.setColumnWidths(new int[]{150, 300});
@@ -72,35 +71,6 @@ public class ExpressionDialog extends BeanDialog {
 		return main;
 	}
 
-	private Object createExpressionComposite() {
-		
-		final ExpressionComposite expressionComposite = new ExpressionComposite(expressions, SWT.NONE);
-		
-		if (automaticExpressionCreation) {
-			final Map<String,Object> values = new HashMap<String,Object>(7);
-			final List<IVariable>    vars   = parent.getInputVariables();
-			for (IVariable var : vars) {
-				Object value = var.getExampleValue();
-				if (value instanceof String) {
-					try {
-						value = Double.parseDouble((String)value);
-					} catch (Exception igonred) {
-						// Nothing
-					}
-				}
-				values.put(var.getVariableName(), value);
-			}
-			expressionComposite.setExpressionVariables(values);
-		}
-		return expressionComposite;
-	}
-
-
-	private String getOutputPortName() {
-		final List<Port> outputPorts = parent.outputPortCfgExt.getOutputPorts();
-		if (outputPorts!=null && !outputPorts.isEmpty()) return (outputPorts.get(0).getName());
-		return "outputPort";
-	}
 
 	public VerticalListEditor getExpressions() {
 		return expressions;
@@ -113,15 +83,30 @@ public class ExpressionDialog extends BeanDialog {
         return ret;
 	}
 	
+	public Object getBean() {
+		List<String> names = new ArrayList<String>();
+		ExpressionContainer eBean = (ExpressionContainer)super.getBean();
+		for (ExpressionBean expression : eBean.getExpressions()) {
+			String outputPortName = expression.getOutputPortName();
+			names.add(outputPortName);
+		}
+		String [] listNames = new String[names.size()];
+		for (int i=0; i<names.size(); i++) {
+			listNames[i] = names.get(i);
+		}
+		parent.outputPortSetterBuilder.setOutputPortNames(listNames);
+		return eBean;
+	}
+
+		
+		
+		
 	public void setBean(final Object bean) {
 		
 		final ExpressionContainer eBean = (ExpressionContainer)bean;
 
-		// First item the default output port
-		eBean.addExpression(new ExpressionBean("output", "true"));
-
-		// Then the defined output ports
-		List<Port> outputPorts = parent.outputPortCfgExt.getOutputPorts();
+		// The list of the defined output ports
+		List<Port> outputPorts = parent.outputPortSetterBuilder.getOutputPorts();
 		if (outputPorts!=null && !outputPorts.isEmpty()) {
 	        for (Port port : (List<Port>)outputPorts) {
 	        	final String name = port.getName();
@@ -134,11 +119,4 @@ public class ExpressionDialog extends BeanDialog {
 		super.setBean(eBean);
 	}
 
-	public boolean isAutomaticExpressionCreation() {
-		return automaticExpressionCreation;
-	}
-
-	public void setAutomaticExpressionCreation(boolean automaticExpressionCreation) {
-		this.automaticExpressionCreation = automaticExpressionCreation;
-	}
 }

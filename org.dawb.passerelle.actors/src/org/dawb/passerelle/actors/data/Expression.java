@@ -39,7 +39,6 @@ public class Expression extends AbstractDataMessageTransformer {
 		
 		expressions = new ExpressionParameter(this, "Expressions");
 		expressions.setNameParameter("Expression Result");
-		expressions.setAutomaticExpressionCreation(false);
 		registerConfigurableParameter(expressions);
 		
 		memoryManagementParam.setVisibility(Settable.NONE);

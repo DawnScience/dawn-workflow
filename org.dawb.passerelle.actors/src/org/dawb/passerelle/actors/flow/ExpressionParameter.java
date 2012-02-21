@@ -25,13 +25,10 @@ import ptolemy.kernel.util.NamedObj;
 public class ExpressionParameter extends CellEditorParameter {
 	
 	private String  nameParameter;
-	private boolean automaticExpressionCreation=true;
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 8999174318856900808L;
-	
-	private final static Logger logger = LoggerFactory.getLogger(ExpressionParameter.class);
 	
 	public ExpressionParameter(NamedObj container, String name) throws IllegalActionException, NameDuplicationException {
 		super(container, name);
@@ -45,7 +42,6 @@ public class ExpressionParameter extends CellEditorParameter {
 			protected Object openDialogBox(Control cellEditorWindow) {
 								
 				final ExpressionDialog dialog = new ExpressionDialog(cellEditorWindow.getShell(), getContainer()); // extends BeanDialog
-				dialog.setAutomaticExpressionCreation(automaticExpressionCreation);
 				dialog.create();
 				if (nameParameter!=null) {
 					dialog.setNameLabel(nameParameter);
@@ -85,13 +81,5 @@ public class ExpressionParameter extends CellEditorParameter {
 	public void setNameParameter(String string) {
 		nameParameter = string;
 	}
-
-	public boolean isAutomaticExpressionCreation() {
-		return automaticExpressionCreation;
-	}
-
-	public void setAutomaticExpressionCreation(boolean automaticExpressionCreation) {
-		this.automaticExpressionCreation = automaticExpressionCreation;
-	}	
 
 }
