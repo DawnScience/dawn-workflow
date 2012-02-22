@@ -293,7 +293,9 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 			
 		};
 		uiUpdate.setSystem(true);
-		uiUpdate.setUser(true);
+		uiUpdate.setUser(false); // Important do NOT show user progress here - a dialog continually pops up.
+		                         // In fact why even use a job here? Little work is done in it and then it goes back
+		                         // to the display thread.
 		uiUpdate.setPriority(Job.SHORT);
 		uiUpdate.schedule();
 		
