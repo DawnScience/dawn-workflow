@@ -15,9 +15,12 @@ import org.dawb.workbench.jmx.IRemoteWorkbench;
 
 public class Py4jServiceProvider implements IRemoteServiceProvider {
 
+	private GatewayServerWorkflow gatewayServerWorkflow;
 	private Py4jWorkflowCallback py4jWorkflowCallback;
 
-	public Py4jServiceProvider(Py4jWorkflowCallback thePy4jWorkflowCallback) {
+	public Py4jServiceProvider(GatewayServerWorkflow theGatewayServerWorkflow, 
+			Py4jWorkflowCallback thePy4jWorkflowCallback) {
+		gatewayServerWorkflow = theGatewayServerWorkflow;
 		py4jWorkflowCallback = thePy4jWorkflowCallback;
 	}
 
@@ -33,30 +36,30 @@ public class Py4jServiceProvider implements IRemoteServiceProvider {
 
 	@Override
 	public String getWorkspacePath() {
-		return "/users/svensson/debug_workspaces";
+		return gatewayServerWorkflow.getWorkspacePath();
 	}
 
 	@Override
 	public String getModelPath() {
-		return "/users/svensson/dawb_workspace/workflows/examples/loop_example.moml";
+		return gatewayServerWorkflow.getModelPath();
 	}
 
 	@Override
 	public String getInstallationPath() {
 		// Executable name of your eclipse worflow application, for instance dawb or sda.
-		return "/opt/dawb/dawb";
+		return gatewayServerWorkflow.getInstallationPath();
 	}
 
 	@Override
 	public boolean getTangoSpecMockMode() {
 		// To test a TANGO Spec connection set to false
-		return false;
+		return gatewayServerWorkflow.getTangoSpecMockMode();
 	}
 
 	@Override
 	public boolean getServiceTerminate() {
 		// Set to false to not have Eclipse to open a trace message in a new window
-		return true;
+		return gatewayServerWorkflow.getServiceTerminate();
 	}
 
 }

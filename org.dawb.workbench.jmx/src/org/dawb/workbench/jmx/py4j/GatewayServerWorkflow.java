@@ -29,7 +29,19 @@ public class GatewayServerWorkflow {
 	private static Logger logger;
 
 	private IWorkflowService service;
+
 	private Process workflow;
+
+	private String workspacePath;
+
+
+	private String modelPath;
+
+	private String installationPath;
+
+	private boolean tangoSpecMode;
+
+	private boolean serviceTerminate;
 
 	/**
 	 * Configure log4j
@@ -51,7 +63,6 @@ public class GatewayServerWorkflow {
 	public void setPy4jWorkflowCallback(Py4jWorkflowCallback thePy4jWorkflowCallback) {
 		System.out.println("Setting the service provider!");
 		py4jWorkflowCallback = thePy4jWorkflowCallback;
-		//System.out.println(remoteServiceProvider);
 	}
 	
 	/**
@@ -60,7 +71,7 @@ public class GatewayServerWorkflow {
 	public void runWorkflow() throws Exception {
 		
 		logger.debug("Starting the workflow!");
-		service  = WorkflowFactory.createWorkflowService(new Py4jServiceProvider(py4jWorkflowCallback));
+		service  = WorkflowFactory.createWorkflowService(new Py4jServiceProvider(this, py4jWorkflowCallback));
 		workflow = service.start();
 	}
 	
@@ -97,6 +108,50 @@ public class GatewayServerWorkflow {
         server.start();
         logger.info("Gateway server started.");
     }
+
+
+	public void setWorkspacePath(String workspacePath) {
+		this.workspacePath = workspacePath;
+	}
+
+
+	public void setModelPath(String modelPath) {
+		this.modelPath = modelPath;
+	}
+
+
+	public void setInstallationPath(String installationPath) {
+		this.installationPath = installationPath;
+	}
+
+
+	public void setServiceTerminate(boolean serviceTerminate) {
+		this.serviceTerminate = serviceTerminate;
+	}
+
+	public String getWorkspacePath() {
+		return workspacePath;
+	}
+
+
+	public String getModelPath() {
+		return modelPath;
+	}
+
+
+	public String getInstallationPath() {
+		return installationPath;
+	}
+
+
+	public boolean getTangoSpecMockMode() {
+		return tangoSpecMode;
+	}
+
+
+	public boolean getServiceTerminate() {
+		return serviceTerminate;
+	}
 
 	
 	
