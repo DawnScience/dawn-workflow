@@ -18,6 +18,7 @@ import org.dawb.common.util.io.IFileUtils;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -177,7 +178,7 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 		}
 		if (file==null) {
 			// Path exists but file is null...
-			path = ModelUtils.substitute(path, this);
+			path = ParameterUtils.substitute(path, this);
 			final IProject project= getProject();
 			final String     srcP = IFileUtils.getPathWithoutProject(path.substring(0,path.lastIndexOf('/')));
 			IContainer src  = (IContainer)project.findMember(srcP);
