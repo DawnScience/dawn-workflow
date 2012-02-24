@@ -647,7 +647,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		if (isPathRelative) {
 			String sourcePath = this.path.getExpression();
 			try {
-				sourcePath = ModelUtils.substitute(sourcePath, this);
+				sourcePath = ParameterUtils.substitute(sourcePath, this);
 			} catch (Exception e) {
 				logger.error("Cannot ret resource "+sourcePath, e);
 				return null;
