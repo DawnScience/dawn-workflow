@@ -89,8 +89,7 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} 			
-		final Map<String,String> ret = new HashMap<String,String>(3);
-		ret.put("x", "1");
+		final Map<String,String> ret = bean.getScalarValues();
 		return ret;
 	}
 
@@ -102,7 +101,7 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 		
 		logger.info("Select Actor Requested");
 		logger.info("Actor "+actorName+"; isSelected "+isSelected);
-		if ((actorName != null) && (py4jWorkflowCallback != null))
+		if ((actorName != null) && (py4jWorkflowCallback != null) && isSelected)
 			py4jWorkflowCallback.setActorSelected(actorName);
 		return true;
 	}

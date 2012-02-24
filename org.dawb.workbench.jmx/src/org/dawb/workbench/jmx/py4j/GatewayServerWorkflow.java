@@ -10,9 +10,6 @@
 package org.dawb.workbench.jmx.py4j;
 
 
-import java.net.URL;
-import org.dawb.workbench.jmx.IRemoteServiceProvider;
-import org.dawb.workbench.jmx.example.WorkflowExample;
 import org.dawb.workbench.jmx.service.IWorkflowService;
 import org.dawb.workbench.jmx.service.WorkflowFactory;
 import org.slf4j.Logger;
@@ -21,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import py4j.GatewayServer;
 
 public class GatewayServerWorkflow {
-
-	private IRemoteServiceProvider remoteServiceProvider = null;
 
 	private Py4jWorkflowCallback py4jWorkflowCallback;
 	
@@ -47,13 +42,8 @@ public class GatewayServerWorkflow {
 	 * Configure log4j
 	 */
 	private static final void createLoggingProperties() {
-		
-		if (System.getProperty("logback.configurationFile")==null) {
-			final URL url = WorkflowExample.class.getResource("logback.xml");
-			System.setProperty("logback.configurationFile", url.getFile());
-		}
-		
-		logger = LoggerFactory.getLogger(WorkflowExample.class);
+				
+		logger = LoggerFactory.getLogger(GatewayServerWorkflow.class);
 	}
 
 	
@@ -70,7 +60,7 @@ public class GatewayServerWorkflow {
 	 */
 	public void runWorkflow() throws Exception {
 		
-		logger.debug("Starting the workflow!");
+		//logger.debug("Starting the workflow!");
 		service  = WorkflowFactory.createWorkflowService(new Py4jServiceProvider(this, py4jWorkflowCallback));
 		workflow = service.start();
 	}
@@ -124,6 +114,10 @@ public class GatewayServerWorkflow {
 		this.installationPath = installationPath;
 	}
 
+
+	public void setTangoSpecMode(boolean tangoSpecMode) {
+		this.tangoSpecMode = tangoSpecMode;
+	}
 
 	public void setServiceTerminate(boolean serviceTerminate) {
 		this.serviceTerminate = serviceTerminate;
