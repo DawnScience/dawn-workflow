@@ -199,6 +199,11 @@ public class PythonScript extends AbstractScriptTransformer {
 					
 					if (name.indexOf('.')>-1) continue;
 					final String value = ret.getScalar().get(name);
+					
+					// The name must be legal one:
+					if (!PythonUtils.isLegalName(name)) {
+						name = PythonUtils.getLegalVarName(name, ret.getList().keySet());
+					}
 					try {
 						final int ival = Integer.parseInt(value);
 						data.put(name, ival);
@@ -214,17 +219,6 @@ public class PythonScript extends AbstractScriptTransformer {
 					}
 				}
 			}			
-			
-			// We process the names in data to ensure that all the variables are 
-			// legal python syntax
-			for (Iterator<String> it = data.keySet().iterator(); it.hasNext();) {
-				final String name = it.next();
-				if (!PythonUtils.isLegalName(name)) {
-					final Object val = data.get(name);
-					it.remove();
-					data.put(name, val);
-				}
- 			}
 			
 			final IResource file = getResource();
 			if (outputs==null) outputs=Collections.emptyList();
