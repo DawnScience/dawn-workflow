@@ -12,6 +12,6 @@ package org.dawb.workbench.jmx.py4j;
 
 public interface Py4jWorkflowCallback {
 	
-	public void setActorSelected(String actorName);
+	public void setActorSelected(String actorName, boolean isSelected);
 
 }

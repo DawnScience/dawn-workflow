@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 
-	Logger logger = LoggerFactory.getLogger(WorkflowExample.class);
+	Logger logger = LoggerFactory.getLogger(Py4jRemoteWorkbench.class);
 
 	private Map<String, Object> mockValues;
 	private boolean tangoSpecMockMode = true;
@@ -89,7 +89,7 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} 			
-		final Map<String,String> ret = bean.getScalarValues();
+		Map<String,String> ret = bean.getScalarValues();
 		return ret;
 	}
 
@@ -101,8 +101,11 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 		
 		logger.info("Select Actor Requested");
 		logger.info("Actor "+actorName+"; isSelected "+isSelected);
-		if ((actorName != null) && (py4jWorkflowCallback != null) && isSelected)
-			py4jWorkflowCallback.setActorSelected(actorName);
+		try {
+			py4jWorkflowCallback.setActorSelected(actorName, isSelected);
+		} catch(Exception e) {
+			logger.info(e.toString());
+		}
 		return true;
 	}
 
