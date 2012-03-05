@@ -415,8 +415,20 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				
 				final IMetaData meta  = LoaderFactory.getMetaData(file.getAbsolutePath(), null);
 				if (meta!=null && meta.getDataNames()!=null) {
-				    cachedDatasets = meta.getDataNames();
-				    cachedShapes   = meta.getDataShapes();
+				    Collection<String> names = meta.getDataNames();
+				    Map<String,int[]>  shapes= meta.getDataShapes();
+				    
+				    // If single image, rename
+				    if (names!=null&&names.size()==1&&shapes!=null&&shapes.size()==1 && shapes.get(names.iterator().next())!=null && shapes.get(names.iterator().next()).length==2) {
+				    	final int[] shape = shapes.get(names.iterator().next());
+				    	cachedDatasets = Arrays.asList(new String[]{"image"});
+				    	cachedShapes   = new HashMap<String,int[]>(1);
+				    	cachedShapes.put("image", shape);
+				    	
+				    } else {
+				    	cachedDatasets = names;
+				    	cachedShapes   = shapes;
+				    }
 				}
 			} catch (Exception e) {
 				logger.error("Cannot get data set names from "+getSourcePath(null), e);
@@ -546,7 +558,13 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		final Map<String, Object> raw;
 		if (ds==null) {
 			raw = new LinkedHashMap<String, Object>();
-			raw.putAll(data);
+			if (isSingleImage(data)) {
+				final ILazyDataset image = data.values().iterator().next();
+				image.setName("image");
+				data.put("image", image);
+			} else {
+			    raw.putAll(data);
+			}
 		} else {
 			raw = new LinkedHashMap<String, Object>();
 			for (String name : ds) {
@@ -583,6 +601,12 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		}
 		
 	    return ret;
+	}
+
+	private boolean isSingleImage(Map<String, ILazyDataset> data) {
+		if (data.size()!=1) return false;
+		final ILazyDataset set = data.values().iterator().next();
+		return set.getShape()!=null && set.getShape().length==2;
 	}
 
 	private AbstractDataset getLoadedData(ILazyDataset lazy) throws Exception {
