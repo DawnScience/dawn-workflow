@@ -499,7 +499,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			datasets.put(pyName, set);
 			
 		} else {
-			datasets = getDatasets(filePath);
+			datasets = getDatasets(filePath, trigOb);
 		}
 		
 		final DataMessageComponent comp = new DataMessageComponent();
@@ -535,7 +535,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		return names.getValue();
 	}
 	
-	private Map<String,Serializable> getDatasets(String filePath) throws Exception {
+	private Map<String,Serializable> getDatasets(String filePath, final TriggerObject trigOb) throws Exception {
 		
 		if (!DATA_TYPES[0].equals(dataType.getExpression())) return null; 
 		
@@ -560,8 +560,11 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			raw = new LinkedHashMap<String, Object>();
 			if (isSingleImage(data)) {
 				final ILazyDataset image = data.values().iterator().next();
-				image.setName("image");
-				data.put("image", image);
+				final String       name  = trigOb!=null && trigOb.getIndex()>-1
+						                 ? "image"
+						                 : "image"+trigOb.getIndex();
+				image.setName(name);
+				raw.put(name, image);
 			} else {
 			    raw.putAll(data);
 			}
