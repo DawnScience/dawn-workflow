@@ -14,17 +14,16 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import jep.Jep;
 import jep.JepException;
 
-import org.dawb.gda.extensions.jython.JythonInterpreterUtils;
 import org.dawb.common.python.NumpyUtils;
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.python.rpc.PythonService;
+import org.dawb.gda.extensions.jython.JythonInterpreterUtils;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.IVariable;
@@ -199,6 +198,11 @@ public class PythonScript extends AbstractScriptTransformer {
 					
 					if (name.indexOf('.')>-1) continue;
 					final String value = ret.getScalar().get(name);
+					
+					// The name must be legal one:
+					if (!PythonUtils.isLegalName(name)) {
+						name = PythonUtils.getLegalVarName(name, ret.getList().keySet());
+					}
 					try {
 						final int ival = Integer.parseInt(value);
 						data.put(name, ival);
@@ -214,17 +218,6 @@ public class PythonScript extends AbstractScriptTransformer {
 					}
 				}
 			}			
-			
-			// We process the names in data to ensure that all the variables are 
-			// legal python syntax
-			for (Iterator<String> it = data.keySet().iterator(); it.hasNext();) {
-				final String name = it.next();
-				if (!PythonUtils.isLegalName(name)) {
-					final Object val = data.get(name);
-					it.remove();
-					data.put(name, val);
-				}
- 			}
 			
 			final IResource file = getResource();
 			if (outputs==null) outputs=Collections.emptyList();
