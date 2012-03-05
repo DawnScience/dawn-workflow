@@ -68,10 +68,10 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 		logger.info("Show Message Requested");
 		logger.info("Title "+title+"; message "+message);
 		try {
-			Thread.sleep(1000);// User is pressing ok...
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} 
+			py4jWorkflowCallback.showMessage(title, message, type);
+		} catch(Exception e) {
+			logger.info(e.toString());
+		}
 		return true;
 	}
 
@@ -84,13 +84,13 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 	public Map<String, String> createUserInput(final UserInputBean bean) throws Exception {
 		logger.info("Create User Input Requested");
 		logger.info("Actor "+bean.getPartName());
+		Map<String,String> scalarValues = bean.getScalarValues();
 		try {
-			Thread.sleep(1000);// User is pressing ok...
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} 			
-		Map<String,String> ret = bean.getScalarValues();
-		return ret;
+			scalarValues = py4jWorkflowCallback.createUserInput(scalarValues);
+		} catch(Exception e) {
+			logger.info(e.toString());
+		}
+		return scalarValues;
 	}
 
 	@Override
