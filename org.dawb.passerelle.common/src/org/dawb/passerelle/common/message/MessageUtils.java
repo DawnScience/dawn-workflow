@@ -359,7 +359,9 @@ public class MessageUtils {
 		}
 		
 		if (actor!=null) {
-			ret.put("project_name", ModelUtils.getProject(actor).getName());
+			if (ModelUtils.getProject(actor) != null) {
+				ret.put("project_name", ModelUtils.getProject(actor).getName());
+			}
 			ret.put("actor_name",   actor.getName());
 		}
 		
@@ -401,8 +403,12 @@ public class MessageUtils {
 			}
 		}
 		
-		ret.put("project_name", ModelUtils.getProject(actor).getName());
-		ret.put("actor_name",   actor.getName());
+		if (actor!=null) {		
+			if (ModelUtils.getProject(actor) != null) {
+				ret.put("project_name", ModelUtils.getProject(actor).getName());
+			}
+			ret.put("actor_name",   actor.getName());
+		}
 		
 		return ret;
 	}
