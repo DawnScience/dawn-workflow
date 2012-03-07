@@ -20,7 +20,7 @@ public interface Py4jWorkflowCallback {
 
 	public boolean showMessage(String title, String message, int type);
 
-	public Map<String, String> createUserInput(Map<String, String> userValues);
+	public Map<String, String> createUserInput(String actorName, Map<String, String> userValues);
 
 }
 

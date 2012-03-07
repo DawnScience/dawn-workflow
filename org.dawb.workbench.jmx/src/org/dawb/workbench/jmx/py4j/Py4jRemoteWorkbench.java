@@ -85,12 +85,15 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 		logger.info("Create User Input Requested");
 		logger.info("Actor "+bean.getPartName());
 		Map<String,String> scalarValues = bean.getScalarValues();
+		Map<String,String> newScalarValues;
 		try {
-			scalarValues = py4jWorkflowCallback.createUserInput(scalarValues);
+			newScalarValues = py4jWorkflowCallback.createUserInput(bean.getActorName(), scalarValues);
 		} catch(Exception e) {
 			logger.info(e.toString());
+			e.printStackTrace();
+			newScalarValues = scalarValues;
 		}
-		return scalarValues;
+		return newScalarValues;
 	}
 
 	@Override
