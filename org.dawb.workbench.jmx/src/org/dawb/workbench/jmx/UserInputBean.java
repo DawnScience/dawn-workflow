@@ -19,6 +19,7 @@ public class UserInputBean implements Serializable {
 	private static final long serialVersionUID = -828017701067849684L;
 	
 	// These are the fields to edit, everything else is auto-generated.
+	private String             actorName;
 	private String             partName;
 	private boolean            isDialog;
 	private String             configurationXML;
@@ -26,6 +27,12 @@ public class UserInputBean implements Serializable {
 	private boolean            silent;
 	
 	
+	public String getActorName() {
+		return actorName;
+	}
+	public void setActorName(String actorName) {
+		this.actorName = actorName;
+	}
 	public String getPartName() {
 		return partName;
 	}
