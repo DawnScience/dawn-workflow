@@ -112,6 +112,7 @@ public class UserInputSource extends AbstractDataMessageSource {
 				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{getModelPath(), getName(), true, SWT.COLOR_RED}, new String[]{String.class.getName(), String.class.getName(), boolean.class.getName(), int.class.getName()});
 				
 				final UserInputBean bean = new UserInputBean();
+				bean.setActorName(getName());
 				bean.setPartName("Set Values");
 				bean.setDialog(isDialog);
 				bean.setConfigurationXML(fieldParam.getXML());

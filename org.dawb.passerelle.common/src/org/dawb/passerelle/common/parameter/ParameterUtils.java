@@ -85,8 +85,12 @@ public class ParameterUtils {
 	public static String substitute(String stringValue, final NamedObj actor) throws Exception {
 
 		final Map<String, Object> variables = new HashMap<String, Object>(3);
-		variables.put("project_name", ModelUtils.getProject(actor).getName());
-		variables.put("actor_name", actor.getName());
+		if (actor != null) {
+			if (ModelUtils.getProject(actor) != null) {
+				variables.put("project_name", ModelUtils.getProject(actor).getName());				
+			}
+			variables.put("actor_name", actor.getName());
+		}
 
 		MultiVariableExpander expander = new MultiVariableExpander();
 		expander.addSource("$", variables);
