@@ -79,7 +79,7 @@ public class MomlUITest {
 			}
 			
 			EclipseUtils.delay(1000);
-
+			EclipseUtils.getPage().closeAllEditors(false);
 		}	
 
 	}
@@ -124,7 +124,8 @@ public class MomlUITest {
 			}
 
 			EclipseUtils.delay(1000);
-    	}	
+			EclipseUtils.getPage().closeAllEditors(false);
+		}	
 
 	}
 	
