@@ -441,7 +441,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		if (fileName==null) fileName = "new_data_file.h5";
 		this.fileWriteType = fileWriteParam.getExpression();
 		this.filePath = filePathParam.getExpression();
-		this.filePath = ModelUtils.substitute(filePath, this);
+		this.filePath = ParameterUtils.substitute(filePath, this);
 		
 		if (WRITING_CHOICES.get(0).equals(fileWriteType) || WRITING_CHOICES.get(1).equals(fileWriteType)) { //Append to file referenced by Output
 			IFile file = (IFile)ResourcesPlugin.getWorkspace().getRoot().findMember(filePath, true);

@@ -37,6 +37,7 @@ public class FieldBean implements Serializable {
 	private Object  defaultValue;
 	private Integer textLimit;
 	private boolean isFolder;
+	private boolean isPassword;
 	private String  fileFilterLabel;
 	private String  extensions;
 	private List<StringValueBean> textChoices;
@@ -150,6 +151,7 @@ public class FieldBean implements Serializable {
 		result = prime * result
 				+ ((fileFilterLabel == null) ? 0 : fileFilterLabel.hashCode());
 		result = prime * result + (isFolder ? 1231 : 1237);
+		result = prime * result + (isPassword ? 1231 : 1237);
 		result = prime * result
 				+ ((lowerBound == null) ? 0 : lowerBound.hashCode());
 		result = prime * result
@@ -192,6 +194,8 @@ public class FieldBean implements Serializable {
 		} else if (!fileFilterLabel.equals(other.fileFilterLabel))
 			return false;
 		if (isFolder != other.isFolder)
+			return false;
+		if (isPassword != other.isPassword)
 			return false;
 		if (lowerBound == null) {
 			if (other.lowerBound != null)
@@ -343,6 +347,16 @@ public class FieldBean implements Serializable {
 
 	public void setVariableName(String variableName) {
 		this.variableName = variableName;
+	}
+
+
+	public boolean isPassword() {
+		return isPassword;
+	}
+
+
+	public void setPassword(boolean isPassword) {
+		this.isPassword = isPassword;
 	}
 
 }

@@ -207,6 +207,7 @@ public class UserModifyComposite extends Composite implements RemoveWorkbenchPar
 				if (configuration!=null && configuration.containsBean(varName)) {
 					final FieldBean bean = configuration.getBean(varName);
 					if (bean.getUnit()!=null && bean.getUiClass().endsWith(".StandardBox")) val = val+" "+bean.getUnit();
+					if (bean.isPassword() && bean.getUiClass().endsWith(".TextWrapper")) val = getStars(val.length());
 				}
 				return val;
 			}
@@ -241,6 +242,12 @@ public class UserModifyComposite extends Composite implements RemoveWorkbenchPar
 		});
 	}
 	
+	protected String getStars(int length) {
+		final StringBuilder buf = new StringBuilder();
+		for (int i = 0; i < length; i++) buf.append("*");
+		return buf.toString();
+	}
+
 	private CellEditor createFieldWidgetEditor(final FieldBean configBean) {
 		
 		final String uiClass = configBean.getUiClass();
@@ -252,6 +259,8 @@ public class UserModifyComposite extends Composite implements RemoveWorkbenchPar
 			} else if (configBean.getUiClass().equals(FileBox.class.getName())) {
 				style = SWT.NO_TRIM;
 			}
+			
+			if (configBean.isPassword()) style = style|SWT.PASSWORD;
 			
 			final FieldComponentCellEditor ed = new FieldComponentCellEditor(tableViewer.getTable(), uiClass, style);
 			final IFieldWidget            wid = ed.getFieldWidget();

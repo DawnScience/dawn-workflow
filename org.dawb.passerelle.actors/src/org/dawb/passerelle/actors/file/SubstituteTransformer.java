@@ -184,7 +184,7 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 	}
 
 	private IFile getResource() throws Exception {
-		final String tempPath = ModelUtils.substitute(templateParam.getExpression(), this);
+		final String tempPath = ParameterUtils.substitute(templateParam.getExpression(), this);
 		final IFile  file     = (IFile)ResourceUtils.getResource(tempPath);
 		return file;
 	}

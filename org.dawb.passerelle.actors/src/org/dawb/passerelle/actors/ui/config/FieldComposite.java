@@ -18,6 +18,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
@@ -58,6 +59,7 @@ public class FieldComposite extends Composite {
 	private SpinnerWrapper textLimit;
 	private NumberBox      upperBound, lowerBound;
 	private BooleanWrapper folder;
+	private BooleanWrapper password;
 	//private TextWrapper    fileFilterLabel;
 	private TextWrapper    extensions;
 	private VerticalListEditor textChoices;
@@ -169,6 +171,13 @@ public class FieldComposite extends Composite {
 		textLimit.setValue(0);
 		textLimit.setToolTipText("A value of 0 means no text limit.");
 		
+		this.password = new BooleanWrapper(properties, SWT.CHECK);
+		password.setText("   Password");		
+		password.setToolTipText("Turn on to make the text a password text box.");
+		password.setLayoutData(new GridData(0, 0, false, false, 2, 1));
+		password.setValue(Boolean.FALSE);
+		propControls.add(password);
+		
 		unitLabel = new CLabel(properties, SWT.NONE);
 		propControls.add(unitLabel);
 		unitLabel.setText("Unit");
@@ -262,6 +271,7 @@ public class FieldComposite extends Composite {
 			//GridUtils.setVisible(defaultValueText, true);
 			GridUtils.setVisible(textLimitLabel, true);
 			GridUtils.setVisible(textLimit,      true);
+			GridUtils.setVisible(password,     true);
 			
 		} else if (uiValue.equals(ComboWrapper.class.getName())) {
 			properties.setText("Choice Input Properties");
@@ -379,4 +389,7 @@ public class FieldComposite extends Composite {
 		return variableName;
 	}
 
+	public BooleanWrapper getPassword() {
+		return password;
+	}
 }
