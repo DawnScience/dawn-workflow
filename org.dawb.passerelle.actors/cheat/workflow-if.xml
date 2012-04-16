@@ -56,10 +56,10 @@
             label="1. Click and drag another 'Message' actor to the workflow, make it an INFORMATION message and fill in parameters indicating that a value of three or greater is ignored.">
       </subitem>
       <subitem
-            label="2. Connect the output of 'If' to the new message actors white 'input' port.">
+            label="2. Edit the 'Expressions' attribute of 'If'. Change the expression value of the 'output' port (connected to the 'Warning' message dialog) to be x==2, add a new output port with a name and an expression parameter set to 'x&gt;=3' ">
       </subitem>
       <subitem
-            label="3. Edit the 'Expressions' attribute of 'If'. Change the expression value of 'Warning' to be x==2, change the expression parameter of your new message actor to be 'x&gt;=3' ">
+            label="3. Connect the new output of 'If' to the new message actor's white 'input' port.">
       </subitem>
       <subitem
             label="4. Experiment running the workflow with different x values until you are happy how the 'If' actor works.">
