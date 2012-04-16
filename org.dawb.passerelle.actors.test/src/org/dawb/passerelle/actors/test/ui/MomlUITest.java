@@ -23,7 +23,9 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.PlatformUI;
 import org.edna.pydev.extensions.utils.InterpreterUtils;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -54,6 +56,11 @@ public class MomlUITest {
 	@Test
 	public void testExampleMomlModels() throws Exception {
 		
+		
+		// We choose the workflows perspective
+		final IWorkbench bench = PlatformUI.getWorkbench();
+		bench.showPerspective("org.edna.workbench.application.perspective.WorkflowPerspective", bench.getActiveWorkbenchWindow());
+		
 		final IProject workflows = ResourcesPlugin.getWorkspace().getRoot().getProject("workflows");
 		final IFolder  examples  = (IFolder)workflows.getFolder("examples");
 
@@ -72,7 +79,7 @@ public class MomlUITest {
 			}
 			
 			EclipseUtils.delay(1000);
-
+			EclipseUtils.getPage().closeAllEditors(false);
 		}	
 
 	}
@@ -117,7 +124,8 @@ public class MomlUITest {
 			}
 
 			EclipseUtils.delay(1000);
-    	}	
+			EclipseUtils.getPage().closeAllEditors(false);
+		}	
 
 	}
 	
