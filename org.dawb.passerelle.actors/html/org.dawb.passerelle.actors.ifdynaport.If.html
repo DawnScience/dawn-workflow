@@ -1,0 +1,30 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
+	<TITLE>Title</TITLE>
+	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.2  (Unix)">
+	<META NAME="CREATED" CONTENT="0;0">
+	<META NAME="CHANGEDBY" CONTENT="Matthew Gerring">
+	<META NAME="CHANGED" CONTENT="20110901;14250700">
+	<META NAME="CHANGEDBY" CONTENT="Matthew Gerring">
+</HEAD>
+<BODY LANG="en-US" DIR="LTR">
+<H2>If actor</H2>
+<P>This actor allows different paths to be taken in the workflow depending on logical expressions. 
+As an example see the "if_example.moml" workflow in workflows/examples:</P>
+<IMG SRC="if/if_example.png" NAME="if_example">
+<P>The output port have different names which can be visualised by hoovering
+the mouse pointer over the ports:</P> 
+<P><IMG SRC="if/output_port.png" NAME="output_port">
+<IMG SRC="if/x_equals_one_port.png" NAME="x_equals_one_port.png"></P>
+<P>The different output ports of the if actor are attributed different expressions.
+These expressions are visualised in the actor attributes view:</P>
+<P><IMG SRC="if/actor_attributes.png" NAME="actor_attributes"><BR></P>
+<P>In this example the port 'output' is used if x!=1 and the port
+'x==1' is used if x==1. The number of output ports and their expressions
+can be edited using the 'Create expressions' dialog:</P>
+<IMG SRC="if/create_expressions.png" NAME="create_expressions"></P>
+<P><B>NOTE!</B> There must always be one port called 'output'.</P>
+</BODY>
+</HTML>
