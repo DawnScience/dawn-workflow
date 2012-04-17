@@ -28,6 +28,19 @@
    </item>
    
    <item
+         title="Have a look on the if actor documentation">
+      <description>
+		 Before starting to play with the if actor please consult its documentation.
+      </description>
+      <subitem
+            label="1. Right-click on the actor called 'If' and choose 'Help'. You will see the Eclipse help system open up the documentation for the if actor.">
+      </subitem>
+      <subitem
+            label="2. Read the documentation in order to become familiar with the if actor.">
+      </subitem>
+   </item>
+
+   <item
          title="How 'If' Works">
       <description>
          There is only one new actor in this tutorial - the 'If'. The test works by having many branches from one actor. You can create as many connections from an If actor to other actors, you must then create expressions which test values for each connection (they evaluate to 'true' by default). This is done by clicking the button on the 'Expressions' attribute of the 'Actor Attributes' part.
