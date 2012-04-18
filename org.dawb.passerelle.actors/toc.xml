@@ -26,25 +26,25 @@
    <topic label="Edna Plugins">
    </topic>
       <topic label="Maths">
-         <topic href="html/maths/org.dawb.passerelle.actors.data.AddDatasets.html" label="Add">
+         <topic href="html/org.dawb.passerelle.actors.data.AddDatasets.html" label="Add">
          </topic>
          <topic href="html/maths/org.dawb.passerelle.actors.data.AddDatasets_attributes.html" label="Add Attributes">
          </topic>
-          <topic href="html/maths/org.dawb.passerelle.actors.data.DeleteDatasets.html" label="Delete">
+          <topic href="html/org.dawb.passerelle.actors.data.SubtractDatasets.html" label="Subtract">
          </topic>
-         <topic href="html/maths/org.dawb.passerelle.actors.data.DeleteDatasets_attributes.html" label="Delete Attributes">
+         <topic href="html/maths/org.dawb.passerelle.actors.data.SubtractDatasets_attributes.html" label="Subract Attributes">
          </topic>
-          <topic href="html/maths/org.dawb.passerelle.actors.data.MultiplyDatasets.html" label="Multiply">
+          <topic href="html/org.dawb.passerelle.actors.data.MultiplyDatasets.html" label="Multiply">
          </topic>
          <topic href="html/maths/org.dawb.passerelle.actors.data.MultiplyDatasets_attributes.html" label="Multiply Attributes">
          </topic>
-          <topic href="html/maths/org.dawb.passerelle.actors.data.DivideDatasets.html" label="Divide">
+          <topic href="html/org.dawb.passerelle.actors.data.DivideDatasets.html" label="Divide">
          </topic>
          <topic href="html/maths/org.dawb.passerelle.actors.data.DivideDatasets_attributes.html" label="Divide Attributes">
          </topic>
-          <topic label="Median">
+          <topic href="html/org.dawb.passerelle.actors.data.MedianDatasets.html" label="Median">
          </topic>
-         <topic label="Median Attributes">
+         <topic href="html/maths/org.dawb.passerelle.actors.data.MedianDatasets_attributes.html" label="Median Attributes">
          </topic>
           <topic label="Scalar">
          </topic>
@@ -54,7 +54,7 @@
          </topic>
          <topic label="Python Attributes">
          </topic>
-          <topic label="If">
+          <topic href="html/org.dawb.passerelle.actors.ifdynaport.If.html" label="If">
          </topic>
          <topic label="If Attributes">
          </topic>
