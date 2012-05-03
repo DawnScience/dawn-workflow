@@ -118,12 +118,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 					logger.debug("resource to open requested: "+res);
 					if (res!=null && res instanceof IFile) {
 						logger.debug("opening IFile editor for "+fullPath);
-						final IEditorInput input = new FileEditorInput((IFile)res);
-						ob = EclipseUtils.getPage().findEditor(input);
-						if (ob==null) {
-							ob = EclipseUtils.openEditor((IFile)res);
-						}
-						
+						ob = EclipseUtils.openEditor((IFile)res);
 					} else {
 						String externalPath = fullPath;
 						File file = new File(externalPath);
