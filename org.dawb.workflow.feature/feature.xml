@@ -3,7 +3,7 @@
       id="org.dawb.workflow.feature"
       label="DAWB Workflows"
       version="1.0.0.qualifier"
-      provider-name="Diamond Ltd.">
+      provider-name="Diamond Light Source">
 
    <description>
       A feature used in the Data Analysis Workbench
