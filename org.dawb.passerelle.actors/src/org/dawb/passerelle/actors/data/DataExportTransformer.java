@@ -275,6 +275,8 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
         			slice = new File(filePath);
         			final String name = slice.getName();
         			dataName = PythonUtils.getLegalVarName(name.substring(0, name.indexOf('0')), null);
+        		} else if(WRITING_CHOICES.get(2).equals(fileWriteParam.getExpression())) {
+        			slice = new File(filePath);
         		} else {
         			dataName = PythonUtils.getLegalVarName(set.getName(), null);
        			    slice = new File(parent, dataName);
