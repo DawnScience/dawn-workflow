@@ -149,7 +149,7 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 			AbstractPassModeTransformer.refreshResource(ModelUtils.getProject(this));
 			
 			if (outputExpressionName!=null) {
-				ret.putScalar(outputExpressionName, command.getStdoutAsString());
+				ret.putScalar(outputExpressionName, command.getStdoutAsString()!=null ? command.getStdoutAsString().trim() : "");
 			}
 			
 			return ret; 
