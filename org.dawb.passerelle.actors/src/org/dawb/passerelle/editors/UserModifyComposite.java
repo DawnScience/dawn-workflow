@@ -142,7 +142,7 @@ public class UserModifyComposite extends Composite implements RemoveWorkbenchPar
 		ColumnViewerToolTipSupport.enableFor(viewer,ToolTip.NO_RECREATE);
 		
 		TableViewerColumn name   = new TableViewerColumn(viewer, SWT.LEFT, 0);
-		name.getColumn().setText("Scalar Name");
+		name.getColumn().setText("");
 		name.getColumn().setWidth(200);
 		name.setLabelProvider(new ColumnLabelProvider() {
 			public Color getForeground(Object element) {
