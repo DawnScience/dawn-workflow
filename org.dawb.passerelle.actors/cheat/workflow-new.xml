@@ -85,7 +85,7 @@
             label="2. Notice that the Scalar object has no inputs and one output called 'x' this is then passed to the future actors in the workflow.">
       </subitem>
       <subitem
-            label="3. Click on the 'Message' actor and view its inputs and outputs, there is one input 'x' and no outputs. In fact Message is known as a 'Sink', it does not have any outputs.">
+            label="3. Click on the 'Message' actor and view its inputs and outputs, there is one input 'x' and one output called 'x'. Message is known as a 'Transformer', it does something to the message passes it on.">
       </subitem>
       <subitem
             label="4. Click on the connection between Scalar and Message. This shows the variables flowing between actors. It is only 'x' travelling between Scalar and Message in this instance but many more will be there in later examples.">
