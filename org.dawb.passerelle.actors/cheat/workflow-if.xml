@@ -30,7 +30,7 @@
    <item
          title="Have a look on the if actor documentation">
       <description>
-		 Before starting to play with the if actor please consult its documentation.
+		 Before starting to use the if actor please consult its documentation.
       </description>
       <subitem
             label="1. Right-click on the actor called 'If' and choose 'Help'. You will see the Eclipse help system open up the documentation for the if actor.">
