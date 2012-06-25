@@ -143,6 +143,10 @@ public class RemoteWorkbenchAgent {
 				if (waited>=timeout) {
 					throw new Exception("Cannot get connection", ne);
 				} else {
+					if ("true".equals(System.getProperty("org.dawb.workbench.jmx.headless"))) {
+						logger.error("Cannot find the MBeanServerConnection for the workbench client.\nThe headless property is set so workflow with continue without a client.");
+						return null; 
+					}
 					Thread.sleep(100);
 					continue;
 				}

@@ -26,7 +26,7 @@ public class ModelListener implements IModelListener {
 	public void executionStarted() {
 		try {
 			MBeanServerConnection client = ActorUtils.getWorkbenchConnection();
-			client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "executionStarted", null, null);
+			if (client!=null) client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "executionStarted", null, null);
 			
 		} catch (Exception ne) {
 			logger.error("Cannot notify of terminate!", ne);
@@ -37,7 +37,7 @@ public class ModelListener implements IModelListener {
 	public void executionTerminated(int returnCode) {
 		try {
 			MBeanServerConnection client = ActorUtils.getWorkbenchConnection();
-			client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "executionTerminated", new Object[]{returnCode}, new String[]{int.class.getName()});
+			if (client!=null) client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "executionTerminated", new Object[]{returnCode}, new String[]{int.class.getName()});
 			
 		} catch (Exception ne) {
 			logger.error("Cannot notify of terminate!", ne);
