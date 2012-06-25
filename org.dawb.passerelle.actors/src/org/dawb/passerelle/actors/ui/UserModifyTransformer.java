@@ -108,6 +108,12 @@ public class UserModifyTransformer extends AbstractDataMessageTransformer {
             
 			final Map<String,String>    scalar = MessageUtils.getScalar(cache);
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection();
+			if (client == null ) {
+				final DataMessageComponent  ret    = new DataMessageComponent();
+				ret.setMeta(MessageUtils.getMeta(cache));
+				ret.addScalar(scalar);
+				return ret;
+			}
 			
 			boolean isDialog = INPUT_CHOICES[0].equals(inputTypeParam.getExpression());
 			
