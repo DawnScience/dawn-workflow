@@ -29,7 +29,7 @@
    </item>
 
   <item
-         title="Crate a workflow to extract images">
+         title="Create a workflow to extract images">
       <description>
          Now we will do the reverse operation and extract the images back to tiff format.
       </description>
