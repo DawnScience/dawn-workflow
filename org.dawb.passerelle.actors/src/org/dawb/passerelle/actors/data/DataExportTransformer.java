@@ -449,6 +449,21 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		if (WRITING_CHOICES.get(0).equals(fileWriteType) || WRITING_CHOICES.get(1).equals(fileWriteType)) { //Append to file referenced by Output
 			IFile file = (IFile)ResourcesPlugin.getWorkspace().getRoot().findMember(filePath, true);
 			if (file == null) {
+				
+				// Make directories
+				try {
+					final File fullFile = new File(getProject().getParent().getLocation().toOSString()+"/"+filePath);
+					if (!fullFile.exists() && !fullFile.getParentFile().exists()) {
+						fullFile.getParentFile().mkdirs();
+						fullFile.createNewFile();
+						getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+					}
+
+				} catch (Exception ne) {
+					logger.trace("Error refreshing", ne);
+					// Just carry on.
+				}
+				
 				final File f = new File(filePath);
 				final String name = f.getName();
 				final String path = f.getParent();
