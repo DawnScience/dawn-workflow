@@ -459,6 +459,7 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
      * @return
      */
 	protected boolean isInputRoundComplete() {
+		if (recInputHandler==null) return isFinishRequested();
 		return recInputHandler.isInputComplete();
 	}
 }
