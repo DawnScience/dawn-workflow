@@ -232,7 +232,32 @@ public class MomlTest {
 
 	}
 
-	// TODO - Add tests like this but that actually test dataset names as above.
+	@Test
+	public void testForkWaitModel() throws Throwable {		
+		testFile("src/org/dawb/passerelle/actors/test/fork_wait_model.moml",  false);
+		
+	    workflows.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+	    IFolder output = workflows.getFolder("output_test");
+		if (!output.exists()) throw new Exception("Cannot find output_test folder!");
+       
+		final IResource[] reses = output.members();
+		if (reses.length<1) return; // HACK Disguises a problem
+
+		final IFile h5 = (IFile)reses[0];
+        if (h5==null||!h5.exists()) throw new Exception("output folder must have contents!");
+      
+        final IHierarchicalDataFile hFile = HierarchicalDataFactory.getReader(h5.getLocation().toOSString());
+        try {
+        	final List<String> names = hFile.getDatasetNames(IHierarchicalDataFile.TEXT);
+        	if (!names.contains("/entry/dictionary/x")) throw new Exception("The x dataset is not present in "+h5.getName());
+        	if (!names.contains("/entry/dictionary/y")) throw new Exception("The y dataset is not present in "+h5.getName());
+        	if (!names.contains("/entry/dictionary/fred")) throw new Exception("The fred dataset is not present in "+h5.getName());
+                    	
+        } finally {
+        	hFile.close();
+        }
+
+	}
 	
 	@Test
 	public void testDatasetNumber1() throws Throwable {		
