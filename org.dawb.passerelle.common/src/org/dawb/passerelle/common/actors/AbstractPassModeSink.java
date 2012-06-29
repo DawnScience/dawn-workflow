@@ -257,6 +257,7 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
      * @return
      */
 	protected boolean isInputRoundComplete() {
+		if (recInputHandler==null) return isFinishRequested();
 		return recInputHandler.isInputComplete();
 	}
 
