@@ -163,8 +163,7 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 	 * @see be.isencia.passerelle.actor.Actor#doInitialize()
 	 */
 	protected void doInitialize() throws InitializationException {
-		if (logger.isTraceEnabled())
-			logger.trace(getInfo());
+		if (logger.isTraceEnabled()) logger.trace(getInfo());
 			
 		recInputHandler = new RecordingPortHandler(input, true);
 		if(input.getWidth()>0) {
@@ -182,12 +181,31 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		
 		Token token = recInputHandler.getToken();
 		if (token != null) {
-			try {
-				message = MessageHelper.getMessageFromToken(token);
-			} catch (PasserelleException e) {
-			    throw new ProcessingException("Error handling token", token, e);
-			}
+			processToken(token);
 		} else {
+			// If we must wait until an input round is complete
+			// we do here - HACK warning something broke in RecordingPortHandler by passerelle guys.
+			// Now it no longer blocks properly. Instead we wait here.
+			if (EXPRESSION_MODE.get(1).equals(passModeParameter.getExpression()) ) {
+				if (!isInputRoundComplete() && !isFinishRequested()) {
+					try {
+						Thread.sleep(200); // TODO FIXME Something of a hack. It should be a low risk one.
+						                   // Consider fixing a different way after Dawn 1.0 release.
+						
+						token = recInputHandler.getToken();
+						
+						if (token != null) {
+							processToken(token);
+						} else {
+							message = null;
+						}
+					} catch (InterruptedException e) {
+						logger.trace("Sleeping thread interupted at "+getClass().getName(), e);
+						message = null;
+					}
+				}
+			}
+
 			message = null;
 		}
 
@@ -195,6 +213,14 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		
 
 		return true;
+	}
+
+	private void processToken(Token token) throws ProcessingException {
+		try {
+			message = MessageHelper.getMessageFromToken(token);
+		} catch (PasserelleException e) {
+		    throw new ProcessingException("Error handling token", token, e);
+		}		
 	}
 
 	/**

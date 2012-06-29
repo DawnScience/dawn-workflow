@@ -1,0 +1,125 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE entity PUBLIC "-//UC Berkeley//DTD MoML 1//EN"
+    "http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd">
+<entity name="new_model" class="ptolemy.actor.TypedCompositeActor" source="C:\Work\debug_dawn_workspace\workflows\new_model.moml">
+    <property name="_createdBy" class="ptolemy.kernel.attributes.VersionAttribute" value="7.0.1">
+    </property>
+    <property name="_workbenchVersion" class="ptolemy.kernel.attributes.VersionAttribute" value="1.0.0">
+    </property>
+    <property name="Frederick" class="com.isencia.passerelle.domain.cap.Director">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{20, 20}">
+        </property>
+    </property>
+    <entity name="x" class="org.dawb.passerelle.actors.data.Scalar">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Name" class="ptolemy.data.expr.StringParameter" value="x">
+        </property>
+        <property name="Value" class="org.dawb.passerelle.actors.data.Scalar$RangeParameter" value="1">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{67.0, 122.0}">
+        </property>
+    </entity>
+    <entity name="y" class="org.dawb.passerelle.actors.data.Scalar">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Name" class="ptolemy.data.expr.StringParameter" value="y">
+        </property>
+        <property name="Value" class="org.dawb.passerelle.actors.data.Scalar$RangeParameter" value="2">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{67.0, 250.0}">
+        </property>
+    </entity>
+    <entity name="Data Export" class="org.dawb.passerelle.actors.data.DataExportTransformer">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
+        </property>
+        <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
+        </property>
+        <property name="Name Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Attempt to use image name if there is one.">
+        </property>
+        <property name="File Format" class="org.dawb.passerelle.actors.data.DataExportTransformer$1" value="hdf5">
+        </property>
+        <property name="Writing Type" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Replace file referenced by Output">
+        </property>
+        <property name="Output" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="/${project_name}/output_test/test_process.h5">
+        </property>
+        <property name="Calibration" class="org.dawb.passerelle.actors.data.DataExportTransformer$2" value="None">
+        </property>
+        <property name="Dataset Name" class="ptolemy.data.expr.StringParameter" value="">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{430.0, 186.0}">
+        </property>
+    </entity>
+    <entity name="Sleep" class="org.dawb.passerelle.actors.PassDelay">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate after all data received">
+        </property>
+        <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
+        </property>
+        <property name="Name Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Attempt to use image name if there is one.">
+        </property>
+        <property name="time(s)" class="ptolemy.data.expr.Parameter" value="2">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{177.0, 250.0}">
+        </property>
+    </entity>
+    <entity name="Process" class="org.dawb.passerelle.actors.process.ProcessTransformer">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate after all data received">
+        </property>
+        <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
+        </property>
+        <property name="Name Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Attempt to use image name if there is one.">
+        </property>
+        <property name="Command" class="ptolemy.data.expr.StringParameter" value="ls">
+        </property>
+        <property name="Windows Command" class="ptolemy.data.expr.StringParameter" value="dir">
+        </property>
+        <property name="Run Directory" class="ptolemy.data.expr.StringParameter" value="">
+        </property>
+        <property name="Wait" class="ptolemy.data.expr.Parameter" value="true">
+        </property>
+        <property name="Output Variable" class="ptolemy.data.expr.StringParameter" value="fred">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{300.0, 184.0}">
+        </property>
+    </entity>
+    <relation name="_R_2" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_3" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_4" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <link port="x.output" relation="_R"/>
+    <link port="y.output" relation="_R_2"/>
+    <link port="Data Export.input" relation="_R_4"/>
+    <link port="Sleep.input" relation="_R_2"/>
+    <link port="Sleep.output" relation="_R_3"/>
+    <link port="Process.input" relation="_R"/>
+    <link port="Process.input" relation="_R_3"/>
+    <link port="Process.output" relation="_R_4"/>
+</entity>
