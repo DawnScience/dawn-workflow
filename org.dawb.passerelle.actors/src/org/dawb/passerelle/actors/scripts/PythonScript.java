@@ -356,7 +356,7 @@ public class PythonScript extends AbstractScriptTransformer {
 				final Object ob = dataMessageComponent.getList().get(name);
 				interpreter.set(name, ob);
 				if (ob instanceof AbstractDataset) {
-				    interpreter.exec(name+" = jycore.Sciwrap("+name+")");
+				    interpreter.exec(name+" = dnp.Sciwrap("+name+")");
 					if (isPassInputs) {
 						inputs.add(name);
 					}
