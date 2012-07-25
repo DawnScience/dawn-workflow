@@ -92,15 +92,7 @@ import com.isencia.util.StringConvertor;
  */
 public class DataImportSource extends AbstractDataMessageSource implements IResourceActor, IVariableProvider {
 
-	private static final Logger logger = LoggerFactory.getLogger(DataImportSource.class);
-	static {
-		try {
-			H5Loader.setLoaderInFactory();
-		} catch (Exception e) {
-			logger.error("Cannot replace H5Loader", e);
-		}
-	}
-	
+	private static final Logger logger = LoggerFactory.getLogger(DataImportSource.class);	
 	
 	private static final String[] DATA_TYPES = new String[] {"Complete data as numerical arrays", "Just path and file name"};
 	private static final String[] SLICE_TYPES = new String[] {"Unique name for each slice", "Same name for each slice"};

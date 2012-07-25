@@ -35,13 +35,6 @@ import com.isencia.passerelle.workbench.model.ui.command.CreateComponentCommand;
 public class DawbDropFactory implements IDropClassFactory {
 
 	private static Logger logger = LoggerFactory.getLogger(DawbDropFactory.class);
-	static {
-		try {
-			H5Loader.setLoaderInFactory();
-		} catch (Exception e) {
-			logger.error("Cannot replace loader in factory.",e);
-		}
-	}
 	
 	private final Map<String, Class<? extends NamedObj>>  classes;
 	public DawbDropFactory() {
