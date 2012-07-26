@@ -418,30 +418,24 @@ public class PythonScript extends AbstractScriptTransformer {
 		final StringBuilder buf = new StringBuilder();
 		
 		if (isPython()) {
-			
-			buf.append("from numpy import *\r\n");
-			
+			buf.append("import numpy as np\n");
 		} else {
-			
-			buf.append("import "+AbstractDataset.class.getName()+" as _ds\r\n");
-			buf.append("import scisoftpy as dnp\r\n");
-			buf.append("import scisoftpy.core as scp\r\n");
-			buf.append("import scisoftpy.maths as maths\r\n");
-			buf.append("\r\n\r\n");
-		
+			buf.append("import scisoftpy as dnp\n");
+			buf.append("\n\n");
+
 			final List<IVariable> vars = getInputVariables();
 			if (vars!=null&&vars.size()>0) {
-				buf.append("# Jython script for manipulating data sets.\r\n");
-				buf.append("# The variables going into this actor in the workflow are available in the script.\r\n");
-				buf.append("# Expected variable sets available and set when this script is run:\r\n");
+				buf.append("# Jython script for manipulating datasets.\n");
+				buf.append("# The variables going into this actor in the workflow are available in the script.\n");
+				buf.append("# Expected variable sets available and set when this script is run:\n");
 				for (IVariable iVariable : vars) {
 					if (iVariable.getVariableType()==VARIABLE_TYPE.ARRAY) {
 						buf.append("# ");
 						buf.append(iVariable.getVariableName());
-						buf.append("\r\n");
+						buf.append("\n");
 					}
 				}
-				buf.append("\r\n# Please provide maths of these variables and other available ones in the following lines.\r\n");
+				buf.append("\n# Please provide maths of these variables and other available ones in the following lines.\n");
 			}
 		}
 
