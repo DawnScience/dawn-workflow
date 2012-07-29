@@ -149,8 +149,8 @@ public class RecordingPortHandler extends PortHandler {
         	try {
 				LoggerManager.pushMDC(ProcessThread.ACTOR_MDC_NAME,actorInfo);
 	
-				if(logger.isInfoEnabled()) {
-	        		logger.info(RecordingPortHandler.this.ioPort.getFullName()+" ChannelHandler."+channelIndex+" run() - entry");
+				if(logger.isTraceEnabled()) {
+	        		logger.trace(RecordingPortHandler.this.ioPort.getFullName()+" ChannelHandler."+channelIndex+" run() - entry");
 	        	}
 	
 	            while (!terminated) {
@@ -169,8 +169,8 @@ public class RecordingPortHandler extends PortHandler {
 	                }
 	            }
 				
-	        	if(logger.isInfoEnabled()) {
-	        		logger.info(RecordingPortHandler.this.ioPort.getFullName()+" ChannelHandler."+channelIndex+" run() - exit");
+	        	if(logger.isTraceEnabled()) {
+	        		logger.trace(RecordingPortHandler.this.ioPort.getFullName()+" ChannelHandler."+channelIndex+" run() - exit");
 	        	}
         	} catch (Throwable t) {
         		logger.error(RecordingPortHandler.this.ioPort.getFullName()+" - Error in ChannelHandler",t);
