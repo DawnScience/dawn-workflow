@@ -647,7 +647,9 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			final DataMessageComponent comp = manMsg!=null ? MessageUtils.coerceMessage(manMsg) : null;
 			sourcePath = ParameterUtils.getSubstituedValue(this.path, comp);
 		} catch (Exception e) {
-			logger.error("Cannot substitute parameter "+path, e);
+			// Can happen when they have an expand in the parameter that
+			// is not resolved until run time.
+			logger.info("Cannot substitute parameter "+path, e);
 		}
 
 		if (isPathRelative) {
