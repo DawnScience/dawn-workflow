@@ -307,6 +307,10 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 					}
 				}
 			}
+			
+			if (fileQueue!=null && fileQueue.isEmpty()) {
+				logger.info("No files found in '"+file.getAbsolutePath()+"'. Filter is set to: "+filterParam.getExpression());
+			}
 		}
 	}
 	
@@ -377,7 +381,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
     private boolean isRequiredFileName(String fileName) {
     	if (fileFilter==null || "".equals(fileFilter)) return true;
 		if (filterParam.isJustWildCard()) {
-			final StringMatcher matcher = new StringMatcher(fileFilter, false, false);
+			final StringMatcher matcher = new StringMatcher(fileFilter, true, false);
 		    return matcher.match(fileName);
 		} else {
 			return fileName.matches(fileFilter);
