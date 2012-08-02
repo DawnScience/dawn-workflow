@@ -136,7 +136,7 @@ public class Scalar extends AbstractDataMessageSource {
         
 		DataMessageComponent despatch = new DataMessageComponent();
 		despatch.putScalar(strName, value.toString());
-		logger.info("Actor '"+ this.getName() + "': Setting scalar '"+strName+"' to the vale " + value.toString());
+		logInfo("Setting scalar '"+strName+"' to the vale " + value.toString());
 
 		try {
 			return MessageUtils.getDataMessage(despatch);

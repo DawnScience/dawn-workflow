@@ -86,7 +86,7 @@ public class If extends AbstractDataMessageTransformer {
 						if (expression.equals("true") || MessageUtils.isExpressionTrue(expression, message)) {
 							outputPortName = expressionBean.getOutputPortName();
 							if (logger.isInfoEnabled()) {
-								logger.info("Actor '" + this.getName() + "': Expression '" + expression.toString() + 
+								logInfo("Expression '" + expression.toString() + 
 										"' evaluated to be true, sending message to the '" +  outputPortName + "' port");
 							}
 							if (((Port)output).getName().equals(outputPortName)) {
