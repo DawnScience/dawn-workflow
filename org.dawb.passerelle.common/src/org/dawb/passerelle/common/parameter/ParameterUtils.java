@@ -44,12 +44,13 @@ public class ParameterUtils {
 
 		final Map<String,String> values = MessageUtils.getValues(comp, vars, parameter.getContainer());
 		
-		try {
-			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
-		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
-		} catch (Throwable ignored) {
-			// We just try any eclipse vars
-		}
+		// Commented out while waiting for a fix
+//		try {
+//			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
+//		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+//		} catch (Throwable ignored) {
+//			// We just try any eclipse vars
+//		}
 		stringValue = SubstituteUtils.substitute(stringValue, values);
 		return stringValue;
 	}
@@ -64,12 +65,13 @@ public class ParameterUtils {
 
 		final Map<String,String> values = MessageUtils.getValues(cache, vars, parameter.getContainer());
 		
-		try {
-			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
-		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
-		} catch (Throwable ignored) {
-			// We just try any eclipse vars
-		}
+		// Commented out while waiting for a fix
+//		try {
+//			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
+//		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+//		} catch (Throwable ignored) {
+//			// We just try any eclipse vars
+//		}
 		stringValue = SubstituteUtils.substitute(stringValue, values);
 		return stringValue;
 	}
@@ -97,12 +99,13 @@ public class ParameterUtils {
 		// Create a substitutor with the expander
 		VariableSubstitutor substitutor = new VariableSubstitutor(expander);
 
-		try {
-			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
-		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
-		} catch (Throwable ignored) {
-			// We just try any eclipse vars
-		}
+		// Commented out while waiting for a fix
+//		try {
+//			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
+//		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+//		} catch (Throwable ignored) {
+//			// We just try any eclipse vars
+//		}
 		return substitutor.substitute(stringValue);
 	}
 
