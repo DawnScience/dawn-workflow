@@ -57,6 +57,9 @@ public class MedianDatasets extends AbstractDataMessageTransformer2Port {
     		final AbstractDataset   median = CollectionStats.median(sets);
     		
 			final DataMessageComponent ret = new DataMessageComponent();
+			if (median.getName()==null || "".equals(median.getName())) {
+				median.setName(getName());
+			}
 			ret.setList(median);
 	   		setUpstreamValues(ret, port1Cache, port2Cache);
 			ret.putScalar("operation_names", MessageUtils.getNames(sets));
