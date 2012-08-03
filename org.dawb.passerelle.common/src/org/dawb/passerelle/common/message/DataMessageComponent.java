@@ -103,6 +103,28 @@ public class DataMessageComponent {
 		MapUtils.putUnique(list, name, set);
 	}
 	
+    /**
+     * Renames a list in the DataMessageComponent
+     * @param existing
+     * @param name
+     * @return true if the name replaced was already there.
+     */
+	public boolean renameList(String existing, String name) {
+		if (list==null) return false;
+		
+		Map<String,Serializable> map = new LinkedHashMap<String,Serializable>(1);
+		map.putAll(list);
+		final Serializable set = map.remove(existing);
+		if (set instanceof IDataset) {
+			((IDataset)set).setName(name);
+		}
+	
+		boolean replaced = map.put(name, set) != null;
+		this.list = map;
+		return replaced;
+	}
+
+	
 	public void addScalar(final Map<String,String> f) {
 		addScalar(f, true);
 	}
@@ -150,26 +172,29 @@ public class DataMessageComponent {
 	
 	@Override
     public String toString() {
-		String value = "";
+		StringBuilder buf = new StringBuilder("");
 		if (list!=null&&!list.isEmpty()) {
 			// Sorts the key set of the list
 			Set<String> keySetList = new TreeSet<String>(list.keySet());
 			for (String name: keySetList) {
-				value += this.formatString(name, list.get(name).toString()) + "\n";
+				if (list.get(name)==null) continue;
+				buf.append(this.formatString(name, list.get(name).toString()));
+				buf.append("\n");
 			}
 		}
 		if (scalar!=null&&!scalar.isEmpty()) {
 			// Sorts the key set of the scalars
 			Set<String> keySetList = new TreeSet<String>(scalar.keySet());
 			for (String name: keySetList) {
-				value += this.formatString(name, scalar.get(name).toString()) + "\n";
+				buf.append(this.formatString(name, scalar.get(name).toString()));
+				buf.append("\n");
 			}
 		}
 		if (meta!=null) {
-			value += meta.toString();
+			buf.append(meta.toString());
 		}
-		if (value.equals("")) value = super.toString();
-		return value;
+		if ("".equals(buf.toString())) return super.toString();
+		return buf.toString();
 	}
 
 	/**
