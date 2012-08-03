@@ -9,6 +9,7 @@
  */ 
 package org.dawb.passerelle.actors.ui;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,6 +61,8 @@ public class MessageSink extends AbstractDataMessageSink {
 	
 	private Parameter messageType,messageParam, messageTitle;
 
+	private final Map<String, String> visibleChoices = new HashMap<String, String>(3);
+	
 	/**
 	 *  NOTE Ports must be public for composites to work.
 	 */
@@ -67,24 +70,25 @@ public class MessageSink extends AbstractDataMessageSink {
 
 	public MessageSink(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
+
+		visibleChoices.put(MessageDialog.ERROR+"",       "ERROR");
+		visibleChoices.put(MessageDialog.WARNING+"",     "WARNING");
+		visibleChoices.put(MessageDialog.INFORMATION+"", "INFORMATION");
 		
 		messageType = new StringChoiceParameter(this, "Message Type", new IAvailableChoices() {
 			
 			@Override
 			public Map<String, String> getVisibleChoices() {
-				final Map<String,String> map = new HashMap<String, String>(3);
-				map.put(MessageDialog.ERROR+"",       "ERROR");
-				map.put(MessageDialog.WARNING+"",     "WARNING");
-				map.put(MessageDialog.INFORMATION+"", "INFORMATION");
-				return map;
+				return visibleChoices;
 			}
 			
 			@Override
 			public String[] getChoices() {
-				return new String[]{MessageDialog.ERROR+"",MessageDialog.WARNING+"",MessageDialog.INFORMATION+""}; 
+				return visibleChoices.keySet().toArray(new String[0]); 
 			}
+			
 		}, SWT.SINGLE);
-		messageType.setExpression(MessageDialog.ERROR+"");
+		messageType.setExpression(MessageDialog.INFORMATION+"");
 		registerConfigurableParameter(messageType);
 		
 		messageParam = new StringParameter(this, "Message");
@@ -118,6 +122,8 @@ public class MessageSink extends AbstractDataMessageSink {
 			final int    type    = Integer.parseInt(messageType.getExpression());
 			
 			try {
+				logInfo(visibleChoices.get(type+"") + " message: '" + message + "'");
+
 				if (MessageUtils.isErrorMessage(cache)) getManager().stop();
 
 				final MBeanServerConnection client = ActorUtils.getWorkbenchConnection();

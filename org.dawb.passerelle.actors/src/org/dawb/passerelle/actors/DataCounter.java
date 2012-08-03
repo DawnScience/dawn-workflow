@@ -98,7 +98,7 @@ public class DataCounter extends AbstractDataMessageTransformer {
 	        value = value + 1;
 	        storedValue = value;
 	        
-	        if (logger.isInfoEnabled()) logger.info("Actor '" + this.getName() + "': Counter '" + scalarName + "' increased, new value = " + storedValue);
+	        logInfo("Counter '" + scalarName + "' increased, new value = " + storedValue);
 	        
 	        comp.putScalar(scalarName, String.valueOf(value));
 			return comp;
