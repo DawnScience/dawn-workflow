@@ -92,15 +92,7 @@ import com.isencia.util.StringConvertor;
  */
 public class DataImportSource extends AbstractDataMessageSource implements IResourceActor, IVariableProvider {
 
-	private static final Logger logger = LoggerFactory.getLogger(DataImportSource.class);
-	static {
-		try {
-			H5Loader.setLoaderInFactory();
-		} catch (Exception e) {
-			logger.error("Cannot replace H5Loader", e);
-		}
-	}
-	
+	private static final Logger logger = LoggerFactory.getLogger(DataImportSource.class);	
 	
 	private static final String[] DATA_TYPES = new String[] {"Complete data as numerical arrays", "Just path and file name"};
 	private static final String[] SLICE_TYPES = new String[] {"Unique name for each slice", "Same name for each slice"};
@@ -315,6 +307,10 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 					}
 				}
 			}
+			
+			if (fileQueue!=null && fileQueue.isEmpty()) {
+				logger.info("No files found in '"+file.getAbsolutePath()+"'. Filter is set to: "+filterParam.getExpression());
+			}
 		}
 	}
 	
@@ -385,7 +381,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
     private boolean isRequiredFileName(String fileName) {
     	if (fileFilter==null || "".equals(fileFilter)) return true;
 		if (filterParam.isJustWildCard()) {
-			final StringMatcher matcher = new StringMatcher(fileFilter, false, false);
+			final StringMatcher matcher = new StringMatcher(fileFilter, true, false);
 		    return matcher.match(fileName);
 		} else {
 			return fileName.matches(fileFilter);
@@ -651,7 +647,9 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			final DataMessageComponent comp = manMsg!=null ? MessageUtils.coerceMessage(manMsg) : null;
 			sourcePath = ParameterUtils.getSubstituedValue(this.path, comp);
 		} catch (Exception e) {
-			logger.error("Cannot substitute parameter "+path, e);
+			// Can happen when they have an expand in the parameter that
+			// is not resolved until run time.
+			logger.info("Cannot substitute parameter "+path, e);
 		}
 
 		if (isPathRelative) {

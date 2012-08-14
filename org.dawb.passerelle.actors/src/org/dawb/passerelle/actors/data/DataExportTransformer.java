@@ -63,7 +63,6 @@ import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.TerminationException;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 /**
  * NOTE This is not a sink because it does output the file path.
@@ -450,6 +449,21 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		if (WRITING_CHOICES.get(0).equals(fileWriteType) || WRITING_CHOICES.get(1).equals(fileWriteType)) { //Append to file referenced by Output
 			IFile file = (IFile)ResourcesPlugin.getWorkspace().getRoot().findMember(filePath, true);
 			if (file == null) {
+				
+				// Make directories
+				try {
+					final File fullFile = new File(getProject().getParent().getLocation().toOSString()+"/"+filePath);
+					if (!fullFile.exists() && !fullFile.getParentFile().exists()) {
+						fullFile.getParentFile().mkdirs();
+						fullFile.createNewFile();
+						getProject().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+					}
+
+				} catch (Exception ne) {
+					logger.trace("Error refreshing", ne);
+					// Just carry on.
+				}
+				
 				final File f = new File(filePath);
 				final String name = f.getName();
 				final String path = f.getParent();
@@ -470,7 +484,10 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 			if (fileName==null) throw createDataMessageException("Inputs to '"+getName()+"' must contain scalar value 'file_name' to determine h5 output name.", null);
 			final String rootName = fileName.substring(0, fileName.lastIndexOf("."));
             final IContainer folder = IFileUtils.getContainer(filePath, getProject().getName(), "output");
-			final IFile      file   = IFileUtils.getUniqueIFile(folder, rootName, getExtension());
+			      IFile      file   = folder instanceof IFolder
+					                ? ((IFolder)folder).getFile(rootName)
+					                : ((IProject)folder).getFile(rootName);
+            if (file.exists()) file = IFileUtils.getUniqueIFile(folder, rootName, getExtension());
 			return file;
 			
 		} else if (WRITING_CHOICES.get(3).equals(fileWriteType)||

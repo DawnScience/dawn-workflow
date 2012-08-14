@@ -137,7 +137,7 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 		
 		final boolean isFinished   = isFinishRequested();
 		final boolean isInputRound = isInputRoundComplete();
-		
+
 		// TODO Check also if all inputs to input have fired once, not only if system has finished.
 		if (isInputRound && isFireEndLoop() && cache.size()>=getMinimumCacheSize()) {
 			DataMessageComponent despatch = null;

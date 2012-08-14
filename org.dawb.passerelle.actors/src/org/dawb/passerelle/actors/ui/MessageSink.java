@@ -121,9 +121,11 @@ public class MessageSink extends AbstractDataMessageSink {
 				if (MessageUtils.isErrorMessage(cache)) getManager().stop();
 
 				final MBeanServerConnection client = ActorUtils.getWorkbenchConnection();
-				final Object ob = client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "showMessage", new Object[]{title,message,type}, new String[]{String.class.getName(),String.class.getName(),int.class.getName()});
-				if (ob==null || !((Boolean)ob).booleanValue()) {
-					throw createDataMessageException("Show message '"+getName()+"'!", new Exception());
+				if (client!=null) {
+					final Object ob = client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "showMessage", new Object[]{title,message,type}, new String[]{String.class.getName(),String.class.getName(),int.class.getName()});
+					if (ob==null || !((Boolean)ob).booleanValue()) {
+						throw createDataMessageException("Show message '"+getName()+"'!", new Exception());
+					}
 				}
 			} catch (InstanceNotFoundException noService) {
 				logger.error(title+">  "+message);

@@ -9,6 +9,7 @@
  */ 
 package org.dawb.passerelle.editors;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -24,6 +25,7 @@ import org.dawb.passerelle.actors.Activator;
 import org.dawb.passerelle.actors.ui.config.FieldBean;
 import org.dawb.passerelle.actors.ui.config.FieldContainer;
 import org.dawb.workbench.jmx.RemoveWorkbenchPart;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
@@ -42,8 +44,16 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.dnd.DropTarget;
+import org.eclipse.swt.dnd.DropTargetAdapter;
+import org.eclipse.swt.dnd.DropTargetEvent;
+import org.eclipse.swt.dnd.FileTransfer;
+import org.eclipse.swt.dnd.TextTransfer;
+import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -53,7 +63,9 @@ import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.IActionBars;
+import org.eclipse.ui.part.ResourceTransfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,7 +131,7 @@ public class UserModifyComposite extends Composite implements RemoveWorkbenchPar
 			public Object[] getElements(Object inputElement) {
 				if (values==null || values.isEmpty()) return new Object[]{};
 				final Collection<Map.Entry<String,String>> ret = values.entrySet();
-				return	ret.toArray(new Map.Entry[ret.size()]);
+				return	ret.toArray(new Map.Entry[ret.size()]); // Sorry horrible model, should use list of beans, it would be clearer.
 			}
 		});
 		tableViewer.setInput(new Object());
@@ -131,6 +143,41 @@ public class UserModifyComposite extends Composite implements RemoveWorkbenchPar
 				event.height = 22;
 			}
 		});
+		
+		// We try to add a DND lister to allow files to be dragged and dropped here
+		DropTarget dt = new DropTarget(tableViewer.getTable(), DND.DROP_MOVE| DND.DROP_DEFAULT| DND.DROP_COPY);
+		dt.setTransfer(new Transfer[] { TextTransfer.getInstance (), FileTransfer.getInstance(), ResourceTransfer.getInstance()});
+		dt.addDropListener(new DropTargetAdapter() {
+			@Override
+			public void drop(DropTargetEvent event) {
+                final Object    data = event.data;
+                final TableItem item = (TableItem)event.item;
+                final Map.Entry<String, String> entry = (Map.Entry<String, String>)item.getData();
+				final String valueName = ((Map.Entry<String, String>)entry).getKey();
+				
+				String path = null;
+                if (data instanceof String[]) {
+                	path = ((String[])data)[0];
+                	
+                } else if (data instanceof IResource[]) {
+                	final IResource[] res = (IResource[])data;
+                	path = res[0].getLocation().toOSString();
+                	
+                } else if (data instanceof File[]) {
+                	path = ((File[])data)[0].getAbsolutePath();
+                }
+                
+				if (path!=null && configuration!=null && configuration.getBean(valueName)!=null) {
+					final FieldBean bean = configuration.getBean(valueName);
+                    if (bean.getUiClass().equals(FileBox.class.getName())) {
+                    	values.put(entry.getKey(), path);
+                    	tableViewer.refresh();
+                    }
+				}
+
+			}			
+		});
+
 	
 	}
 	

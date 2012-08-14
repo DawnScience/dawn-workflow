@@ -106,6 +106,13 @@ public class UserInputSource extends AbstractDataMessageSource {
 					logger.info("Trigger for "+getName()+" is not DataMessageComponent, no data added.");
 				}
 			}
+			
+			if (client==null) {
+				final DataMessageComponent  ret    = new DataMessageComponent();
+				ret.addScalar(scalarValues);
+				
+				return MessageUtils.getDataMessage(ret);
+			}
 
 			boolean isDialog = INPUT_CHOICES[0].equals(inputTypeParam.getExpression());
 			
