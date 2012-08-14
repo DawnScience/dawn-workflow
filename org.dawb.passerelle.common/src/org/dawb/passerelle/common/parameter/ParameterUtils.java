@@ -19,6 +19,8 @@ import org.dawb.common.util.SubstituteUtils;
 import org.dawb.common.util.io.Grep;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.variables.IValueVariable;
 import org.eclipse.core.variables.VariablesPlugin;
 
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
@@ -29,24 +31,24 @@ import ptolemy.kernel.util.NamedObj;
 public class ParameterUtils {
 
 	public static final String VARIABLE_EXPRESSION = "\\$\\{([a-zA-Z0-9_ ]+)\\}";
-	
-	
-	public static String getSubstituedValue(final Parameter parameter) throws Exception {
-        return getSubstituedValue(parameter, (DataMessageComponent)null);
-	}
-	
-	public static String getSubstituedValue(final Parameter parameter, final DataMessageComponent comp) throws Exception {
-		
-	    String       stringValue = parameter.getExpression();
-	    if (stringValue==null || "".equals(stringValue.trim())) return null;
 
-	    final List<String> vars = Grep.group(stringValue, VARIABLE_EXPRESSION, 1);
+
+	public static String getSubstituedValue(final Parameter parameter) throws Exception {
+		return getSubstituedValue(parameter, (DataMessageComponent)null);
+	}
+
+	public static String getSubstituedValue(final Parameter parameter, final DataMessageComponent comp) throws Exception {
+
+		String       stringValue = parameter.getExpression();
+		if (stringValue==null || "".equals(stringValue.trim())) return null;
+
+		final List<String> vars = Grep.group(stringValue, VARIABLE_EXPRESSION, 1);
 
 		final Map<String,String> values = MessageUtils.getValues(comp, vars, parameter.getContainer());
-		
+
 		try {
 			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
-		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+			stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
 		} catch (Throwable ignored) {
 			// We just try any eclipse vars
 		}
@@ -54,19 +56,19 @@ public class ParameterUtils {
 		return stringValue;
 	}
 
-	
+
 	public static String getSubstituedValue(final Parameter parameter, final List<DataMessageComponent> cache) throws Exception {
-		
-        String       stringValue = parameter.getExpression();
-	    if (stringValue==null || "".equals(stringValue.trim())) return null;
-	    
+
+		String       stringValue = parameter.getExpression();
+		if (stringValue==null || "".equals(stringValue.trim())) return null;
+
 		final List<String> vars = Grep.group(stringValue, VARIABLE_EXPRESSION, 1);
 
 		final Map<String,String> values = MessageUtils.getValues(cache, vars, parameter.getContainer());
-		
+
 		try {
 			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
-		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+			stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
 		} catch (Throwable ignored) {
 			// We just try any eclipse vars
 		}
@@ -99,11 +101,23 @@ public class ParameterUtils {
 
 		try {
 			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
-		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+			stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
 		} catch (Throwable ignored) {
 			// We just try any eclipse vars
 		}
 		return substitutor.substitute(stringValue);
 	}
 
+	public static void setEclipseValueVariable(String name, String value) throws CoreException {
+
+		IValueVariable var = VariablesPlugin.getDefault().getStringVariableManager().getValueVariable(name);
+
+		if (var == null) {
+			IValueVariable[] variables = new IValueVariable[1];
+			variables[0] = new UtilValueVariable(name, "Util setup variable:"+name, value);
+			VariablesPlugin.getDefault().getStringVariableManager().addVariables(variables);
+		} else {
+			var.setValue(value);
+		}
+	}
 }

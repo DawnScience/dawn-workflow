@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.management.MBeanServerConnection;
 
+import org.dawb.common.util.SubstituteUtils;
 import org.dawb.passerelle.actors.ui.config.FieldBean;
 import org.dawb.passerelle.actors.ui.config.FieldContainer;
 import org.dawb.passerelle.actors.ui.config.FieldParameter;
@@ -25,6 +26,7 @@ import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
+import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserInputBean;
 import org.eclipse.swt.SWT;
@@ -115,7 +117,8 @@ public class UserInputSource extends AbstractDataMessageSource {
 				bean.setActorName(getName());
 				bean.setPartName("Set Values");
 				bean.setDialog(isDialog);
-				bean.setConfigurationXML(fieldParam.getXML());
+				final String xml = ParameterUtils.substitute(fieldParam.getXML(), this);
+				bean.setConfigurationXML(xml);
 				bean.setScalarValues(scalarValues);				
 				bean.setSilent(((BooleanToken)silent.getToken()).booleanValue());
 				
@@ -125,7 +128,7 @@ public class UserInputSource extends AbstractDataMessageSource {
 					trans = new HashMap<String,String>(7);
 					final FieldContainer fc = (FieldContainer)fieldParam.getBeanFromValue(FieldContainer.class);
 					for (FieldBean fb : fc.getFields()) {
-						if (fb.getDefaultValue()!=null) trans.put(fb.getVariableName(), fb.getDefaultValue().toString());
+						if (fb.getDefaultValue()!=null) trans.put(fb.getVariableName(), ParameterUtils.substitute(fb.getDefaultValue().toString(), this));
 					}
 				} else if (trans.isEmpty()) {
 					requestFinish();
