@@ -20,6 +20,7 @@ import java.util.TreeSet;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
+import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
 import uk.ac.gda.util.map.MapUtils;
 
 /**
@@ -57,6 +58,11 @@ public class DataMessageComponent {
 	 * What we did to the data in the pipeline
 	 */
 	private Map<String,String>   scalar;
+	/**
+	 * The data extends ROIBase
+	 */
+	private Map<String,Serializable> rois;
+	
 	/**
 	 * A set of source meta data which may be altered
 	 * to add more information if needed.
@@ -213,16 +219,19 @@ public class DataMessageComponent {
 		if (objectString.length() > maxStringLength) objectString = objectString.substring(0, maxStringLength) + "...";
 		return objectName + " : " + objectString;				
 	}
-	
-	
-	
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime * result + (error ? 1231 : 1237);
 		result = prime * result + ((list == null) ? 0 : list.hashCode());
-		result = prime * result + ((scalar == null) ? 0 : scalar.hashCode());
 		result = prime * result + ((meta == null) ? 0 : meta.hashCode());
+		result = prime * result + ((rois == null) ? 0 : rois.hashCode());
+		result = prime * result + ((scalar == null) ? 0 : scalar.hashCode());
+		result = prime * result
+				+ ((valueTypes == null) ? 0 : valueTypes.hashCode());
 		return result;
 	}
 
@@ -235,20 +244,32 @@ public class DataMessageComponent {
 		if (getClass() != obj.getClass())
 			return false;
 		DataMessageComponent other = (DataMessageComponent) obj;
+		if (error != other.error)
+			return false;
 		if (list == null) {
 			if (other.list != null)
 				return false;
 		} else if (!list.equals(other.list))
+			return false;
+		if (meta == null) {
+			if (other.meta != null)
+				return false;
+		} else if (!meta.equals(other.meta))
+			return false;
+		if (rois == null) {
+			if (other.rois != null)
+				return false;
+		} else if (!rois.equals(other.rois))
 			return false;
 		if (scalar == null) {
 			if (other.scalar != null)
 				return false;
 		} else if (!scalar.equals(other.scalar))
 			return false;
-		if (meta == null) {
-			if (other.meta != null)
+		if (valueTypes == null) {
+			if (other.valueTypes != null)
 				return false;
-		} else if (!meta.equals(other.meta))
+		} else if (!valueTypes.equals(other.valueTypes))
 			return false;
 		return true;
 	}
@@ -297,6 +318,23 @@ public class DataMessageComponent {
 
 	public void setError(boolean error) {
 		this.error = error;
+	}
+	
+	
+	// ROI Methods
+	public void addROI(String name, ROIBase roi) {
+		if (rois == null) rois = new LinkedHashMap<String,Serializable>(1);
+		rois.put(name, roi);
+	}
+	
+	public ROIBase getROI(String name) {
+		if (rois == null) return null;
+		return (ROIBase) rois.get(name);
+	}
+	
+	public void clearROI() {
+		rois.clear();
+		rois = null;
 	}
 
 }
