@@ -28,6 +28,7 @@ Export-Package: org.dawb.passerelle.common,
  org.dawb.passerelle.common.io,
  org.dawb.passerelle.common.message,
  org.dawb.passerelle.common.parameter,
+ org.dawb.passerelle.common.parameter.roi,
  org.dawb.passerelle.common.project,
  org.dawb.passerelle.common.remote,
  org.dawb.passerelle.common.utils

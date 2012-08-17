@@ -56,7 +56,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 								
 				final ROIDialog dialog = new ROIDialog(cellEditorWindow.getShell(), getContainer()); // extends BeanDialog
 				dialog.create();
-				dialog.getShell().setSize(550,750); // As needed
+				dialog.getShell().setSize(550,450); // As needed
 				dialog.getShell().setText("Edit Region of Interest");
 			
 				try {
@@ -88,7 +88,8 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	public String getRendererText() {
 		if (getExpression()==null || "".equals(getExpression())) return "Click to define roi...";
 		try {
-			return getROIFromValue().toString();
+			final ROIBase roi = getROIFromValue();
+			return roi.getClass().getSimpleName()+"  "+roi.toString();
 		} catch (Throwable e) {
 			return "Click to define roi...";
 		} 
@@ -102,6 +103,11 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 		
 		if (getExpression()==null || "".equals(getExpression())) return new RectangularROI();
 
+		return getROIFromValue(getExpression());
+        
+	}
+	
+	private ROIBase getROIFromValue(String expression) throws IOException, ClassNotFoundException {
 		final ClassLoader original = Thread.currentThread().getContextClassLoader();
 		ObjectInputStream ois=null;
 		try {
@@ -113,8 +119,17 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
         } finally {
 			Thread.currentThread().setContextClassLoader(original);
 			if (ois!=null) ois.close();
-       }
-        
+        }
+	}
+
+
+	public ROIBase getRoi() {
+		if (getExpression()==null || "".equals(getExpression())) return null;
+		try {
+			return getROIFromValue(getExpression());
+		} catch (Exception ne) {
+			return null;
+		}
 	}
 
 	/**
@@ -123,11 +138,20 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	 * @return
 	 */
 	private String getValueFromROI(final ROIBase roi) throws IOException {
+		if (roi==null) return "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject( roi );
         oos.close();
         return new String(Base64Encoder.encode(baos.toByteArray()));
+	}
+
+	public void setRoi(ROIBase roi) {
+		try {
+			setExpression(getValueFromROI(roi));
+		} catch (IOException e) {
+			setExpression("");
+		}
 	}
 
 }
