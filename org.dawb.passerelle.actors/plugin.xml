@@ -20,7 +20,7 @@
       <actorgroup
             icon="icons/io_group.png"
             id="org.dawb.passerelle.actors.actorgroup.io"
-            name="File Operations"
+            name="File"
             open="false"
             priority="8">
       </actorgroup>
@@ -37,6 +37,13 @@
             name="User Interface"
             open="false"
             priority="6">
+      </actorgroup>
+      <actorgroup
+            icon="icons/folder_roi.gif"
+            id="org.dawb.passerelle.actors.actorgroup.roi"
+            name="Region of Interest"
+            open="false"
+            priority="5">
       </actorgroup>
    </extension>
    <extension
@@ -280,6 +287,17 @@
             icon="icons/user_input.gif"
             id="org.dawb.passerelle.actors.userinput"
             name="Input">
+      </actor>
+   </extension>
+   <extension
+         name="Region Actors"
+         point="com.isencia.passerelle.engine.actors">
+      <actor
+            class="org.dawb.passerelle.actors.data.ROISource"
+            group="org.dawb.passerelle.actors.actorgroup.roi"
+            icon="icons/roi.png"
+            id="org.dawb.passerelle.actors.roi"
+            name="Region">
       </actor>
    </extension>
    <extension
