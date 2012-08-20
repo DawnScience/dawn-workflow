@@ -293,7 +293,7 @@
          name="Region Actors"
          point="com.isencia.passerelle.engine.actors">
       <actor
-            class="org.dawb.passerelle.actors.data.ROISource"
+            class="org.dawb.passerelle.actors.roi.ROISource"
             group="org.dawb.passerelle.actors.actorgroup.roi"
             icon="icons/roi.png"
             id="org.dawb.passerelle.actors.roi"
