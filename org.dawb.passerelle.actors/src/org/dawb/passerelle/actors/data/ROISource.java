@@ -78,6 +78,13 @@ public class ROISource extends AbstractDataMessageSource {
 		registerConfigurableParameter(roiParam);
 		
 	}
+	
+	public static ROISource createSource(String name, ROIBase roi) throws NameDuplicationException, IllegalActionException {
+		ROISource source = new ROISource(new CompositeEntity(), name);
+		source.roiParam.setRoi(roi);
+		return source;
+	}
+
 
 	/**
 	 *  @param attribute The attribute that changed.
@@ -137,5 +144,6 @@ public class ROISource extends AbstractDataMessageSource {
 	protected boolean mustWaitForTrigger() {
 		return false;
 	}
+
 
 }
