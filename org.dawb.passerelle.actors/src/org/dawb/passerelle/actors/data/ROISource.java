@@ -33,7 +33,7 @@ import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.message.ManagedMessage;
 
 //////////////////////////////////////////////////////////////////////////
-//// Scalar
+//// ROI
 
 /**
  * Sends a scalar message once on each output port.
