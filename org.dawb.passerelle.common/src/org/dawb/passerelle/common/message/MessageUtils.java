@@ -28,6 +28,7 @@ import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.MetaDataAdapter;
+import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
 
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageException;
@@ -213,6 +214,42 @@ public class MessageUtils {
 			final List<IDataset> sets = getDatasets(comp);
 			if (sets==null) continue;
 			ret.addAll(sets);
+		}
+		return ret;
+	}
+	
+	/**
+	 * List of all the data sets contained in the DataMessageComponent(s)
+	 * 
+	 * Does not try and make data sets out of primitive arrays
+	 * 
+	 * @param data
+	 * @return
+	 */
+	public static List<ROIBase> getRois(List<DataMessageComponent> data) {
+		List<ROIBase> ret = null;
+		for (DataMessageComponent comp : data) {
+			if (comp==null||comp.getRois()==null) continue;
+			if (ret==null) ret = new ArrayList<ROIBase>(7);
+			final List<ROIBase> sets = getRois(comp);
+			if (sets==null) continue;
+			ret.addAll(sets);
+		}
+		return ret;
+	}
+	
+	/**
+	 * 
+	 * @param comp
+	 * @return
+	 */
+	public static List<ROIBase> getRois(DataMessageComponent comp) {
+		List<ROIBase> ret = null;
+		if (comp==null||comp.getRois()==null) return null;
+		if (ret==null) ret = new ArrayList<ROIBase>(7);
+		final Collection<Serializable> values = comp.getRois().values();
+		for (Object object : values) {
+			if (object instanceof IDataset) ret.add((ROIBase)object);
 		}
 		return ret;
 	}

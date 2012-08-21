@@ -336,5 +336,8 @@ public class DataMessageComponent {
 		rois.clear();
 		rois = null;
 	}
+	public Map<String, Serializable> getRois() {
+		return rois;
+	}
 
 }
