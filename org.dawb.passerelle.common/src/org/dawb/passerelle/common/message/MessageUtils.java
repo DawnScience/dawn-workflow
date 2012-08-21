@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,7 @@ import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.MetaDataAdapter;
+import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
 
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageException;
@@ -516,4 +518,20 @@ public class MessageUtils {
         return ExpressionUtils.evaluateExpression(expression, comp.getScalar());
 	}
 
+	public static Map<String, ROIBase> getROIs(final List<DataMessageComponent> cache) throws Exception {
+		Map<String, ROIBase> rois = new LinkedHashMap<String,ROIBase>(1);
+		for (DataMessageComponent message : cache) {
+			Map<String, Serializable> map = message.getROIs();
+			for (String key : map.keySet()) {
+				if (map.get(key) instanceof ROIBase) {
+					ROIBase new_name = (ROIBase) map.get(key);
+					rois.put(key, (ROIBase)map.get(key));
+				}
+				
+			}
+		}
+		return rois;
+	}
+}
+	
 }

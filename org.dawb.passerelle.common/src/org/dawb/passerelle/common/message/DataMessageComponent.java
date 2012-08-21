@@ -332,6 +332,10 @@ public class DataMessageComponent {
 		return (ROIBase) rois.get(name);
 	}
 	
+	public Map<String,Serializable> getROIs(){
+		return rois;
+	}
+	
 	public void clearROI() {
 		rois.clear();
 		rois = null;
