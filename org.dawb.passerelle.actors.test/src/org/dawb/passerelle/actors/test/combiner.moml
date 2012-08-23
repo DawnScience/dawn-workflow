@@ -1,0 +1,141 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE entity PUBLIC "-//UC Berkeley//DTD MoML 1//EN"
+    "http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd">
+<entity name="new_model" class="ptolemy.actor.TypedCompositeActor" source="C:\Work\debug_dawn_workspace\workflows\combiner.moml">
+    <property name="_createdBy" class="ptolemy.kernel.attributes.VersionAttribute" value="7.0.1">
+    </property>
+    <property name="_workbenchVersion" class="ptolemy.kernel.attributes.VersionAttribute" value="1.0.0">
+    </property>
+    <property name="Director" class="com.isencia.passerelle.domain.cap.Director">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{20, 20}">
+        </property>
+    </property>
+    <entity name="Combiner" class="org.dawb.passerelle.common.actors.DataMessageCombiner">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{156.0, 158.0}">
+        </property>
+    </entity>
+    <entity name="Data Export" class="org.dawb.passerelle.actors.data.DataExportTransformer">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
+        </property>
+        <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
+        </property>
+        <property name="Name Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Attempt to use image name if there is one.">
+        </property>
+        <property name="File Format" class="org.dawb.passerelle.actors.data.DataExportTransformer$1" value="hdf5">
+        </property>
+        <property name="Writing Type" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create new file using ${file_name} then use that for everything">
+        </property>
+        <property name="Output" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="/${project_name}/output/">
+        </property>
+        <property name="Calibration" class="org.dawb.passerelle.actors.data.DataExportTransformer$2" value="None">
+        </property>
+        <property name="Dataset Name" class="ptolemy.data.expr.StringParameter" value="">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{263.0, 158.0}">
+        </property>
+    </entity>
+    <entity name="Open File" class="org.dawb.passerelle.actors.file.OpenFileSink">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="PassThrough" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
+        </property>
+        <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
+        </property>
+        <property name="File Path" class="ptolemy.data.expr.StringParameter" value="${file_path}">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{385.0, 161.0}">
+        </property>
+    </entity>
+    <entity name="MoKedge_1_15" class="org.dawb.passerelle.actors.data.DataImportSource">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Relative Path" class="ptolemy.data.expr.Parameter" value="true">
+        </property>
+        <property name="Folder" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="File Filter" class="com.isencia.passerelle.util.ptolemy.RegularExpressionParameter" value="">
+        </property>
+        <property name="Path" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="${project_name}/data/MoKedge_1_15.nxs">
+        </property>
+        <property name="Data Sets" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="/entry1/instrument/xspress2system/data">
+        </property>
+        <property name="Rename Data Sets" class="com.isencia.passerelle.util.ptolemy.StringMapParameter" value="">
+        </property>
+        <property name="Data Set Slice" class="org.dawb.passerelle.actors.data.config.SliceParameter" value="PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4gCjxqYXZhIHZlcnNpb249IjEuNi4wXzI5IiBjbGFzcz0iamF2YS5iZWFucy5YTUxEZWNvZGVyIj4gCiA8b2JqZWN0IGNsYXNzPSJvcmcuZGF3Yi5jb21tb24udWkuc2xpY2luZy5EaW1zRGF0YUxpc3QiPiAKICA8dm9pZCBwcm9wZXJ0eT0iZGltc0RhdGEiPiAKICAgPG9iamVjdCBjbGFzcz0iamF2YS51dGlsLkFycmF5TGlzdCI+IAogICAgPHZvaWQgbWV0aG9kPSJhZGQiPiAKICAgICA8b2JqZWN0IGNsYXNzPSJvcmcuZGF3Yi5jb21tb24udWkuc2xpY2luZy5EaW1zRGF0YSI+IAogICAgICA8dm9pZCBwcm9wZXJ0eT0iYXhpcyI+IAogICAgICAgPGludD4wPC9pbnQ+IAogICAgICA8L3ZvaWQ+IAogICAgICA8dm9pZCBwcm9wZXJ0eT0iZGltZW5zaW9uIj4gCiAgICAgICA8aW50PjA8L2ludD4gCiAgICAgIDwvdm9pZD4gCiAgICAgPC9vYmplY3Q+IAogICAgPC92b2lkPiAKICAgIDx2b2lkIG1ldGhvZD0iYWRkIj4gCiAgICAgPG9iamVjdCBjbGFzcz0ib3JnLmRhd2IuY29tbW9uLnVpLnNsaWNpbmcuRGltc0RhdGEiPiAKICAgICAgPHZvaWQgcHJvcGVydHk9ImRpbWVuc2lvbiI+IAogICAgICAgPGludD4xPC9pbnQ+IAogICAgICA8L3ZvaWQ+IAogICAgIDwvb2JqZWN0PiAKICAgIDwvdm9pZD4gCiAgICA8dm9pZCBtZXRob2Q9ImFkZCI+IAogICAgIDxvYmplY3QgY2xhc3M9Im9yZy5kYXdiLmNvbW1vbi51aS5zbGljaW5nLkRpbXNEYXRhIj4gCiAgICAgIDx2b2lkIHByb3BlcnR5PSJheGlzIj4gCiAgICAgICA8aW50PjE8L2ludD4gCiAgICAgIDwvdm9pZD4gCiAgICAgIDx2b2lkIHByb3BlcnR5PSJkaW1lbnNpb24iPiAKICAgICAgIDxpbnQ+MjwvaW50PiAKICAgICAgPC92b2lkPiAKICAgICA8L29iamVjdD4gCiAgICA8L3ZvaWQ+IAogICA8L29iamVjdD4gCiAgPC92b2lkPiAKIDwvb2JqZWN0PiAKPC9qYXZhPiAK">
+        </property>
+        <property name="Data Type" class="org.dawb.passerelle.actors.data.DataImportSource$3" value="Complete data as numerical arrays">
+        </property>
+        <property name="Slice Name Type" class="org.dawb.passerelle.actors.data.DataImportSource$4" value="Unique name for each slice">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{29.0, 110.0}">
+        </property>
+    </entity>
+    <entity name="MoKedge_1_15(1)" class="org.dawb.passerelle.actors.data.DataImportSource">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Relative Path" class="ptolemy.data.expr.Parameter" value="true">
+        </property>
+        <property name="Folder" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="File Filter" class="com.isencia.passerelle.util.ptolemy.RegularExpressionParameter" value="">
+        </property>
+        <property name="Path" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="${project_name}/data/MoKedge_1_15.nxs">
+        </property>
+        <property name="Data Sets" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="/entry1/counterTimer01/Energy, /entry1/counterTimer01/lnI0It">
+        </property>
+        <property name="Rename Data Sets" class="com.isencia.passerelle.util.ptolemy.StringMapParameter" value="">
+        </property>
+        <property name="Data Set Slice" class="org.dawb.passerelle.actors.data.config.SliceParameter" value="">
+        </property>
+        <property name="Data Type" class="org.dawb.passerelle.actors.data.DataImportSource$3" value="Complete data as numerical arrays">
+        </property>
+        <property name="Slice Name Type" class="org.dawb.passerelle.actors.data.DataImportSource$4" value="Unique name for each slice">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{29.0, 244.0}">
+        </property>
+    </entity>
+    <relation name="_R_3" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_4" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_2" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <link port="Combiner.input" relation="_R"/>
+    <link port="Combiner.input" relation="_R_2"/>
+    <link port="Combiner.output" relation="_R_3"/>
+    <link port="Data Export.input" relation="_R_3"/>
+    <link port="Data Export.output" relation="_R_4"/>
+    <link port="Open File.input" relation="_R_4"/>
+    <link port="MoKedge_1_15.output" relation="_R"/>
+    <link port="MoKedge_1_15(1).output" relation="_R_2"/>
+</entity>

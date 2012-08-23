@@ -20,12 +20,6 @@
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
-<mapAttribute key="org.eclipse.debug.core.environmentVariables">
-<mapEntry key="EDNA_HOME" value="${project_loc:edna}"/>
-<mapEntry key="EDNA_SITE" value="ESRF"/>
-<mapEntry key="LD_PRELOAD" value="/usr/lib/libpython2.6.so.1.0"/>
-<mapEntry key="PYTHONPATH" value="${project_loc:org.dawb.fable.feature}/python/fabio_0.0.7/${target.os}-${target.arch}:${project_loc:edna}/kernel/src"/>
-</mapAttribute>
 <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>

@@ -156,6 +156,12 @@ public class MomlTest {
 	public void testScalarInjection2() throws Throwable {
 		testScalarInjection("src/org/dawb/passerelle/actors/test/scalar_test2.moml",  "/entry/dictionary/x", "/entry/dictionary/x1", "/entry/dictionary/x4");
 	}
+	
+	@Test
+	public void testCombine() throws Throwable {
+		testVariables("src/org/dawb/passerelle/actors/test/combiner.moml",  "/entry/data/Energy", IHierarchicalDataFile.NUMBER_ARRAY,  "/entry/data/lnI0It");
+	}
+
 //	@Test // This one sometimes fails - run again separately if does
 //	public void testScalarInjection3() throws Throwable {
 //		testScalarInjection("src/org/dawb/passerelle/actors/test/scalar_test3.moml",  "/entry/dictionary/p", "/entry/dictionary/q");
@@ -188,6 +194,10 @@ public class MomlTest {
 		testVariables(path, null, scalarNames);
 	}
 	public synchronized void testVariables(final String path, final String listName, final String... scalarNames) throws Throwable {
+	
+	    testVariables(path, listName, IHierarchicalDataFile.TEXT, scalarNames);
+	}
+	public synchronized void testVariables(final String path, final String listName, int dataType, final String... scalarNames) throws Throwable {
 
 		
 		testFile(path, false);
@@ -214,7 +224,7 @@ public class MomlTest {
 
 		final IHierarchicalDataFile hFile = HierarchicalDataFactory.getReader(h5.getLocation().toOSString());
 		try {
-			final List<String> scalars = hFile.getDatasetNames(IHierarchicalDataFile.TEXT);
+			final List<String> scalars = hFile.getDatasetNames(dataType);
 			if (!scalars.containsAll(Arrays.asList(scalarNames))) {
 				throw new Exception("Testing file '"+path+"', did not find injected scalars in "+scalars);
 			}
