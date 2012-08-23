@@ -147,6 +147,13 @@
             id="org.dawb.passerelle.actors.timerSource"
             name="Timed Source">
       </actor>
+      <actor
+            class="org.dawb.passerelle.common.actors.DataMessageCombiner"
+            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            icon="icons/sync.gif"
+            id="org.dawb.passerelle.actors.dmSynchronizer"
+            name="Combiner">
+      </actor>
    </extension>
    <extension
          name="Maths actors"
