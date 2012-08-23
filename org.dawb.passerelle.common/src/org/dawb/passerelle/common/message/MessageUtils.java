@@ -558,12 +558,13 @@ public class MessageUtils {
 		Map<String, ROIBase> rois = new LinkedHashMap<String,ROIBase>(1);
 		for (DataMessageComponent message : cache) {
 			Map<String, Serializable> map = message.getROIs();
-			for (String key : map.keySet()) {
-				if (map.get(key) instanceof ROIBase) {
-					ROIBase new_name = (ROIBase) map.get(key);
-					rois.put(key, (ROIBase)map.get(key));
+			if(map!=null){
+				for (String key : map.keySet()) {
+					if (map.get(key) instanceof ROIBase) {
+						ROIBase new_name = (ROIBase) map.get(key);
+						rois.put(key, (ROIBase)map.get(key));
+					}
 				}
-				
 			}
 		}
 		return rois;
