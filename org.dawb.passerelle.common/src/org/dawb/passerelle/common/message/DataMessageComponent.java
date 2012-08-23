@@ -301,6 +301,12 @@ public class DataMessageComponent {
 			if (valueTypes==null) valueTypes = new Hashtable<String, VALUE_TYPE>(a.valueTypes.size());
 			valueTypes.putAll(a.valueTypes);
 		}
+		
+		if (a.rois!=null) {
+			for (String key : a.rois.keySet()) {
+				addROI(key, a.getROI(key));
+			}
+		}
 	}
 
 	public boolean isScalarOnly() {
