@@ -19,6 +19,7 @@ import java.util.TreeSet;
 
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
 import uk.ac.gda.util.map.MapUtils;
@@ -58,10 +59,16 @@ public class DataMessageComponent {
 	 * What we did to the data in the pipeline
 	 */
 	private Map<String,String>   scalar;
+	
 	/**
 	 * The data extends ROIBase
 	 */
 	private Map<String,Serializable> rois;
+	
+	/**
+	 * The data extends AFunction
+	 */
+	private Map<String,Serializable> functions;
 	
 	/**
 	 * A set of source meta data which may be altered
@@ -349,5 +356,25 @@ public class DataMessageComponent {
 	public Map<String, Serializable> getRois() {
 		return rois;
 	}
-
+	
+	
+	// Function Methods
+	public void addFunction(String name, AFunction function) {
+		if (functions == null) functions = new LinkedHashMap<String,Serializable>(1);
+		functions.put(name, function);
+	}
+	
+	public AFunction getFunction(String name) {
+		if (functions == null) return null;
+		return (AFunction) functions.get(name);
+	}
+	
+	public Map<String,Serializable> getFunctions(){
+		return functions;
+	}
+	
+	public void clearFunctions() {
+		functions.clear();
+		functions = null;
+	}
 }
