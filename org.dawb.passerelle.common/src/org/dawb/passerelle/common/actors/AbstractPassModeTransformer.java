@@ -392,7 +392,11 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		if (NAME_MODE.get(2).equals(dataSetNaming.getExpression())) {
 			final List<IDataset> sets = MessageUtils.getDatasets(despatch);
 			if (sets!=null) for (IDataset iDataset : sets) {
-				iDataset.setName(getName());
+				final String existing = iDataset.getName();
+				boolean replacedExisting = despatch.renameList(existing, getName());
+				if (replacedExisting) {
+					logger.error("Replaced existing name '"+existing+"' with '"+getName()+"' in actor: "+getName());
+				}
 			}
         
 		}
@@ -411,7 +415,12 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 				    }
 				    if (fileName!=null) {
 				    	try {
-				    	    set.setName(fileName.substring(0,fileName.lastIndexOf('.')));
+				    		
+							final String existing    = set.getName();
+							boolean replacedExisting = despatch.renameList(existing, fileName.substring(0,fileName.lastIndexOf('.')));
+							if (replacedExisting) {
+								logger.error("Replaced existing name '"+existing+"' with '"+fileName.substring(0,fileName.lastIndexOf('.'))+"' in actor: "+getName());
+							}
 				    	} catch (Exception ignored) {
 				    		logger.debug("Could not assign data set name from '"+fileName+"'");
 				    	}
