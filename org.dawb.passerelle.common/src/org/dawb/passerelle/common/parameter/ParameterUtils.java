@@ -38,20 +38,21 @@ public class ParameterUtils {
 	}
 
 	public static String getSubstituedValue(final Parameter parameter, final DataMessageComponent comp) throws Exception {
+		
+	    String       stringValue = parameter.getExpression();
+	    if (stringValue==null || "".equals(stringValue.trim())) return null;
 
-		String       stringValue = parameter.getExpression();
-		if (stringValue==null || "".equals(stringValue.trim())) return null;
-
-		final List<String> vars = Grep.group(stringValue, VARIABLE_EXPRESSION, 1);
+	    final List<String> vars = Grep.group(stringValue, VARIABLE_EXPRESSION, 1);
 
 		final Map<String,String> values = MessageUtils.getValues(comp, vars, parameter.getContainer());
-
-		try {
-			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
-			stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
-		} catch (Throwable ignored) {
-			// We just try any eclipse vars
-		}
+		
+		// Commented out while waiting for a fix
+//		try {
+//			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
+//		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+//		} catch (Throwable ignored) {
+//			// We just try any eclipse vars
+//		}
 		stringValue = SubstituteUtils.substitute(stringValue, values);
 		return stringValue;
 	}
@@ -65,13 +66,14 @@ public class ParameterUtils {
 		final List<String> vars = Grep.group(stringValue, VARIABLE_EXPRESSION, 1);
 
 		final Map<String,String> values = MessageUtils.getValues(cache, vars, parameter.getContainer());
-
-		try {
-			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
-			stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
-		} catch (Throwable ignored) {
-			// We just try any eclipse vars
-		}
+		
+		// Commented out while waiting for a fix
+//		try {
+//			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
+//		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+//		} catch (Throwable ignored) {
+//			// We just try any eclipse vars
+//		}
 		stringValue = SubstituteUtils.substitute(stringValue, values);
 		return stringValue;
 	}
@@ -99,12 +101,13 @@ public class ParameterUtils {
 		// Create a substitutor with the expander
 		VariableSubstitutor substitutor = new VariableSubstitutor(expander);
 
-		try {
-			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
-			stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
-		} catch (Throwable ignored) {
-			// We just try any eclipse vars
-		}
+		// Commented out while waiting for a fix
+//		try {
+//			VariablesPlugin.getDefault().getStringVariableManager().validateStringVariables(stringValue);
+//		    stringValue = VariablesPlugin.getDefault().getStringVariableManager().performStringSubstitution(stringValue, false);
+//		} catch (Throwable ignored) {
+//			// We just try any eclipse vars
+//		}
 		return substitutor.substitute(stringValue);
 	}
 

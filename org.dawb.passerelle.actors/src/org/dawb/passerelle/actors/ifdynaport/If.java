@@ -17,6 +17,8 @@ import org.dawb.passerelle.actors.ifdynaport.ExpressionParameter;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
@@ -29,6 +31,8 @@ import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.message.ManagedMessage;
 
 public class If extends AbstractDataMessageTransformer {
+
+	private static final Logger logger = LoggerFactory.getLogger(If.class);
 
 	/**
 	 * 
@@ -81,6 +85,10 @@ public class If extends AbstractDataMessageTransformer {
 					if (!expression.equals("false")) {
 						if (expression.equals("true") || MessageUtils.isExpressionTrue(expression, message)) {
 							outputPortName = expressionBean.getOutputPortName();
+							if (logger.isInfoEnabled()) {
+								logInfo("Expression '" + expression.toString() + 
+										"' evaluated to be true, sending message to the '" +  outputPortName + "' port");
+							}
 							if (((Port)output).getName().equals(outputPortName)) {
 								super.sendOutputMsg(((Port)output),message);
 							} else {

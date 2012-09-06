@@ -505,7 +505,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				final DataMessageComponent c = MessageUtils.coerceMessage(triggerMsg);
 			    comp.addScalar(c.getScalar());
 			} catch (Exception ignored) {
-				logger.info("Trigger for "+getName()+" is not DataMessageComponent, no data added.");
+				logger.debug("Trigger for "+getName()+" is not DataMessageComponent, no data added.");
 			}
 		}
 		

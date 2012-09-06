@@ -8,19 +8,26 @@
             id="com.isencia.passerelle.actor.actorgroup.utilities"
             name="General"
             open="false"
-            priority="10">
+            priority="11">
       </actorgroup>
       <actorgroup
             icon="icons/folder_process.png"
             id="org.dawb.passerelle.actors.actorgroup.process"
             name="Processes"
             open="false"
+            priority="10">
+      </actorgroup>
+      <actorgroup
+            icon="icons/folder.gif"
+            id="org.dawb.passerelle.actors.actorgroup.flowcontrol"
+            name="Flow Control"
+            open="false"
             priority="9">
       </actorgroup>
       <actorgroup
             icon="icons/io_group.png"
             id="org.dawb.passerelle.actors.actorgroup.io"
-            name="File"
+            name="File Operations"
             open="false"
             priority="8">
       </actorgroup>
@@ -215,13 +222,6 @@
             name="Python">
       </actor>
       <actor
-            class="org.dawb.passerelle.actors.ifdynaport.If"
-            group="org.dawb.passerelle.actors.actorgroup.maths"
-            icon="icons/if.png"
-            id="org.dawb.passerelle.actors.ifdynaport"
-            name="If">
-      </actor>
-      <actor
             class="org.dawb.passerelle.actors.data.Expression"
             figureCustomizer="org.dawb.passerelle.actors.data.MathCustomizer"
             group="org.dawb.passerelle.actors.actorgroup.maths"
@@ -297,6 +297,7 @@
       </actor>
    </extension>
    <extension
+<<<<<<< HEAD
          name="Region Actors"
          point="com.isencia.passerelle.engine.actors">
       <actor
@@ -305,6 +306,23 @@
             icon="icons/roi.png"
             id="org.dawb.passerelle.actors.roi"
             name="Region">
+=======
+         name="Flow Control"
+         point="com.isencia.passerelle.engine.actors">
+      <actor
+            class="org.dawb.passerelle.actors.ifdynaport.If"
+            group="org.dawb.passerelle.actors.actorgroup.flowcontrol"
+            icon="icons/if.png"
+            id="org.dawb.passerelle.actors.ifdynaport"
+            name="If">
+      </actor>
+      <actor
+            class="com.isencia.passerelle.actor.flow.Synchronizer"
+            group="org.dawb.passerelle.actors.actorgroup.flowcontrol"
+            icon="icons/passerelle.gif"
+            id="org.dawb.passerelle.actors.flow.Synchronizer"
+            name="Synchronizer">
+>>>>>>> origin/1.1
       </actor>
    </extension>
    <extension

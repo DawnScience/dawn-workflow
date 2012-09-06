@@ -15,6 +15,7 @@ import java.util.Map;
 
 import javax.management.MBeanServerConnection;
 
+import org.dawb.common.util.SubstituteUtils;
 import org.dawb.passerelle.actors.ui.config.FieldBean;
 import org.dawb.passerelle.actors.ui.config.FieldContainer;
 import org.dawb.passerelle.actors.ui.config.FieldParameter;
@@ -63,7 +64,7 @@ public class UserModifyTransformer extends AbstractDataMessageTransformer {
 	private static final long serialVersionUID = -8123070610686014566L;
 
 	private FieldParameter  fieldParam;
-	private StringParameter inputTypeParam;
+	private StringParameter inputTypeParam, automaticModeParam;
 	private Parameter       silent;
 	
 	public UserModifyTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
@@ -87,6 +88,10 @@ public class UserModifyTransformer extends AbstractDataMessageTransformer {
 		silent.setToken(new BooleanToken(false));
 		registerConfigurableParameter(silent);
 
+		automaticModeParam = new StringParameter(this, "Automatic Mode Variable");
+		automaticModeParam.setExpression("automatic_mode");
+		registerConfigurableParameter(automaticModeParam);
+
 		
 		inputTypeParam.setExpression(INPUT_CHOICES[0]);
 		registerConfigurableParameter(inputTypeParam);
@@ -107,6 +112,22 @@ public class UserModifyTransformer extends AbstractDataMessageTransformer {
             }
             
 			final Map<String,String>    scalar = MessageUtils.getScalar(cache);
+			
+			// Check if automatic mode
+			System.out.println("Expression: "+ automaticModeParam.getExpression());
+			if (scalar.containsKey(automaticModeParam.getExpression())) {
+				final String automaticMode = SubstituteUtils.substitute("${"+automaticModeParam.getExpression()+"}", scalar);
+				System.out.println("Automatic mode : "+automaticMode);
+				if (automaticMode.equals("true")) {
+					final DataMessageComponent  ret    = new DataMessageComponent();
+					ret.setMeta(MessageUtils.getMeta(cache));
+					ret.addScalar(scalar);
+					return ret;				
+				}
+			}	else {
+				scalar.put(automaticModeParam.getExpression(), "false");
+			}
+				
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection();
 			if (client == null ) {
 				final DataMessageComponent  ret    = new DataMessageComponent();

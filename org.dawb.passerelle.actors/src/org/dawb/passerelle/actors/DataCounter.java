@@ -23,6 +23,8 @@ import java.util.List;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
@@ -41,6 +43,8 @@ import com.isencia.passerelle.actor.ProcessingException;
 
 public class DataCounter extends AbstractDataMessageTransformer {
 
+	private static final Logger logger = LoggerFactory.getLogger(DataCounter.class);
+
 	private static List<String> MODES;
 	static {
 		MODES = new ArrayList<String>(3);
@@ -48,7 +52,7 @@ public class DataCounter extends AbstractDataMessageTransformer {
 		MODES.add("Evaluate on every data input and store value locally.");
 	}
 	
-	private double  storedValue;
+	private int storedValue;
 	private boolean readValue = false;
 	
 	/**
@@ -81,13 +85,20 @@ public class DataCounter extends AbstractDataMessageTransformer {
         final String scalarName = nameParam.getExpression();
 		try {
 	        final DataMessageComponent comp  = MessageUtils.mergeAll(cache);
-	        double                    value  = Double.parseDouble(comp.getScalar(scalarName));
+	        int value;
+	        try {
+		        value  = Integer.parseInt(comp.getScalar(scalarName));	        	
+	        } catch (Exception e) { 
+		        value  = (int)Double.parseDouble(comp.getScalar(scalarName));
+	        }
 	        readValue = true;
 	        if (MODES.get(2).equals(passModeParameter.getExpression()) && readValue) {
 	        	value = storedValue;	
 	        }
-	        value = value + 1d;
+	        value = value + 1;
 	        storedValue = value;
+	        
+	        logInfo("Counter '" + scalarName + "' increased, new value = " + storedValue);
 	        
 	        comp.putScalar(scalarName, String.valueOf(value));
 			return comp;
