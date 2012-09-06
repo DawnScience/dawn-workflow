@@ -233,6 +233,8 @@ public class DataMessageComponent {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + (error ? 1231 : 1237);
+		result = prime * result
+				+ ((functions == null) ? 0 : functions.hashCode());
 		result = prime * result + ((list == null) ? 0 : list.hashCode());
 		result = prime * result + ((meta == null) ? 0 : meta.hashCode());
 		result = prime * result + ((rois == null) ? 0 : rois.hashCode());
@@ -252,6 +254,11 @@ public class DataMessageComponent {
 			return false;
 		DataMessageComponent other = (DataMessageComponent) obj;
 		if (error != other.error)
+			return false;
+		if (functions == null) {
+			if (other.functions != null)
+				return false;
+		} else if (!functions.equals(other.functions))
 			return false;
 		if (list == null) {
 			if (other.list != null)
@@ -312,6 +319,12 @@ public class DataMessageComponent {
 		if (a.rois!=null) {
 			for (String key : a.rois.keySet()) {
 				addROI(key, a.getROI(key));
+			}
+		}
+		
+		if (a.functions!=null) {
+			for (String key : a.functions.keySet()) {
+				addFunction(key, a.getFunction(key));
 			}
 		}
 	}

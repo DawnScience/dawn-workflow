@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.MetaDataAdapter;
 import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
@@ -561,7 +562,6 @@ public class MessageUtils {
 			if(map!=null){
 				for (String key : map.keySet()) {
 					if (map.get(key) instanceof ROIBase) {
-						ROIBase new_name = (ROIBase) map.get(key);
 						rois.put(key, (ROIBase)map.get(key));
 					}
 				}
@@ -569,5 +569,22 @@ public class MessageUtils {
 		}
 		return rois;
 	}
+	
+	
+	public static Map<String, AFunction> getFunctions(final List<DataMessageComponent> cache) throws Exception {
+		Map<String, AFunction> functions = new LinkedHashMap<String,AFunction>(1);
+		for (DataMessageComponent message : cache) {
+			Map<String, Serializable> map = message.getFunctions();
+			if(map!=null){
+				for (String key : map.keySet()) {
+					if (map.get(key) instanceof AFunction) {
+						functions.put(key, (AFunction) map.get(key));
+					}
+				}
+			}
+		}
+		return functions;
+	}
+	
 }
 	
