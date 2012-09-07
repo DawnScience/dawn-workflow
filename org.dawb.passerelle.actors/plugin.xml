@@ -154,13 +154,6 @@
             id="org.dawb.passerelle.actors.timerSource"
             name="Timed Source">
       </actor>
-      <actor
-            class="org.dawb.passerelle.common.actors.DataMessageCombiner"
-            group="com.isencia.passerelle.actor.actorgroup.utilities"
-            icon="icons/sync.gif"
-            id="org.dawb.passerelle.actors.dmSynchronizer"
-            name="Combiner">
-      </actor>
    </extension>
    <extension
          name="Maths actors"
@@ -297,7 +290,6 @@
       </actor>
    </extension>
    <extension
-<<<<<<< HEAD
          name="Region Actors"
          point="com.isencia.passerelle.engine.actors">
       <actor
@@ -306,7 +298,9 @@
             icon="icons/roi.png"
             id="org.dawb.passerelle.actors.roi"
             name="Region">
-=======
+      </actor>
+   </extension>
+   <extension
          name="Flow Control"
          point="com.isencia.passerelle.engine.actors">
       <actor
@@ -322,7 +316,13 @@
             icon="icons/passerelle.gif"
             id="org.dawb.passerelle.actors.flow.Synchronizer"
             name="Synchronizer">
->>>>>>> origin/1.1
+      </actor>
+      <actor
+            class="org.dawb.passerelle.common.actors.DataMessageCombiner"
+            group="org.dawb.passerelle.actors.actorgroup.flowcontrol"
+            icon="icons/sync.gif"
+            id="org.dawb.passerelle.actors.dmSynchronizer"
+            name="Combiner">
       </actor>
    </extension>
    <extension
