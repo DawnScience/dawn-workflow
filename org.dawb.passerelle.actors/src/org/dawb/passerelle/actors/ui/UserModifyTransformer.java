@@ -114,10 +114,10 @@ public class UserModifyTransformer extends AbstractDataMessageTransformer {
 			final Map<String,String>    scalar = MessageUtils.getScalar(cache);
 			
 			// Check if automatic mode
-			System.out.println("Expression: "+ automaticModeParam.getExpression());
-			if (scalar.containsKey(automaticModeParam.getExpression())) {
-				final String automaticMode = SubstituteUtils.substitute("${"+automaticModeParam.getExpression()+"}", scalar);
-				System.out.println("Automatic mode : "+automaticMode);
+			String automaticModeExpression = automaticModeParam.getExpression();
+			if (scalar.containsKey(automaticModeExpression)) {
+				final String automaticMode = scalar.get(automaticModeExpression);
+				logInfo("Automatic mode : "+automaticMode);
 				if (automaticMode.equals("true")) {
 					final DataMessageComponent  ret    = new DataMessageComponent();
 					ret.setMeta(MessageUtils.getMeta(cache));
