@@ -187,6 +187,7 @@ public class PythonScript extends AbstractScriptTransformer {
 			final DataMessageComponent ret = MessageUtils.mergeAll(cache);
 			ret.setMeta(MessageUtils.getMeta(cache));
 			ret.putScalar("python_script", getResource().getName());
+			this.logInfo("Running python script: "+getResource().toString());
 			
 			final Map<String,Object>  data = ret.getList()!=null
 					                       ? new HashMap<String,Object>(ret.getList())
