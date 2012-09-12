@@ -138,12 +138,17 @@ public class UserInputSource extends AbstractDataMessageSource {
 					requestFinish();
 					return null;
 				}
-				
+
 				// We always send the variables from the trigger on too, although it
 				// may not have been presented to the user.
 				final Map<String,String>sentScalars  = new HashMap<String,String>(7);
 				if (scalarValues!=null) sentScalars.putAll(scalarValues);
-				if (trans!=null)        sentScalars.putAll(trans);
+				if (trans!=null) {
+					sentScalars.putAll(trans);
+					for (String key : trans.keySet()) {
+						logInfo("User dialog: "+key+" = '"+(String)trans.get(key)+"'");
+					}
+				}
 	
 				final DataMessageComponent  ret    = new DataMessageComponent();
 				ret.addScalar(sentScalars);

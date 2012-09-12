@@ -167,6 +167,9 @@ public class UserModifyTransformer extends AbstractDataMessageTransformer {
 				ret.setMeta(MessageUtils.getMeta(cache));
 				ret.addScalar(MessageUtils.getScalar(cache));
 				ret.addScalar(trans);
+				for (String key : trans.keySet()) {
+					logInfo("User dialog: "+key+" = '"+(String)trans.get(key)+"'");
+				}
 				
 				return ret;
 			} finally {
