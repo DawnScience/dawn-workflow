@@ -443,6 +443,24 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		super.sendOutputMsg(port,message);
 	}
 	
+	/**
+	 * This method is removed in later version because the stategy is to move away from sending data
+	 * to the hasFinished port.
+	 */
+	protected void doWrapUp() throws TerminationException {
+
+		super.doWrapUp();
+		try {
+			if (lastOutput!=null && finishedPort!=null && finishedPort.numberOfSinks()>0) {
+				finishedPort.broadcast(new PasserelleToken(lastOutput));
+			}
+		} catch (Exception e) {
+			logger.error(getInfo(), e);
+		} finally {
+			lastOutput = null;
+		}
+	}
+	
     /**
      * Returns true when each input has fired received one message and 
      * the queue has dealt with it.
