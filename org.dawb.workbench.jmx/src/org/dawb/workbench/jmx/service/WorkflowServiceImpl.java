@@ -134,14 +134,16 @@ class WorkflowServiceImpl implements IWorkflowService {
 	 */
 	@Override
 	public void stop(long id) throws Exception {
-		try {
-		    final MBeanServerConnection conn = RemoteWorkflow.getServerConnection(1000);
-		    conn.invoke(RemoteWorkflow.REMOTE_MANAGER, "stop", null, null);
-
-		} catch (Exception ne) {
-			throw new Exception("Cannot call workflow service for clean stop!", ne);
+		if (this.agent != null) {
+			try {
+			    final MBeanServerConnection conn = RemoteWorkflow.getServerConnection(1000);
+			    conn.invoke(RemoteWorkflow.REMOTE_MANAGER, "stop", null, null);
+	
+			} catch (Exception ne) {
+				throw new Exception("Cannot call workflow service for clean stop!", ne);
+			}
 		}
-	}	
+	}
 	
 	/**
 	 * Returns the current output from the workflow.
@@ -168,19 +170,21 @@ class WorkflowServiceImpl implements IWorkflowService {
 	@Override
 	public void clear() throws Exception {
 		
-		try {
-			agent.stop();
-		} catch (javax.management.InstanceNotFoundException ex) {
-			logger.trace("Service could not be stopped",ex);
+		if (this.agent != null) {
+			try {
+				agent.stop();
+			} catch (javax.management.InstanceNotFoundException ex) {
+				logger.trace("Service could not be stopped",ex);
+			}
 		}
-		workflow=null;
-		out = null;
-		err = null;
-		
+			
 		if (workflow!=null) {
 			workflow.destroy();
+			logger.info("Workflow execution aborted.");
 		}
 		workflow = null;
+		out = null;
+		err = null;
 	}
 
 	@Override
