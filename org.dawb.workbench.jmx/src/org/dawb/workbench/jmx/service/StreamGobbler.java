@@ -68,30 +68,31 @@ class StreamGobbler extends Thread {
 	 *  stringBuffer.
 	 */
 	public synchronized void run() {
-		if (!inputStreamReaderClosed) {
-			try {
-				read();
-			} catch (IOException e) {
-				logger.error("Error reading from stream by Gobbler "+getName(),e);
-				return;
-			}
-		}
+		if (!inputStreamReaderClosed) read();
 	}
 
 	// Read line-by-line from the stream until we get to the end of the stream
-	private void read() throws IOException {
+	private void read() {
 		BufferedReader lineByLineReader = new BufferedReader(inputStreamReader);
 		String line = null;
-		while ((line=lineByLineReader.readLine())!=null) {
-			if (streamLogsToLogging) {
-				logger.debug(getName()+"> "+line);
-			} else {
-				streamDataAsList.add(line);
+		try {
+			while ((line=lineByLineReader.readLine())!=null) {
+				if (streamLogsToLogging) {
+					logger.debug(getName()+"> "+line);
+				} else {
+					streamDataAsList.add(line);
+				}
 			}
+			readRemainder();
+		} catch (IOException e) {
+			logger.debug("Error when reading from stream: "+getName()+e);
 		}
-		readRemainder();
-		inputStreamReaderClosed = true;
-		lineByLineReader.close();
+		try {
+			inputStreamReaderClosed = true;
+			lineByLineReader.close();
+		} catch (IOException e) {
+			logger.debug("Error when reading closing stream: "+getName()+e);
+		}
 		
 		return;
 	}
