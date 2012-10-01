@@ -12,7 +12,7 @@ package org.dawb.passerelle.common.message;
 public interface IVariable {
 
 	public enum VARIABLE_TYPE {
-        PATH, SCALAR, ARRAY, IMAGE, XML, ROI
+        PATH, SCALAR, ARRAY, IMAGE, XML, ROI, FUNCTION
 	}
 
 	/**
