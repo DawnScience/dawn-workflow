@@ -56,7 +56,7 @@ public class SliceParameterDialog extends Dialog {
 			            final String filePath) {
 		
 		final int[] dataShape = getDataShape(dataSetName, filePath);
-		sliceComponent.setData(dataSetName, filePath, dataShape, null);        
+		sliceComponent.setData(dataSetName, filePath, dataShape);        
 		
 	}
 
