@@ -411,5 +411,13 @@
                serviceClass="org.dawb.common.services.IUserInputService"></service>
       </serviceFactory>
    </extension>
+   <extension
+         point="org.eclipse.ui.services">
+      <serviceFactory
+            factoryClass="org.dawb.passerelle.service.TransferService">
+         <service
+               serviceClass="org.dawb.common.services.ITransferService"></service>
+      </serviceFactory>
+   </extension>
 
 </plugin>
