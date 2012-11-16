@@ -113,15 +113,20 @@ public class MessageUtils {
 			return ((DataMessageComponent)data).getMeta();
 		} else {
 			return new MetaDataAdapter() {
+				private static final long serialVersionUID = MetaDataAdapter.serialVersionUID;
+
+				@SuppressWarnings("unchecked")
+				@Override
 				public Collection<String> getDataNames() {
 					try {
-						return message.getAllBodyHeaders();
+						return Collections.unmodifiableCollection((Collection<String>) message.getAllBodyHeaders());
 					} catch (MessageException e) {
 						logger.error("Cannot get data names from ManagedMessage",e);
 						return null;
 					}
 				}
 				
+				@Override
 				public String getMetaValue(String key) {
 					try {
 					    return message.getBodyHeader(key)[0];	
