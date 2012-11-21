@@ -3,6 +3,7 @@
 	<name>org.dawb.passerelle.actors</name>
 	<comment></comment>
 	<projects>
+		<project>uk.ac.diamond.scisoft.analysis.rcp</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

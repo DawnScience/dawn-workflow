@@ -56,7 +56,8 @@ Import-Package: fr.esrf.TangoApi,
  org.python.pydev.plugin,
  org.python.pydev.runners,
  org.python.util,
- org.slf4j
+ org.slf4j,
+ uk.ac.diamond.scisoft.analysis.rcp.util
 Export-Package: org.dawb.passerelle.actors,
  org.dawb.passerelle.actors.data,
  org.dawb.passerelle.actors.file,
