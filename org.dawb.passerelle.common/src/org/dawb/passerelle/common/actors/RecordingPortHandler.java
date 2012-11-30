@@ -26,6 +26,7 @@ import ptolemy.actor.process.TerminateProcessException;
 import ptolemy.data.Token;
 import ptolemy.kernel.util.IllegalActionException;
 
+import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.core.PortHandler;
 import com.isencia.passerelle.core.PortListener;
 import com.isencia.passerelle.domain.ProcessThread;
@@ -40,12 +41,12 @@ public class RecordingPortHandler extends PortHandler {
 	private Map<Integer,Object> portRecord;
 	
     /** Creates a new instance of PortHandler */
-    public RecordingPortHandler(IOPort ioPort) {
+    public RecordingPortHandler(Port ioPort) {
         this(ioPort, null);
     }
     
     /** Creates a new instance of PortHandler */
-    public RecordingPortHandler(IOPort ioPort, boolean isRecordPorts) {
+    public RecordingPortHandler(Port ioPort, boolean isRecordPorts) {
         this(ioPort, isRecordPorts, null);
     }
 
@@ -56,11 +57,11 @@ public class RecordingPortHandler extends PortHandler {
      * @param listener an object interested in receiving messages from the handler
      * in push mode
      */
-    public RecordingPortHandler(IOPort ioPort, PortListener listener) {
+    public RecordingPortHandler(Port ioPort, PortListener listener) {
         this(ioPort, false, listener);
     }
     
-    private RecordingPortHandler(IOPort ioPort, boolean recordPorts, PortListener listener) {
+    private RecordingPortHandler(Port ioPort, boolean recordPorts, PortListener listener) {
     	
     	super(ioPort, listener);
         setRecordPorts(recordPorts);
