@@ -134,8 +134,10 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 
 				while((token=inputHandler2.getToken())!=null) {
 					ManagedMessage message2  = MessageHelper.getMessageFromToken(token);
-					DataMessageComponent msg = MessageUtils.coerceMessage(message2);
-					port2Cache.add(msg);
+					if (message2!=null) {
+						DataMessageComponent msg = MessageUtils.coerceMessage(message2);
+						port2Cache.add(msg);
+					}
 				}
 			} catch (Exception e) {
 			    throw new ProcessingException("Error handling token", token, e);
@@ -145,9 +147,10 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 			if (token != null) {
 				try {
 					ManagedMessage message2  = MessageHelper.getMessageFromToken(token);
-					DataMessageComponent msg = MessageUtils.coerceMessage(message2);
-					port2Cache.add(msg);
-
+					if (message2!=null) {
+						DataMessageComponent msg = MessageUtils.coerceMessage(message2);
+						port2Cache.add(msg);
+					}
 				} catch (Exception e) {
 				    throw new ProcessingException("Error handling token", token, e);
 				}
