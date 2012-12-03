@@ -57,6 +57,7 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
 import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
@@ -612,8 +613,11 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		
 		if (lazy instanceof H5LazyDataset) {
 		    return ((H5LazyDataset)lazy).getCompleteData(null);
+		} else if (lazy instanceof AbstractDataset) {
+			return (AbstractDataset) lazy;
 		}
-		return (AbstractDataset)lazy;
+
+		return DatasetUtils.convertToAbstractDataset(lazy.getSlice(null, null, null));
 	}
 
 	private Map<String, String> getDataSetNameMap() {
