@@ -297,30 +297,22 @@ public abstract class AbstractEdnaPlugin extends AbstractDataMessageTransformer 
 		
 	
 		String  outputXML = null;
-		IFolder ednaWkDir = null;
     	logger.debug(getName() + " - in AbstractEdnaPlugin.getTransformedMessage");
 		try {
-			ednaWkDir = getEdnaWorkingDirFolder();
-			String lastDir = ednaWkDir.getLocation().lastSegment();
-			String absPathToWorkingDir = ednaWkDir.getLocation().toOSString();
+			String baseWorkingDir = null;
 			if (isEnabledChangeWorkingDir) {
 				for (DataMessageComponent dataMessageComponent : cache) {
 					if (dataMessageComponent.getScalar()!=null) {
 						for (String name : dataMessageComponent.getScalar().keySet()) {						
 							if (name.equals("edna_working_dir")) {
-								absPathToWorkingDir = dataMessageComponent.getScalar().get(name)+"/"+lastDir;
-								boolean success = (new File(absPathToWorkingDir)).mkdirs();
-								if (!success) {
-									logger.warn("Cannot create EDNA working directory: "+absPathToWorkingDir);
-									absPathToWorkingDir = ednaWkDir.getLocation().toOSString();
-									logger.warn("Reverting back to workspace location: "+absPathToWorkingDir);
-								}
+								baseWorkingDir = dataMessageComponent.getScalar().get(name);
 							}
 						}
 					}
 				}
 			}
-			
+			String absPathToWorkingDir = getEdnaWorkingDirFolder(baseWorkingDir);
+			this.logInfo("EDNA working dir: "+absPathToWorkingDir);
             final EDJob  job  = new EDJob(sharedService, plugin, absPathToWorkingDir);
     		final String xml  = getDataInput(cache);
             job.setDataInput(xml);
@@ -365,17 +357,21 @@ public abstract class AbstractEdnaPlugin extends AbstractDataMessageTransformer 
 			logger.error("Output XML from "+getName()+" may be invalid. It is:\n"+outputXML);
 			throw createDataMessageException("Cannot run edna task "+plugin, ne);
 			
-		} finally {
-			try {
-	            if (ednaWkDir!=null) {
-	            	ednaWkDir.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
-	    			AbstractPassModeTransformer.refreshResource(ednaWkDir.getProject());
-	            }
-			} catch (Throwable ne) {
-				logger.error("Cannot refresh folder "+ednaWkDir);
-				throw createDataMessageException("Cannot run edna task "+plugin, ne);
-			}
-		}
+		} 
+// I have commented out this part for the moment so the edna-working-dir folder is not
+// autmatically updated in Eclipse. 
+// TODO: Fix this!
+//		finally {
+//			try {
+//	            if (ednaWkDir!=null) {
+//	            	ednaWkDir.refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
+//	    			AbstractPassModeTransformer.refreshResource(ednaWkDir.getProject());
+//	            }
+//			} catch (Throwable ne) {
+//				logger.error("Cannot refresh folder "+ednaWkDir);
+//				throw createDataMessageException("Cannot run edna task "+plugin, ne);
+//			}
+//		}
 
 	}
 
@@ -604,41 +600,80 @@ public abstract class AbstractEdnaPlugin extends AbstractDataMessageTransformer 
 		return edna;
 	}
 	
-	private static final DateFormat DATE_FOLDER = new SimpleDateFormat("yyyyMMdd_HHmmss");
+	private static final DateFormat DATE_FOLDER = new SimpleDateFormat("yyyyMMdd-HHmmss");
 	private static final Object     LOCK        = new Object();
 	
-	private IFolder getEdnaWorkingDirFolder() throws Exception {
-		
-		final IProject cont = getProject();
-		logger.debug(getName() + " - Containing project is "+cont);
-
-		// Sub directory for the input file.
-		final IFolder edna = cont.getFolder("edna-working-dir");
-		
-		// Best to use single lock blocks or lock entire methods.
-		synchronized (LOCK) {
-			if (!edna.exists()) {
-				edna.create(true, true, new NullProgressMonitor());
-			}
-
-			Time   time       = getDirector()!=null
-			                  ? getDirector().getModelTime()
-			                  : new Time(null, 0);
-			if (time.getLongValue()<=0)  {
-				time = new Time(getDirector(), System.currentTimeMillis());
-				if (getDirector()!=null) getDirector().setModelTime(time);
-			}
-			final String timeFolder = DATE_FOLDER.format(new Date(time.getLongValue()));
-			
-			final IFolder dir = edna.getFolder(timeFolder);
-			if (!dir.exists()) {
-				dir.create(true, true, new NullProgressMonitor());
-			}
-			
-			return dir;
+	private String getEdnaWorkingDirFolder(String baseWorkingDir) throws Exception {
+		File ednaWorkingDirFolder = null;
+		Time   time       = getDirector()!=null
+				? getDirector().getModelTime()
+				: new Time(null, 0);
+				if (time.getLongValue()<=0)  {
+					time = new Time(getDirector(), System.currentTimeMillis());
 		}
+		final String topFolder = "Workflow_"+DATE_FOLDER.format(new Date(time.getLongValue()));
+		DateFormat EDNA_DATE_FOLDER = new SimpleDateFormat("yyyyMMdd-HHmmss-S");
+		final String timeFolder = "EDApplication_"+EDNA_DATE_FOLDER.format(new Date(time.getLongValue()));
+		if (baseWorkingDir!=null) {
+			// Try to create directory 
+			File tmpFolder = new File(new File(baseWorkingDir), topFolder);
+			ednaWorkingDirFolder = new File(tmpFolder, timeFolder);
+			if (!(ednaWorkingDirFolder.mkdir())) {
+				logger.warn("Cannot create EDNA working directory : "+ednaWorkingDirFolder.getAbsolutePath());
+				ednaWorkingDirFolder = null;
+			}
+		}
+		if (ednaWorkingDirFolder==null) {
+			final IProject cont = getProject();
+			if (cont==null) {
+				logger.debug("Cannot get containing project, using temporary folder");
+				File workflowTmpFolder = File.createTempFile("WorkFlow_tmp_", null);
+			    if(!(workflowTmpFolder.delete()))
+			    {
+			        logger.debug("Could not delete temp file: " + workflowTmpFolder.getAbsolutePath());
+			    }
+			    if(!(workflowTmpFolder.mkdir()))
+			    {
+			        throw new IOException("Could not create temp directory: " + workflowTmpFolder.getAbsolutePath());
+			    }
+				File workflowTmpTopFolder = new File(workflowTmpFolder, topFolder);
+			    if(!(workflowTmpTopFolder.delete()))
+			    {
+			        logger.debug("Could not delete temp file: " + workflowTmpTopFolder.getAbsolutePath());
+			    }
+			    if(!(workflowTmpTopFolder.mkdir()))
+			    {
+			        throw new IOException("Could not create temp directory: " + workflowTmpTopFolder.getAbsolutePath());
+			    }
+				ednaWorkingDirFolder = new File(workflowTmpTopFolder, timeFolder);
+			    if(!(ednaWorkingDirFolder.delete()))
+			    {
+			        logger.debug("Could not delete temp file: " + ednaWorkingDirFolder.getAbsolutePath());
+			    }
+			    if(!(ednaWorkingDirFolder.mkdir()))
+			    {
+			        throw new IOException("Could not create temp directory: " + ednaWorkingDirFolder.getAbsolutePath());
+			    }
+			} else {
+				logger.debug(getName() + " - Containing project is "+cont);
+				// Sub directory for the input file.
+				final IFolder edna = cont.getFolder("edna-working-dir");
+				// Best to use single lock blocks or lock entire methods.
+				synchronized (LOCK) {
+					if (!edna.exists()) {
+						edna.create(true, true, new NullProgressMonitor());
+					}
+					final IFolder iTimeFolder = edna.getFolder(timeFolder);
+					if (!iTimeFolder.exists()) {
+						iTimeFolder.create(true, true, new NullProgressMonitor());
+					}
+					ednaWorkingDirFolder = iTimeFolder.getLocation().toFile();
+				}
+			}
+		}
+		return ednaWorkingDirFolder.getAbsolutePath();
 	}
-
+	
 	public List<IVariable> getInputVariables() {
 		
 		final List<IVariable> inputs = new ArrayList<IVariable>(7);
