@@ -602,6 +602,7 @@ public abstract class AbstractEdnaPlugin extends AbstractDataMessageTransformer 
 	
 	private static final DateFormat DATE_FOLDER = new SimpleDateFormat("yyyyMMdd-HHmmss");
 	private static final Object     LOCK        = new Object();
+	private static String topFolder = null;
 	
 	private String getEdnaWorkingDirFolder(String baseWorkingDir) throws Exception {
 		File ednaWorkingDirFolder = null;
@@ -611,14 +612,18 @@ public abstract class AbstractEdnaPlugin extends AbstractDataMessageTransformer 
 				if (time.getLongValue()<=0)  {
 					time = new Time(getDirector(), System.currentTimeMillis());
 		}
-		final String topFolder = "Workflow_"+DATE_FOLDER.format(new Date(time.getLongValue()));
 		DateFormat EDNA_DATE_FOLDER = new SimpleDateFormat("yyyyMMdd-HHmmss-S");
+		synchronized (LOCK) {
+			if (topFolder==null) {
+				topFolder = "Workflow_"+DATE_FOLDER.format(new Date(time.getLongValue()));
+			}
+		}
 		final String timeFolder = "EDApplication_"+EDNA_DATE_FOLDER.format(new Date(time.getLongValue()));
 		if (baseWorkingDir!=null) {
 			// Try to create directory 
 			File tmpFolder = new File(new File(baseWorkingDir), topFolder);
 			ednaWorkingDirFolder = new File(tmpFolder, timeFolder);
-			if (!(ednaWorkingDirFolder.mkdir())) {
+			if (!(ednaWorkingDirFolder.mkdirs())) {
 				logger.warn("Cannot create EDNA working directory : "+ednaWorkingDirFolder.getAbsolutePath());
 				ednaWorkingDirFolder = null;
 			}
