@@ -76,7 +76,7 @@
             label="7. The default values of the actor attributes are good enough for this example - hit run and run your version of the maths example!">
       </subitem>
        <subitem
-            label="8. If your connections are still untidy, try using the actions to the left of the workflow run button. These give different connection and router options.">
+            label="8. If your connections are still untidy, try using the actions by clicking on the blue button displaying one point and three wires (you should read 'Connection types' when you pass the mouse hover this button ). These give different connection and router options.">
       </subitem>
     <onCompletion>
       Congratulations, you can now complete simple maths in a workflow and visualize the results. Give it a try with some data from your experiment.
