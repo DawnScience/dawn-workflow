@@ -46,7 +46,7 @@ public class MomlExamplesTest {
 	public static final List<String> blacklist = Arrays.asList(
 //			"command_example.moml",
 //			"directory_packing_example.moml",
-			"folder_example.moml",
+			"folder_example.moml"
 //			"folder_monitor_example.moml",
 //			"if_example.moml",
 //			"loop_example.moml",
@@ -56,7 +56,7 @@ public class MomlExamplesTest {
 //			"motor_example.moml",
 //			"python_numpy_example1.moml",
 //			"user_interface_example.moml",
-			"python_numjy_example1.moml"
+//			"python_numjy_example1.moml"
 			);
 
 	
