@@ -15,22 +15,21 @@
 <booleanAttribute key="includeOptional" value="true"/>
 <stringAttribute key="location" value="${workspace_loc}/../junit-workspace"/>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_PATHS">
-<listEntry value="/org.dawb.passerelle.actors.test/src/org/dawb/passerelle/actors/test/edna/Suite.java"/>
+<listEntry value="/org.dawb.passerelle.actors.test/src/org/dawb/passerelle/actors/test/edna/MomlEdnaTest.java"/>
 </listAttribute>
 <listAttribute key="org.eclipse.debug.core.MAPPED_RESOURCE_TYPES">
 <listEntry value="1"/>
 </listAttribute>
 <mapAttribute key="org.eclipse.debug.core.environmentVariables">
-<mapEntry key="EDNA_HOME" value="${project_loc:edna}"/>
+<mapEntry key="EDNA_HOME" value="/opt/pxsoft/EDNA/vGIT/edna"/>
 <mapEntry key="EDNA_SITE" value="ESRF"/>
-<mapEntry key="LD_PRELOAD" value="/usr/lib/libpython2.6.so.1.0"/>
-<mapEntry key="PYTHONPATH" value="${project_loc:org.dawb.fable.feature}/python/fabio_0.0.7/${target.os}-${target.arch}:${project_loc:edna}/kernel/src"/>
+<mapEntry key="PYTHONPATH" value="/opt/pxsoft/EDNA/vGIT/edna/kernel/src"/>
 </mapAttribute>
 <stringAttribute key="org.eclipse.jdt.junit.CONTAINER" value=""/>
 <booleanAttribute key="org.eclipse.jdt.junit.KEEPRUNNING_ATTR" value="false"/>
 <stringAttribute key="org.eclipse.jdt.junit.TESTNAME" value=""/>
 <stringAttribute key="org.eclipse.jdt.junit.TEST_KIND" value="org.eclipse.jdt.junit.loader.junit4"/>
-<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.dawb.passerelle.actors.test.edna.Suite"/>
+<stringAttribute key="org.eclipse.jdt.launching.MAIN_TYPE" value="org.dawb.passerelle.actors.test.edna.MomlEdnaTest"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROGRAM_ARGUMENTS" value="-os ${target.os} -ws ${target.ws} -arch ${target.arch} -nl ${target.nl} -consoleLog"/>
 <stringAttribute key="org.eclipse.jdt.launching.PROJECT_ATTR" value="org.dawb.passerelle.actors.test"/>
 <stringAttribute key="org.eclipse.jdt.launching.SOURCE_PATH_PROVIDER" value="org.eclipse.pde.ui.workbenchClasspathProvider"/>

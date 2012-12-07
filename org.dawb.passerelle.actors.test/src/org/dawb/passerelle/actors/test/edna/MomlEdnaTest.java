@@ -50,8 +50,6 @@ public class MomlEdnaTest {
 	@BeforeClass
 	public static void beforeClass() throws Exception {
 		
-    	InterpreterUtils.createJythonInterpreter("jython", new NullProgressMonitor());
-    	InterpreterUtils.createPythonInterpreter("python", new NullProgressMonitor());
 		ModelUtils.createWorkflowProject("workflows", ResourcesPlugin.getWorkspace().getRoot(), true, null);
 		ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 		WorkbenchServiceManager.startWorkbenchService();
