@@ -23,7 +23,6 @@ import jep.JepException;
 import org.dawb.common.python.NumpyUtils;
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.python.rpc.PythonService;
-import org.dawb.gda.extensions.jython.JythonInterpreterUtils;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.IVariable;
@@ -45,6 +44,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.python.JythonInterpreterUtils;
 import uk.ac.gda.util.list.ListUtils;
 
 import com.isencia.passerelle.actor.Actor;

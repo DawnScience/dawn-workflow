@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 
 import ptolemy.actor.AtomicActor;
 import ptolemy.actor.Manager;
-import org.dawb.gda.extensions.jython.JythonInterpreterUtils;
+import uk.ac.diamond.scisoft.python.JythonInterpreterUtils;
 
 public class ActorInterpreterUtils {
 
