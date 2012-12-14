@@ -319,7 +319,10 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		final String  ext      = FileUtils.getFileExtension(getSourcePath(triggerMsg));
 		final boolean isH5File = LoaderFactory.getLoaderClass(ext) == H5Loader.class;
 		
-		return isH5File && this.slicing.getExpression()!=null && getDataSetNames()!=null && getDataSetNames().length==1;
+		return isH5File && this.slicing.getExpression()!=null 
+				        && !"".equals(slicing.getExpression()) 
+				        && getDataSetNames()!=null 
+				        && getDataSetNames().length==1;
 	}
 
 	private boolean isFileLegal(File file) {
