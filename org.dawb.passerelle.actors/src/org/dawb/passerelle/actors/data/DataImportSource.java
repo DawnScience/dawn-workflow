@@ -620,7 +620,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			return (AbstractDataset) lazy;
 		}
 
-		return DatasetUtils.convertToAbstractDataset(lazy.getSlice(null, null, null));
+		return DatasetUtils.convertToAbstractDataset(lazy.getSlice());
 	}
 
 	private Map<String, String> getDataSetNameMap() {
