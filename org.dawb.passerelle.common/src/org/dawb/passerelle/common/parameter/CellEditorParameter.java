@@ -73,7 +73,7 @@ public abstract class CellEditorParameter extends StringParameter implements Cel
 	 * @param bean
 	 * @return
 	 */
-	protected final String getValueFromBean(Object bean) {
+	public final String getValueFromBean(Object bean) {
 		if (bean==null) return null;
 		try {
 			final String xml  = BeanUI.getString(bean);
