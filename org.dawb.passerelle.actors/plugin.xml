@@ -341,7 +341,7 @@
             name="Edna Editor">
       </editor>
       <editor
-            class="org.dawb.passerelle.editors.UserModifyEditor"
+            class="org.dawb.passerelle.editors.UserInputEditor"
             default="false"
             icon="icons/application_form_magnify.png"
             id="org.dawb.passerelle.editors.UserModifyEditor"
@@ -406,7 +406,7 @@
    <extension
          point="org.eclipse.ui.services">
       <serviceFactory
-            factoryClass="org.dawb.passerelle.editors.UserModifyService">
+            factoryClass="org.dawb.passerelle.editors.UserInputService">
          <service
                serviceClass="org.dawb.common.services.IUserInputService"></service>
       </serviceFactory>
