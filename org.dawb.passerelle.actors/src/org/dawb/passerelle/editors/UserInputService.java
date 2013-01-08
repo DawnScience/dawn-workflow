@@ -36,7 +36,7 @@ public class UserInputService extends AbstractServiceFactory implements IUserInp
 	@Override
 	public IRemoteWorkbenchPart openUserInputPart(final String partName, boolean isDialog) throws Exception {
 		
-		IRemoteWorkbenchPart deligate = new UserModifyComposite();
+		IRemoteWorkbenchPart deligate = new UserModifyRemotePart();
 		return openPart(partName, isDialog, deligate, "org.dawb.passerelle.editors.UserModifyEditor");
 	}
 

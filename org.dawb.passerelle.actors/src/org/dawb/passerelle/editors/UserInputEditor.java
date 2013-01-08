@@ -49,7 +49,7 @@ import org.eclipse.ui.part.EditorPart;
  * @author gerring
  *
  */
-public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart, UserModifyComposite.Closeable {
+public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart, IRemoteWorkbenchPart.Closeable {
 	
 	public static final String ID = "org.dawb.passerelle.editors.UserModifyEditor"; //$NON-NLS-1$
 	
@@ -112,8 +112,6 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		
-		getSite().setSelectionProvider((ColumnViewer)deligate.getViewer());
-
 		final MenuManager    menuMan = new MenuManager();
 	    final ToolBarManager toolMan = new ToolBarManager(SWT.FLAT|SWT.RIGHT);
 	    this.toolBar = toolMan.createControl(top);
@@ -144,6 +142,8 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 	    actionBarsWrapper.getToolBarManager().add(menuAction);
 	    actionBarsWrapper.getToolBarManager().update(true);
 
+		getSite().setSelectionProvider((ColumnViewer)deligate.getViewer());
+
 	}
 
 
@@ -173,7 +173,7 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 
 	@Override
 	public void setFocus() {
-		deligate.setRemoteFocus();
+		if (deligate!=null) deligate.setRemoteFocus();
 	}
 	
 	@Override
@@ -185,7 +185,7 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 		
 		super.dispose();
 		
-		deligate.dispose();
+		if (deligate!=null) deligate.dispose();
 	}
 	@Override
 	public void doSave(IProgressMonitor monitor) {
