@@ -107,7 +107,6 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 				} else {
 					deligate.confirm();
 				}
-				close();
 			}
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {}
@@ -216,7 +215,6 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 	@Override
 	public void setValues(Map<String, String> values) {
 		deligate.setValues(values);
-		container.layout();
 	}
 
 	@Override

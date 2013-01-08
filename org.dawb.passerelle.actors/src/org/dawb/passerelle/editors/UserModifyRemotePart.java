@@ -538,7 +538,6 @@ public class UserModifyRemotePart implements IRemoteWorkbenchPart {
 	}
 	protected void doStop() {
 		if (queue.isEmpty()) queue.add(new HashMap<String,String>(0));
-		if (closeable!=null) closeable.close();
 	}
 
 	public void setPartName(String partName) {
