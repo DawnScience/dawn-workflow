@@ -79,9 +79,9 @@ import uk.ac.gda.richbeans.components.wrappers.ComboWrapper;
 import uk.ac.gda.richbeans.components.wrappers.SpinnerWrapper;
 import uk.ac.gda.richbeans.components.wrappers.TextWrapper;
 
-public class UserModifyRemotePart implements IRemoteWorkbenchPart {
+public class UserModifyComposite implements IRemoteWorkbenchPart {
 
-	private static Logger logger = LoggerFactory.getLogger(UserModifyRemotePart.class);
+	private static Logger logger = LoggerFactory.getLogger(UserModifyComposite.class);
 	
 	private String                     partName;
 	private Closeable                  closeable;
@@ -92,7 +92,7 @@ public class UserModifyRemotePart implements IRemoteWorkbenchPart {
 	private FieldContainer             configuration;
 	private Label                      customLabel;
 
-    public UserModifyRemotePart() {
+    public UserModifyComposite() {
     	
     }
     
@@ -551,12 +551,12 @@ public class UserModifyRemotePart implements IRemoteWorkbenchPart {
 	
 	@Override
     public void stop() {
-		doStop();
+		this.stop.run();
 	}
 
 	@Override
     public void confirm() {
-		doConfirm();
+		this.confirm.run();
 	}
 
 	@Override

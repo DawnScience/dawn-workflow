@@ -36,7 +36,7 @@ import uk.ac.gda.common.rcp.util.DialogUtils;
  * @author fcp94556
  *
  */
-public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRemoteWorkbenchPart.Closeable {
+public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, UserModifyComposite.Closeable {
 
 	private final IRemoteWorkbenchPart deligate;
 	private Link label;
