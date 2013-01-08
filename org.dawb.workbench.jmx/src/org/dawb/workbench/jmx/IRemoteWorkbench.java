@@ -124,16 +124,6 @@ public interface IRemoteWorkbench {
      * @throws Exception
      */
 	public Map<String,String> createUserInput(final UserInputBean bean) throws Exception;
-	
-    /**
-     * Plots data in the PlotInputBean and returns the plot data, any regions, the plot settings,
-     * tool output.
-     * 
-     * @param bean
-     * @return plot output
-     * @throws Exception
-     */
-	public UserPlotBean createPlotInput(final UserPlotBean bean) throws Exception;
 
 
 	/**

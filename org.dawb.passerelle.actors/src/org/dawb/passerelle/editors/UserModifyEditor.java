@@ -16,8 +16,7 @@ import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.ui.util.GridUtils;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
-import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
-import org.dawb.workbench.jmx.IRemoteWorkbenchPart.Closeable;
+import org.dawb.workbench.jmx.RemoveWorkbenchPart;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IMenuManager;
@@ -25,7 +24,6 @@ import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.action.ToolBarManager;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -42,29 +40,20 @@ import org.eclipse.ui.IEditorSite;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.part.EditorPart;
 /**
- * A editor that can deligate its UI to an implementation of IRemoteWorkbenchPart.
- * For instance user modify or user plot.
+ * A view that can deal with showing various values. Including actors inputs/outputs,
+ * variables going along wires, hdf5 values etc.
  * 
  * 
  * @author gerring
  *
  */
-public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart, UserModifyComposite.Closeable {
+public class UserModifyEditor extends EditorPart implements RemoveWorkbenchPart, UserModifyComposite.Closeable {
 	
 	public static final String ID = "org.dawb.passerelle.editors.UserModifyEditor"; //$NON-NLS-1$
 	
 
 	private Link                label;
-	private IRemoteWorkbenchPart deligate;
-
-
-	private Composite container;
-
-
-	private ActionBarWrapper actionBarsWrapper;
-
-
-	private ToolBar toolBar;
+	private UserModifyComposite userModComp;
 
 	@Override
 	public void init(IEditorSite site, IEditorInput input) throws PartInitException {
@@ -84,7 +73,7 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 	@Override
 	public void createPartControl(Composite parent) {
 		
-		this.container = new Composite(parent, SWT.NONE);
+		Composite container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
 		GridUtils.removeMargins(container);
 		container.setBackground(parent.getDisplay().getSystemColor(SWT.COLOR_WHITE));
@@ -103,46 +92,41 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (e.text.contains("stop")) {
-					deligate.stop();
+					userModComp.stop.run();
 				} else {
-					deligate.confirm();
+					userModComp.confirm.run();
 				}
 			}
 			@Override
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 		
-		getSite().setSelectionProvider((ColumnViewer)deligate.getViewer());
-
 		final MenuManager    menuMan = new MenuManager();
 	    final ToolBarManager toolMan = new ToolBarManager(SWT.FLAT|SWT.RIGHT);
-	    this.toolBar = toolMan.createControl(top);
+	    final ToolBar toolBar = toolMan.createControl(top);
 	    toolBar.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false));
         
- 
-		final IActionBars bars = this.getEditorSite().getActionBars();
-		this.actionBarsWrapper = new ActionBarWrapper(toolMan,menuMan,null,(IActionBars2)bars);
-
-	}
-	
-	public void setDeligate(IRemoteWorkbenchPart part) {
-		this.deligate = part;
-		deligate.createRemotePart(container, this);
-		
-	
-		deligate.initializeMenu(actionBarsWrapper);
-		initializeToolBar(actionBarsWrapper);
-		initializeMenu(actionBarsWrapper);
-		
 	    Action menuAction = new Action("", Activator.getImageDescriptor("/icons/DropDown.png")) {
 	        @Override
 	        public void run() {
-                final Menu   mbar = ((MenuManager)actionBarsWrapper.getMenuManager()).createContextMenu(toolBar);
+                final Menu   mbar = menuMan.createContextMenu(toolBar);
        		    mbar.setVisible(true);
 	        }
 	    };
-	    actionBarsWrapper.getToolBarManager().add(menuAction);
-	    actionBarsWrapper.getToolBarManager().update(true);
+
+		final IActionBars bars = this.getEditorSite().getActionBars();
+		ActionBarWrapper actionBarsWrapper = new ActionBarWrapper(toolMan,menuMan,null,(IActionBars2)bars);
+ 
+		this.userModComp = new UserModifyComposite(container, this, SWT.NONE);
+		
+		getSite().setSelectionProvider(userModComp.getViewer());
+		
+		userModComp.initializePopup(actionBarsWrapper);
+		initializeToolBar(actionBarsWrapper);
+		initializeMenu(actionBarsWrapper);
+		
+        toolMan.add(menuAction);
+        toolMan.update(true);
 
 	}
 
@@ -151,41 +135,36 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 	 * Initialize the toolbar.
 	 */
 	private void initializeToolBar(IActionBars bars) {
-//		IToolBarManager man = bars.getToolBarManager();
-//		man.add(deligate.confirm);
-//		man.add(deligate.stop);
-//		man.add(new Separator(getClass().getName()+".sep2"));
-//		man.add(deligate.add);
-//		man.add(deligate.delete);
+		IToolBarManager man = bars.getToolBarManager();
+		man.add(userModComp.confirm);
+		man.add(userModComp.stop);
+		man.add(new Separator(getClass().getName()+".sep2"));
+		man.add(userModComp.add);
+		man.add(userModComp.delete);
 	}
 
 	/**
 	 * Initialize the menu.
 	 */
 	private void initializeMenu(IActionBars bars) {
-//		IMenuManager man = bars.getMenuManager();
-//		man.add(deligate.confirm);
-//		man.add(deligate.stop);
-//		man.add(new Separator(getClass().getName()+".sep3"));
-//		man.add(deligate.add);
-//		man.add(deligate.delete);
+		IMenuManager man = bars.getMenuManager();
+		man.add(userModComp.confirm);
+		man.add(userModComp.stop);
+		man.add(new Separator(getClass().getName()+".sep3"));
+		man.add(userModComp.add);
+		man.add(userModComp.delete);
 	}
 
 	@Override
 	public void setFocus() {
-		deligate.setRemoteFocus();
-	}
-	
-	@Override
-	public void setRemoteFocus() {
-		setFocus();
+		userModComp.setFocus();
 	}
 
 	public void dispose() {
 		
 		super.dispose();
 		
-		deligate.dispose();
+		userModComp.dispose();
 	}
 	@Override
 	public void doSave(IProgressMonitor monitor) {
@@ -208,57 +187,24 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 	}
 
 	@Override
-	public void setQueue(Queue<Object> valueQueue) {
-		deligate.setQueue(valueQueue);
+	public void setQueue(Queue<Map<String, String>> valueQueue) {
+		userModComp.setQueue(valueQueue);
 	}
 
 	@Override
 	public void setValues(Map<String, String> values) {
-		deligate.setValues(values);
+		userModComp.setValues(values);
 	}
 
 	@Override
 	public void setConfiguration(String configuration) throws Exception {
-		deligate.setConfiguration(configuration);
+		userModComp.setConfiguration(configuration);
 	}
 
 
 	@Override
 	public boolean close() {
 		return EclipseUtils.getActivePage().closeEditor(this, false);
-	}
-	@Override
-	public void setUserObject(Object userObject) {
-		deligate.setUserObject(userObject);
-	}
-	@Override
-	public void stop() {
-		deligate.stop();
-	}
-
-	@Override
-	public void confirm() {
-		deligate.confirm();
-	}
-
-	@Override
-	public Object getViewer() {
-		return deligate.getViewer();
-	}
-
-	@Override
-	public boolean isMessageOnly() {
-		return deligate.isMessageOnly();
-	}
-
-	@Override
-	public void createRemotePart(Object container, Closeable closeable) {
-		// We already called it for them.
-	}
-
-	@Override
-	public void initializeMenu(Object iActionBars) {
-		deligate.initializeMenu(iActionBars);
 	}
 
 }

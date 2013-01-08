@@ -39,7 +39,6 @@ public class RemoteWorkbenchManager extends StandardMBean implements RemoteWorkb
 	private static final String MESSAGE_CODE       = "org.dawb.workbench.jmx.showMessage";
 	private static final String LOG_CODE           = "org.dawb.workbench.jmx.logStatus";
 	private static final String EDIT_CODE          = "org.dawb.workbench.jmx.editScalarValues";
-	private static final String PLOT_CODE          = "org.dawb.workbench.jmx.plotInputValues";
 	private static final String ACTOR_SELECTED_CODE= "org.dawb.workbench.jmx.actorSelectedCode";
 	
 	
@@ -164,19 +163,11 @@ public class RemoteWorkbenchManager extends StandardMBean implements RemoteWorkb
 	@Override
 	public Map<String,String> createUserInput(final UserInputBean bean) throws Exception {
 		
+		
 		Map<String,String> newValues = rmDelegate.createUserInput(bean);
 		sendNotification(EDIT_CODE);
     	return newValues;
 	}
-	
-	@Override
-	public UserPlotBean createPlotInput(final UserPlotBean bean) throws Exception {
-		
-		UserPlotBean output = rmDelegate.createPlotInput(bean);
-		sendNotification(PLOT_CODE);
-    	return output;
-	}
-
 
 	@Override
 	public boolean setActorSelected(final String  resourcePath, 

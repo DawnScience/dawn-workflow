@@ -26,9 +26,8 @@ import org.dawb.common.ui.views.ImageMonitorView;
 import org.dawb.passerelle.common.Activator;
 import org.dawb.passerelle.common.utils.ModelListener;
 import org.dawb.workbench.jmx.IRemoteWorkbench;
-import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
+import org.dawb.workbench.jmx.RemoveWorkbenchPart;
 import org.dawb.workbench.jmx.UserInputBean;
-import org.dawb.workbench.jmx.UserPlotBean;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.resources.IFile;
@@ -280,7 +279,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 		if (bean.isSilent()) return bean.getScalarValues();
 		
 		
-		final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>(1);
+		final BlockingQueue<Map<String,String>> queue = new LinkedBlockingQueue<Map<String,String>>(1);
 		
 		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
@@ -289,7 +288,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				try {
 					
 					final IUserInputService service = (IUserInputService)ServiceManager.getService(IUserInputService.class);
-					final IRemoteWorkbenchPart part  = service.openUserInputPart(bean.getPartName(), bean.isDialog());
+					final RemoveWorkbenchPart part  = service.openUserInputPart(bean.getPartName(), bean.isDialog());
 					
 					if (bean.getPartName()!=null) part.setPartName(bean.getPartName());
 					part.setQueue(queue);
@@ -326,56 +325,9 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 			}
 		});
 		
-		final Map<String,String> newValues = (Map<String,String>)queue.take(); // Blocks until user edits this!
+		final Map<String,String> newValues = queue.take(); // Blocks until user edits this!
     	return newValues;
 	}
-	
-	@Override
-	public UserPlotBean createPlotInput(final UserPlotBean bean) throws Exception {
-		
-		if (!PlatformUI.isWorkbenchRunning()) return bean;		
-		if (bean.isSilent()) return bean;
-		
-		final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>(1);
-		
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
-
-			@Override
-			public void run() {
-				try {
-					
-					final IUserInputService service = (IUserInputService)ServiceManager.getService(IUserInputService.class);
-					final IRemoteWorkbenchPart part  = service.openUserPlotPart(bean.getPartName(), bean.isDialog());
-					
-					if (bean.getPartName()!=null) part.setPartName(bean.getPartName());
-					part.setQueue(queue);
-					part.setUserObject(bean);
-					
-					if (part instanceof Dialog) {
-						Dialog dialog = (Dialog)part;
-						dialog.open();
-						
-						if (dialog.getReturnCode()!=Dialog.OK) {
-							queue.add(Collections.EMPTY_MAP);
-						}
-					}
-					
-				    return; // Queue will be notified when they have chosen
-				    
-				} catch (PartInitException e) {
-					// Ignored.
-				} catch (Exception e) {
-					logger.error("Cannot open editor ", e);
-					queue.add(Collections.EMPTY_MAP);
-					return;
-				}
-			}
-		});
-		
-		return (UserPlotBean)queue.take(); // Blocks until user edits this!
-		
-	}
-
 
 
 	@Override

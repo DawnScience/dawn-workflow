@@ -24,7 +24,7 @@ import org.dawb.common.util.text.NumberUtils;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.passerelle.actors.ui.config.FieldBean;
 import org.dawb.passerelle.actors.ui.config.FieldContainer;
-import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
+import org.dawb.workbench.jmx.RemoveWorkbenchPart;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -53,6 +53,7 @@ import org.eclipse.swt.dnd.TextTransfer;
 import org.eclipse.swt.dnd.Transfer;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -79,38 +80,38 @@ import uk.ac.gda.richbeans.components.wrappers.ComboWrapper;
 import uk.ac.gda.richbeans.components.wrappers.SpinnerWrapper;
 import uk.ac.gda.richbeans.components.wrappers.TextWrapper;
 
-public class UserModifyComposite implements IRemoteWorkbenchPart {
+public class UserModifyComposite extends Composite implements RemoveWorkbenchPart {
+
+	public interface Closeable {
+        public boolean close();
+	}
 
 	private static Logger logger = LoggerFactory.getLogger(UserModifyComposite.class);
 	
 	private String                     partName;
 	private Closeable                  closeable;
 	private AppliableTableViewer       tableViewer;
-	private Queue<Object>              queue;
+	private Queue<Map<String,String>>  queue;
 	private Map<String,String>         values;
 	private Map<String,String>         originalValues;
 	private FieldContainer             configuration;
 	private Label                      customLabel;
 
-    public UserModifyComposite() {
-    	
-    }
-    
-    @Override
-	public void createRemotePart(final Object container, Closeable closeable) {
+
+	public UserModifyComposite(final Composite container, Closeable closeable, int style) {
 		
-		final Composite contents = new Composite((Composite)container, SWT.NONE);
+		super(container, style);
 		this.closeable = closeable;
-		contents.setLayout(new GridLayout(1, false));
-		contents.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		setLayout(new GridLayout(1, false));
+		setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		this.customLabel  = new Label(contents, SWT.WRAP);
+		this.customLabel  = new Label(this, SWT.WRAP);
 		customLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		final Image image = Activator.getDefault().getImageDescriptor("icons/information.gif").createImage();
 		customLabel.setImage(image);
 		GridUtils.setVisible(customLabel, false);
 		
-        this.tableViewer = new AppliableTableViewer(contents, SWT.FULL_SELECTION | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
+        this.tableViewer = new AppliableTableViewer(this, SWT.FULL_SELECTION | SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.BORDER);
 		tableViewer.getTable().setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		tableViewer.getTable().setLinesVisible(true);
 		tableViewer.getTable().setHeaderVisible(true);
@@ -176,6 +177,7 @@ public class UserModifyComposite implements IRemoteWorkbenchPart {
 
 			}			
 		});
+
 	
 	}
 	
@@ -383,8 +385,7 @@ public class UserModifyComposite implements IRemoteWorkbenchPart {
 	/**
 	 * Create the actions.
 	 */
-	@Override
-	public void initializeMenu(Object obars) {
+	protected void initializePopup(IActionBars bars) {
 		MenuManager man = new MenuManager();
 		man.add(confirm);
 		man.add(stop);
@@ -433,7 +434,7 @@ public class UserModifyComposite implements IRemoteWorkbenchPart {
 	/**
 	 * Queue must not be null and is cleared prior to using.
 	 */
-	public void setQueue(Queue<Object> queue) {
+	public void setQueue(Queue<Map<String, String>> queue) {
 		this.queue = queue;
 		queue.clear();
 	}
@@ -482,7 +483,6 @@ public class UserModifyComposite implements IRemoteWorkbenchPart {
 		}
 	}
 
-	@Override
 	public boolean isMessageOnly() {
 		return messageOnly;
 	}
@@ -544,24 +544,5 @@ public class UserModifyComposite implements IRemoteWorkbenchPart {
 		this.partName = partName;
 	}
 
-	@Override
-	public void setUserObject(Object userObject) {
-		throw new RuntimeException("Cannot call setUserObject(...) on "+getClass().getName());
-	}
-	
-	@Override
-    public void stop() {
-		this.stop.run();
-	}
-
-	@Override
-    public void confirm() {
-		this.confirm.run();
-	}
-
-	@Override
-	public void setRemoteFocus() {
-		setFocus();
-	}
 
 }

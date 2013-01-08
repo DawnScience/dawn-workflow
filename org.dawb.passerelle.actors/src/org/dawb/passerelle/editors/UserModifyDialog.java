@@ -13,10 +13,9 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.dawb.common.ui.util.GridUtils;
-import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
+import org.dawb.workbench.jmx.RemoveWorkbenchPart;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
-import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -29,24 +28,16 @@ import org.eclipse.swt.widgets.Shell;
 
 import uk.ac.gda.common.rcp.util.DialogUtils;
 
-/**
- * A dialog allowing an implementation of IRemoteWorkbenchPart to run
- * inside it.
- * 
- * @author fcp94556
- *
- */
-public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, UserModifyComposite.Closeable {
+public class UserModifyDialog extends Dialog implements RemoveWorkbenchPart, UserModifyComposite.Closeable {
 
-	private final IRemoteWorkbenchPart deligate;
+	private UserModifyComposite userModComp;
 	private Link label;
 
-	public UserInputDialog(final Shell parentShell, final IRemoteWorkbenchPart remotePartImpl) {
+	public UserModifyDialog(final Shell parentShell) {
 		
 		super(parentShell);
 		
 		setShellStyle(SWT.RESIZE | SWT.TITLE);
-		this.deligate = remotePartImpl;
 	}
 	
 	protected Control createDialogArea(Composite container) {
@@ -62,9 +53,9 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, Use
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (e.text.contains("stop")) {
-					deligate.stop();
+					userModComp.stop.run();
 				} else {
-					deligate.confirm();
+					userModComp.confirm.run();
 				}
 				close();
 			}
@@ -72,8 +63,8 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, Use
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 
-		deligate.createRemotePart(container, this);
-		return ((ColumnViewer)deligate.getViewer()).getControl();
+		this.userModComp = new UserModifyComposite(container, this, SWT.NONE);
+		return userModComp.getViewer().getControl();
 	}
 	
 	protected void createButtonsForButtonBar(Composite parent) {
@@ -84,7 +75,7 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, Use
 	public boolean close() {
 		
         if (getReturnCode()==OK) {
-        	deligate.confirm();
+        	userModComp.doConfirm();
         }
         return super.close();
 	}
@@ -95,14 +86,14 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, Use
 	}
 
 	@Override
-	public void setQueue(Queue<Object> valueQueue) {
-		deligate.setQueue(valueQueue);
+	public void setQueue(Queue<Map<String, String>> valueQueue) {
+		userModComp.setQueue(valueQueue);
 	}
 
 	@Override
 	public void setValues(Map<String, String> values) {
-		deligate.setValues(values);
-		if (deligate.isMessageOnly()) {
+		userModComp.setValues(values);
+		if (userModComp.isMessageOnly()) {
 			GridUtils.setVisible(label, false);
 			label.getParent().layout(new Control[]{label});
 			
@@ -115,51 +106,7 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, Use
 
 	@Override
 	public void setConfiguration(String configuration) throws Exception {
-		deligate.setConfiguration(configuration);
-	}
-
-	@Override
-	public void setUserObject(Object userObject) {
-		deligate.setUserObject(userObject);
-	}
-
-	@Override
-	public void stop() {
-		deligate.stop();
-	}
-
-	@Override
-	public void confirm() {
-		deligate.confirm();
-	}
-
-	@Override
-	public Object getViewer() {
-		return deligate.getViewer();
-	}
-
-	@Override
-	public boolean isMessageOnly() {
-		return deligate.isMessageOnly();
-	}
-	@Override
-	public void setRemoteFocus() {
-		deligate.setRemoteFocus();
-	}
-	@Override
-	public void dispose() {
-		deligate.dispose();
-	}
-
-	@Override
-	public void initializeMenu(Object iActionBars) {
-		deligate.initializeMenu(iActionBars);
-	}
-
-	@Override
-	public void createRemotePart(Object container, Closeable closeable) {
-		// TODO Auto-generated method stub
-		
+		userModComp.setConfiguration(configuration);
 	}
 
 }

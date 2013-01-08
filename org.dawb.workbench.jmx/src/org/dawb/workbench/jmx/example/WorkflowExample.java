@@ -16,7 +16,6 @@ import java.util.Map;
 import org.dawb.workbench.jmx.IRemoteServiceProvider;
 import org.dawb.workbench.jmx.IRemoteWorkbench;
 import org.dawb.workbench.jmx.UserInputBean;
-import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawb.workbench.jmx.service.IWorkflowService;
 import org.dawb.workbench.jmx.service.WorkflowFactory;
 import org.slf4j.Logger;
@@ -256,19 +255,6 @@ public class WorkflowExample {
 		public void notifyMockCommand(String motorName, String message, String cmd) {
 			logger.info("Mock Notify Requested");
 			logger.info("Motor "+motorName+"; message "+message);
-		}
-
-		@Override
-		public UserPlotBean createPlotInput(UserPlotBean bean) throws Exception {
-			
-			logger.info("Create Plot Input Requested");
-			logger.info("Actor "+bean.getPartName());
-			try {
-				Thread.sleep(1000);// Simulate user pressing ok...
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} 			
-			return null;
 		}
 
 	}
