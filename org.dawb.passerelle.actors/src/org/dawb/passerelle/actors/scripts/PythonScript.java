@@ -17,10 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jep.Jep;
-import jep.JepException;
-
-import org.dawb.common.python.NumpyUtils;
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.python.rpc.PythonService;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
@@ -61,7 +57,7 @@ public class PythonScript extends AbstractScriptTransformer {
 	private static final Logger logger = LoggerFactory.getLogger(PythonScript.class);
 	
 	private static String[] INTERPRETER_CHOICES = new String[]{"Jython", "Python"};
-	private static String[] PYLINK_CHOICES      = new String[]{"RPC",    "Jep"};
+	private static String[] PYLINK_CHOICES      = new String[]{"RPC"};
 	private static String[] PYDEBUG_CHOICES     = new String[]{"Start new python rcp server",    "Python rpc server already running"};
 	
 	private final Parameter             createNewParameter;
@@ -162,12 +158,7 @@ public class PythonScript extends AbstractScriptTransformer {
 	protected DataMessageComponent getTransformedMessage(List<DataMessageComponent> cache) throws Exception {
 				
 		if (isPython()) {
-			if (PYLINK_CHOICES[0].equals(pythonLink.getExpression())) {
-				// Normally RPC
-			    return getPythonRpcMessage(cache);
-			} else {
-				return getPythonJepMessage(cache);
-			}
+			return getPythonRpcMessage(cache);
 		} else {
 			return getJythonMessage(cache);
 		}
@@ -250,91 +241,6 @@ public class PythonScript extends AbstractScriptTransformer {
 
 	}
 
-	private DataMessageComponent getPythonJepMessage(final List<DataMessageComponent> cache) throws Exception {
-
-		// TODO more fixing to this once the memory leak is figured out
-		// FIXED We have currently circumvented Jep by using the Diamond fast RPC link.
-		Jep jep=null;
-		final DataMessageComponent ret = new DataMessageComponent();
-		try {
-			jep = new Jep();
-			
-			// We save the names of the abstract data sets passed in
-			// these are read back and passed on sometimes.
-			List<String> inputs = new ArrayList<String>(7);
-
-			for (DataMessageComponent dataMessageComponent : cache) {
-				if (dataMessageComponent.getList()!=null) {
-					for (String name : dataMessageComponent.getList().keySet()) {
-						final Object ob = dataMessageComponent.getList().get(name);
-						if (ob instanceof AbstractDataset) {
-							final AbstractDataset set = (AbstractDataset)dataMessageComponent.getList().get(name);
-							NumpyUtils.setNumpy(jep, set);
-							if (isPassInputs) {
-								inputs.add(name);
-							}
-						} else {
-						    jep.set(name, ob);
-						}
-					}
-				}
-				
-				if (dataMessageComponent.getScalar()!=null) {
-					for (String name : dataMessageComponent.getScalar().keySet()) {
-						
-						if (name.indexOf('.')>-1) continue;
-						final String value = dataMessageComponent.getScalar().get(name);
-						try {
-							final int ival = Integer.parseInt(value);
-							jep.set(name, ival);
-							
-						} catch (Throwable t) {
-							try {
-								final double dval = Double.parseDouble(value);
-								jep.set(name, dval);
-								
-							} catch (Throwable t2) {
-								jep.set(name, value);
-							}
-						}
-					}
-				}
-			}
-
-			final IResource file = getResource();
-			if (file.exists()) jep.runScript(file.getLocation().toOSString());
-
-			ret.addScalar(MessageUtils.getScalar(cache));
-			ret.setMeta(MessageUtils.getMeta(cache));
-			ret.putScalar("Python Script", getResource().getName());
-
-			if (outputs==null) outputs=Collections.emptyList();
-			final List<String> toRead = new ArrayList<String>(outputs.size()+inputs.size());
-			toRead.addAll(outputs);
-			toRead.addAll(inputs);
-			for (String name : toRead) {
-				try {
-					ret.addList(name, NumpyUtils.getNumpy(jep, name));
-				} catch (Throwable ne) {
-					ret.putScalar(name, jep.getValue(name).toString());
-				}
-			}
-
-		} catch (JepException je) {
-			throw createDataMessageException("Script error in actor " + getName() + ": "
-							+ je.getMessage(), je);
-		} catch (Throwable e) {
-			logger.error(e.getStackTrace().toString());
-			throw createDataMessageException("Error when executing actor " + getName() + ": "
-					+ e.getMessage() + "\nPlease see log for more information.", e);
-		} finally {
-			if (jep!=null) jep.close();
-		}
-
-		return ret;
-		
-
-	}
 
 	private DataMessageComponent getJythonMessage(final List<DataMessageComponent> cache) throws Exception {
 		

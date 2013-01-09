@@ -370,6 +370,15 @@ public class DataMessageComponent {
 		return rois;
 	}
 	
+	public void addList(Map<String, Serializable> data) {
+		if (list==null) list = new LinkedHashMap<String,Serializable>(1);
+		this.list.putAll(data);
+	}
+	
+	public void addRois(final Map<String, Serializable> rdata) {
+		if (rois==null) rois = new LinkedHashMap<String,Serializable>(1);
+		this.rois.putAll(rdata);
+	}
 	
 	// Function Methods
 	public void addFunction(String name, AFunction function) {

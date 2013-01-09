@@ -45,13 +45,6 @@
             open="false"
             priority="6">
       </actorgroup>
-      <actorgroup
-            icon="icons/folder_roi.gif"
-            id="org.dawb.passerelle.actors.actorgroup.roi"
-            name="Region of Interest"
-            open="false"
-            priority="5">
-      </actorgroup>
    </extension>
    <extension
          name="General and Other Actors"
@@ -282,19 +275,22 @@
             name="Review">
       </actor>
       <actor
+            class="org.dawb.passerelle.actors.ui.UserPlotTransformer"
+            group="org.dawb.passerelle.actors.actorgroup.ui"
+            icon="icons/user-plot-actor.png"
+            id="org.dawb.passerelle.actors.userplot"
+            name="Plot Review">
+      </actor>
+      <actor
             class="org.dawb.passerelle.actors.ui.UserInputSource"
             group="org.dawb.passerelle.actors.actorgroup.ui"
             icon="icons/user_input.gif"
             id="org.dawb.passerelle.actors.userinput"
             name="Input">
       </actor>
-   </extension>
-   <extension
-         name="Region Actors"
-         point="com.isencia.passerelle.engine.actors">
       <actor
             class="org.dawb.passerelle.actors.roi.ROISource"
-            group="org.dawb.passerelle.actors.actorgroup.roi"
+            group="org.dawb.passerelle.actors.actorgroup.ui"
             icon="icons/roi.png"
             id="org.dawb.passerelle.actors.roi"
             name="Region">
@@ -341,7 +337,7 @@
             name="Edna Editor">
       </editor>
       <editor
-            class="org.dawb.passerelle.editors.UserModifyEditor"
+            class="org.dawb.passerelle.editors.UserInputEditor"
             default="false"
             icon="icons/application_form_magnify.png"
             id="org.dawb.passerelle.editors.UserModifyEditor"
@@ -406,7 +402,7 @@
    <extension
          point="org.eclipse.ui.services">
       <serviceFactory
-            factoryClass="org.dawb.passerelle.editors.UserModifyService">
+            factoryClass="org.dawb.passerelle.editors.UserInputService">
          <service
                serviceClass="org.dawb.common.services.IUserInputService"></service>
       </serviceFactory>

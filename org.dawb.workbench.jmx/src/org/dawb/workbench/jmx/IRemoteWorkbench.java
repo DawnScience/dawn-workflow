@@ -113,7 +113,7 @@ public interface IRemoteWorkbench {
      * 
      * @param parName  - part name input should appear with. Just a name to be used by the UI
      * @param isDialog - if true workflow would like a modal dialog used, otherwise editor part used.
-     * @param configuration - can be null, just usde 
+     * @param configuration - can be null, just used 
      * @param scalarValues  - can be null
      * @param silent        - true or false, if true, the user will not see the user input form,
      *                        and the default values will be used directly.
@@ -124,6 +124,16 @@ public interface IRemoteWorkbench {
      * @throws Exception
      */
 	public Map<String,String> createUserInput(final UserInputBean bean) throws Exception;
+	
+    /**
+     * Plots data in the PlotInputBean and returns the plot data, any regions, the plot settings,
+     * tool output.
+     * 
+     * @param bean
+     * @return plot output
+     * @throws Exception
+     */
+	public UserPlotBean createPlotInput(final UserPlotBean bean) throws Exception;
 
 
 	/**

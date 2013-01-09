@@ -9,14 +9,22 @@
  */ 
 package org.dawb.passerelle.common;
 
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import org.dawb.passerelle.common.remote.RemoteServiceProviderImpl;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
+import org.dawb.workbench.jmx.UserPlotBean;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+
+import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 
 /**
  * This is a service manager for the service which runs giving workflow actors
@@ -58,45 +66,64 @@ public class WorkbenchServiceManager implements IStartup {
 		
 		if (agent!=null) return;
 		
-		
-		if (checkUI) {
-			if (!PlatformUI.isWorkbenchRunning()) return;
-			if (!WorkbenchServiceManager.isUserInterfaceApplication()) return;
-		}
-		
-		logger.debug("Running workbench not workflow, starting workbench service.");
-		
-		if (System.getProperty("org.edna.workbench.application.no.service")==null) {
-			
-			final RemoteServiceProviderImpl prov = new RemoteServiceProviderImpl();
-			try {
-				agent = new RemoteWorkbenchAgent(prov);
-				agent.start();
-			} catch (java.io.IOException alreadyExisting) {
-				logger.debug("The service for the workbench is already running.");
-			} catch (Exception e) {
-				logger.error("Cannot start workbench service!", e);
+		final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		try {
+			final CompositeClassLoader customLoader = new CompositeClassLoader();
+			customLoader.add(UserPlotBean.class.getClassLoader());
+			customLoader.add(AbstractDataset.class.getClassLoader());
+			AccessController.doPrivileged(new PrivilegedAction() {
+				public Object run() {
+					Thread.currentThread().setContextClassLoader(customLoader);
+					return null;
+				}
+			});
+
+			if (checkUI) {
+				if (!PlatformUI.isWorkbenchRunning()) return;
+				if (!WorkbenchServiceManager.isUserInterfaceApplication()) return;
 			}
-			
-			
-	    	if (!addedWorkbenchListener) {
-	    		
-	    		addedWorkbenchListener = true;
-	    		if (PlatformUI.isWorkbenchRunning()) PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
 
-	    			@Override
-	    			public void postShutdown(final IWorkbench workbench) {
-	    				stopWorkbenchService();
-	    			}
+			logger.debug("Running workbench not workflow, starting workbench service.");
 
-					@Override
-					public boolean preShutdown(IWorkbench workbench,
-							                   boolean forced) {
-						return true;
-					}
-	    		});
-	    	}
+			if (System.getProperty("org.edna.workbench.application.no.service")==null) {
 
+				final RemoteServiceProviderImpl prov = new RemoteServiceProviderImpl();
+				try {
+					agent = new RemoteWorkbenchAgent(prov);
+					agent.start();
+				} catch (java.io.IOException alreadyExisting) {
+					logger.debug("The service for the workbench is already running.");
+				} catch (Exception e) {
+					logger.error("Cannot start workbench service!", e);
+				}
+
+
+				if (!addedWorkbenchListener) {
+
+					addedWorkbenchListener = true;
+					if (PlatformUI.isWorkbenchRunning()) PlatformUI.getWorkbench().addWorkbenchListener(new IWorkbenchListener() {
+
+						@Override
+						public void postShutdown(final IWorkbench workbench) {
+							stopWorkbenchService();
+						}
+
+						@Override
+						public boolean preShutdown(IWorkbench workbench,
+								boolean forced) {
+							return true;
+						}
+					});
+				}
+
+			}
+		} finally {
+			AccessController.doPrivileged(new PrivilegedAction() {
+				public Object run() {
+					Thread.currentThread().setContextClassLoader(loader);
+					return null;
+				}
+			});
 		}
 
 	}

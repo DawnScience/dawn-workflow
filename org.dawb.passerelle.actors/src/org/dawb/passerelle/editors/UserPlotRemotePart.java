@@ -1,0 +1,328 @@
+/*
+ * Copyright (c) 2012 European Synchrotron Radiation Facility,
+ *                    Diamond Light Source Ltd.
+ *
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ */ 
+package org.dawb.passerelle.editors;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
+import org.dawb.common.ui.plot.AbstractPlottingSystem;
+import org.dawb.common.ui.plot.EmptyWorkbenchPart;
+import org.dawb.common.ui.plot.IPlottingSystem;
+import org.dawb.common.ui.plot.PlotType;
+import org.dawb.common.ui.plot.PlottingFactory;
+import org.dawb.common.ui.plot.region.IRegion;
+import org.dawb.common.ui.plot.region.RegionUtils;
+import org.dawb.common.ui.plot.tool.IToolPageSystem;
+import org.dawb.common.ui.plot.tool.IToolPage.ToolPageRole;
+import org.dawb.common.ui.util.EclipseUtils;
+import org.dawb.common.ui.views.HeaderTablePage;
+import org.dawb.common.ui.widgets.ActionBarWrapper;
+import org.dawb.passerelle.actors.Activator;
+import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
+import org.dawb.workbench.jmx.UserPlotBean;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.SashForm;
+import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.part.Page;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
+import uk.ac.gda.common.rcp.util.GridUtils;
+
+public class UserPlotRemotePart implements IRemoteWorkbenchPart {
+
+	private static Logger logger = LoggerFactory.getLogger(UserPlotRemotePart.class);
+	
+	private String                     partName;
+	
+	private Closeable                  closeable;
+	private Queue<Object>              queue;
+	private UserPlotBean               userPlotBean, originalUserPlotBean;
+	private IPlottingSystem            system;
+	private ActionBarWrapper           wrapper, toolWrapper;
+	
+	private Composite                  plotComposite, toolComposite, main;
+
+	public UserPlotRemotePart() {		
+		try {
+			system = PlottingFactory.createPlottingSystem();
+		} catch (Exception e) {
+			logger.error("Cannot create plotting system!", e);
+		}
+	}
+	
+	@Override
+	public void createRemotePart(final Object container, Closeable closeable) {
+		
+		this.main  = new Composite((Composite)container, SWT.NONE);
+		final GridLayout gridLayout = new GridLayout(1, false);
+		gridLayout.verticalSpacing = 0;
+		gridLayout.marginWidth = 0;
+		gridLayout.marginHeight = 0;
+		gridLayout.horizontalSpacing = 0;
+		main.setLayout(gridLayout);
+		
+		final SashForm contents = new SashForm((Composite)container, SWT.HORIZONTAL);
+		contents.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		this.closeable = closeable;
+				
+		Composite plot = new Composite(contents, SWT.BORDER);
+		plot.setLayout(new GridLayout(1, false));
+		GridUtils.removeMargins(plot);
+		
+		if (closeable instanceof IEditorPart) {
+			this.wrapper = ActionBarWrapper.createActionBars(plot, ((IEditorPart)closeable).getEditorSite().getActionBars());
+		} else if (closeable instanceof Dialog) {
+			this.wrapper = ActionBarWrapper.createActionBars(plot, null);			
+		}
+		this.plotComposite = new Composite(plot, SWT.BORDER); // Used to plot on to.
+		plotComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		plotComposite.setLayout(new FillLayout());
+
+		
+		this.toolComposite = new Composite(contents, SWT.BORDER);
+		toolComposite.setLayout(new StackLayout());
+		this.toolWrapper = ActionBarWrapper.createActionBars(toolComposite, null);
+		
+		// TODO Tool toolbar
+	
+		// Show tools here, not on a page.
+		((AbstractPlottingSystem)system).setToolComposite(toolComposite);
+		
+		contents.setWeights(new int[]{70,30});
+		
+	}
+	
+    /**
+     * Please called setPartName
+     * @param bean
+     */
+	private void createPlot(UserPlotBean bean) {
+		
+		IWorkbenchPart part = closeable instanceof IWorkbenchPart ? (IWorkbenchPart)closeable : null;
+		if (part==null)  part = new EmptyWorkbenchPart(system);
+		
+		system.createPlotPart(plotComposite, bean.getPartName(), wrapper, PlotType.XY, part);
+		
+		if (bean.getData()!=null) {
+			// Plot whatever was in the bean, if one 2D dataset is encountered use that
+			// since it is exclusive.
+			final AbstractDataset image = getFirst2DDataset(bean.getData());
+			// TODO Other plotting modes
+			// TODO Plot title?
+			if (image!=null) { // We plot in 2D
+				system.createPlot2D(image, getAxes(bean), null);
+			} else { // We plot in 1D
+				system.createPlot1D(getXAxis(bean), get1DDatasets(bean.getData()), null);
+			}
+		}
+		
+	    // Regions
+		if (bean.getRois()!=null) {
+			for (String roiName : bean.getRois().keySet()) {
+				final ROIBase roi = (ROIBase)bean.getRois().get(roiName);
+				try {
+					IRegion region = RegionUtils.createRegion(system, roi, roiName);
+					if (region==null) {
+						logger.error("Cannot create region '"+roiName+"' with ROI "+roi);
+					} else {
+						logger.trace("Ceated "+region.getRegionType()+" region '"+roiName+"' with ROI "+roi);
+					}
+				 
+				} catch (Exception e) {
+					logger.error("Cannot create region '"+roiName+"'", e);
+				}
+			}
+		}
+		
+		// Tool
+		AbstractPlottingSystem asystem = (AbstractPlottingSystem)system;
+		if (bean.getToolId()!=null && asystem.getToolPage(bean.getToolId())!=null) {
+			
+			final ToolPageRole role = asystem.getToolPage(bean.getToolId()).getToolPageRole();
+			try {
+				asystem.setToolVisible(bean.getToolId(), role, null);
+			} catch (Exception e) {
+				logger.error("Cannot select tool '"+bean.getToolId()+"'", e);
+			}
+		}
+		
+		if (wrapper!=null) wrapper.update(true);
+		plotComposite.layout(plotComposite.getChildren());
+		main.layout(main.getChildren());
+	}
+
+	private List<AbstractDataset> getAxes(UserPlotBean bean) {
+		final List<String>    axes  = bean.getAxesNames();
+		if (axes==null) return null;
+		if (!bean.getData().containsKey(axes.get(0))) return null;
+		if (!bean.getData().containsKey(axes.get(1))) return null;
+		return Arrays.asList((AbstractDataset)bean.getData().get(axes.get(0)), (AbstractDataset)bean.getData().get(axes.get(1)));
+	}
+	private AbstractDataset getXAxis(UserPlotBean bean) {
+		final List<String>    axes  = bean.getAxesNames();
+		if (axes==null) return null;
+		if (!bean.getData().containsKey(axes.get(0))) return null;
+		return (AbstractDataset)bean.getData().get(axes.get(0));
+	}
+
+	private AbstractDataset getFirst2DDataset(Map<String, Serializable> data) {
+		for (String name : data.keySet()) {
+			Serializable d = data.get(name);
+			if (d instanceof AbstractDataset) {
+				final int rank = ((AbstractDataset)d).getRank();
+				if (rank==2) return (AbstractDataset)d;
+			}
+		}
+		return null;
+	}
+	private List<AbstractDataset> get1DDatasets(Map<String, Serializable> data) {
+		List<AbstractDataset> ret = new ArrayList<AbstractDataset>(7);
+		for (String name : data.keySet()) {
+			Serializable d = data.get(name);
+			if (d instanceof AbstractDataset) {
+				final int rank = ((AbstractDataset)d).getRank();
+				if (rank==1) ret.add( (AbstractDataset)d );
+			}
+		}
+		return ret;
+	}
+
+	/**
+	 * Create the actions.
+	 */
+	public void initializeMenu(Object bars) {
+		MenuManager man = new MenuManager();
+		man.add(confirm);
+		man.add(stop);
+	}
+	
+	@Override
+	public void setConfiguration(String configurationXML) throws Exception {
+		throw new RuntimeException(getClass().getName()+" does not support configuration xml yet!");
+	}
+
+
+	public void dispose() {
+			
+		if (queue!=null) {
+			queue.clear();
+			if (queue!=null) {
+				// Just in case something is waiting
+				// An empty one cancels the message.
+				if (queue.isEmpty()) queue.add(new UserPlotBean());
+			}
+		}
+		this.queue          = null;
+	}
+
+	/**
+	 * Queue must not be null and is cleared prior to using.
+	 */
+	public void setQueue(Queue<Object> queue) {
+		this.queue = queue;
+		queue.clear();
+	}
+	
+	public void setValues(final Map<String, String> inputValues) {
+		throw new RuntimeException("Set values as a Map of strings it not supported for Plotting!");
+	}
+
+	// Actions used by class
+	protected final Action confirm = new Action("Confirm values, close view and continue workflow.", Activator.getImageDescriptor("icons/application_form_confirm.png")) {
+		public void run() {
+			doConfirm();
+			closeable.close();
+		}
+	};
+	
+	// Actions used by class
+	protected final Action stop = new Action("Stop workflow downstream of this node.", Activator.getImageDescriptor("icons/stop_workflow.gif")) {
+		public void run() {
+			doStop();
+			closeable.close();
+		}
+	};
+	
+
+	public String getPartName() {
+		return partName;
+	}
+
+	protected void doConfirm() {
+		if (queue==null || userPlotBean==null) {
+			MessageDialog.open(MessageDialog.INFORMATION, Display.getCurrent().getActiveShell(),
+					           "Cannot confirm", "The workflow is not waiting for you to confirm these values.\n\nThere is currently nothing to confirm.", SWT.NONE);
+			return;
+		}
+		if (queue.isEmpty()) queue.add(userPlotBean);
+	}
+	protected void doStop() {
+		if (queue.isEmpty()) queue.add(new UserPlotBean());
+	}
+
+	public void setPartName(String partName) {
+		this.partName = partName;
+	}
+
+	@Override
+	public void setUserObject(Object userObject) {
+		this.originalUserPlotBean = (UserPlotBean)userObject;
+		createPlot(originalUserPlotBean);
+	}
+
+
+	@Override
+	public void stop() {
+		this.stop.run();
+	}
+
+
+	@Override
+	public void confirm() {
+		this.confirm.run();
+	}
+
+
+	@Override
+	public Object getViewer() {
+		return system;
+	}
+	@Override
+	public boolean isMessageOnly() {
+		return false;
+	}
+	@Override
+	public void setRemoteFocus() {
+		try {
+			((AbstractPlottingSystem)system).setFocus();
+		} catch (Throwable ne) {
+			logger.error("Cannot set focus!", ne);
+		}
+	}
+
+}

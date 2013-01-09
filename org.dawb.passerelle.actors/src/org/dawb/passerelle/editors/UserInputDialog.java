@@ -12,10 +12,12 @@ package org.dawb.passerelle.editors;
 import java.util.Map;
 import java.util.Queue;
 
+import org.dawb.common.ui.plot.IPlottingSystem;
 import org.dawb.common.ui.util.GridUtils;
-import org.dawb.workbench.jmx.RemoveWorkbenchPart;
+import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
+import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -28,16 +30,24 @@ import org.eclipse.swt.widgets.Shell;
 
 import uk.ac.gda.common.rcp.util.DialogUtils;
 
-public class UserModifyDialog extends Dialog implements RemoveWorkbenchPart, UserModifyComposite.Closeable {
+/**
+ * A dialog allowing an implementation of IRemoteWorkbenchPart to run
+ * inside it.
+ * 
+ * @author fcp94556
+ *
+ */
+public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRemoteWorkbenchPart.Closeable {
 
-	private UserModifyComposite userModComp;
+	private final IRemoteWorkbenchPart deligate;
 	private Link label;
 
-	public UserModifyDialog(final Shell parentShell) {
+	public UserInputDialog(final Shell parentShell, final IRemoteWorkbenchPart remotePartImpl) {
 		
 		super(parentShell);
 		
 		setShellStyle(SWT.RESIZE | SWT.TITLE);
+		this.deligate = remotePartImpl;
 	}
 	
 	protected Control createDialogArea(Composite container) {
@@ -53,9 +63,9 @@ public class UserModifyDialog extends Dialog implements RemoveWorkbenchPart, Use
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				if (e.text.contains("stop")) {
-					userModComp.stop.run();
+					deligate.stop();
 				} else {
-					userModComp.confirm.run();
+					deligate.confirm();
 				}
 				close();
 			}
@@ -63,8 +73,15 @@ public class UserModifyDialog extends Dialog implements RemoveWorkbenchPart, Use
 			public void widgetDefaultSelected(SelectionEvent e) {}
 		});
 
-		this.userModComp = new UserModifyComposite(container, this, SWT.NONE);
-		return userModComp.getViewer().getControl();
+		deligate.createRemotePart(container, this);
+		Object viewer = deligate.getViewer();
+		if (viewer instanceof ColumnViewer) {
+			return ((ColumnViewer)viewer).getControl();
+		} else if (viewer instanceof IPlottingSystem) {
+			return ((IPlottingSystem)viewer).getPlotComposite();	
+		} else {
+			return container;
+		}
 	}
 	
 	protected void createButtonsForButtonBar(Composite parent) {
@@ -75,7 +92,7 @@ public class UserModifyDialog extends Dialog implements RemoveWorkbenchPart, Use
 	public boolean close() {
 		
         if (getReturnCode()==OK) {
-        	userModComp.doConfirm();
+        	deligate.confirm();
         }
         return super.close();
 	}
@@ -86,14 +103,14 @@ public class UserModifyDialog extends Dialog implements RemoveWorkbenchPart, Use
 	}
 
 	@Override
-	public void setQueue(Queue<Map<String, String>> valueQueue) {
-		userModComp.setQueue(valueQueue);
+	public void setQueue(Queue<Object> valueQueue) {
+		deligate.setQueue(valueQueue);
 	}
 
 	@Override
 	public void setValues(Map<String, String> values) {
-		userModComp.setValues(values);
-		if (userModComp.isMessageOnly()) {
+		deligate.setValues(values);
+		if (deligate.isMessageOnly()) {
 			GridUtils.setVisible(label, false);
 			label.getParent().layout(new Control[]{label});
 			
@@ -106,7 +123,51 @@ public class UserModifyDialog extends Dialog implements RemoveWorkbenchPart, Use
 
 	@Override
 	public void setConfiguration(String configuration) throws Exception {
-		userModComp.setConfiguration(configuration);
+		deligate.setConfiguration(configuration);
+	}
+
+	@Override
+	public void setUserObject(Object userObject) {
+		deligate.setUserObject(userObject);
+	}
+
+	@Override
+	public void stop() {
+		deligate.stop();
+	}
+
+	@Override
+	public void confirm() {
+		deligate.confirm();
+	}
+
+	@Override
+	public Object getViewer() {
+		return deligate.getViewer();
+	}
+
+	@Override
+	public boolean isMessageOnly() {
+		return deligate.isMessageOnly();
+	}
+	@Override
+	public void setRemoteFocus() {
+		deligate.setRemoteFocus();
+	}
+	@Override
+	public void dispose() {
+		deligate.dispose();
+	}
+
+	@Override
+	public void initializeMenu(Object iActionBars) {
+		deligate.initializeMenu(iActionBars);
+	}
+
+	@Override
+	public void createRemotePart(Object container, Closeable closeable) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

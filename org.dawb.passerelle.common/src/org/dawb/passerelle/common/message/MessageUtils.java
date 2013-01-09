@@ -233,14 +233,14 @@ public class MessageUtils {
 	 * @param data
 	 * @return
 	 */
-	public static List<ROIBase> getRois(List<DataMessageComponent> data) {
-		List<ROIBase> ret = null;
+	public static Map<String, Serializable> getRois(List<DataMessageComponent> data) {
+		Map<String, Serializable> ret = null;
 		for (DataMessageComponent comp : data) {
 			if (comp==null||comp.getRois()==null) continue;
-			if (ret==null) ret = new ArrayList<ROIBase>(7);
-			final List<ROIBase> sets = getRois(comp);
+			if (ret==null) ret = new HashMap<String, Serializable>(7);
+			final  Map<String, Serializable> sets = getRois(comp);
 			if (sets==null) continue;
-			ret.addAll(sets);
+			ret.putAll(sets);
 		}
 		return ret;
 	}
@@ -250,13 +250,14 @@ public class MessageUtils {
 	 * @param comp
 	 * @return
 	 */
-	public static List<ROIBase> getRois(DataMessageComponent comp) {
-		List<ROIBase> ret = null;
+	public static Map<String, Serializable> getRois(DataMessageComponent comp) {
+		Map<String, Serializable> ret = null;
 		if (comp==null||comp.getRois()==null) return null;
-		if (ret==null) ret = new ArrayList<ROIBase>(7);
-		final Collection<Serializable> values = comp.getRois().values();
-		for (Object object : values) {
-			if (object instanceof IDataset) ret.add((ROIBase)object);
+		if (ret==null) ret = new HashMap<String, Serializable>(7);
+		final Collection<String> keys = comp.getRois().keySet();
+		for (String key : keys) {
+			Object object = comp.getRois().get(key);
+			if (object instanceof ROIBase) ret.put(key, (Serializable)object);
 		}
 		return ret;
 	}

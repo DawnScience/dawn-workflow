@@ -19,6 +19,7 @@ import ncsa.hdf.object.Datatype;
 import ncsa.hdf.object.Group;
 
 import org.dawb.common.python.PythonUtils;
+import org.dawb.common.ui.util.CalibrationUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.IFileUtils;
 import org.dawb.gda.extensions.loaders.H5Utils;
@@ -35,7 +36,6 @@ import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
-import org.dawb.tango.extensions.editors.SharedMemoryUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -217,7 +217,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		final boolean isMultipleFiles = FILE_TYPES.get(2).equals(fileFormat);
 		if (CALIBRATION_TYPES.get(1).equals(calibParam.getExpression())) {
 			if (!isMultipleFiles) {
-				writer.addData(SharedMemoryUtils.getCalibrated(sets.get(0), scal, false));
+				writer.addData(CalibrationUtils.getCalibrated(sets.get(0), scal, false));
 			}
 		}
 		
@@ -231,7 +231,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				writer.setFile(file);
 				
 				if (CALIBRATION_TYPES.get(1).equals(calibParam.getExpression())) {
-					writer.addData(SharedMemoryUtils.getCalibrated(set, scal, false));
+					writer.addData(CalibrationUtils.getCalibrated(set, scal, false));
 				}
 			}
 			

@@ -15,7 +15,7 @@ import java.util.Map;
 
 import org.dawb.workbench.jmx.IRemoteWorkbench;
 import org.dawb.workbench.jmx.UserInputBean;
-import org.dawb.workbench.jmx.example.WorkflowExample;
+import org.dawb.workbench.jmx.UserPlotBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -128,6 +128,11 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 	public void notifyMockCommand(String motorName, String message, String cmd) {
 		logger.info("Mock Notify Requested");
 		logger.info("Motor "+motorName+"; message "+message);
+	}
+
+	@Override
+	public UserPlotBean createPlotInput(UserPlotBean bean) throws Exception {
+		throw new Exception("Cannot interact with plot in py4j mode!");
 	}
 
 }
