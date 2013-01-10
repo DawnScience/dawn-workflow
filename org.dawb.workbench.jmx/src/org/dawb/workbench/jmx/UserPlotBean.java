@@ -1,6 +1,8 @@
 package org.dawb.workbench.jmx;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,6 +68,12 @@ public class UserPlotBean extends ActorBean {
 	private Serializable toolData;
 	
 	/**
+	 * A description for explaining to the user how they are supposed to 
+	 * use the plot. May be null
+	 */
+	private String description;
+	
+	/**
 	 * If the user used a tool, this is the id of the tool which they last used.
 	 * If other tools were used, they may have set data in the data or the regions
 	 * or their data may have been lost.
@@ -96,6 +104,11 @@ public class UserPlotBean extends ActorBean {
 		this.data = list;
 	}
 
+	public void addList(String name, Serializable ads) {
+		if (this.data==null) data = new LinkedHashMap<String, Serializable>(7);
+		data.put(name, ads);
+	}
+
 	public Map<String, String> getScalar() {
 		return scalar;
 	}
@@ -112,7 +125,19 @@ public class UserPlotBean extends ActorBean {
 		this.rois = rois;
 	}
 
-	
+	public UserPlotBean clone() {
+		UserPlotBean ret = new UserPlotBean();
+		
+		ret.setData  (getData()!=null  ? new LinkedHashMap<String, Serializable>(getData()): null);
+		ret.setScalar(getScalar()!=null? new LinkedHashMap<String, String>(getScalar())    : null);		
+		ret.setRois  (getRois()!=null  ? new LinkedHashMap<String, Serializable>(getRois()): null);
+		
+		ret.setAxesNames(getAxesNames()!=null?   new ArrayList<String>(getAxesNames()): null);
+		ret.setDescription(getDescription());
+		ret.setToolData(getToolData());
+		
+		return ret;
+	}
 
 	@Override
 	public int hashCode() {
@@ -121,6 +146,8 @@ public class UserPlotBean extends ActorBean {
 		result = prime * result
 				+ ((axesNames == null) ? 0 : axesNames.hashCode());
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
+		result = prime * result
+				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result + ((rois == null) ? 0 : rois.hashCode());
 		result = prime * result + ((scalar == null) ? 0 : scalar.hashCode());
 		result = prime * result
@@ -148,6 +175,11 @@ public class UserPlotBean extends ActorBean {
 			if (other.data != null)
 				return false;
 		} else if (!data.equals(other.data))
+			return false;
+		if (description == null) {
+			if (other.description != null)
+				return false;
+		} else if (!description.equals(other.description))
 			return false;
 		if (rois == null) {
 			if (other.rois != null)
@@ -188,6 +220,27 @@ public class UserPlotBean extends ActorBean {
 
 	public void setAxesNames(List<String> axesNames) {
 		this.axesNames = axesNames;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public void clearAxisNames() {
+		if (axesNames!=null) axesNames.clear();
+	}
+	public void addAxisName(String name) {
+		if (axesNames==null) axesNames = new ArrayList<String>(3);
+		axesNames.add(name);
+	}
+
+	public void addRoi(String name, Serializable roi) {
+		if (rois==null) rois = new LinkedHashMap<String, Serializable>(4);
+		rois.put(name, roi);
 	}
 
 }

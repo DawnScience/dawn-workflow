@@ -44,6 +44,7 @@ import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.dnd.DropTarget;
 import org.eclipse.swt.dnd.DropTargetAdapter;
@@ -90,7 +91,7 @@ public class UserModifyRemotePart implements IRemoteWorkbenchPart {
 	private Map<String,String>         values;
 	private Map<String,String>         originalValues;
 	private FieldContainer             configuration;
-	private Label                      customLabel;
+	private CLabel                     customLabel;
 
     public UserModifyRemotePart() {
     	
@@ -104,7 +105,7 @@ public class UserModifyRemotePart implements IRemoteWorkbenchPart {
 		contents.setLayout(new GridLayout(1, false));
 		contents.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		
-		this.customLabel  = new Label(contents, SWT.WRAP);
+		this.customLabel  = new CLabel(contents, SWT.WRAP);
 		customLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
 		final Image image = Activator.getDefault().getImageDescriptor("icons/information.gif").createImage();
 		customLabel.setImage(image);

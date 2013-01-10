@@ -13,19 +13,15 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.dawb.common.ui.plot.IPlottingSystem;
-import org.dawb.common.ui.util.GridUtils;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnViewer;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Shell;
 
 import uk.ac.gda.common.rcp.util.DialogUtils;
@@ -40,39 +36,17 @@ import uk.ac.gda.common.rcp.util.DialogUtils;
 public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRemoteWorkbenchPart.Closeable {
 
 	private final IRemoteWorkbenchPart deligate;
-	private Link label;
 
 	public UserInputDialog(final Shell parentShell, final IRemoteWorkbenchPart remotePartImpl) {
 		
 		super(parentShell);
 		
-		setShellStyle(SWT.RESIZE | SWT.TITLE);
+		setShellStyle(SWT.RESIZE | SWT.SHELL_TRIM );
 		this.deligate = remotePartImpl;
 	}
 	
 	protected Control createDialogArea(Composite container) {
-		
-		final Composite top = new Composite(container, SWT.NONE);
-		top.setLayout(new GridLayout(1, false));
-		top.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		
-		this.label  = new Link(top, SWT.LEFT);
-		label.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
-		label.setText("Please check and/or set values, then <a>continue</a> or <a>stop</a> the workflow.");
-		label.addSelectionListener(new SelectionListener() {	
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (e.text.contains("stop")) {
-					deligate.stop();
-				} else {
-					deligate.confirm();
-				}
-				close();
-			}
-			@Override
-			public void widgetDefaultSelected(SelectionEvent e) {}
-		});
-
+				
 		deligate.createRemotePart(container, this);
 		Object viewer = deligate.getViewer();
 		if (viewer instanceof ColumnViewer) {
@@ -96,6 +70,12 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRe
         }
         return super.close();
 	}
+	
+	public int open() {
+		int ret = super.open();
+		setRemoteFocus();
+		return ret;
+	}
 
 	@Override
 	public void setPartName(String partName) {
@@ -110,10 +90,7 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRe
 	@Override
 	public void setValues(Map<String, String> values) {
 		deligate.setValues(values);
-		if (deligate.isMessageOnly()) {
-			GridUtils.setVisible(label, false);
-			label.getParent().layout(new Control[]{label});
-			
+		if (deligate.isMessageOnly()) {			
 			if (getShell()!=null && getParentShell()!=null) {
 				getShell().setSize(500,300);
 				DialogUtils.centerDialog(getParentShell(), getShell());

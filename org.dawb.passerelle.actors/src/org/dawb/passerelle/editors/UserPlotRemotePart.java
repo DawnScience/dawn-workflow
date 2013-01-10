@@ -12,6 +12,7 @@ package org.dawb.passerelle.editors;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -23,10 +24,13 @@ import org.dawb.common.ui.plot.PlotType;
 import org.dawb.common.ui.plot.PlottingFactory;
 import org.dawb.common.ui.plot.region.IRegion;
 import org.dawb.common.ui.plot.region.RegionUtils;
-import org.dawb.common.ui.plot.tool.IToolPageSystem;
+import org.dawb.common.ui.plot.tool.IToolChangeListener;
+import org.dawb.common.ui.plot.tool.IToolPage;
 import org.dawb.common.ui.plot.tool.IToolPage.ToolPageRole;
-import org.dawb.common.ui.util.EclipseUtils;
-import org.dawb.common.ui.views.HeaderTablePage;
+import org.dawb.common.ui.plot.tool.IToolPageSystem;
+import org.dawb.common.ui.plot.tool.ToolChangeEvent;
+import org.dawb.common.ui.plot.trace.IImageTrace;
+import org.dawb.common.ui.plot.trace.ITrace;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
@@ -36,8 +40,10 @@ import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -45,7 +51,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.part.Page;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,9 +68,11 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 	private Queue<Object>              queue;
 	private UserPlotBean               userPlotBean, originalUserPlotBean;
 	private IPlottingSystem            system;
-	private ActionBarWrapper           wrapper, toolWrapper;
+	private ActionBarWrapper           wrapper;
 	
 	private Composite                  plotComposite, toolComposite, main;
+	private SashForm                   contents;
+	private CLabel                     customLabel;
 
 	public UserPlotRemotePart() {		
 		try {
@@ -79,6 +86,7 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 	public void createRemotePart(final Object container, Closeable closeable) {
 		
 		this.main  = new Composite((Composite)container, SWT.NONE);
+		main.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		final GridLayout gridLayout = new GridLayout(1, false);
 		gridLayout.verticalSpacing = 0;
 		gridLayout.marginWidth = 0;
@@ -86,7 +94,13 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 		gridLayout.horizontalSpacing = 0;
 		main.setLayout(gridLayout);
 		
-		final SashForm contents = new SashForm((Composite)container, SWT.HORIZONTAL);
+		this.customLabel  = new CLabel(main, SWT.WRAP);
+		customLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		final Image image = Activator.getImageDescriptor("icons/information.gif").createImage();
+		customLabel.setImage(image);
+		GridUtils.setVisible(customLabel, false);
+		
+		this.contents = new SashForm(main, SWT.HORIZONTAL);
 		contents.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		this.closeable = closeable;
 				
@@ -102,18 +116,14 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 		this.plotComposite = new Composite(plot, SWT.BORDER); // Used to plot on to.
 		plotComposite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		plotComposite.setLayout(new FillLayout());
-
-		
+	
 		this.toolComposite = new Composite(contents, SWT.BORDER);
 		toolComposite.setLayout(new StackLayout());
-		this.toolWrapper = ActionBarWrapper.createActionBars(toolComposite, null);
 		
-		// TODO Tool toolbar
-	
 		// Show tools here, not on a page.
-		((AbstractPlottingSystem)system).setToolComposite(toolComposite);
+		((IToolPageSystem)system).setToolComposite(toolComposite);
 		
-		contents.setWeights(new int[]{70,30});
+		contents.setWeights(new int[]{100,0});
 		
 	}
 	
@@ -159,16 +169,39 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 			}
 		}
 		
+		// Description
+		if (bean.getDescription()!=null) {
+			customLabel.setText(bean.getDescription());
+			GridUtils.setVisible(customLabel, true);
+			main.layout();
+		}
+		
 		// Tool
-		AbstractPlottingSystem asystem = (AbstractPlottingSystem)system;
+		final AbstractPlottingSystem asystem = (AbstractPlottingSystem)system;
 		if (bean.getToolId()!=null && asystem.getToolPage(bean.getToolId())!=null) {
 			
 			final ToolPageRole role = asystem.getToolPage(bean.getToolId()).getToolPageRole();
 			try {
 				asystem.setToolVisible(bean.getToolId(), role, null);
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						contents.setWeights(new int[]{50,50});
+						contents.layout();
+					}
+				});
+				
 			} catch (Exception e) {
 				logger.error("Cannot select tool '"+bean.getToolId()+"'", e);
 			}
+		} else {
+			asystem.addToolChangeListener(new IToolChangeListener() {	
+				@Override
+				public void toolChanged(ToolChangeEvent evt) {
+					contents.setWeights(new int[]{50,50});
+					contents.layout();
+					asystem.removeToolChangeListener(this);
+				}
+			});
 		}
 		
 		if (wrapper!=null) wrapper.update(true);
@@ -274,6 +307,7 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 	}
 
 	protected void doConfirm() {
+		userPlotBean = createUserPlotBean();
 		if (queue==null || userPlotBean==null) {
 			MessageDialog.open(MessageDialog.INFORMATION, Display.getCurrent().getActiveShell(),
 					           "Cannot confirm", "The workflow is not waiting for you to confirm these values.\n\nThere is currently nothing to confirm.", SWT.NONE);
@@ -281,8 +315,61 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 		}
 		if (queue.isEmpty()) queue.add(userPlotBean);
 	}
+	
+	/**
+	 * Reads plot data. Sends back everything it can.
+	 * This may be slower but it is hard to predict which data the
+	 * workflow needs. If speed becomes an issue we will change the 
+	 * actor to specify which data should be returned.
+	 * 
+	 * @return
+	 */
+	private UserPlotBean createUserPlotBean() {
+		
+		final UserPlotBean ret = originalUserPlotBean.clone();
+		
+		// Send back any data not in the original message
+		final Collection<ITrace> traces = system.getTraces();
+		if (traces!=null) {
+			for (ITrace iTrace : traces) {
+				AbstractDataset data =  iTrace.getData();
+				ret.addList(iTrace.getName(), data);
+				
+				if (data instanceof IImageTrace) {
+					IImageTrace image = (IImageTrace)iTrace;
+					if (image.getAxes()!=null) {
+						ret.clearAxisNames();
+					    final List<AbstractDataset> axes = image.getAxes();
+					    for (AbstractDataset axis : axes) {
+						    ret.addList(axis.getName(), axis);
+						    ret.addAxisName(axis.getName());
+					    }
+					}
+				}
+			}
+		}
+		
+		final Collection<IRegion> regions = system.getRegions();
+		if (regions!=null) {
+			for (IRegion iRegion : regions) {
+                ret.addRoi(iRegion.getName(), iRegion.getROI());
+			}
+		}
+
+		// Get the data from the tool required by the actor.
+		if (originalUserPlotBean.getToolId()!=null) {
+			IToolPageSystem tsystem = (IToolPageSystem)system;
+			IToolPage       tool    = tsystem.getToolPage(originalUserPlotBean.getToolId());
+			ret.setToolData(tool.getToolData());
+		} else { // Set the data for any tool which was selected and also set the id for this tool.
+			
+		}
+		
+		return ret;
+	}
+
 	protected void doStop() {
-		if (queue.isEmpty()) queue.add(new UserPlotBean());
+		if (queue.isEmpty()) queue.add(null); // null means stop for this part
 	}
 
 	public void setPartName(String partName) {
