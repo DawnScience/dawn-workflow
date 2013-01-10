@@ -356,13 +356,16 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 			}
 		}
 
+		IToolPageSystem tsystem = (IToolPageSystem)system;
 		// Get the data from the tool required by the actor.
 		if (originalUserPlotBean.getToolId()!=null) {
-			IToolPageSystem tsystem = (IToolPageSystem)system;
 			IToolPage       tool    = tsystem.getToolPage(originalUserPlotBean.getToolId());
 			ret.setToolData(tool.getToolData());
-		} else { // Set the data for any tool which was selected and also set the id for this tool.
-			
+		} else if (tsystem.getActiveTool()!=null){ 
+			// Set the data for any tool which was selected and also set the id for this tool.
+			final IToolPage tool = tsystem.getActiveTool();
+			ret.setToolId(tool.getToolId());
+			ret.setToolData(tool.getToolData());
 		}
 		
 		return ret;
