@@ -11,6 +11,7 @@ package org.dawb.passerelle.common;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -22,7 +23,8 @@ public class Activator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "org.dawb.passerelle.common";
 
 	// The shared instance
-	private static Activator plugin;
+	private static Activator     plugin;
+	private static BundleContext context;
 	
 	/**
 	 * The constructor
@@ -36,7 +38,8 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		plugin = this;
+		plugin       = this;
+		this.context = context;
 	}
 
 	/*
@@ -58,5 +61,11 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	public static Object getService(Class<?> clazz) {
+		if (plugin==null) return null;
+		ServiceReference<?> ref = context.getServiceReference(clazz);
+		if (ref==null) return null;
+		return context.getService(ref);
+	}
 
 }

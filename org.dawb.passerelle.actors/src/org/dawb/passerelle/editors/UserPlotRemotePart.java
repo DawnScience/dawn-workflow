@@ -30,6 +30,7 @@ import org.dawb.common.ui.plot.tool.IToolPage.ToolPageRole;
 import org.dawb.common.ui.plot.tool.IToolPageSystem;
 import org.dawb.common.ui.plot.tool.ToolChangeEvent;
 import org.dawb.common.ui.plot.trace.IImageTrace;
+import org.dawb.common.ui.plot.trace.ILineTrace;
 import org.dawb.common.ui.plot.trace.ITrace;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
@@ -43,6 +44,8 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.custom.StackLayout;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
@@ -96,6 +99,10 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 		
 		this.customLabel  = new CLabel(main, SWT.WRAP);
 		customLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, false));
+		FontData fontDatas[] = customLabel.getFont().getFontData();
+		FontData data = fontDatas[0];
+		customLabel.setFont(new Font(Display.getCurrent(), data.getName(), data.getHeight(), SWT.BOLD));
+
 		final Image image = Activator.getImageDescriptor("icons/information.gif").createImage();
 		customLabel.setImage(image);
 		GridUtils.setVisible(customLabel, false);
@@ -326,16 +333,15 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 	 */
 	private UserPlotBean createUserPlotBean() {
 		
-		final UserPlotBean ret = originalUserPlotBean.clone();
+
+		final UserPlotBean ret = new UserPlotBean();
 		
 		// Send back any data not in the original message
 		final Collection<ITrace> traces = system.getTraces();
 		if (traces!=null) {
 			for (ITrace iTrace : traces) {
-				AbstractDataset data =  iTrace.getData();
-				ret.addList(iTrace.getName(), data);
 				
-				if (data instanceof IImageTrace) {
+				if (iTrace instanceof IImageTrace) {
 					IImageTrace image = (IImageTrace)iTrace;
 					if (image.getAxes()!=null) {
 						ret.clearAxisNames();
@@ -345,6 +351,27 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 						    ret.addAxisName(axis.getName());
 					    }
 					}
+					AbstractDataset data =  iTrace.getData();
+					data.setName(image.getName());
+					data.setMetadata(null); // Gives some error with Serialization with Diffraction metadata.
+					ret.addList(image.getName(), data);
+
+				} else if (iTrace instanceof ILineTrace) { 
+					ILineTrace line = (ILineTrace)iTrace;
+					AbstractDataset data =  line.getYData();
+ 				    data.setName(line.getName());
+					ret.addList(line.getName(), data);
+				    
+					// TODO Fit tool does not give datasets for the
+					// peaks drawn to the same resolution as the original data.
+					
+//					AbstractDataset  x = line.getXData();
+//					final String xName = line.getName()+"_x";
+//					if (x!=null && !ret.getData().containsKey(xName)) {
+//	 				    x.setName(xName);
+//						ret.addList(xName, x);
+//					}
+					
 				}
 			}
 		}
@@ -360,19 +387,21 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 		// Get the data from the tool required by the actor.
 		if (originalUserPlotBean.getToolId()!=null) {
 			IToolPage       tool    = tsystem.getToolPage(originalUserPlotBean.getToolId());
-			ret.setToolData(tool.getToolData());
+			if (tool!=null) ret.setToolData(tool.getToolData());
 		} else if (tsystem.getActiveTool()!=null){ 
 			// Set the data for any tool which was selected and also set the id for this tool.
 			final IToolPage tool = tsystem.getActiveTool();
-			ret.setToolId(tool.getToolId());
-			ret.setToolData(tool.getToolData());
+			if (tool!=null) {
+				ret.setToolId(tool.getToolId());
+				ret.setToolData(tool.getToolData());
+			}
 		}
 		
 		return ret;
 	}
 
 	protected void doStop() {
-		if (queue.isEmpty()) queue.add(null); // null means stop for this part
+		if (queue.isEmpty()) queue.add(new UserPlotBean()); // null means stop for this part
 	}
 
 	public void setPartName(String partName) {
@@ -388,13 +417,13 @@ public class UserPlotRemotePart implements IRemoteWorkbenchPart {
 
 	@Override
 	public void stop() {
-		this.stop.run();
+		doStop();
 	}
 
 
 	@Override
 	public void confirm() {
-		this.confirm.run();
+		doConfirm();
 	}
 
 

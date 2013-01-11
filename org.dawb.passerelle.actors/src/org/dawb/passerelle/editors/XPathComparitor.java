@@ -11,7 +11,6 @@ package org.dawb.passerelle.editors;
 
 import java.util.Comparator;
 
-import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.XPathVariable;
 

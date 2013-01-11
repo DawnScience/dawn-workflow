@@ -9,22 +9,15 @@
  */ 
 package org.dawb.passerelle.common;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
-
+import org.dawb.common.services.IClassLoaderService;
 import org.dawb.passerelle.common.remote.RemoteServiceProviderImpl;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
-import org.dawb.workbench.jmx.UserPlotBean;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;
 import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
-
-import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 
 /**
  * This is a service manager for the service which runs giving workflow actors
@@ -66,23 +59,15 @@ public class WorkbenchServiceManager implements IStartup {
 		
 		if (agent!=null) return;
 		
-		final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+		final IClassLoaderService service = (IClassLoaderService)PlatformUI.getWorkbench().getService(IClassLoaderService.class);
 		try {
-			final CompositeClassLoader customLoader = new CompositeClassLoader();
-			customLoader.add(UserPlotBean.class.getClassLoader());
-			customLoader.add(AbstractDataset.class.getClassLoader());
-			AccessController.doPrivileged(new PrivilegedAction() {
-				public Object run() {
-					Thread.currentThread().setContextClassLoader(customLoader);
-					return null;
-				}
-			});
-
 			if (checkUI) {
-				if (!PlatformUI.isWorkbenchRunning()) return;
+				if (!PlatformUI.isWorkbenchRunning())                      return;
 				if (!WorkbenchServiceManager.isUserInterfaceApplication()) return;
 			}
 
+			if (service!=null) service.setDataAnalysisClassLoaderActive(true);
+			
 			logger.debug("Running workbench not workflow, starting workbench service.");
 
 			if (System.getProperty("org.edna.workbench.application.no.service")==null) {
@@ -118,12 +103,7 @@ public class WorkbenchServiceManager implements IStartup {
 
 			}
 		} finally {
-			AccessController.doPrivileged(new PrivilegedAction() {
-				public Object run() {
-					Thread.currentThread().setContextClassLoader(loader);
-					return null;
-				}
-			});
+			if (service!=null) service.setDataAnalysisClassLoaderActive(false);
 		}
 
 	}

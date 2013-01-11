@@ -366,7 +366,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 					// Ignored.
 				} catch (Exception e) {
 					logger.error("Cannot open editor ", e);
-					queue.add(null);
+					queue.add(new UserPlotBean());
 					return;
 				}
 				

@@ -9,14 +9,16 @@
  */ 
 package org.dawb.passerelle.actors.ui;
 
-import java.security.AccessController;
-import java.security.PrivilegedAction;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 import javax.management.MBeanServerConnection;
 
+import org.dawb.common.services.IClassLoaderService;
 import org.dawb.common.ui.plot.tool.ToolPageFactory;
+import org.dawb.common.util.list.ListUtils;
+import org.dawb.passerelle.common.Activator;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.actors.ActorUtils;
 import org.dawb.passerelle.common.message.DataMessageComponent;
@@ -36,10 +38,8 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 
 import com.isencia.passerelle.actor.ProcessingException;
-import com.thoughtworks.xstream.core.util.CompositeClassLoader;
 
 /**
  * Allows user to modify scalar values in the message and
@@ -77,7 +77,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 		}
 	}
 
-	private StringParameter inputTypeParam, toolId, description;
+	private StringParameter inputTypeParam, toolId, description, axisNames;
 	private Parameter       silent;
 	
 	public UserPlotTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
@@ -105,6 +105,8 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 		description = new StringParameter(this, "Description");
 		registerConfigurableParameter(description);
 		
+		axisNames = new StringParameter(this, "Axis Names");
+		registerConfigurableParameter(axisNames);
 
 		silent = new Parameter(this, "Silent");
 		silent.setToken(new BooleanToken(false));
@@ -151,25 +153,17 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 				bean.setRois(input.getRois());
 				bean.setToolId(toolId.getExpression());
 				bean.setSilent(((BooleanToken)silent.getToken()).booleanValue());
+				bean.setAxesNames(ListUtils.getList(axisNames.getExpression()));
 				if (description.getExpression()!=null && !"".equals(description.getExpression())) {
 					bean.setDescription(description.getExpression());
 				}
 				
-				final ClassLoader loader = Thread.currentThread().getContextClassLoader();
+				IClassLoaderService service = (IClassLoaderService)Activator.getService(IClassLoaderService.class);
 				try {
-					final CompositeClassLoader customLoader = new CompositeClassLoader();
-					customLoader.add(UserPlotBean.class.getClassLoader());
-					customLoader.add(AbstractDataset.class.getClassLoader());
-					AccessController.doPrivileged(new PrivilegedAction() {
-						public Object run() {
-							Thread.currentThread().setContextClassLoader(customLoader);
-							return null;
-						}
-					});
-
+					if (service!=null) service.setDataAnalysisClassLoaderActive(true);
 					
 					final UserPlotBean uRet   = (UserPlotBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "createPlotInput", new Object[]{bean}, new String[]{UserPlotBean.class.getName()});
-					if (uRet==null) {
+					if (uRet==null || uRet.isEmpty()) {
 						requestFinish();
 						return null;
 					} 
@@ -179,17 +173,13 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 					input.addList(uRet.getData());
 					input.addRois(uRet.getRois());
 									
+					Serializable toolData = uRet.getToolData();
 	                // TODO Custom tool data?
 					
 					return input;
 					
 				} finally {
-					AccessController.doPrivileged(new PrivilegedAction() {
-						public Object run() {
-							Thread.currentThread().setContextClassLoader(loader);
-							return null;
-						}
-					});
+					if (service!=null) service.setDataAnalysisClassLoaderActive(false);
 				}
 				
 			} finally {

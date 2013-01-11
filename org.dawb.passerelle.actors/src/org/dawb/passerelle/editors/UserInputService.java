@@ -59,7 +59,9 @@ public class UserInputService extends AbstractServiceFactory implements IUserInp
 			dialog.create();
 			dialog.getShell().setText(partName);
 			dialog.getShell().setSize(size);
-			DialogUtils.centerDialog(Display.getDefault().getActiveShell(), dialog.getShell());
+			if (Display.getDefault().getActiveShell()!=null && dialog.getShell()!=null) {
+			    DialogUtils.centerDialog(Display.getDefault().getActiveShell(), dialog.getShell());
+			}
 		    return dialog;
 		} else {
 		    final IWorkbenchPage page = EclipseUtils.getActivePage();

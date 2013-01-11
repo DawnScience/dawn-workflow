@@ -474,6 +474,21 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	
 	protected DataMessageComponent getData(final TriggerObject trigOb) throws Exception {
 		
+		// Add everything non-data from upstream that we can, then decide on the details
+		// like data slicing.
+		final DataMessageComponent comp = new DataMessageComponent();
+		if (trigOb.getTrigger()!=null) {
+			try {
+			    DataMessageComponent dmc = MessageUtils.coerceMessage(trigOb.getTrigger());
+			    comp.addScalar(dmc.getScalar());
+			    comp.addRois(dmc.getRois());
+			    comp.addFunctions(dmc.getFunctions());
+			} catch (Throwable ignored) {
+				// triggers to not have to be DataMessageComponent
+			}
+		}
+
+		
 		final File                 file      = trigOb.getFile();
 		final ManagedMessage       triggerMsg= trigOb.getTrigger();
 		final String               filePath  = file.getAbsolutePath();
@@ -502,7 +517,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			datasets = getDatasets(filePath, trigOb);
 		}
 		
-		final DataMessageComponent comp = new DataMessageComponent();
 		// Add messages from upsteam, if any.
 		if (triggerMsg!=null) {
 			try {
@@ -514,7 +528,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		}
 		
 		if (datasets!=null) comp.setList(datasets);
-		
 		if (isMetaRequired) {
 			IMetaData meta =  LoaderFactory.getMetaData(filePath, null);
 			comp.setMeta(meta);

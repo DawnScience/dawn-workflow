@@ -139,6 +139,7 @@ public class DataMessageComponent {
 
 	
 	public void addScalar(final Map<String,String> f) {
+		if (f==null) return;
 		addScalar(f, true);
 	}
 
@@ -371,13 +372,21 @@ public class DataMessageComponent {
 	}
 	
 	public void addList(Map<String, Serializable> data) {
+		if (data==null) return;
 		if (list==null) list = new LinkedHashMap<String,Serializable>(1);
 		this.list.putAll(data);
 	}
 	
 	public void addRois(final Map<String, Serializable> rdata) {
+		if (rdata==null) return;
 		if (rois==null) rois = new LinkedHashMap<String,Serializable>(1);
 		this.rois.putAll(rdata);
+	}
+
+	public void addFunctions(Map<String, Serializable> functions2) {
+		if (functions2==null) return;
+		if (functions==null) functions = new LinkedHashMap<String,Serializable>(1);
+		this.functions.putAll(functions2);
 	}
 	
 	// Function Methods

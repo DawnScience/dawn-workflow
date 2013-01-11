@@ -243,4 +243,8 @@ public class UserPlotBean extends ActorBean {
 		rois.put(name, roi);
 	}
 
+	public boolean isEmpty() {
+		return data==null&&rois==null&&scalar==null&&description==null&&toolData==null&&toolId==null;
+	}
+
 }
