@@ -168,7 +168,11 @@ public class Scalar extends AbstractDataMessageSource {
 	public List<IVariable> getOutputVariables() {
 		try {
 			final String strName  = ((StringToken) nameParam.getToken()).stringValue();
-			final String strValue = ((StringToken) valueParam.getToken()).stringValue();
+			String strValue = ((StringToken) valueParam.getToken()).stringValue();
+	        if (numberFormat.getExpression()!=null && !"".equals(numberFormat.getExpression())) {
+	        	double dbl = Double.parseDouble(strValue.toString());
+	        	strValue = (new DecimalFormat(numberFormat.getExpression())).format(dbl);
+	        }
 		    final List<IVariable> ret = new ArrayList<IVariable>(1);
 		    ret.add(new Variable(strName, VARIABLE_TYPE.SCALAR, strValue, String.class));
 		    return ret;
