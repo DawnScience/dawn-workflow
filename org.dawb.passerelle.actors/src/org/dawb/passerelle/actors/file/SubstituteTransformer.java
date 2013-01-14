@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.dawb.common.util.SubstituteUtils;
 import org.dawb.common.util.io.FileUtils;
+import org.dawb.common.util.io.IFileUtils;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.IVariable;
@@ -46,7 +47,6 @@ import com.isencia.passerelle.util.ptolemy.ResourceParameter;
 import com.isencia.passerelle.workbench.model.actor.IPartListenerActor;
 import com.isencia.passerelle.workbench.model.actor.IResourceActor;
 import com.isencia.passerelle.workbench.model.actor.ResourceObject;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 import com.isencia.passerelle.workbench.util.ResourceUtils;
 
 /**
@@ -60,12 +60,12 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -5382424251791664468L;
+	protected static final long serialVersionUID = -5382424251791664468L;
 	
-	private static Logger logger = LoggerFactory.getLogger(SubstituteTransformer.class);
+	protected static Logger logger = LoggerFactory.getLogger(SubstituteTransformer.class);
 	
-	private ResourceParameter templateParam, outputParam;
-	private StringParameter   encoding;
+	protected ResourceParameter templateParam, outputParam;
+	protected StringParameter   encoding;
 
 	public SubstituteTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
@@ -106,7 +106,15 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 		
 		// Copy file to new location
 		final IFile    input = (IFile)ResourceUtils.getResource(fromPath);
-		final IResource  res = ResourceUtils.getResource(outputPath);
+		IResource  res = ResourceUtils.getResource(outputPath);
+		if (res==null) { // This call 
+			try {
+				res = IFileUtils.getContainer(outputPath, getProject().getName(), "output");
+			} catch (Exception e) {
+				logger.error("Cannot obtain output path as expected!", e);
+			}
+		}	
+		
 		
 		IFile output = null;
 		if (res instanceof IContainer) {

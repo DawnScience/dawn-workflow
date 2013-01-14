@@ -9,6 +9,7 @@
  */ 
 package org.dawb.passerelle.actors.data;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,10 +60,13 @@ public class Scalar extends AbstractDataMessageSource {
 	 *  By default, it contains an StringToken with an empty string.  
 	 */
 	public  Parameter        valueParam,nameParam;
+	private StringParameter  numberFormat;
+	
 	private String           strName, strValue;
 	private List<? extends Number> rangeQueue;
 	
 	protected boolean firedStringValueAlready;
+
 	
 	/** Construct a constant source with the given container and name.
 	 *  Create the <i>value</i> parameter, initialize its value to
@@ -87,6 +91,9 @@ public class Scalar extends AbstractDataMessageSource {
 		valueParam.setExpression("1");
 		valueParam.setDisplayName("Scalar Value");
 		registerConfigurableParameter(valueParam);
+		
+		numberFormat = new StringParameter(this, "Decimal Format");
+		registerConfigurableParameter(numberFormat);
 		
 	}
 
@@ -132,6 +139,11 @@ public class Scalar extends AbstractDataMessageSource {
         	value = strValue;
         } else {
         	value = rangeQueue.remove(0);
+        }
+        
+        if (numberFormat.getExpression()!=null && !"".equals(numberFormat.getExpression())) {
+        	double dbl = Double.parseDouble(value.toString());
+        	value = (new DecimalFormat(numberFormat.getExpression())).format(dbl);
         }
         
 		DataMessageComponent despatch = new DataMessageComponent();

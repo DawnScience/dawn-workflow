@@ -45,6 +45,13 @@
             open="false"
             priority="6">
       </actorgroup>
+      <actorgroup
+            icon="icons/HardwareGroup.png"
+            id="org.dawb.passerelle.actors.hardware"
+            name="Hardware"
+            open="false"
+            priority="5">
+      </actorgroup>
    </extension>
    <extension
          name="General and Other Actors"
@@ -319,6 +326,17 @@
             icon="icons/sync.gif"
             id="org.dawb.passerelle.actors.dmSynchronizer"
             name="Combiner">
+      </actor>
+   </extension>
+   <extension
+         name="Hardware"
+         point="com.isencia.passerelle.engine.actors">
+      <actor
+            class="org.dawb.passerelle.actors.net.TelnetTransformer"
+            group="org.dawb.passerelle.actors.hardware"
+            icon="icons/console.gif"
+            id="org.dawb.passerelle.actors.hardware.telnet"
+            name="Telnet">
       </actor>
    </extension>
    <extension
