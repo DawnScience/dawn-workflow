@@ -3,8 +3,10 @@ package org.dawb.passerelle.views;
 import java.util.Map;
 import java.util.Queue;
 
+import org.dawb.common.ui.Activator;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.dawb.workbench.jmx.UserDebugBean;
+import org.eclipse.jface.action.Action;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -14,10 +16,11 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 	
 	private ActorValuePage valuePage;
 	private Queue<Object>  queue;
+	private UserDebugBean  bean;
  
 	@Override
 	public void setUserObject(Object userObject) {
-		final UserDebugBean  bean = (UserDebugBean)userObject;
+		this.bean = (UserDebugBean)userObject;
 
 		StringBuilder buf = new StringBuilder();
 		if (bean.getPartName()!=null) {
@@ -28,7 +31,7 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 		}
 		setPartName(buf.toString());
 
-		// TODO ensure ActorValuePage can deal with DataMessageComponent
+		valuePage.setData(bean);
 
 	}
 
@@ -36,8 +39,27 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 	public void createPartControl(Composite parent) {
 		valuePage = new ActorValuePage();
 		valuePage.createControl(parent, false);
+		valuePage.setTableView(true);
+		
+		createActions();
 	}
 	
+	private void createActions() {
+		final Action play = new Action("Continue", Activator.getImageDescriptor("icons/run_workflow.gif")) {
+			public void run() {
+				queue.add(bean);				
+			}
+		};
+		getViewSite().getActionBars().getToolBarManager().add(play);
+		
+		final Action stop = new Action("Stop", Activator.getImageDescriptor("icons/stop_workflow.gif")) {
+			public void run() {
+				queue.add(new UserDebugBean());
+			}
+		};
+		getViewSite().getActionBars().getToolBarManager().add(stop);
+	}
+
 	@Override
 	public void setPartName(String partName) {
 		super.setPartName(partName);
@@ -72,7 +94,7 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 		
 	}
 /*$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ 	
-	 END  
+	END  
   $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$*/
 
 }

@@ -97,7 +97,7 @@ public class ActorUtils {
 	 * @param bean
 	 * @return
 	 */
-	public static UserDebugBean debug(UserDebugBean bean) {
+	public static UserDebugBean debug(Actor actor, UserDebugBean bean) {
 
 		if (bean==null) return null;
 		
@@ -110,6 +110,11 @@ public class ActorUtils {
 				
 			bean = (UserDebugBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "debug", new Object[]{bean}, new String[]{UserDebugBean.class.getName()});
 		
+			if (bean==null || bean.isEmpty()) {
+				actor.requestFinish();
+				return null;
+			}
+			
 			return bean;
 			
 		} catch (Exception ignored) {

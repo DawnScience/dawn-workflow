@@ -17,6 +17,11 @@ package org.dawb.passerelle.views;
  */
 public class ActorValueObject {
 
+	public enum ActorValueDataType {
+		LIST, SCALAR, ROI;
+	}
+	
+	private ActorValueDataType dataType;
 	private String inputName;
 	private String outputName;
 	private Object inputValue;
@@ -51,6 +56,8 @@ public class ActorValueObject {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
+				+ ((dataType == null) ? 0 : dataType.hashCode());
+		result = prime * result
 				+ ((inputName == null) ? 0 : inputName.hashCode());
 		result = prime * result
 				+ ((inputValue == null) ? 0 : inputValue.hashCode());
@@ -69,6 +76,8 @@ public class ActorValueObject {
 		if (getClass() != obj.getClass())
 			return false;
 		ActorValueObject other = (ActorValueObject) obj;
+		if (dataType != other.dataType)
+			return false;
 		if (inputName == null) {
 			if (other.inputName != null)
 				return false;
@@ -90,5 +99,11 @@ public class ActorValueObject {
 		} else if (!outputValue.equals(other.outputValue))
 			return false;
 		return true;
+	}
+	public ActorValueDataType getDataType() {
+		return dataType;
+	}
+	public void setDataType(ActorValueDataType dataType) {
+		this.dataType = dataType;
 	}
 }

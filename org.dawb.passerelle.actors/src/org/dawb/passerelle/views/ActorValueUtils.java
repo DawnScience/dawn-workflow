@@ -12,8 +12,11 @@ package org.dawb.passerelle.views;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.dawb.passerelle.common.message.IVariable;
+import org.dawb.passerelle.views.ActorValueObject.ActorValueDataType;
+import org.dawb.workbench.jmx.UserDataBean;
 
 class ActorValueUtils {
 
@@ -24,7 +27,7 @@ class ActorValueUtils {
 	 * @return
 	 */
 	public static List<ActorValueObject> getTableObjects(List<IVariable> in,
-			                                                List<IVariable> out) {
+			                                             List<IVariable> out) {
 		
 		in  = ActorValueUtils.removeDuplicatedNames(in);
 		out = ActorValueUtils.removeDuplicatedNames(out);
@@ -64,6 +67,32 @@ class ActorValueUtils {
 			found.add(iv);
 		}
 		return found;
+	}
+
+	public static List<ActorValueObject> getTableObjects(UserDataBean bean) {
+		
+		List<ActorValueObject> ret = new ArrayList<ActorValueObject>(7);
+		
+		// Order: LIST, SCALAR, ROIS
+		process(bean.getData(),   ActorValueObject.ActorValueDataType.LIST,   ret);
+		process(bean.getScalar(), ActorValueObject.ActorValueDataType.SCALAR, ret);
+		process(bean.getRois(),   ActorValueObject.ActorValueDataType.ROI,    ret);
+		
+		return ret;
+	}
+
+	private static void process(Map<String, ?> data,
+			                    ActorValueDataType        type, 
+			                    List<ActorValueObject>    ret) {
+		
+		if (data==null) return;
+		for (String name : data.keySet()) {
+			ActorValueObject val = new ActorValueObject();
+			val.setDataType(type);
+			val.setInputName(name);
+			val.setInputValue(data.get(name).toString());
+			ret.add(val);
+		}		
 	}
 
 }

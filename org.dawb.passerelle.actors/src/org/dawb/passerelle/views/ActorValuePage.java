@@ -13,16 +13,19 @@ import java.util.List;
 
 import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.ui.util.GridUtils;
+import org.dawb.passerelle.actors.Activator;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.message.XPathVariable;
+import org.dawb.workbench.jmx.UserDataBean;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.jface.text.source.SourceViewer;
+import org.eclipse.jface.viewers.ColumnLabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -31,10 +34,12 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IWorkbenchPart;
@@ -59,7 +64,7 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 	protected CLabel       label;
 	protected SourceViewer sourceViewer;
 	protected TableViewer  tableViewer;
-	protected TableViewerColumn inNameColumn, inValueColumn, outNameColumn, outValueColumn;
+	protected TableViewerColumn dataTypeColumn, inNameColumn, inValueColumn, outNameColumn, outValueColumn;
 
 	protected StructuredSelection lastSelection;
 
@@ -113,7 +118,33 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 		setTableView(false);
 	}
 
+	private Image listIcon, scalarIcon, roiIcon;
+	
 	private void createColumns(final TableViewer viewer) {
+		
+		listIcon   = Activator.getImageDescriptor("icons/list.png").createImage();
+		scalarIcon = Activator.getImageDescriptor("icons/scalar.png").createImage();
+		roiIcon    = Activator.getImageDescriptor("icons/roi.png").createImage();
+		
+		this.dataTypeColumn   = new TableViewerColumn(viewer, SWT.LEFT, 0);
+		dataTypeColumn.getColumn().setText("Type");
+		dataTypeColumn.getColumn().setWidth(0);
+		dataTypeColumn.getColumn().setResizable(false);
+		dataTypeColumn.setLabelProvider(new ColumnLabelProvider() {
+			public Image getImage(Object element) {
+				final ActorValueObject var = (ActorValueObject)element;
+				switch(var.getDataType()) {
+				case LIST:
+					return listIcon;
+				case SCALAR:					
+					return scalarIcon;
+				case ROI:					
+					return roiIcon;
+			    default:
+					return null;
+				}
+			}			
+		});
 		
 		this.inNameColumn   = new TableViewerColumn(viewer, SWT.LEFT, 0);
 		inNameColumn.getColumn().setText("Input Name");
@@ -148,6 +179,9 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 
 	public void dispose() {
 		super.dispose();
+		if (scalarIcon!=null) scalarIcon.dispose();
+		if (listIcon!=null)   listIcon.dispose();
+		if (roiIcon!=null)    roiIcon.dispose();
 		getSite().getPage().getWorkbenchWindow().getSelectionService().removeSelectionListener(this);
 		getSite().getPage().removePartListener(this);
 		lastSelection=null;
@@ -313,6 +347,43 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 		
 	}
 
+	/**
+	 * Must be called on the UI thread.
+	 * @param bean
+	 */
+	public void setData(final UserDataBean bean) {
+		
+		if (Display.getCurrent()==null) throw new RuntimeException("ActorValuePage.setData(...) must be called on the UI thread!");
+		
+		// Setup columns required.
+		dataTypeColumn.getColumn().setWidth(30);
+		dataTypeColumn.getColumn().setResizable(true);
+
+		inNameColumn.getColumn().setText("Variable Name");
+		inNameColumn.getColumn().setWidth(200);
+		inValueColumn.getColumn().setWidth(300);
+		
+		outNameColumn.getColumn().setWidth(0);
+		outNameColumn.getColumn().setResizable(false);
+		outValueColumn.getColumn().setWidth(0);
+		outValueColumn.getColumn().setResizable(false);
+		
+		tableViewer.setContentProvider(new IStructuredContentProvider() {
+			@Override
+			public void dispose() {
+				
+			}
+			@Override
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {}
+
+			@Override
+			public Object[] getElements(Object inputElement) {
+				final List<ActorValueObject> ret = ActorValueUtils.getTableObjects(bean);
+				return	ret.toArray(new ActorValueObject[ret.size()]);
+			}
+		});
+		tableViewer.setInput(new Object());
+	}
 
 	/**
 	 * UI Thread safe method for updating the model
@@ -332,9 +403,9 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 					inNameColumn.getColumn().setWidth(200);
 					inValueColumn.getColumn().setWidth(300);
 					outNameColumn.getColumn().setWidth(200);
-					outNameColumn.getColumn().setResizable(false);
+					outNameColumn.getColumn().setResizable(true);
 					outValueColumn.getColumn().setWidth(300);
-					outValueColumn.getColumn().setResizable(false);
+					outValueColumn.getColumn().setResizable(true);
 				} else {
 					inNameColumn.getColumn().setText("Wire Variable Name");
 					inNameColumn.getColumn().setWidth(200);

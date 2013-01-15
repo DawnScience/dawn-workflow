@@ -195,7 +195,7 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 			try {
 				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port1Cache), DebugType.BEFORE_ACTOR);
 				if (bean!=null) bean.setPortName(input.getDisplayName());
-				ActorUtils.debug(bean);
+				ActorUtils.debug(this, bean);
 			} catch (Exception e) {
 				logger.trace("Unable to debug!", e);
 			}
@@ -203,7 +203,7 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 			try {
 				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port2Cache), DebugType.BEFORE_ACTOR);
 				if (bean!=null) bean.setPortName(inputPort2.getDisplayName());
-				ActorUtils.debug(bean);
+				ActorUtils.debug(this, bean);
 			} catch (Exception e) {
 				logger.trace("Unable to debug!", e);
 			}

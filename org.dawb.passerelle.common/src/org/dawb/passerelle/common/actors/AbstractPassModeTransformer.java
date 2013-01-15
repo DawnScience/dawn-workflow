@@ -446,7 +446,7 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 			UserDebugBean bean = ActorUtils.create(this, MessageUtils.coerceMessage(message), DebugType.AFTER_ACTOR);
 			if (bean!=null) {
 				bean.setPortName(port.getDisplayName());
-				ActorUtils.debug(bean);
+				ActorUtils.debug(this, bean);
 			}
 		} catch (Exception e) {
 			logger.trace("Unable to debug!", e);

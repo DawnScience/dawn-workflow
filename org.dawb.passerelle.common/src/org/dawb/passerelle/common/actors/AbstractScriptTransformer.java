@@ -100,7 +100,7 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 			ActorUtils.setActorExecuting(this, true);
 			try {
 				UserDebugBean bean = ActorUtils.create(this, MessageUtils.coerceMessage(message), DebugType.BEFORE_ACTOR);
-				ActorUtils.debug(bean);
+				ActorUtils.debug(this, bean);
 			} catch (Exception e) {
 				logger.trace("Unable to debug!", e);
 			}
