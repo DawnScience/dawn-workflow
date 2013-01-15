@@ -60,28 +60,46 @@ public class ActorUtils {
 
 	}
 	
-	public static UserDebugBean debug(final Actor actor, final DataMessageComponent data, final DebugType type) {
-
+	/**
+	 * 
+	 * @param actor
+	 * @param data
+	 * @param type
+	 * @return Return the bean if valid call, otherwise null.
+	 */
+	public static UserDebugBean create(final Actor actor, final DataMessageComponent data, final DebugType type) throws Exception {
+		
 		if (actor==null || data==null || type==null) return null;
 		
-		try {		
-			// Test the _debug_attribute
-			final boolean breakA = getBooleanValue(actor, BREAKA, false);
-			final boolean breakB = getBooleanValue(actor, BREAKB, false);
-			if (!breakA && !breakB) return null;
-			
-			if (breakA && type==DebugType.AFTER_ACTOR)  return null;
-			if (breakB && type==DebugType.BEFORE_ACTOR) return null;
+		final boolean breakA = getBooleanValue(actor, BREAKA, false);
+		final boolean breakB = getBooleanValue(actor, BREAKB, false);
+		if (!breakA && !breakB) return null;
+		
+		if (breakA && type==DebugType.AFTER_ACTOR)  return null;
+		if (breakB && type==DebugType.BEFORE_ACTOR) return null;
+		
+		UserDebugBean bean = new UserDebugBean();
+		bean.setActorName(actor.getDisplayName());
+		bean.setDataMessageComponent(data);
+		bean.setDebugType(type);
+		bean.setSilent(false);
+		
+		return bean;
+	}
+	
+	/**
+	 * Blocks until user presses the continue button if a debug parameter is set.
+	 * 
+	 * @param bean
+	 * @return
+	 */
+	public static UserDebugBean debug(UserDebugBean bean) {
 
+		if (bean==null) return null;
+		try {		
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection(500);
 			if (client==null) return null;
-			
-			UserDebugBean bean = new UserDebugBean();
-			bean.setActorName(actor.getDisplayName());
-			bean.setDataMessageComponent(data);
-			bean.setDebugType(type);
-			bean.setSilent(false);
-			
+						
 			bean = (UserDebugBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "debug", new Object[]{bean}, new String[]{UserDebugBean.class.getName()});
 		
 			return bean;

@@ -18,6 +18,8 @@ import java.util.List;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.dawb.workbench.jmx.UserDebugBean;
+import org.dawb.workbench.jmx.UserDebugBean.DebugType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -189,6 +191,14 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 			if (MessageUtils.isScalarOnly(port1Cache)) {
 				throw createDataMessageException("Cannot send messages with scalar data only to port 'a' of '"+getName()+"'", null);
 			}
+			
+			try {
+				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port1Cache, port2Cache), DebugType.BEFORE_ACTOR);
+				ActorUtils.debug(bean);
+			} catch (Exception e) {
+				logger.trace("Unable to debug!", e);
+			}
+
 			
 			final DataMessageComponent despatch = getTransformedMessage(port1Cache, MessageUtils.mergeScalar(port2Cache));
 			if (despatch!=null) setDataNames(despatch, port1Cache);

@@ -30,6 +30,12 @@ public class UserDebugBean extends ActorBean{
 	 * The break point position.
 	 */
 	private DebugType debugType;
+	
+	/**
+	 * The port name that we are debugging on, if any.
+	 * Can be null
+	 */
+	private String portName;
 
 	public Serializable getDataMessageComponent() {
 		return dataMessageComponent;
@@ -57,6 +63,8 @@ public class UserDebugBean extends ActorBean{
 						.hashCode());
 		result = prime * result
 				+ ((debugType == null) ? 0 : debugType.hashCode());
+		result = prime * result
+				+ ((portName == null) ? 0 : portName.hashCode());
 		return result;
 	}
 
@@ -76,7 +84,20 @@ public class UserDebugBean extends ActorBean{
 			return false;
 		if (debugType != other.debugType)
 			return false;
+		if (portName == null) {
+			if (other.portName != null)
+				return false;
+		} else if (!portName.equals(other.portName))
+			return false;
 		return true;
+	}
+
+	public String getPortName() {
+		return portName;
+	}
+
+	public void setPortName(String portName) {
+		this.portName = portName;
 	}
 	
 }

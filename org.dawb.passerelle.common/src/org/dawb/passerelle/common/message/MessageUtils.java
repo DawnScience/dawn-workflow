@@ -497,10 +497,17 @@ public class MessageUtils {
 		return cache;
 	}
 
-	public static DataMessageComponent mergeAll(Collection<DataMessageComponent> cache) {
+	/**
+	 * Merge 1 or more list of DataMessageComponent's into 1 single DataMessageComponent
+	 * @param cache
+	 * @return
+	 */
+	public static DataMessageComponent mergeAll(Collection<DataMessageComponent>... cache) {
 		final DataMessageComponent ret = new DataMessageComponent();
-		for (DataMessageComponent a : cache) {
-			ret.add(a);
+		for (Collection<DataMessageComponent> c : cache) {
+			for (DataMessageComponent a : c) {
+			    ret.add(a);
+			}
 		}
 		return ret;
 	}

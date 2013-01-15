@@ -19,6 +19,8 @@ import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
+import org.dawb.workbench.jmx.UserDebugBean;
+import org.dawb.workbench.jmx.UserDebugBean.DebugType;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -96,6 +98,13 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 		if (cache==null||cache.isEmpty()) return null;
 		try {
 			ActorUtils.setActorExecuting(this, true);
+			try {
+				UserDebugBean bean = ActorUtils.create(this, MessageUtils.coerceMessage(message), DebugType.BEFORE_ACTOR);
+				ActorUtils.debug(bean);
+			} catch (Exception e) {
+				logger.trace("Unable to debug!", e);
+			}
+
 			return getTransformedMessage(cache);
 		} finally {
 			ActorUtils.setActorExecuting(this, false);

@@ -22,6 +22,8 @@ import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
+import org.dawb.workbench.jmx.UserDebugBean;
+import org.dawb.workbench.jmx.UserDebugBean.DebugType;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -439,6 +441,17 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 	
 	protected void sendOutputMsg(Port port, ManagedMessage message) throws ProcessingException, IllegalArgumentException {
 		if (port==output && finishedPort!=null && finishedPort.numberOfSinks()>0) lastOutput = message;
+		
+		try {
+			UserDebugBean bean = ActorUtils.create(this, MessageUtils.coerceMessage(message), DebugType.AFTER_ACTOR);
+			if (bean!=null) {
+				bean.setPortName(port.getDisplayName());
+				ActorUtils.debug(bean);
+			}
+		} catch (Exception e) {
+			logger.trace("Unable to debug!", e);
+		}
+		
 		super.sendOutputMsg(port,message);
 	}
 	

@@ -20,6 +20,8 @@ import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.dawb.workbench.jmx.UserDebugBean;
+import org.dawb.workbench.jmx.UserDebugBean.DebugType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,7 +112,13 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 		
 		try {
 			ActorUtils.setActorExecuting(this, true);
-			
+			try {
+				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(cache), DebugType.BEFORE_ACTOR);
+				ActorUtils.debug(bean);
+			} catch (Exception e) {
+				logger.trace("Unable to debug!", e);
+			}
+
 			final DataMessageComponent despatch = getTransformedMessage(cache);
 			if (despatch!=null) setDataNames(despatch, cache);
 			if (despatch==null) return null;
