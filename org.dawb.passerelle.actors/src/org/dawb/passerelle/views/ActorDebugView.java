@@ -20,8 +20,17 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 	public void setUserObject(Object userObject) {
 		final UserDebugBean  bean = (UserDebugBean)userObject;
 		DataMessageComponent comp = (DataMessageComponent)bean.getDataMessageComponent();
-		
+		StringBuilder buf = new StringBuilder();
+		if (bean.getPartName()!=null) {
+			buf.append(bean.getPartName());
+		} else {
+			buf.append("Debug '"+bean.getActorName()+"' ");
+			if (bean.getPortName()!=null) buf.append("port '"+bean.getPortName()+"' ");
+		}
+		setPartName(buf.toString());
+
 		// TODO ensure ActorValuePage can deal with DataMessageComponent
+		System.out.println(comp);
 	}
 
 	@Override
