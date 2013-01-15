@@ -22,21 +22,25 @@ import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
-import uk.ac.gda.util.map.MapUtils;
 
 /**
  * This class is similar to a DataHolder in the scisoft diamond
  * plugins.
  * 
- * It is simpler and less subject to use else where being the main thing
+ * It is simpler and less subject to use else where. It is the main thing
  * which is passed around in the workflow system.
  *
- * It contains data and provenance, meta data.
+ * It contains data and provenance, meta data, RIOs and functions.
  * 
  * @author gerring
  *
  */
-public class DataMessageComponent {
+public class DataMessageComponent implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4322907913441650831L;
 
 	public enum VALUE_TYPE {
 		/**
@@ -113,9 +117,26 @@ public class DataMessageComponent {
 		if (list==null) list = new LinkedHashMap<String,Serializable>(1);
 		String name = set.getName();
 		if (name==null||"".equals(name)) name = "Unknown";
-		MapUtils.putUnique(list, name, set);
+		putUnique(list, name, set);
 	}
-	
+	/**
+	 * 
+	 * @param data
+	 * @param key
+	 * @param value
+	 */
+	private static <V> void putUnique(Map<String, V> data, String key, V value) {
+		if (data.containsKey(key)) {
+			key = getUniqueKey(data.keySet(), key);
+		}
+		data.put(key, value);
+	}
+	private static String getUniqueKey(Set<String> keySet, String key) {
+		
+        int num = 1;
+        while(keySet.contains(key+num)) num++;
+        return key+num;
+	}	
     /**
      * Renames a list in the DataMessageComponent
      * @param existing

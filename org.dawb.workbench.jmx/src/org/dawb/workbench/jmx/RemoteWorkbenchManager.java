@@ -41,6 +41,7 @@ public class RemoteWorkbenchManager extends StandardMBean implements RemoteWorkb
 	private static final String EDIT_CODE          = "org.dawb.workbench.jmx.editScalarValues";
 	private static final String PLOT_CODE          = "org.dawb.workbench.jmx.plotInputValues";
 	private static final String ACTOR_SELECTED_CODE= "org.dawb.workbench.jmx.actorSelectedCode";
+	private static final String DEBUG_CODE         = "org.dawb.workbench.jmx.debugCode";
 	
 	
 	private final IRemoteWorkbench       rmDelegate;
@@ -177,6 +178,13 @@ public class RemoteWorkbenchManager extends StandardMBean implements RemoteWorkb
     	return output;
 	}
 
+	@Override
+	public UserDebugBean debug(final UserDebugBean bean) throws Exception {
+		
+		UserDebugBean output = rmDelegate.debug(bean);
+		sendNotification(DEBUG_CODE);
+    	return output;
+	}
 
 	@Override
 	public boolean setActorSelected(final String  resourcePath, 

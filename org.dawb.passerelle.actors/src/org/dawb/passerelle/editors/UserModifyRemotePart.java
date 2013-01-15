@@ -24,7 +24,7 @@ import org.dawb.common.util.text.NumberUtils;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.passerelle.actors.ui.config.FieldBean;
 import org.dawb.passerelle.actors.ui.config.FieldContainer;
-import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
+import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -78,7 +78,7 @@ import uk.ac.gda.richbeans.components.wrappers.ComboWrapper;
 import uk.ac.gda.richbeans.components.wrappers.SpinnerWrapper;
 import uk.ac.gda.richbeans.components.wrappers.TextWrapper;
 
-public class UserModifyRemotePart implements IRemoteWorkbenchPart {
+public class UserModifyRemotePart implements IDeligateWorkbenchPart {
 
 	private static Logger logger = LoggerFactory.getLogger(UserModifyRemotePart.class);
 	

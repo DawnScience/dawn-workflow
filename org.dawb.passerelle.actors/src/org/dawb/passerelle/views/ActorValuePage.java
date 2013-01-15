@@ -65,12 +65,17 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 
 	protected Composite container;
 
+	private boolean isTableView;
+
 	/**
 	 * Create contents of the view part.
 	 * @param parent
 	 */
 	@Override
 	public void createControl(Composite parent) {
+		createControl(parent, true);
+	}
+	protected void createControl(Composite parent, boolean activeListeners) {
 		
 		this.container = new Composite(parent, SWT.NONE);
 		container.setLayout(new GridLayout(1, false));
@@ -94,13 +99,15 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 		tableViewer.setUseHashlookup(true);
 		tableViewer.setColumnProperties(new String[]{"Input Name", "Example Value", "Output Name", "Example Value"});
 		
-		getSite().getPage().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
-		getSite().getPage().addPartListener(this);
+		if (activeListeners) {
+			getSite().getPage().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
+			getSite().getPage().addPartListener(this);
 		
-		try {
-			updateSelection(EclipseUtils.getActivePage().getSelection());
-		} catch (Throwable ignored) {
-			// There might not be a selection or page.
+			try {
+				updateSelection(EclipseUtils.getActivePage().getSelection());
+			} catch (Throwable ignored) {
+				// There might not be a selection or page.
+			}
 		}
 
 		setTableView(false);
@@ -175,13 +182,18 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 	}
 
 	protected void setTableView(boolean isVisible) {
-		
+		this.isTableView = isVisible;
 		GridUtils.setVisible(label,                     !isVisible);
 		GridUtils.setVisible(sourceViewer.getControl(), !isVisible);
 		GridUtils.setVisible(tableViewer.getControl(),  isVisible);
 		
 		label.getParent().layout(new Control[]{label,sourceViewer.getControl(),tableViewer.getControl()});
 	}
+	
+	public Viewer getActiveViewer() {
+		return isTableView ? tableViewer : sourceViewer;
+	}
+
 
 	/**
 	 * Set it back to blank

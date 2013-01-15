@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.dawb.common.ui.plot.IPlottingSystem;
+import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
@@ -33,9 +34,9 @@ import uk.ac.gda.common.rcp.util.DialogUtils;
  */
 public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRemoteWorkbenchPart.Closeable {
 
-	private final IRemoteWorkbenchPart deligate;
+	private final IDeligateWorkbenchPart deligate;
 
-	public UserInputDialog(final Shell parentShell, final IRemoteWorkbenchPart remotePartImpl) {
+	public UserInputDialog(final Shell parentShell, final IDeligateWorkbenchPart remotePartImpl) {
 		
 		super(parentShell);
 		
@@ -71,7 +72,7 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRe
 	
 	public int open() {
 		int ret = super.open();
-		setRemoteFocus();
+		deligate.setRemoteFocus();
 		return ret;
 	}
 
@@ -104,45 +105,6 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRe
 	@Override
 	public void setUserObject(Object userObject) {
 		deligate.setUserObject(userObject);
-	}
-
-	@Override
-	public void stop() {
-		deligate.stop();
-	}
-
-	@Override
-	public void confirm() {
-		deligate.confirm();
-	}
-
-	@Override
-	public Object getViewer() {
-		return deligate.getViewer();
-	}
-
-	@Override
-	public boolean isMessageOnly() {
-		return deligate.isMessageOnly();
-	}
-	@Override
-	public void setRemoteFocus() {
-		deligate.setRemoteFocus();
-	}
-	@Override
-	public void dispose() {
-		deligate.dispose();
-	}
-
-	@Override
-	public void initializeMenu(Object iActionBars) {
-		deligate.initializeMenu(iActionBars);
-	}
-
-	@Override
-	public void createRemotePart(Object container, Closeable closeable) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

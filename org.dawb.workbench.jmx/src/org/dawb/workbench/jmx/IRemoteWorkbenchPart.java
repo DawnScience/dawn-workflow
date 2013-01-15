@@ -12,7 +12,13 @@ package org.dawb.workbench.jmx;
 import java.util.Map;
 import java.util.Queue;
 
-
+/**
+ * IRemoteWorkbenchPart provides methods which can be done in the implementation
+ * of IRemoteWorkbench to parts opened.
+ * 
+ * @author fcp94556
+ *
+ */
 public interface IRemoteWorkbenchPart {
 	
 	/**
@@ -23,14 +29,6 @@ public interface IRemoteWorkbenchPart {
 	public interface Closeable {
         public boolean close();
 	}
-	
-	/**
-	 * Used to create the composite, will have already been called when the system makes the IRemoteWorkbenchPart.
-	 * @param container
-	 * @param closeable
-	 * @return
-	 */
-	public void createRemotePart(final Object container, Closeable closeable);
 
 	/**
 	 * Carries data used by the remote workbench part to configure it.
@@ -72,43 +70,5 @@ public interface IRemoteWorkbenchPart {
 	 */
 	public void setConfiguration(String configurationXML) throws Exception;
 
-	/**
-	 * Called by the stop action to stop the part interacting with the user.
-	 */
-	public void stop();
-	
-	/**
-	 * Called by the confirm action to confirm the parts interaction with the user.
-	 */
-	public void confirm();
-
-	/**
-	 * 
-	 * @return the widget, for instance a ColumnViewer or an IPlottingSystem, which the user part provides.
-	 */
-	public Object getViewer();
-	
-	/**
-	 * 
-	 * @return normally false but true if the user was shown something only and was not able to interact.
-	 */
-	public boolean isMessageOnly();
-
-	/**
-	 * Call to set focus on the part.
-	 */
-	public void setRemoteFocus();
-
-	/**
-	 * Usual dispose() method.
-	 */
-	public void dispose();
-
-	/**
-	 * If this is a part which has internal menus as standard, and not just a composite
-	 * you can initialize menus on it. The Object will likely be base to IActionBars.
-	 * @param actionBarsWrapper
-	 */
-	public void initializeMenu(Object iActionBars);
 
 }

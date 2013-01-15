@@ -34,6 +34,7 @@ import org.dawb.common.ui.plot.trace.ILineTrace;
 import org.dawb.common.ui.plot.trace.ITrace;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
+import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.eclipse.jface.action.Action;
@@ -61,7 +62,7 @@ import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
 import uk.ac.gda.common.rcp.util.GridUtils;
 
-public class UserPlotRemotePart implements IRemoteWorkbenchPart {
+public class UserPlotRemotePart implements IDeligateWorkbenchPart {
 
 	private static Logger logger = LoggerFactory.getLogger(UserPlotRemotePart.class);
 	

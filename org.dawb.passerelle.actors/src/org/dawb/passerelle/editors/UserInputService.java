@@ -13,6 +13,8 @@ import java.io.File;
 
 import org.dawb.common.services.IUserInputService;
 import org.dawb.common.ui.util.EclipseUtils;
+import org.dawb.passerelle.views.ActorDebugView;
+import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
@@ -40,20 +42,25 @@ public class UserInputService extends AbstractServiceFactory implements IUserInp
 	@Override
 	public IRemoteWorkbenchPart openUserInputPart(final String partName, boolean isDialog) throws Exception {
 		
-		IRemoteWorkbenchPart deligate = new UserModifyRemotePart();
+		IDeligateWorkbenchPart deligate = new UserModifyRemotePart();
 		return openPart(partName, isDialog, deligate, new Point(550, 480), "org.dawb.passerelle.editors.UserModifyEditor");
 	}
 
 	@Override
 	public IRemoteWorkbenchPart openUserPlotPart(String partName, boolean isDialog) throws Exception {
 		
-		IRemoteWorkbenchPart deligate = new UserPlotRemotePart();
+		IDeligateWorkbenchPart deligate = new UserPlotRemotePart();
 		return openPart(partName, isDialog, deligate, new Point(1275, 800), "org.dawb.passerelle.editors.UserModifyEditor");
 	}
 	
+	@Override
+	public IRemoteWorkbenchPart openDebugPart(String partName, boolean isDialog) throws Exception {
+		
+		return (ActorDebugView)EclipseUtils.getActivePage().showView(ActorDebugView.ID, null, IWorkbenchPage.VIEW_ACTIVATE);
+	}
 	
 
-	private IRemoteWorkbenchPart openPart(String partName, boolean isDialog, IRemoteWorkbenchPart deligate, final Point size, final String id) throws Exception {
+	private IRemoteWorkbenchPart openPart(String partName, boolean isDialog, IDeligateWorkbenchPart deligate, final Point size, final String id) throws Exception {
 		if (isDialog) {
 			UserInputDialog dialog = new UserInputDialog(PlatformUI.getWorkbench().getDisplay().getActiveShell(), deligate);
 			dialog.create();

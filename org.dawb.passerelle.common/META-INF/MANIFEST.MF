@@ -6,7 +6,6 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.dawb.passerelle.common.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.5.2",
- org.eclipse.core.commands;bundle-version="3.5.0",
  org.eclipse.ui,
  org.eclipse.ui.ide,
  com.isencia.passerelle.engine,
@@ -17,10 +16,8 @@ Require-Bundle: org.eclipse.core.runtime,
  com.isencia.passerelle.workbench.model;bundle-version="1.1.0",
  com.isencia.passerelle.workbench.model.editor.ui;bundle-version="1.0.0",
  com.isencia.passerelle.workbench.model.ui;bundle-version="1.0.0",
- com.isencia.passerelle.actor;bundle-version="6.0.1",
  ptolemy.core;bundle-version="7.0.1",
- uk.ac.gda.common;bundle-version="1.0.0",
- uk.ac.gda.common.rcp;bundle-version="1.0.0"
+ uk.ac.gda.common.rcp;bundle-version="1.2.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.dawb.passerelle.common,
@@ -52,5 +49,4 @@ Import-Package: com.isencia.util,
  org.python.pydev.core,
  org.slf4j,
  uk.ac.diamond.scisoft.analysis.dataset,
- uk.ac.diamond.scisoft.analysis.io,
- uk.ac.gda.util.map
+ uk.ac.diamond.scisoft.analysis.io

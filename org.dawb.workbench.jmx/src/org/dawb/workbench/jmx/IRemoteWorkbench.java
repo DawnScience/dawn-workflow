@@ -137,6 +137,14 @@ public interface IRemoteWorkbench {
 
 
 	/**
+	 * Shows values in Value view and blocks until user presses next.
+	 * 
+	 * @param bean
+	 * @throws Exception
+	 */
+	public UserDebugBean debug(final UserDebugBean bean) throws Exception;
+	
+	/**
 	 * This method allows certain actors to be selected if the editor for the corresponding file is open.
 	 * 
 	 * Once the actor has finished executing, it must call again to unselect. So the implemention should

@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.dawb.workbench.jmx.IRemoteServiceProvider;
 import org.dawb.workbench.jmx.IRemoteWorkbench;
+import org.dawb.workbench.jmx.UserDebugBean;
 import org.dawb.workbench.jmx.UserInputBean;
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawb.workbench.jmx.service.IWorkflowService;
@@ -262,6 +263,19 @@ public class WorkflowExample {
 		public UserPlotBean createPlotInput(UserPlotBean bean) throws Exception {
 			
 			logger.info("Create Plot Input Requested");
+			logger.info("Actor "+bean.getPartName());
+			try {
+				Thread.sleep(1000);// Simulate user pressing ok...
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} 			
+			return null;
+		}
+		
+		@Override
+		public UserDebugBean debug(final UserDebugBean bean) throws Exception {
+			
+			logger.info("Debug Requested");
 			logger.info("Actor "+bean.getPartName());
 			try {
 				Thread.sleep(1000);// Simulate user pressing ok...

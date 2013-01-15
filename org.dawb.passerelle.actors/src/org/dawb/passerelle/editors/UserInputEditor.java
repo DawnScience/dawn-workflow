@@ -16,6 +16,7 @@ import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.ui.util.GridUtils;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
+import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.action.Action;
@@ -51,7 +52,7 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 	
 
 	private Link                label;
-	private IRemoteWorkbenchPart deligate;
+	private IDeligateWorkbenchPart deligate;
 
 
 	private Composite container;
@@ -120,7 +121,7 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 
 	}
 	
-	public void setDeligate(IRemoteWorkbenchPart part) {
+	public void setDeligate(IDeligateWorkbenchPart part) {
 		this.deligate = part;
 		deligate.createRemotePart(container, this);
 		
@@ -173,10 +174,6 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 		if (deligate!=null) deligate.setRemoteFocus();
 	}
 	
-	@Override
-	public void setRemoteFocus() {
-		setFocus();
-	}
 
 	public void dispose() {
 		
@@ -228,35 +225,6 @@ public class UserInputEditor extends EditorPart implements IRemoteWorkbenchPart,
 	@Override
 	public void setUserObject(Object userObject) {
 		deligate.setUserObject(userObject);
-	}
-	@Override
-	public void stop() {
-		deligate.stop();
-	}
-
-	@Override
-	public void confirm() {
-		deligate.confirm();
-	}
-
-	@Override
-	public Object getViewer() {
-		return deligate.getViewer();
-	}
-
-	@Override
-	public boolean isMessageOnly() {
-		return deligate.isMessageOnly();
-	}
-
-	@Override
-	public void createRemotePart(Object container, Closeable closeable) {
-		// We already called it for them.
-	}
-
-	@Override
-	public void initializeMenu(Object iActionBars) {
-		deligate.initializeMenu(iActionBars);
 	}
 
 }

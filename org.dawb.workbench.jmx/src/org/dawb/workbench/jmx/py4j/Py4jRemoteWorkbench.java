@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.dawb.workbench.jmx.IRemoteWorkbench;
+import org.dawb.workbench.jmx.UserDebugBean;
 import org.dawb.workbench.jmx.UserInputBean;
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.slf4j.Logger;
@@ -133,6 +134,11 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 	@Override
 	public UserPlotBean createPlotInput(UserPlotBean bean) throws Exception {
 		throw new Exception("Cannot interact with plot in py4j mode!");
+	}
+	
+	@Override
+	public UserDebugBean debug(final UserDebugBean bean) throws Exception {
+		throw new Exception("Cannot debug in py4j mode!");
 	}
 
 }

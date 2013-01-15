@@ -27,6 +27,7 @@ import org.dawb.passerelle.common.Activator;
 import org.dawb.passerelle.common.utils.ModelListener;
 import org.dawb.workbench.jmx.IRemoteWorkbench;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
+import org.dawb.workbench.jmx.UserDebugBean;
 import org.dawb.workbench.jmx.UserInputBean;
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.eclipse.core.filesystem.EFS;
@@ -381,7 +382,56 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 		
 	}
 
+	@Override
+	public UserDebugBean debug(final UserDebugBean bean) throws Exception {
+		
+		if (!PlatformUI.isWorkbenchRunning()) return bean;		
+		if (bean.isSilent())                  return bean;
+	
+		final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>(1);
+		
+		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
 
+			@Override
+			public void run() {
+				try {
+					
+					final IUserInputService service = (IUserInputService)ServiceManager.getService(IUserInputService.class);
+					final IRemoteWorkbenchPart part  = service.openDebugPart(bean.getPartName(), bean.isDialog());
+					
+					part.setQueue(queue);
+					part.setUserObject(bean); // Creates all the plotting UI in this case.
+					
+					if (part instanceof Dialog) { // It will not normally be, we use to the value view to debug.
+						Dialog dialog = (Dialog)part;
+						dialog.open();
+						
+						if (dialog.getReturnCode()!=Dialog.OK) {
+							queue.add(null);
+						}
+					}
+					
+				    return; // Queue will be notified when they have chosen
+				    
+				} catch (PartInitException e) {
+					// Ignored.
+				} catch (Exception e) {
+					logger.error("Cannot open editor ", e);
+					queue.add(new UserPlotBean());
+					return;
+				}
+				
+				// If we drop through to here, do nothing.
+				// Adding this to the queue makes the take()
+				// call return straight away.
+				queue.add(bean);
+			}
+		});
+		
+		return (UserDebugBean)queue.take(); // Blocks until user edits this!
+		
+	}
+  
 
 	@Override
 	public boolean setActorSelected(final String  fullPath, 
