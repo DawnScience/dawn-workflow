@@ -11,13 +11,22 @@ package org.dawb.passerelle.common.actors;
 
 import javax.management.MBeanServerConnection;
 
+import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
+import org.dawb.workbench.jmx.UserDebugBean;
+import org.dawb.workbench.jmx.UserDebugBean.DebugType;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.jface.preference.BooleanPropertyAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import ptolemy.data.BooleanToken;
+import ptolemy.data.Token;
+import ptolemy.data.expr.Parameter;
+import ptolemy.kernel.util.Attribute;
 
 import com.isencia.passerelle.actor.Actor;
 
@@ -25,6 +34,83 @@ public class ActorUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(ActorUtils.class);
 	
+	private static final String BREAKA = "_break_pointA";
+	private static final String BREAKB = "_break_pointB";
+	/**
+	 * Creates a attribute(s) that can be used as break points.
+	 * 
+	 * @param actor
+	 */
+	public static void createDebugAttributes(final Actor actor) {
+		
+		try {
+			final Parameter breakPointBefore = new Parameter(actor, BREAKA);
+			breakPointBefore.setDisplayName("Break Point Before");
+			breakPointBefore.setToken(new BooleanToken(false));
+			actor.registerExpertParameter(breakPointBefore);
+			
+			
+			final Parameter breakPointAfter = new Parameter(actor, BREAKB);
+			breakPointAfter.setDisplayName("Break Point After");
+			breakPointAfter.setToken(new BooleanToken(false));
+			actor.registerExpertParameter(breakPointAfter);
+		} catch (Exception ne) {
+			logger.trace("Cannot create debugging attributes!", ne);
+		}
+
+	}
+	
+	public static UserDebugBean debug(final Actor actor, final DataMessageComponent data, final DebugType type) {
+
+		if (actor==null || data==null || type==null) return null;
+		
+		try {		
+			// Test the _debug_attribute
+			final boolean breakA = getBooleanValue(actor, BREAKA, false);
+			final boolean breakB = getBooleanValue(actor, BREAKB, false);
+			if (!breakA && !breakB) return null;
+			
+			if (breakA && type==DebugType.AFTER_ACTOR)  return null;
+			if (breakB && type==DebugType.BEFORE_ACTOR) return null;
+
+			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection(500);
+			if (client==null) return null;
+			
+			UserDebugBean bean = new UserDebugBean();
+			bean.setActorName(actor.getDisplayName());
+			bean.setDataMessageComponent(data);
+			bean.setDebugType(type);
+			bean.setSilent(false);
+			
+			bean = (UserDebugBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "debug", new Object[]{bean}, new String[]{UserDebugBean.class.getName()});
+		
+			return bean;
+		} catch (Exception ignored) {
+			logger.trace("Cannot debug", ignored);
+			return null;
+		}
+		
+	}
+	
+	/**
+	 * Method to deal with the horrible way in which ptolmey stores boolean values.
+	 * 
+	 * @param actor
+	 * @param name
+	 * @param defaultValue
+	 * @return
+	 * @throws Exception
+	 */
+	private static boolean getBooleanValue(Actor actor, String name, boolean defaultValue) throws Exception {
+		final Attribute att = actor.getAttribute(name);
+		if (att==null) return defaultValue;
+		if (!(att instanceof Parameter)) return defaultValue;
+		Token tok = ((Parameter)att).getToken();
+		if (!(tok instanceof BooleanToken)) return defaultValue;
+		return ((BooleanToken)tok).booleanValue();
+		// All this just to get a boolean! 
+	}
+
 	/**
 	 * Tells the user interface that a given actor is running.
 	 * 
@@ -45,7 +131,6 @@ public class ActorUtils {
 		}
 
 		try {
-			//TODO Check property to see if actor highlighting is switched on.
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection();
 			if (client==null) return;
 			
@@ -66,10 +151,18 @@ public class ActorUtils {
 	 * @throws Exception
 	 */
 	public static MBeanServerConnection getWorkbenchConnection() throws Exception {
+		return getWorkbenchConnection(1000);
+	}
+	/**
+	 * Designed to avoid too many timeouts if workbench not there.
+	 * @return
+	 * @throws Exception
+	 */
+	public static MBeanServerConnection getWorkbenchConnection(int timeoutMs) throws Exception {
 		
 		if (isWorkbenchPresentChecked) return workbenchConnection;
 		
-		workbenchConnection       = RemoteWorkbenchAgent.getServerConnection(1000);
+		workbenchConnection       = RemoteWorkbenchAgent.getServerConnection(timeoutMs);
 		isWorkbenchPresentChecked = true;
 		
 		return workbenchConnection;

@@ -15,7 +15,7 @@ public class UserDebugBean extends ActorBean{
 	 */
 	private static final long serialVersionUID = -6270121996201032744L;
 
-	public enum DEBUG_TYPE {
+	public enum DebugType {
 		BEFORE_ACTOR, AFTER_ACTOR, BOTH;
 	}
 
@@ -29,7 +29,7 @@ public class UserDebugBean extends ActorBean{
 	/**
 	 * The break point position.
 	 */
-	private DEBUG_TYPE debugType;
+	private DebugType debugType;
 
 	public Serializable getDataMessageComponent() {
 		return dataMessageComponent;
@@ -39,11 +39,11 @@ public class UserDebugBean extends ActorBean{
 		this.dataMessageComponent = dataMessageComponent;
 	}
 
-	public DEBUG_TYPE getDebugType() {
+	public DebugType getDebugType() {
 		return debugType;
 	}
 
-	public void setDebugType(DEBUG_TYPE debugType) {
+	public void setDebugType(DebugType debugType) {
 		this.debugType = debugType;
 	}
 

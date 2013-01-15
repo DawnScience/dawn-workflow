@@ -43,10 +43,8 @@ import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 
 import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.actor.TerminationException;
 import com.isencia.passerelle.actor.Transformer;
 import com.isencia.passerelle.core.PasserelleException;
-import com.isencia.passerelle.core.PasserelleToken;
 import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageHelper;
@@ -156,6 +154,7 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 			}
 		}
 		
+		ActorUtils.createDebugAttributes(this);
 	}
 
 	/*

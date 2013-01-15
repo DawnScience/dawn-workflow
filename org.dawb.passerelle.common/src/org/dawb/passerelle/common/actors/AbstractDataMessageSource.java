@@ -67,6 +67,9 @@ public abstract class AbstractDataMessageSource extends TriggeredSource implemen
 				}
 			}
 		});
+		
+		ActorUtils.createDebugAttributes(this);
+
 	}
 	
 	
