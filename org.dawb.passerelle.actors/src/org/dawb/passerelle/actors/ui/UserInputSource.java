@@ -126,7 +126,7 @@ public class UserInputSource extends AbstractDataMessageSource {
 				bean.setDialog(isDialog);
 				final String xml = ParameterUtils.substitute(fieldParam.getXML(), this);
 				bean.setConfigurationXML(xml);
-				bean.setScalarValues(scalarValues);				
+				bean.setScalar(scalarValues);				
 				bean.setSilent(((BooleanToken)silent.getToken()).booleanValue());
 				
 				final Object       ob    = client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "createUserInput", new Object[]{bean}, new String[]{UserInputBean.class.getName()});

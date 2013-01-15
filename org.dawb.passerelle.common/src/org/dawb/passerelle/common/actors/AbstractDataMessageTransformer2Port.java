@@ -193,12 +193,20 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 			}
 			
 			try {
-				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port1Cache, port2Cache), DebugType.BEFORE_ACTOR);
+				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port1Cache), DebugType.BEFORE_ACTOR);
+				if (bean!=null) bean.setPortName(input.getDisplayName());
 				ActorUtils.debug(bean);
 			} catch (Exception e) {
 				logger.trace("Unable to debug!", e);
 			}
 
+			try {
+				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port2Cache), DebugType.BEFORE_ACTOR);
+				if (bean!=null) bean.setPortName(inputPort2.getDisplayName());
+				ActorUtils.debug(bean);
+			} catch (Exception e) {
+				logger.trace("Unable to debug!", e);
+			}
 			
 			final DataMessageComponent despatch = getTransformedMessage(port1Cache, MessageUtils.mergeScalar(port2Cache));
 			if (despatch!=null) setDataNames(despatch, port1Cache);

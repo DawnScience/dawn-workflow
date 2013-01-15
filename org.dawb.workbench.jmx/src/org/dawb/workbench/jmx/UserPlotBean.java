@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Bean holds data sent to plot something and also much that the user did 
@@ -14,7 +13,7 @@ import java.util.Map;
  * @author fcp94556
  *
  */
-public class UserPlotBean extends ActorBean {
+public class UserPlotBean extends UserDataBean {
 
 	/**
 	 * 
@@ -26,29 +25,6 @@ public class UserPlotBean extends ActorBean {
 	 * to continue.
 	 */
 	private boolean userPlottedSomething = false;
-
-
-	/**
-	 * The data is either primitive array or IDataset
-	 * It is the plotted data and the key is the trace name.
-	 * 
-	 * If tools will add traces, these traces will be included in this list.
-	 */
-	private Map<String,Serializable> data;
-	
-	/**
-	 * Scalar data (passed in) plus anything that the tool used
-	 * or the user edited, passed back.
-	 */
-	private Map<String,String>       scalar;
-	
-	/**
-	 * The data extends ROIBase. The rois passed in will be created in the plotting system,
-	 * the rois passed back will be those rois in the plotting system at the point where
-	 * the cancel button is pressed. The Region name will be used as key. This would be the
-	 * name propagated to the workflow normally.
-	 */
-	private Map<String,Serializable> rois;
 	
 	/**
 	 * The list of the axes in the order x,y,z. Made be size one, two or three.
@@ -96,34 +72,6 @@ public class UserPlotBean extends ActorBean {
 		this.toolId = toolId;
 	}
 
-	public Map<String, Serializable> getData() {
-		return data;
-	}
-
-	public void setData(Map<String, Serializable> list) {
-		this.data = list;
-	}
-
-	public void addList(String name, Serializable ads) {
-		if (this.data==null) data = new LinkedHashMap<String, Serializable>(7);
-		data.put(name, ads);
-	}
-
-	public Map<String, String> getScalar() {
-		return scalar;
-	}
-
-	public void setScalar(Map<String, String> scalar) {
-		this.scalar = scalar;
-	}
-
-	public Map<String, Serializable> getRois() {
-		return rois;
-	}
-
-	public void setRois(Map<String, Serializable> rois) {
-		this.rois = rois;
-	}
 
 	public UserPlotBean clone() {
 		UserPlotBean ret = new UserPlotBean();
@@ -145,11 +93,8 @@ public class UserPlotBean extends ActorBean {
 		int result = super.hashCode();
 		result = prime * result
 				+ ((axesNames == null) ? 0 : axesNames.hashCode());
-		result = prime * result + ((data == null) ? 0 : data.hashCode());
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((rois == null) ? 0 : rois.hashCode());
-		result = prime * result + ((scalar == null) ? 0 : scalar.hashCode());
 		result = prime * result
 				+ ((toolData == null) ? 0 : toolData.hashCode());
 		result = prime * result + ((toolId == null) ? 0 : toolId.hashCode());
@@ -171,25 +116,10 @@ public class UserPlotBean extends ActorBean {
 				return false;
 		} else if (!axesNames.equals(other.axesNames))
 			return false;
-		if (data == null) {
-			if (other.data != null)
-				return false;
-		} else if (!data.equals(other.data))
-			return false;
 		if (description == null) {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
-			return false;
-		if (rois == null) {
-			if (other.rois != null)
-				return false;
-		} else if (!rois.equals(other.rois))
-			return false;
-		if (scalar == null) {
-			if (other.scalar != null)
-				return false;
-		} else if (!scalar.equals(other.scalar))
 			return false;
 		if (toolData == null) {
 			if (other.toolData != null)
@@ -238,13 +168,8 @@ public class UserPlotBean extends ActorBean {
 		axesNames.add(name);
 	}
 
-	public void addRoi(String name, Serializable roi) {
-		if (rois==null) rois = new LinkedHashMap<String, Serializable>(4);
-		rois.put(name, roi);
-	}
-
 	public boolean isEmpty() {
-		return data==null&&rois==null&&scalar==null&&description==null&&toolData==null&&toolId==null;
+		return super.isEmpty()&&description==null&&toolData==null&&toolId==null;
 	}
 
 }

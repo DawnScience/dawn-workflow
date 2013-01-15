@@ -3,7 +3,6 @@ package org.dawb.passerelle.views;
 import java.util.Map;
 import java.util.Queue;
 
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.swt.widgets.Composite;
@@ -19,7 +18,7 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 	@Override
 	public void setUserObject(Object userObject) {
 		final UserDebugBean  bean = (UserDebugBean)userObject;
-		DataMessageComponent comp = (DataMessageComponent)bean.getDataMessageComponent();
+
 		StringBuilder buf = new StringBuilder();
 		if (bean.getPartName()!=null) {
 			buf.append(bean.getPartName());
@@ -30,7 +29,7 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 		setPartName(buf.toString());
 
 		// TODO ensure ActorValuePage can deal with DataMessageComponent
-		System.out.println(comp);
+
 	}
 
 	@Override

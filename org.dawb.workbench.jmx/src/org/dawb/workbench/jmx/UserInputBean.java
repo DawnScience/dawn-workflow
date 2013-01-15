@@ -9,9 +9,8 @@
  */ 
 package org.dawb.workbench.jmx;
 
-import java.util.Map;
 
-public class UserInputBean extends ActorBean {
+public class UserInputBean extends UserDataBean {
 	/**
 	 * 
 	 */
@@ -19,19 +18,12 @@ public class UserInputBean extends ActorBean {
 	
 	// These are the fields to edit, everything else is auto-generated.
 	private String             configurationXML;
-	private Map<String,String> scalarValues;
 	
 	public String getConfigurationXML() {
 		return configurationXML;
 	}
 	public void setConfigurationXML(String configurationXML) {
 		this.configurationXML = configurationXML;
-	}
-	public Map<String, String> getScalarValues() {
-		return scalarValues;
-	}
-	public void setScalarValues(Map<String, String> scalarValues) {
-		this.scalarValues = scalarValues;
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -43,8 +35,6 @@ public class UserInputBean extends ActorBean {
 		result = prime
 				* result
 				+ ((configurationXML == null) ? 0 : configurationXML.hashCode());
-		result = prime * result
-				+ ((scalarValues == null) ? 0 : scalarValues.hashCode());
 		return result;
 	}
 	@Override
@@ -60,11 +50,6 @@ public class UserInputBean extends ActorBean {
 			if (other.configurationXML != null)
 				return false;
 		} else if (!configurationXML.equals(other.configurationXML))
-			return false;
-		if (scalarValues == null) {
-			if (other.scalarValues != null)
-				return false;
-		} else if (!scalarValues.equals(other.scalarValues))
 			return false;
 		return true;
 	}

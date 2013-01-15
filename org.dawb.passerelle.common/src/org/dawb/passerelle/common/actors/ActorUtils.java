@@ -11,13 +11,14 @@ package org.dawb.passerelle.common.actors;
 
 import javax.management.MBeanServerConnection;
 
+import org.dawb.common.services.IClassLoaderService;
+import org.dawb.passerelle.common.Activator;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.dawb.workbench.jmx.UserDebugBean.DebugType;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.jface.preference.BooleanPropertyAction;
 import org.eclipse.swt.SWT;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.slf4j.Logger;
@@ -75,13 +76,16 @@ public class ActorUtils {
 		final boolean breakB = getBooleanValue(actor, BREAKB, false);
 		if (!breakA && !breakB) return null;
 		
-		if (breakA && type==DebugType.AFTER_ACTOR)  return null;
-		if (breakB && type==DebugType.BEFORE_ACTOR) return null;
+		if ((breakA && type==DebugType.AFTER_ACTOR) || (!breakA && breakB && type==DebugType.BEFORE_ACTOR)) {
+			return null;
+		}
 		
 		UserDebugBean bean = new UserDebugBean();
 		bean.setActorName(actor.getDisplayName());
-		bean.setDataMessageComponent(data);
 		bean.setDebugType(type);
+		bean.setScalar(data.getScalar());
+		bean.setData(data.getList());
+		bean.setRois(data.getRois());
 		bean.setSilent(false);
 		
 		return bean;
@@ -96,16 +100,24 @@ public class ActorUtils {
 	public static UserDebugBean debug(UserDebugBean bean) {
 
 		if (bean==null) return null;
-		try {		
+		
+		IClassLoaderService service = (IClassLoaderService)Activator.getService(IClassLoaderService.class);
+		try {
+			if (service!=null) service.setDataAnalysisClassLoaderActive(true);
+
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection(500);
 			if (client==null) return null;
-						
+				
 			bean = (UserDebugBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "debug", new Object[]{bean}, new String[]{UserDebugBean.class.getName()});
 		
 			return bean;
+			
 		} catch (Exception ignored) {
 			logger.trace("Cannot debug", ignored);
 			return null;
+		
+		} finally {
+			if (service!=null) service.setDataAnalysisClassLoaderActive(false);
 		}
 		
 	}

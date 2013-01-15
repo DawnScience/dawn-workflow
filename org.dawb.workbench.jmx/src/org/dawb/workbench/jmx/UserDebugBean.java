@@ -1,6 +1,5 @@
 package org.dawb.workbench.jmx;
 
-import java.io.Serializable;
 
 /**
  * A bean 
@@ -8,7 +7,7 @@ import java.io.Serializable;
  * @author fcp94556
  *
  */
-public class UserDebugBean extends ActorBean{
+public class UserDebugBean extends UserDataBean{
 	
 	/**
 	 * 
@@ -18,13 +17,6 @@ public class UserDebugBean extends ActorBean{
 	public enum DebugType {
 		BEFORE_ACTOR, AFTER_ACTOR, BOTH;
 	}
-
-	/**
-	 * The component which contains the information we would
-	 * like to debug in value view. This is normally cast to a
-	 * DataMessageComponent.
-	 */
-	private Serializable dataMessageComponent;
 	
 	/**
 	 * The break point position.
@@ -37,13 +29,6 @@ public class UserDebugBean extends ActorBean{
 	 */
 	private String portName;
 
-	public Serializable getDataMessageComponent() {
-		return dataMessageComponent;
-	}
-
-	public void setDataMessageComponent(Serializable dataMessageComponent) {
-		this.dataMessageComponent = dataMessageComponent;
-	}
 
 	public DebugType getDebugType() {
 		return debugType;
@@ -57,10 +42,6 @@ public class UserDebugBean extends ActorBean{
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
-		result = prime
-				* result
-				+ ((dataMessageComponent == null) ? 0 : dataMessageComponent
-						.hashCode());
 		result = prime * result
 				+ ((debugType == null) ? 0 : debugType.hashCode());
 		result = prime * result
@@ -77,11 +58,6 @@ public class UserDebugBean extends ActorBean{
 		if (getClass() != obj.getClass())
 			return false;
 		UserDebugBean other = (UserDebugBean) obj;
-		if (dataMessageComponent == null) {
-			if (other.dataMessageComponent != null)
-				return false;
-		} else if (!dataMessageComponent.equals(other.dataMessageComponent))
-			return false;
 		if (debugType != other.debugType)
 			return false;
 		if (portName == null) {

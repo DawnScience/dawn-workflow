@@ -276,9 +276,9 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 	@Override
 	public Map<String,String> createUserInput(final UserInputBean bean) throws Exception {
 		
-		if (!PlatformUI.isWorkbenchRunning()) return bean.getScalarValues();
+		if (!PlatformUI.isWorkbenchRunning()) return bean.getScalar();
 		
-		if (bean.isSilent()) return bean.getScalarValues();
+		if (bean.isSilent()) return bean.getScalar();
 		
 		
 		final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>(1);
@@ -295,7 +295,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 					if (bean.getPartName()!=null) part.setPartName(bean.getPartName());
 					part.setQueue(queue);
 					part.setConfiguration(bean.getConfigurationXML());
-					part.setValues(bean.getScalarValues());
+					part.setValues(bean.getScalar());
 					
 					if (part instanceof Dialog) {
 						Dialog dialog = (Dialog)part;
@@ -319,8 +319,8 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				// If we drop through to here, do nothing.
 				// Adding this to the queue makes the take()
 				// call return straight away.
-				if (bean.getScalarValues()!=null) {
-					queue.add(bean.getScalarValues());
+				if (bean.getScalar()!=null) {
+					queue.add(bean.getScalar());
 				} else {
 					queue.add(Collections.EMPTY_MAP);
 				}
@@ -386,6 +386,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 	public UserDebugBean debug(final UserDebugBean bean) throws Exception {
 		
 		if (!PlatformUI.isWorkbenchRunning()) return bean;		
+		if (bean==null)                       return null;
 		if (bean.isSilent())                  return bean;
 	
 		final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>(1);

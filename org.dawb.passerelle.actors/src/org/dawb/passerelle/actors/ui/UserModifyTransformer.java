@@ -147,7 +147,7 @@ public class UserModifyTransformer extends AbstractDataMessageTransformer {
 				bean.setPartName("Review");
 				bean.setDialog(isDialog);
 				bean.setConfigurationXML(fieldParam.getXML());
-				bean.setScalarValues(scalar);				
+				bean.setScalar(scalar);				
 				bean.setSilent(((BooleanToken)silent.getToken()).booleanValue());
 				
 				final Object       ob    = client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "createUserInput", new Object[]{bean}, new String[]{UserInputBean.class.getName()});
