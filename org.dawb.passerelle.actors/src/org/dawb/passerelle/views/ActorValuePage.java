@@ -18,7 +18,6 @@ import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.message.XPathVariable;
-import org.dawb.workbench.jmx.UserDataBean;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -387,24 +386,43 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 		if (Display.getCurrent()==null) throw new RuntimeException("ActorValuePage.setData(...) must be called on the UI thread!");
 		
 		// Setup columns required.
-		intTypeColumn.getColumn().setWidth(30);
-		intTypeColumn.getColumn().setResizable(true);
-
-		inNameColumn.getColumn().setText("Input Name");
-		inNameColumn.getColumn().setWidth(200);
-		inValueColumn.getColumn().setWidth(400);
-		inValueColumn.getColumn().setText("Input Value");
+		boolean isInputs = bean.getInputs()!=null && !bean.getInputs().isEmpty();
+		if (isInputs) {
+			intTypeColumn.getColumn().setWidth(30);
+			intTypeColumn.getColumn().setResizable(true);
+	
+			inNameColumn.getColumn().setText("Input Name");
+			inNameColumn.getColumn().setWidth(200);
+			inNameColumn.getColumn().setResizable(true);
+	
+			inValueColumn.getColumn().setWidth(400);
+			inValueColumn.getColumn().setText("Input Value");
+			inValueColumn.getColumn().setResizable(true);
+		} else {
+			setColumnVisible(intTypeColumn, false);
+			setColumnVisible(inNameColumn, false);
+			setColumnVisible(inValueColumn, false);
+		}
 		
 		// Setup columns required.
-		outTypeColumn.getColumn().setWidth(30);
-		outTypeColumn.getColumn().setResizable(true);
-
-		outNameColumn.getColumn().setWidth(200);
-		outNameColumn.getColumn().setText("Output Name");
-		outNameColumn.getColumn().setResizable(true);
-		outValueColumn.getColumn().setWidth(400);
-		outValueColumn.getColumn().setResizable(true);
-		outValueColumn.getColumn().setText("Output Value");
+		boolean isOutputs = bean.getOutputs()!=null && !bean.getOutputs().isEmpty();
+		if (isOutputs) {
+			outTypeColumn.getColumn().setWidth(30);
+			outTypeColumn.getColumn().setResizable(true);
+	
+			outNameColumn.getColumn().setWidth(200);
+			outNameColumn.getColumn().setText("Output Name");
+			outNameColumn.getColumn().setResizable(true);
+			
+			outValueColumn.getColumn().setWidth(400);
+			outValueColumn.getColumn().setResizable(true);
+			outValueColumn.getColumn().setText("Output Value");
+		} else{
+			setColumnVisible(outTypeColumn, false);
+			setColumnVisible(outNameColumn, false);
+			setColumnVisible(outValueColumn, false);
+		
+		}
 		
 		tableViewer.setContentProvider(new IStructuredContentProvider() {
 			@Override
@@ -423,6 +441,15 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 		tableViewer.setInput(new Object());
 	}
 
+	private void setColumnVisible(TableViewerColumn col, boolean vis) {
+		if (vis) {
+			col.getColumn().setWidth(100);
+			col.getColumn().setResizable(true);
+		} else{
+			col.getColumn().setWidth(0);
+			col.getColumn().setResizable(false);
+		}
+	}
 	/**
 	 * UI Thread safe method for updating the model
 	 * @param inputVariables

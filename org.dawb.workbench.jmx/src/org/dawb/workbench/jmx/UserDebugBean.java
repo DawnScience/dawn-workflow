@@ -141,11 +141,15 @@ public class UserDebugBean extends UserDataBean{
 	}
 	
 	public List<Entry<String, ?>> getInputs() {
-		Map<String, Serializable> scalarSerial = new LinkedHashMap<String, Serializable>(getScalar());
+		Map<String, Serializable> scalarSerial = getScalar()!=null
+                                               ? new LinkedHashMap<String, Serializable>(getScalar())
+                                               : null;
 		return getList(getData(), scalarSerial, getRois());
 	}
 	public List<Entry<String, ?>> getOutputs() {
-		Map<String, Serializable> scalarSerial = new LinkedHashMap<String, Serializable>(getOutputScalar());
+		Map<String, Serializable> scalarSerial = getOutputScalar()!=null
+				                               ? new LinkedHashMap<String, Serializable>(getOutputScalar())
+				                               : null;
 		return getList(getOutputData(), scalarSerial, getOutputRois());
 	}
 	
