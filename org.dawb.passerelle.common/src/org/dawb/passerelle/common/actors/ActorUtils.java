@@ -46,10 +46,10 @@ public class ActorUtils {
 	public static void createDebugAttribute(final Actor actor) {
 		
 		try {
-			final Parameter breakPointBefore = new Parameter(actor, BREAKA);
-			breakPointBefore.setDisplayName("Break Point");
-			breakPointBefore.setToken(new BooleanToken(false));
-			actor.registerExpertParameter(breakPointBefore);
+			final Parameter breakPoint = new Parameter(actor, BREAKA);
+			breakPoint.setDisplayName("Break Point");
+			breakPoint.setToken(new BooleanToken(false));
+			actor.registerExpertParameter(breakPoint);
 			
 		} catch (Exception ne) {
 			logger.trace("Cannot create debugging attribute!", ne);
