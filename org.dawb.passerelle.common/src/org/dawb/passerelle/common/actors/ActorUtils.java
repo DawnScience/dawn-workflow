@@ -14,6 +14,7 @@ import javax.management.MBeanServerConnection;
 import org.dawb.common.services.IClassLoaderService;
 import org.dawb.passerelle.common.Activator;
 import org.dawb.passerelle.common.message.DataMessageComponent;
+import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.runtime.Platform;
@@ -107,7 +108,7 @@ public class ActorUtils {
 				if (service!=null) service.setDataAnalysisClassLoaderActive(true);
 					
 				// Highlight it as being debugged.
-				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{actor.getContainer().getSource(), actor.getName(), true, SWT.COLOR_GREEN}, new String[]{String.class.getName(), String.class.getName(), boolean.class.getName(), int.class.getName()});
+				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), true, SWT.COLOR_MAGENTA)}, new String[]{ActorSelectedBean.class.getName()});
 	
 				bean = (UserDebugBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "debug", new Object[]{bean}, new String[]{UserDebugBean.class.getName()});
 				
@@ -129,7 +130,7 @@ public class ActorUtils {
 				if (service!=null) service.setDataAnalysisClassLoaderActive(false);
 				
 				try {
-				    client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{actor.getContainer().getSource(), actor.getName(), false, SWT.COLOR_BLUE}, new String[]{String.class.getName(), String.class.getName(), boolean.class.getName(), int.class.getName()});
+				    client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), false, SWT.COLOR_BLUE)}, new String[]{ActorSelectedBean.class.getName()});
 				} catch (Exception ne) {
 					logger.trace("Cannot set actor back to non-executing!", ne);
 				}
@@ -183,7 +184,7 @@ public class ActorUtils {
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection();
 			if (client==null) return;
 			
-			client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{actor.getContainer().getSource(), actor.getName(), isExecuting, SWT.COLOR_BLUE}, new String[]{String.class.getName(), String.class.getName(), boolean.class.getName(), int.class.getName()});
+			client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), isExecuting, SWT.COLOR_BLUE)}, new String[]{ActorSelectedBean.class.getName()});
 		
 		} catch (Exception ignored) {
 			logger.trace("Cannot set actor selected", ignored);

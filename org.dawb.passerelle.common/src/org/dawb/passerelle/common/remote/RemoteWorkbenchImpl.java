@@ -25,6 +25,7 @@ import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.ui.views.ImageMonitorView;
 import org.dawb.passerelle.common.Activator;
 import org.dawb.passerelle.common.utils.ModelListener;
+import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.IRemoteWorkbench;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.dawb.workbench.jmx.UserDebugBean;
@@ -435,10 +436,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
   
 
 	@Override
-	public boolean setActorSelected(final String  fullPath, 
-			                        final String  actorName,
-			                        final boolean isSelected,
-			                        final int     colorCode) throws Exception {
+	public boolean setActorSelected(final ActorSelectedBean bean) throws Exception {
 		
 
 		if (!PlatformUI.isWorkbenchRunning()) return false;
@@ -454,21 +452,22 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 			@Override
 			public void run() {
 				
-				if (fullPath==null) {
+				if (bean.getResourcePath()==null) {
 					logger.error("Cannot open editor because fullPath is null");
 					return;
 				}
 				try {
 					
 					final String workspaceLoc = ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString();
-					String resourcePath = fullPath;
+					String resourcePath = bean.getResourcePath();
+					final String fullPath = bean.getResourcePath();
 					if (fullPath.startsWith(workspaceLoc)) resourcePath = fullPath.substring(workspaceLoc.length());
 					
 					final IFile          file = (IFile)ResourcesPlugin.getWorkspace().getRoot().findMember(resourcePath);
 				    final IEditorInput   input= new FileEditorInput(file);
 					final IWorkbenchPage page = EclipseUtils.getActivePage();
 				    final PasserelleModelMultiPageEditor ed = (PasserelleModelMultiPageEditor)page.findEditor(input);
-                    if (ed!=null) ed.setActorSelected(actorName, isSelected, colorCode);
+                    if (ed!=null) ed.setActorSelected(bean.getActorName(), bean.isSelected(), bean.getColorCode());
 				    
 				} catch (Exception e) {
 					logger.error("Cannot open editor ", e);

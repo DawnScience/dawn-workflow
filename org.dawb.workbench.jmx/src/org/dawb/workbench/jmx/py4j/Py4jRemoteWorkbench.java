@@ -13,6 +13,7 @@ package org.dawb.workbench.jmx.py4j;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.IRemoteWorkbench;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.dawb.workbench.jmx.UserInputBean;
@@ -98,15 +99,12 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 	}
 
 	@Override
-	public boolean setActorSelected(final String resourcePath, 
-			                        final String actorName,
-			                        final boolean isSelected, 
-			                        final int colorCode) throws Exception {
+	public boolean setActorSelected(final ActorSelectedBean bean) throws Exception {
 		
 		logger.info("Select Actor Requested");
-		logger.info("Actor "+actorName+"; isSelected "+isSelected);
+		logger.info("Actor "+bean.getActorName()+"; isSelected "+bean.isSelected());
 		try {
-			py4jWorkflowCallback.setActorSelected(actorName, isSelected);
+			py4jWorkflowCallback.setActorSelected(bean.getActorName(), bean.isSelected());
 		} catch(Exception e) {
 			logger.info(e.toString());
 		}

@@ -27,6 +27,7 @@ import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
+import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserInputBean;
 import org.eclipse.swt.SWT;
@@ -118,7 +119,7 @@ public class UserInputSource extends AbstractDataMessageSource {
 			
 			try {
 				
-				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{getModelPath(), getName(), true, SWT.COLOR_RED}, new String[]{String.class.getName(), String.class.getName(), boolean.class.getName(), int.class.getName()});
+				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(getModelPath(), getName(), true, SWT.COLOR_RED)}, new String[]{ActorSelectedBean.class.getName()});
 				
 				final UserInputBean bean = new UserInputBean();
 				bean.setActorName(getName());
@@ -154,7 +155,7 @@ public class UserInputSource extends AbstractDataMessageSource {
 				return MessageUtils.getDataMessage(ret);
 			
 			} finally {
-				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{getModelPath(), getName(), false, -1}, new String[]{String.class.getName(), String.class.getName(), boolean.class.getName(), int.class.getName()});
+				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(getModelPath(), getName(), false, -1)}, new String[]{ActorSelectedBean.class.getName()});
 			}
 			
 		} catch (Exception e) {

@@ -187,12 +187,9 @@ public class RemoteWorkbenchManager extends StandardMBean implements RemoteWorkb
 	}
 
 	@Override
-	public boolean setActorSelected(final String  resourcePath, 
-			                        final String  actorName,
-			                        final boolean isSelected,
-			                        final int     colorCode) throws Exception {
+	public boolean setActorSelected(final ActorSelectedBean bean) throws Exception {
         
-		boolean found = rmDelegate.setActorSelected(resourcePath, actorName, isSelected,colorCode);
+		boolean found = rmDelegate.setActorSelected(bean);
 		sendNotification(ACTOR_SELECTED_CODE);
     	return found;
 	}

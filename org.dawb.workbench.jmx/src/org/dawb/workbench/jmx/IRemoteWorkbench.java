@@ -162,10 +162,7 @@ public interface IRemoteWorkbench {
 	 * @param isSelected
 	 * @return true if the actor is found, false otherwise
 	 */
-	public boolean setActorSelected(final String  resourcePath,
-			                        final String  actorName,
-			                        final boolean isSelected,
-			                        final int     colorCode) throws Exception;
+	public boolean setActorSelected(final ActorSelectedBean bean) throws Exception;
 	
 	/**
 	 * Called to set mock values of motors from the workflow. The workflow does not

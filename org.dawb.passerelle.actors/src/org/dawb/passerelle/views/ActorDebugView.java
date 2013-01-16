@@ -17,6 +17,8 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 	private ActorValuePage valuePage;
 	private Queue<Object>  queue;
 	private UserDebugBean  bean;
+
+	private Action play, stop;
  
 	@Override
 	public void setUserObject(Object userObject) {
@@ -32,6 +34,8 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 		setPartName(buf.toString());
 
 		valuePage.setData(bean);
+		play.setEnabled(true);
+		stop.setEnabled(true);
 
 	}
 
@@ -45,20 +49,26 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 	}
 	
 	private void createActions() {
-		final Action play = new Action("Continue", Activator.getImageDescriptor("icons/run_workflow.gif")) {
+		this.play = new Action("Continue", Activator.getImageDescriptor("icons/run_workflow_purple.gif")) {
 			public void run() {
 				UserDebugBean ret = new UserDebugBean(bean.getScalar());
-				ret.addScalar("debug_time", String.valueOf(System.currentTimeMillis()));
+				ret.addScalar("debug_continue_time", String.valueOf(System.currentTimeMillis()));
 				queue.add(ret);
+				play.setEnabled(false);
+				stop.setEnabled(false);
 			}
 		};
+		play.setEnabled(false);
 		getViewSite().getActionBars().getToolBarManager().add(play);
 		
-		final Action stop = new Action("Stop", Activator.getImageDescriptor("icons/stop_workflow.gif")) {
+		this.stop = new Action("Stop", Activator.getImageDescriptor("icons/stop_workflow_purple.gif")) {
 			public void run() {
 				queue.add(new UserDebugBean());
+				play.setEnabled(false);
+				stop.setEnabled(false);
 			}
 		};
+		stop.setEnabled(false);
 		getViewSite().getActionBars().getToolBarManager().add(stop);
 	}
 

@@ -9,19 +9,17 @@
  */ 
 package org.dawb.passerelle.views;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.views.ActorValueObject.ActorValueDataType;
-import org.dawb.workbench.jmx.UserDataBean;
 import org.dawb.workbench.jmx.UserDebugBean;
 
+import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
 import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
@@ -91,15 +89,23 @@ class ActorValueUtils {
 			ActorValueObject val = new ActorValueObject();
 			Entry<String,?> entry = getEntry(i, inputs);
 			if (entry!=null) {
-				val.setInDataType(getType(entry.getValue()));
+				Object value = entry.getValue();
+				if (value instanceof AbstractDataset) {
+					((AbstractDataset)value).setStringPolicy(AbstractDataset.STRING_SHAPE);
+				}
+				val.setInDataType(getType(value));
 				val.setInputName(entry.getKey());
-				val.setInputValue(entry.getValue());
+				val.setInputValue(value);
 			}
 			entry = getEntry(i, outputs);
 			if (entry!=null) {
-				val.setOutDataType(getType(entry.getValue()));
+				Object value = entry.getValue();
+				if (value instanceof AbstractDataset) {
+					((AbstractDataset)value).setStringPolicy(AbstractDataset.STRING_SHAPE);
+				}
 				val.setOutputName(entry.getKey());
-				val.setOutputValue(entry.getValue());
+				val.setOutDataType(getType(value));
+				val.setOutputValue(value);
 			}
 			ret.add(val);
 		}
