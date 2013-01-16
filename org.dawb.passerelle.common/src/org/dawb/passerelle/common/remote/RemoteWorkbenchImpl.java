@@ -467,7 +467,13 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				    final IEditorInput   input= new FileEditorInput(file);
 					final IWorkbenchPage page = EclipseUtils.getActivePage();
 				    final PasserelleModelMultiPageEditor ed = (PasserelleModelMultiPageEditor)page.findEditor(input);
-                    if (ed!=null) ed.setActorSelected(bean.getActorName(), bean.isSelected(), bean.getColorCode());
+                    if (ed!=null) {
+                    	ed.setActorSelected(bean.getActorName(), bean.isSelected(), bean.getColorCode());
+                    	
+                    	if (bean.getPortName()!=null) {
+                    		ed.setPortSelected(bean.getActorName(), bean.getPortName(), bean.isSelected(), bean.getPortColorCode());
+                    	}
+                    }
 				    
 				} catch (Exception e) {
 					logger.error("Cannot open editor ", e);

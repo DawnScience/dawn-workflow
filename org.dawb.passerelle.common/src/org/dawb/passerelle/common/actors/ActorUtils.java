@@ -9,6 +9,8 @@
  */ 
 package org.dawb.passerelle.common.actors;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import javax.management.MBeanServerConnection;
 
 import org.dawb.common.services.IClassLoaderService;
@@ -89,8 +91,12 @@ public class ActorUtils {
 		return bean;
 	}
 	
+	private static ReentrantLock debugLock = new ReentrantLock();
 	/**
 	 * Blocks until user presses the continue button if a debug parameter is set.
+	 * 
+	 * Blocks also if another actor is being debugged. Only one active debug call
+	 * can be done at a time.
 	 * 
 	 * @param bean
 	 * @return
@@ -100,15 +106,21 @@ public class ActorUtils {
 		if (bean==null)            return null;
 
 		try {
+			debugLock.lock();
+			
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection(500);
 			if (client==null) return null;
 			
 			IClassLoaderService service = (IClassLoaderService)Activator.getService(IClassLoaderService.class);
+			
+			ActorSelectedBean selBean = new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), true, SWT.COLOR_MAGENTA);
+			selBean.setPortName(bean.getPortName());
+			selBean.setPortColorCode(SWT.COLOR_DARK_MAGENTA);
 			try {
 				if (service!=null) service.setDataAnalysisClassLoaderActive(true);
 					
 				// Highlight it as being debugged.
-				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), true, SWT.COLOR_MAGENTA)}, new String[]{ActorSelectedBean.class.getName()});
+				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{selBean}, new String[]{ActorSelectedBean.class.getName()});
 	
 				bean = (UserDebugBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "debug", new Object[]{bean}, new String[]{UserDebugBean.class.getName()});
 				
@@ -130,7 +142,8 @@ public class ActorUtils {
 				if (service!=null) service.setDataAnalysisClassLoaderActive(false);
 				
 				try {
-				    client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), false, SWT.COLOR_BLUE)}, new String[]{ActorSelectedBean.class.getName()});
+					selBean.setSelected(false);
+				    client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{selBean}, new String[]{ActorSelectedBean.class.getName()});
 				} catch (Exception ne) {
 					logger.trace("Cannot set actor back to non-executing!", ne);
 				}
@@ -138,6 +151,10 @@ public class ActorUtils {
 		} catch (Exception ne) {
 			logger.error("Cannot get workbench connection!", ne);
 			return null;
+		} finally {
+			
+			debugLock.unlock();
+
 		}
 		
 	}

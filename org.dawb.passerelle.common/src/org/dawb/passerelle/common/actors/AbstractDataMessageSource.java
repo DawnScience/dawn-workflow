@@ -81,6 +81,7 @@ public abstract class AbstractDataMessageSource extends TriggeredSource implemen
 			ManagedMessage mm = getDataMessage();
 			try {
 				UserDebugBean bean = ActorUtils.create(this, null, MessageUtils.coerceMessage(mm));
+				bean.setPortName(output.getDisplayName());
 				ActorUtils.debug(this, bean);
 			} catch (Exception e) {
 				logger.trace("Unable to debug!", e);

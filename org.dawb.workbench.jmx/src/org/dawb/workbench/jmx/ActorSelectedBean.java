@@ -21,6 +21,9 @@ public class ActorSelectedBean extends ActorBean {
 	private boolean isSelected;
 	private int     colorCode;
 	
+	private String  portName;
+	private int     portColorCode;
+	
 	public ActorSelectedBean() {
 		
 	}
@@ -56,6 +59,9 @@ public class ActorSelectedBean extends ActorBean {
 		int result = super.hashCode();
 		result = prime * result + colorCode;
 		result = prime * result + (isSelected ? 1231 : 1237);
+		result = prime * result + portColorCode;
+		result = prime * result
+				+ ((portName == null) ? 0 : portName.hashCode());
 		result = prime * result
 				+ ((resourcePath == null) ? 0 : resourcePath.hashCode());
 		return result;
@@ -73,6 +79,13 @@ public class ActorSelectedBean extends ActorBean {
 			return false;
 		if (isSelected != other.isSelected)
 			return false;
+		if (portColorCode != other.portColorCode)
+			return false;
+		if (portName == null) {
+			if (other.portName != null)
+				return false;
+		} else if (!portName.equals(other.portName))
+			return false;
 		if (resourcePath == null) {
 			if (other.resourcePath != null)
 				return false;
@@ -80,4 +93,21 @@ public class ActorSelectedBean extends ActorBean {
 			return false;
 		return true;
 	}
+
+	public String getPortName() {
+		return portName;
+	}
+
+	public void setPortName(String portName) {
+		this.portName = portName;
+	}
+
+	public int getPortColorCode() {
+		return portColorCode;
+	}
+
+	public void setPortColorCode(int portColorCode) {
+		this.portColorCode = portColorCode;
+	}
+
 }

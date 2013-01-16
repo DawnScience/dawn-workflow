@@ -3,10 +3,15 @@ package org.dawb.passerelle.views;
 import java.util.Map;
 import java.util.Queue;
 
+import org.dawb.common.ui.util.GridUtils;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.jface.action.Action;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CLabel;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 
@@ -17,11 +22,12 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 	private ActorValuePage valuePage;
 	private Queue<Object>  queue;
 	private UserDebugBean  bean;
-
+    private CLabel         partInfo;
 	private Action play, stop;
  
 	@Override
 	public void setUserObject(Object userObject) {
+		
 		this.bean = (UserDebugBean)userObject;
 
 		StringBuilder buf = new StringBuilder();
@@ -31,20 +37,37 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 			buf.append("Debug '"+bean.getActorName()+"' ");
 			if (bean.getPortName()!=null) buf.append("port '"+bean.getPortName()+"' ");
 		}
-		setPartName(buf.toString());
+		partInfo.setText(buf.toString());
 
+        setEnabled(true);
 		valuePage.setData(bean);
-		play.setEnabled(true);
-		stop.setEnabled(true);
 
+	}
+	
+
+	private void setEnabled(boolean enabled) {
+		play.setEnabled(enabled);
+		stop.setEnabled(enabled);
+		valuePage.getActiveViewer().getControl().setEnabled(enabled);
+		partInfo.setEnabled(enabled);
+		if (!enabled) partInfo.setText("");
 	}
 
 	@Override
 	public void createPartControl(Composite parent) {
 		valuePage = new ActorValuePage();
-		valuePage.createControl(parent, false);
-		valuePage.setTableView(true);
+		final Composite main = new Composite(parent, SWT.NONE);
+		main.setLayout(new GridLayout(1, false));
+		GridUtils.removeMargins(main);
 		
+		this.partInfo = new CLabel(main, SWT.NONE);
+		partInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+			
+		valuePage.createControl(main, false);
+		valuePage.setTableView(true);
+		valuePage.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
+		valuePage.getActiveViewer().getControl().setEnabled(false);
+	
 		createActions();
 	}
 	
@@ -54,8 +77,7 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 				UserDebugBean ret = new UserDebugBean(bean.getScalar());
 				ret.addScalar("debug_continue_time", String.valueOf(System.currentTimeMillis()));
 				queue.add(ret);
-				play.setEnabled(false);
-				stop.setEnabled(false);
+				ActorDebugView.this.setEnabled(false);
 			}
 		};
 		play.setEnabled(false);
@@ -64,8 +86,7 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 		this.stop = new Action("Stop", Activator.getImageDescriptor("icons/stop_workflow_purple.gif")) {
 			public void run() {
 				queue.add(new UserDebugBean());
-				play.setEnabled(false);
-				stop.setEnabled(false);
+				ActorDebugView.this.setEnabled(false);
 			}
 		};
 		stop.setEnabled(false);

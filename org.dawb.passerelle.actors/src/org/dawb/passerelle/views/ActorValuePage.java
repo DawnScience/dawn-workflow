@@ -392,7 +392,7 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 
 		inNameColumn.getColumn().setText("Input Name");
 		inNameColumn.getColumn().setWidth(200);
-		inValueColumn.getColumn().setWidth(300);
+		inValueColumn.getColumn().setWidth(400);
 		inValueColumn.getColumn().setText("Input Value");
 		
 		// Setup columns required.
@@ -402,7 +402,7 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 		outNameColumn.getColumn().setWidth(200);
 		outNameColumn.getColumn().setText("Output Name");
 		outNameColumn.getColumn().setResizable(true);
-		outValueColumn.getColumn().setWidth(200);
+		outValueColumn.getColumn().setWidth(400);
 		outValueColumn.getColumn().setResizable(true);
 		outValueColumn.getColumn().setText("Output Value");
 		
