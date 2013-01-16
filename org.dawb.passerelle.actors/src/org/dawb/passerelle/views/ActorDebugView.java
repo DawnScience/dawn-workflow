@@ -34,7 +34,7 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 		if (bean.getPartName()!=null) {
 			buf.append(bean.getPartName());
 		} else {
-			buf.append("Debug '"+bean.getActorName()+"' ");
+			buf.append(" Debug '"+bean.getActorName()+"' ");
 			if (bean.getPortName()!=null) buf.append("port '"+bean.getPortName()+"' ");
 		}
 		partInfo.setText(buf.toString());
@@ -62,7 +62,8 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 		
 		this.partInfo = new CLabel(main, SWT.NONE);
 		partInfo.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-			
+		partInfo.setImage(Activator.getImageDescriptor("icons/information_purple.gif").createImage());	
+		
 		valuePage.createControl(main, false);
 		valuePage.setTableView(true);
 		valuePage.getControl().setLayoutData(new GridData(GridData.FILL_BOTH));
