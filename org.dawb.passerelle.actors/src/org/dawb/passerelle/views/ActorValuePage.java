@@ -169,8 +169,8 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 			public Image getImage(Object element) {
 				final ActorValueObject var = (ActorValueObject)element;
 				if (var==null)                 return null;
-				if (var.getInDataType()==null) return null;
-				switch(var.getInDataType()) {
+				if (var.getOutDataType()==null) return null;
+				switch(var.getOutDataType()) {
 				case LIST:
 					return listIcon;
 				case SCALAR:					
