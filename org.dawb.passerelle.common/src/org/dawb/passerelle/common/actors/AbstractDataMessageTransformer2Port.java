@@ -19,7 +19,6 @@ import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.workbench.jmx.UserDebugBean;
-import org.dawb.workbench.jmx.UserDebugBean.DebugType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -192,8 +191,11 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 				throw createDataMessageException("Cannot send messages with scalar data only to port 'a' of '"+getName()+"'", null);
 			}
 			
+			final DataMessageComponent despatch = getTransformedMessage(port1Cache, MessageUtils.mergeScalar(port2Cache));
+			if (despatch!=null) setDataNames(despatch, port1Cache);
+
 			try {
-				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port1Cache), DebugType.BEFORE_ACTOR);
+				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port1Cache), despatch);
 				if (bean!=null) bean.setPortName(input.getDisplayName());
 				ActorUtils.debug(this, bean);
 			} catch (Exception e) {
@@ -201,15 +203,13 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 			}
 
 			try {
-				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port2Cache), DebugType.BEFORE_ACTOR);
+				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(port2Cache), despatch);
 				if (bean!=null) bean.setPortName(inputPort2.getDisplayName());
 				ActorUtils.debug(this, bean);
 			} catch (Exception e) {
 				logger.trace("Unable to debug!", e);
 			}
 			
-			final DataMessageComponent despatch = getTransformedMessage(port1Cache, MessageUtils.mergeScalar(port2Cache));
-			if (despatch!=null) setDataNames(despatch, port1Cache);
 
 			port1Cache.clear();
 			if (!isLoopPort1SumPort2(false)) {

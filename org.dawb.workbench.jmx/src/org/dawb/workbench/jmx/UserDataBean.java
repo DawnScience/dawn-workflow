@@ -111,4 +111,12 @@ public class UserDataBean extends ActorBean {
 		return data==null&&rois==null&&scalar==null;
 	}
 
+	public int getDataSize() {
+	    int size = 0;
+	    if (data!=null)   size+=data.size();
+	    if (scalar!=null) size+=scalar.size();
+	    if (rois!=null)   size+=rois.size();
+	    return size;
+	}
+
 }

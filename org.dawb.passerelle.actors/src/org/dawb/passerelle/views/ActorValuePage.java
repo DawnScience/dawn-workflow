@@ -19,6 +19,7 @@ import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.message.XPathVariable;
 import org.dawb.workbench.jmx.UserDataBean;
+import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -64,7 +65,7 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 	protected CLabel       label;
 	protected SourceViewer sourceViewer;
 	protected TableViewer  tableViewer;
-	protected TableViewerColumn dataTypeColumn, inNameColumn, inValueColumn, outNameColumn, outValueColumn;
+	protected TableViewerColumn intTypeColumn, inNameColumn, inValueColumn, outTypeColumn, outNameColumn, outValueColumn;
 
 	protected StructuredSelection lastSelection;
 
@@ -126,14 +127,16 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 		scalarIcon = Activator.getImageDescriptor("icons/scalar.png").createImage();
 		roiIcon    = Activator.getImageDescriptor("icons/roi.png").createImage();
 		
-		this.dataTypeColumn   = new TableViewerColumn(viewer, SWT.LEFT, 0);
-		dataTypeColumn.getColumn().setText("Type");
-		dataTypeColumn.getColumn().setWidth(0);
-		dataTypeColumn.getColumn().setResizable(false);
-		dataTypeColumn.setLabelProvider(new ColumnLabelProvider() {
+		this.intTypeColumn   = new TableViewerColumn(viewer, SWT.LEFT, 0);
+		intTypeColumn.getColumn().setText(" ");
+		intTypeColumn.getColumn().setWidth(0);
+		intTypeColumn.getColumn().setResizable(false);
+		intTypeColumn.setLabelProvider(new ColumnLabelProvider() {
 			public Image getImage(Object element) {
 				final ActorValueObject var = (ActorValueObject)element;
-				switch(var.getDataType()) {
+				if (var==null)                 return null;
+				if (var.getInDataType()==null) return null;
+				switch(var.getInDataType()) {
 				case LIST:
 					return listIcon;
 				case SCALAR:					
@@ -144,24 +147,52 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 					return null;
 				}
 			}			
+			public String getText(Object element) {
+				return "";
+			}
 		});
 		
-		this.inNameColumn   = new TableViewerColumn(viewer, SWT.LEFT, 0);
+		this.inNameColumn   = new TableViewerColumn(viewer, SWT.LEFT, 1);
 		inNameColumn.getColumn().setText("Input Name");
 		inNameColumn.getColumn().setWidth(200);
 		inNameColumn.setLabelProvider(new ActorValueLabelProvider(0));
 		
-		this.inValueColumn   = new TableViewerColumn(viewer, SWT.LEFT, 1);
+		this.inValueColumn   = new TableViewerColumn(viewer, SWT.LEFT, 2);
 		inValueColumn.getColumn().setText("Example Value");
 		inValueColumn.getColumn().setWidth(300);
 		inValueColumn.setLabelProvider(new ActorValueLabelProvider(1));
 		
-		this.outNameColumn  = new TableViewerColumn(viewer, SWT.LEFT, 2);
+		this.outTypeColumn   = new TableViewerColumn(viewer, SWT.LEFT, 3);
+		outTypeColumn.getColumn().setText(" ");
+		outTypeColumn.getColumn().setWidth(0);
+		outTypeColumn.getColumn().setResizable(false);
+		outTypeColumn.setLabelProvider(new ColumnLabelProvider() {
+			public Image getImage(Object element) {
+				final ActorValueObject var = (ActorValueObject)element;
+				if (var==null)                 return null;
+				if (var.getInDataType()==null) return null;
+				switch(var.getInDataType()) {
+				case LIST:
+					return listIcon;
+				case SCALAR:					
+					return scalarIcon;
+				case ROI:					
+					return roiIcon;
+			    default:
+					return null;
+				}
+			}			
+			public String getText(Object element) {
+				return "";
+			}
+		});
+
+		this.outNameColumn  = new TableViewerColumn(viewer, SWT.LEFT, 4);
 		outNameColumn.getColumn().setText("Output Name");
 		outNameColumn.getColumn().setWidth(200);
 		outNameColumn.setLabelProvider(new ActorValueLabelProvider(2));
 		
-		this.outValueColumn   = new TableViewerColumn(viewer, SWT.LEFT, 3);
+		this.outValueColumn   = new TableViewerColumn(viewer, SWT.LEFT, 5);
 		outValueColumn.getColumn().setText("Example Value");
 		outValueColumn.getColumn().setWidth(300);
 		outValueColumn.setLabelProvider(new ActorValueLabelProvider(3));
@@ -351,22 +382,29 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 	 * Must be called on the UI thread.
 	 * @param bean
 	 */
-	public void setData(final UserDataBean bean) {
+	public void setData(final UserDebugBean bean) {
 		
 		if (Display.getCurrent()==null) throw new RuntimeException("ActorValuePage.setData(...) must be called on the UI thread!");
 		
 		// Setup columns required.
-		dataTypeColumn.getColumn().setWidth(30);
-		dataTypeColumn.getColumn().setResizable(true);
+		intTypeColumn.getColumn().setWidth(30);
+		intTypeColumn.getColumn().setResizable(true);
 
-		inNameColumn.getColumn().setText("Variable Name");
+		inNameColumn.getColumn().setText("Input Name");
 		inNameColumn.getColumn().setWidth(200);
 		inValueColumn.getColumn().setWidth(300);
+		inValueColumn.getColumn().setText("Input Value");
 		
-		outNameColumn.getColumn().setWidth(0);
-		outNameColumn.getColumn().setResizable(false);
-		outValueColumn.getColumn().setWidth(0);
-		outValueColumn.getColumn().setResizable(false);
+		// Setup columns required.
+		outTypeColumn.getColumn().setWidth(30);
+		outTypeColumn.getColumn().setResizable(true);
+
+		outNameColumn.getColumn().setWidth(200);
+		outNameColumn.getColumn().setText("Output Name");
+		outNameColumn.getColumn().setResizable(true);
+		outValueColumn.getColumn().setWidth(200);
+		outValueColumn.getColumn().setResizable(true);
+		outValueColumn.getColumn().setText("Output Value");
 		
 		tableViewer.setContentProvider(new IStructuredContentProvider() {
 			@Override

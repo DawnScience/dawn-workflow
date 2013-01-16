@@ -16,7 +16,6 @@ import org.dawb.passerelle.common.Activator;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserDebugBean;
-import org.dawb.workbench.jmx.UserDebugBean.DebugType;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.swt.SWT;
@@ -35,28 +34,22 @@ public class ActorUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(ActorUtils.class);
 	
-	private static final String BREAKA = "_break_pointA";
-	private static final String BREAKB = "_break_pointB";
+	private static final String BREAKA = "_break_point";
 	/**
 	 * Creates a attribute(s) that can be used as break points.
 	 * 
 	 * @param actor
 	 */
-	public static void createDebugAttributes(final Actor actor) {
+	public static void createDebugAttribute(final Actor actor) {
 		
 		try {
 			final Parameter breakPointBefore = new Parameter(actor, BREAKA);
-			breakPointBefore.setDisplayName("Break Point Before");
+			breakPointBefore.setDisplayName("Break Point");
 			breakPointBefore.setToken(new BooleanToken(false));
 			actor.registerExpertParameter(breakPointBefore);
 			
-			
-			final Parameter breakPointAfter = new Parameter(actor, BREAKB);
-			breakPointAfter.setDisplayName("Break Point After");
-			breakPointAfter.setToken(new BooleanToken(false));
-			actor.registerExpertParameter(breakPointAfter);
 		} catch (Exception ne) {
-			logger.trace("Cannot create debugging attributes!", ne);
+			logger.trace("Cannot create debugging attribute!", ne);
 		}
 
 	}
@@ -68,24 +61,28 @@ public class ActorUtils {
 	 * @param type
 	 * @return Return the bean if valid call, otherwise null.
 	 */
-	public static UserDebugBean create(final Actor actor, final DataMessageComponent data, final DebugType type) throws Exception {
+	public static UserDebugBean create(final Actor actor, final DataMessageComponent... data) throws Exception {
 		
-		if (actor==null || data==null || type==null) return null;
+		if (actor==null || data==null || data.length<1) return null;
 		
 		final boolean breakA = getBooleanValue(actor, BREAKA, false);
-		final boolean breakB = getBooleanValue(actor, BREAKB, false);
-		if (!breakA && !breakB) return null;
-		
-		if ((breakA && type==DebugType.AFTER_ACTOR) || (!breakA && breakB && type==DebugType.BEFORE_ACTOR)) {
-			return null;
-		}
-		
+		if (!breakA) return null;
+				
 		UserDebugBean bean = new UserDebugBean();
 		bean.setActorName(actor.getDisplayName());
-		bean.setDebugType(type);
-		bean.setScalar(data.getScalar());
-		bean.setData(data.getList());
-		bean.setRois(data.getRois());
+
+		if (data[0]!=null) {
+			bean.setScalar(data[0].getScalar());
+			bean.setData(data[0].getList());
+			bean.setRois(data[0].getRois());
+		}
+		
+		if (data.length==2) {
+			bean.setOutputScalar(data[1].getScalar());
+			bean.setOutputData(data[1].getList());
+			bean.setOutputRois(data[1].getRois());
+		}
+		
 		bean.setSilent(false);
 		
 		return bean;
@@ -99,30 +96,47 @@ public class ActorUtils {
 	 */
 	public static UserDebugBean debug(Actor actor, UserDebugBean bean) {
 
-		if (bean==null) return null;
-		
-		IClassLoaderService service = (IClassLoaderService)Activator.getService(IClassLoaderService.class);
-		try {
-			if (service!=null) service.setDataAnalysisClassLoaderActive(true);
+		if (bean==null)            return null;
 
+		try {
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection(500);
 			if (client==null) return null;
+			
+			IClassLoaderService service = (IClassLoaderService)Activator.getService(IClassLoaderService.class);
+			try {
+				if (service!=null) service.setDataAnalysisClassLoaderActive(true);
+					
+				// Highlight it as being debugged.
+				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{actor.getContainer().getSource(), actor.getName(), true, SWT.COLOR_GREEN}, new String[]{String.class.getName(), String.class.getName(), boolean.class.getName(), int.class.getName()});
+	
+				bean = (UserDebugBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "debug", new Object[]{bean}, new String[]{UserDebugBean.class.getName()});
 				
-			bean = (UserDebugBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "debug", new Object[]{bean}, new String[]{UserDebugBean.class.getName()});
-		
-			if (bean==null || bean.isEmpty()) {
-				actor.requestFinish();
+				if (bean==null){
+					return null;
+				} else if (bean.isEmpty()) {
+					actor.requestFinish();
+					actor.getManager().stop();
+					return null;
+				}
+				
+				return bean;
+				
+			} catch (Exception ignored) {
+				logger.trace("Cannot debug", ignored);
 				return null;
+			
+			} finally {
+				if (service!=null) service.setDataAnalysisClassLoaderActive(false);
+				
+				try {
+				    client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{actor.getContainer().getSource(), actor.getName(), false, SWT.COLOR_BLUE}, new String[]{String.class.getName(), String.class.getName(), boolean.class.getName(), int.class.getName()});
+				} catch (Exception ne) {
+					logger.trace("Cannot set actor back to non-executing!", ne);
+				}
 			}
-			
-			return bean;
-			
-		} catch (Exception ignored) {
-			logger.trace("Cannot debug", ignored);
+		} catch (Exception ne) {
+			logger.error("Cannot get workbench connection!", ne);
 			return null;
-		
-		} finally {
-			if (service!=null) service.setDataAnalysisClassLoaderActive(false);
 		}
 		
 	}

@@ -108,7 +108,7 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
 			}
 		});
 		
-		ActorUtils.createDebugAttributes(this);
+		ActorUtils.createDebugAttribute(this);
 
 	}
 	

@@ -21,7 +21,8 @@ public class ActorValueObject {
 		LIST, SCALAR, ROI;
 	}
 	
-	private ActorValueDataType dataType;
+	private ActorValueDataType inDataType;
+	private ActorValueDataType outDataType;
 	private String inputName;
 	private String outputName;
 	private Object inputValue;
@@ -56,11 +57,13 @@ public class ActorValueObject {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((dataType == null) ? 0 : dataType.hashCode());
+				+ ((inDataType == null) ? 0 : inDataType.hashCode());
 		result = prime * result
 				+ ((inputName == null) ? 0 : inputName.hashCode());
 		result = prime * result
 				+ ((inputValue == null) ? 0 : inputValue.hashCode());
+		result = prime * result
+				+ ((outDataType == null) ? 0 : outDataType.hashCode());
 		result = prime * result
 				+ ((outputName == null) ? 0 : outputName.hashCode());
 		result = prime * result
@@ -76,7 +79,7 @@ public class ActorValueObject {
 		if (getClass() != obj.getClass())
 			return false;
 		ActorValueObject other = (ActorValueObject) obj;
-		if (dataType != other.dataType)
+		if (inDataType != other.inDataType)
 			return false;
 		if (inputName == null) {
 			if (other.inputName != null)
@@ -87,6 +90,8 @@ public class ActorValueObject {
 			if (other.inputValue != null)
 				return false;
 		} else if (!inputValue.equals(other.inputValue))
+			return false;
+		if (outDataType != other.outDataType)
 			return false;
 		if (outputName == null) {
 			if (other.outputName != null)
@@ -100,10 +105,16 @@ public class ActorValueObject {
 			return false;
 		return true;
 	}
-	public ActorValueDataType getDataType() {
-		return dataType;
+	public ActorValueDataType getInDataType() {
+		return inDataType;
 	}
-	public void setDataType(ActorValueDataType dataType) {
-		this.dataType = dataType;
+	public void setInDataType(ActorValueDataType dataType) {
+		this.inDataType = dataType;
+	}
+	public ActorValueDataType getOutDataType() {
+		return outDataType;
+	}
+	public void setOutDataType(ActorValueDataType outDataType) {
+		this.outDataType = outDataType;
 	}
 }

@@ -3,7 +3,7 @@ package org.dawb.passerelle.views;
 import java.util.Map;
 import java.util.Queue;
 
-import org.dawb.common.ui.Activator;
+import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.jface.action.Action;
@@ -47,7 +47,9 @@ public class ActorDebugView extends ViewPart implements IRemoteWorkbenchPart{
 	private void createActions() {
 		final Action play = new Action("Continue", Activator.getImageDescriptor("icons/run_workflow.gif")) {
 			public void run() {
-				queue.add(bean);				
+				UserDebugBean ret = new UserDebugBean(bean.getScalar());
+				ret.addScalar("debug_time", String.valueOf(System.currentTimeMillis()));
+				queue.add(ret);
 			}
 		};
 		getViewSite().getActionBars().getToolBarManager().add(play);

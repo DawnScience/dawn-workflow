@@ -9,14 +9,22 @@
  */ 
 package org.dawb.passerelle.views;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.views.ActorValueObject.ActorValueDataType;
 import org.dawb.workbench.jmx.UserDataBean;
+import org.dawb.workbench.jmx.UserDebugBean;
+
+import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
+import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
 
 class ActorValueUtils {
 
@@ -69,30 +77,54 @@ class ActorValueUtils {
 		return found;
 	}
 
-	public static List<ActorValueObject> getTableObjects(UserDataBean bean) {
+	public static List<ActorValueObject> getTableObjects(UserDebugBean bean) {
 		
-		List<ActorValueObject> ret = new ArrayList<ActorValueObject>(7);
+		final int size = bean.getDataSize(); // The max of inputSize , outputSize.
+		if (size<1) return Collections.emptyList();
 		
-		// Order: LIST, SCALAR, ROIS
-		process(bean.getData(),   ActorValueObject.ActorValueDataType.LIST,   ret);
-		process(bean.getScalar(), ActorValueObject.ActorValueDataType.SCALAR, ret);
-		process(bean.getRois(),   ActorValueObject.ActorValueDataType.ROI,    ret);
+		List<ActorValueObject> ret = new ArrayList<ActorValueObject>(size);
+		
+		final List<Entry<String, ?>> inputs  = bean.getInputs();
+		final List<Entry<String, ?>> outputs = bean.getOutputs();
+		
+		for (int i = 0; i < size; i++) {
+			ActorValueObject val = new ActorValueObject();
+			Entry<String,?> entry = getEntry(i, inputs);
+			if (entry!=null) {
+				val.setInDataType(getType(entry.getValue()));
+				val.setInputName(entry.getKey());
+				val.setInputValue(entry.getValue());
+			}
+			entry = getEntry(i, outputs);
+			if (entry!=null) {
+				val.setOutDataType(getType(entry.getValue()));
+				val.setOutputName(entry.getKey());
+				val.setOutputValue(entry.getValue());
+			}
+			ret.add(val);
+		}
 		
 		return ret;
 	}
 
-	private static void process(Map<String, ?> data,
-			                    ActorValueDataType        type, 
-			                    List<ActorValueObject>    ret) {
+	private static ActorValueDataType getType(Object value) {
+		if (value instanceof IDataset || value instanceof ILazyDataset) {
+			return ActorValueDataType.LIST;
+		} else if (value instanceof ROIBase) {
+			return ActorValueDataType.ROI;
+		} else {
+			return ActorValueDataType.SCALAR;
+		}
+	}
+
+	private static Entry<String, ?> getEntry(int                    index, 
+			                                 List<Entry<String, ?>> data) {
 		
-		if (data==null) return;
-		for (String name : data.keySet()) {
-			ActorValueObject val = new ActorValueObject();
-			val.setDataType(type);
-			val.setInputName(name);
-			val.setInputValue(data.get(name).toString());
-			ret.add(val);
-		}		
+		try {
+			return data.get(index);
+		} catch (Throwable ignored) {
+			return null;
+		}
 	}
 
 }

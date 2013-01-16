@@ -1,5 +1,13 @@
 package org.dawb.workbench.jmx;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
 
 /**
  * A bean 
@@ -13,15 +21,28 @@ public class UserDebugBean extends UserDataBean{
 	 * 
 	 */
 	private static final long serialVersionUID = -6270121996201032744L;
-
-	public enum DebugType {
-		BEFORE_ACTOR, AFTER_ACTOR, BOTH;
-	}
 	
 	/**
-	 * The break point position.
+	 * The data is either primitive array or IDataset
+	 * It is the plotted data and the key is the trace name.
+	 * 
+	 * If tools will add traces, these traces will be included in this list.
 	 */
-	private DebugType debugType;
+	private Map<String,Serializable> outputData;
+	
+	/**
+	 * Scalar data (passed in) plus anything that the tool used
+	 * or the user edited, passed back.
+	 */
+	private Map<String,String>       outputScalar;
+	
+	/**
+	 * The data extends ROIBase. The rois passed in will be created in the plotting system,
+	 * the rois passed back will be those rois in the plotting system at the point where
+	 * the cancel button is pressed. The Region name will be used as key. This would be the
+	 * name propagated to the workflow normally.
+	 */
+	private Map<String,Serializable> outputRois;
 	
 	/**
 	 * The port name that we are debugging on, if any.
@@ -29,21 +50,23 @@ public class UserDebugBean extends UserDataBean{
 	 */
 	private String portName;
 
-
-	public DebugType getDebugType() {
-		return debugType;
-	}
-
-	public void setDebugType(DebugType debugType) {
-		this.debugType = debugType;
-	}
+    public UserDebugBean() {
+    	
+    }
+    public UserDebugBean(Map<String,String> vals) {
+    	setScalar(vals);
+    }
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result
-				+ ((debugType == null) ? 0 : debugType.hashCode());
+				+ ((outputData == null) ? 0 : outputData.hashCode());
+		result = prime * result
+				+ ((outputRois == null) ? 0 : outputRois.hashCode());
+		result = prime * result
+				+ ((outputScalar == null) ? 0 : outputScalar.hashCode());
 		result = prime * result
 				+ ((portName == null) ? 0 : portName.hashCode());
 		return result;
@@ -58,7 +81,20 @@ public class UserDebugBean extends UserDataBean{
 		if (getClass() != obj.getClass())
 			return false;
 		UserDebugBean other = (UserDebugBean) obj;
-		if (debugType != other.debugType)
+		if (outputData == null) {
+			if (other.outputData != null)
+				return false;
+		} else if (!outputData.equals(other.outputData))
+			return false;
+		if (outputRois == null) {
+			if (other.outputRois != null)
+				return false;
+		} else if (!outputRois.equals(other.outputRois))
+			return false;
+		if (outputScalar == null) {
+			if (other.outputScalar != null)
+				return false;
+		} else if (!outputScalar.equals(other.outputScalar))
 			return false;
 		if (portName == null) {
 			if (other.portName != null)
@@ -75,5 +111,60 @@ public class UserDebugBean extends UserDataBean{
 	public void setPortName(String portName) {
 		this.portName = portName;
 	}
+	public Map<String, Serializable> getOutputData() {
+		return outputData;
+	}
+	public void setOutputData(Map<String, Serializable> outputData) {
+		this.outputData = outputData;
+	}
+	public Map<String, String> getOutputScalar() {
+		return outputScalar;
+	}
+	public void setOutputScalar(Map<String, String> outputScalar) {
+		this.outputScalar = outputScalar;
+	}
+	public Map<String, Serializable> getOutputRois() {
+		return outputRois;
+	}
+	public void setOutputRois(Map<String, Serializable> outputRois) {
+		this.outputRois = outputRois;
+	}
 	
+	
+	public int getDataSize() {
+		int inputSize = super.getDataSize();
+	    int size = 0;
+	    if (outputData!=null)   size+=outputData.size();
+	    if (outputScalar!=null) size+=outputScalar.size();
+	    if (outputRois!=null)   size+=outputRois.size();
+	    return Math.max(inputSize, size);
+	}
+	
+	public List<Entry<String, ?>> getInputs() {
+		Map<String, Serializable> scalarSerial = new LinkedHashMap<String, Serializable>(getScalar());
+		return getList(getData(), scalarSerial, getRois());
+	}
+	public List<Entry<String, ?>> getOutputs() {
+		Map<String, Serializable> scalarSerial = new LinkedHashMap<String, Serializable>(getOutputScalar());
+		return getList(getOutputData(), scalarSerial, getOutputRois());
+	}
+	
+	private List<Entry<String, ?>> getList(Map<String, Serializable> data,
+			                               Map<String, Serializable> scalar, 
+                                           Map<String, Serializable> rois) {
+		
+		final List<Entry<String,?>> ret = new ArrayList<Map.Entry<String,?>>(7);
+		if (data!=null)   addEntries(data.entrySet(),   ret);
+		if (scalar!=null) addEntries(scalar.entrySet(), ret);
+		if (rois!=null)   addEntries(rois.entrySet(),   ret);
+		return ret;
+	}
+	private void addEntries(Set<Entry<String,  Serializable>> entrySet,
+			                List<Entry<String, ?>> ret) {
+		
+		for (Entry<String, ?> entry : entrySet) {
+			ret.add(entry);
+		}
+	}
+
 }
