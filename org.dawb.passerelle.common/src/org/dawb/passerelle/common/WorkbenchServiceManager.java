@@ -10,6 +10,7 @@
 package org.dawb.passerelle.common;
 
 import org.dawb.common.services.IClassLoaderService;
+import org.dawb.common.services.ServiceManager;
 import org.dawb.passerelle.common.remote.RemoteServiceProviderImpl;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.eclipse.ui.IStartup;
@@ -59,8 +60,10 @@ public class WorkbenchServiceManager implements IStartup {
 		
 		if (agent!=null) return;
 		
-		final IClassLoaderService service = (IClassLoaderService)PlatformUI.getWorkbench().getService(IClassLoaderService.class);
+		IClassLoaderService service=null;
 		try {
+			service = (IClassLoaderService)ServiceManager.getService(IClassLoaderService.class, false);
+			
 			if (checkUI) {
 				if (!PlatformUI.isWorkbenchRunning())                      return;
 				if (!WorkbenchServiceManager.isUserInterfaceApplication()) return;
@@ -102,6 +105,9 @@ public class WorkbenchServiceManager implements IStartup {
 				}
 
 			}
+		} catch (Exception ne) {
+			logger.error("Cannot create workbench service!", ne);
+			
 		} finally {
 			if (service!=null) service.setDataAnalysisClassLoaderActive(false);
 		}
