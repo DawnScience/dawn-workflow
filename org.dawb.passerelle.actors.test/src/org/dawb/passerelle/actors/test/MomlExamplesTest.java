@@ -49,7 +49,8 @@ public class MomlExamplesTest {
 			"motor_example.moml",
 			"plot_fit_example.moml",
 			"plot_image_region_example.moml",
-			"python_numjy_example1.moml"
+			"python_numjy_example1.moml", // Not an example anyway anymore
+			"spec_scan_example.moml"
 			);
 
 	
