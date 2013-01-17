@@ -62,6 +62,7 @@ public class WorkbenchServiceManager implements IStartup {
 		
 		IClassLoaderService service=null;
 		try {
+			
 			service = (IClassLoaderService)ServiceManager.getService(IClassLoaderService.class, false);
 			
 			if (checkUI) {
