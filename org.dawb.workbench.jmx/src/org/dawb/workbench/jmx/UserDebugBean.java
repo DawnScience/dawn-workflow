@@ -170,5 +170,11 @@ public class UserDebugBean extends UserDataBean{
 			ret.add(entry);
 		}
 	}
+	
+	public void addOutputScalar(String name, String ads) {
+		if (this.outputScalar==null) outputScalar = new LinkedHashMap<String, String>(7);
+		outputScalar.put(name, ads);
+	}
+
 
 }

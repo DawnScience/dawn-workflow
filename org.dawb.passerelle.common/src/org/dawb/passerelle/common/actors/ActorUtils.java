@@ -31,8 +31,6 @@ import ptolemy.data.Token;
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.util.Attribute;
 
-import com.isencia.passerelle.actor.Actor;
-
 public class ActorUtils {
 
 	private static Logger logger = LoggerFactory.getLogger(ActorUtils.class);
@@ -43,10 +41,10 @@ public class ActorUtils {
 	 * 
 	 * @param actor
 	 */
-	public static void createDebugAttribute(final Actor actor) {
+	public static void createDebugAttribute(final IProjectNamedObject actor) {
 		
 		try {
-			final Parameter breakPoint = new Parameter(actor, BREAKA);
+			final Parameter breakPoint = new Parameter(actor.getObject(), BREAKA);
 			breakPoint.setDisplayName("Break Point");
 			breakPoint.setToken(new BooleanToken(false));
 			actor.registerExpertParameter(breakPoint);
@@ -64,7 +62,7 @@ public class ActorUtils {
 	 * @param type
 	 * @return Return the bean if valid call, otherwise null.
 	 */
-	public static UserDebugBean create(final Actor actor, final DataMessageComponent... data) throws Exception {
+	public static UserDebugBean create(final IProjectNamedObject actor, final DataMessageComponent... data) throws Exception {
 		
 		if (actor==null || data==null || data.length<1) return null;
 		
@@ -101,12 +99,15 @@ public class ActorUtils {
 	 * @param bean
 	 * @return
 	 */
-	public static UserDebugBean debug(Actor actor, UserDebugBean bean) {
+	public static UserDebugBean debug(IProjectNamedObject actor, UserDebugBean bean) {
 
 		if (bean==null)            return null;
 
 		try {
 			debugLock.lock();
+			
+			bean.addScalar("project_name", actor.getProject().getName());
+			bean.addOutputScalar("project_name", actor.getProject().getName());
 			
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection(500);
 			if (client==null) return null;
@@ -168,7 +169,7 @@ public class ActorUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	private static boolean getBooleanValue(Actor actor, String name, boolean defaultValue) throws Exception {
+	private static boolean getBooleanValue(IProjectNamedObject actor, String name, boolean defaultValue) throws Exception {
 		final Attribute att = actor.getAttribute(name);
 		if (att==null) return defaultValue;
 		if (!(att instanceof Parameter)) return defaultValue;
@@ -187,7 +188,7 @@ public class ActorUtils {
 	 * @param isExecuting
 	 * @throws Exception 
 	 */
-	public static void setActorExecuting(final Actor actor, final boolean isExecuting) {
+	public static void setActorExecuting(final IProjectNamedObject actor, final boolean isExecuting) {
 		
 		if (actor.getManager()== null) return;
 		

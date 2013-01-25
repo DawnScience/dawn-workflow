@@ -19,6 +19,7 @@ import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.workbench.jmx.UserDebugBean;
+import org.eclipse.core.resources.IProject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +31,7 @@ import ptolemy.kernel.util.ChangeListener;
 import ptolemy.kernel.util.ChangeRequest;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
+import ptolemy.kernel.util.NamedObj;
 
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.TriggeredSource;
@@ -37,7 +39,7 @@ import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public abstract class AbstractDataMessageSource extends TriggeredSource implements IVariableProvider {
+public abstract class AbstractDataMessageSource extends TriggeredSource implements IVariableProvider, IProjectNamedObject {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDataMessageSource.class);
 	/**
@@ -194,5 +196,17 @@ public abstract class AbstractDataMessageSource extends TriggeredSource implemen
 		return source;
 	}
 
+	public IProject getProject() {
+		try {
+			return ModelUtils.getProject(this);
+		} catch (Exception e) {
+			logger.error("Cannot get the project for actor "+getName(), e);
+			return null;
+		}
+	}
+	
+	public NamedObj getObject() {
+		return this;
+	}
 	
 }
