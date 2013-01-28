@@ -27,7 +27,6 @@ import org.eclipse.swt.widgets.Spinner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.Polynomial;
 
@@ -43,7 +42,8 @@ public class FunctionDialog extends Dialog {
 	private CCombo functionType;
 	private Spinner polynomialDegree;
 	private Label labelDegree;
-	FunctionDialog(Shell parentShell, NamedObj container) {	
+	
+	public FunctionDialog(Shell parentShell) {	
 		super(parentShell);
 	}
 	
@@ -114,13 +114,13 @@ public class FunctionDialog extends Dialog {
 		return main;
 	}
 	
-	void setFunction(AFunction function) {
+	public void setFunction(AFunction function) {
 		final int index = FunctionType.getIndex(function.getClass());
 		functionType.select(index);
 		functionEditor.setFunction(function, null);
 	}
 	
-	AFunction getFunction() {
+	public AFunction getFunction() {
 		return functionEditor.getFunction();
 	}
 }

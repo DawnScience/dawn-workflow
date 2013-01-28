@@ -59,7 +59,7 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 			@Override
 			protected Object openDialogBox(Control cellEditorWindow) {
 								
-				final FunctionDialog dialog = new FunctionDialog(cellEditorWindow.getShell(), getContainer()); // extends BeanDialog
+				final FunctionDialog dialog = new FunctionDialog(cellEditorWindow.getShell()); // extends BeanDialog
 				dialog.create();
 				dialog.getShell().setSize(650,500); // Windows needs slightly larger size.
 				dialog.getShell().setText("Edit Function");
