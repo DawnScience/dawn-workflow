@@ -65,7 +65,8 @@ public class ExpressionDialog extends BeanDialog {
 		expressions.setColumnWidths(new int[]{100, 300});
 		expressions.setListHeight(150);
 		
-		GridUtils.setVisibleAndLayout(expressions, true);
+		GridUtils.setVisible(expressions, true);
+		expressions.getParent().layout(new Control[]{expressions});
 		
 		return main;
 	}

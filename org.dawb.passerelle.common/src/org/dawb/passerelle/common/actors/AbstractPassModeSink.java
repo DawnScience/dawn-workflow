@@ -14,6 +14,7 @@ import java.util.List;
 
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariableProvider;
+import org.eclipse.core.resources.IProject;
 import org.eclipse.swt.SWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,7 @@ import ptolemy.kernel.util.ChangeListener;
 import ptolemy.kernel.util.ChangeRequest;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
+import ptolemy.kernel.util.NamedObj;
 
 import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
@@ -36,7 +38,7 @@ import com.isencia.passerelle.message.MessageHelper;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public abstract class AbstractPassModeSink extends Sink implements IVariableProvider {
+public abstract class AbstractPassModeSink extends Sink implements IVariableProvider, IProjectNamedObject {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractPassModeSink.class);
 	
@@ -261,6 +263,19 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
 	protected boolean isInputRoundComplete() {
 		if (recInputHandler==null) return isFinishRequested();
 		return recInputHandler.isInputComplete();
+	}
+
+	public IProject getProject() {
+		try {
+			return ModelUtils.getProject(this);
+		} catch (Exception e) {
+			logger.error("Cannot get the project for actor "+getName(), e);
+			return null;
+		}
+	}
+
+	public NamedObj getObject() {
+		return this;
 	}
 
 }

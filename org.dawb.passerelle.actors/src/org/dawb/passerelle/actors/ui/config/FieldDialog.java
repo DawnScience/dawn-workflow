@@ -81,7 +81,8 @@ public class FieldDialog extends BeanDialog {
 			}
 		});
 		
-		GridUtils.setVisibleAndLayout(fields, true);
+		GridUtils.setVisible(fields, true);
+		fields.getParent().layout(new Control[]{fields});
 		
 		final TabItem labelTab = new TabItem(tabFolder, SWT.NONE);
 		labelTab.setText("Custom Label");

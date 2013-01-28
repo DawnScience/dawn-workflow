@@ -8,16 +8,21 @@ import java.util.List;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.eclipse.core.resources.IProject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
+import ptolemy.kernel.util.NamedObj;
 
 import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.TerminationException;
 import com.isencia.passerelle.actor.Transformer;
 import com.isencia.passerelle.message.ManagedMessage;
+import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 /**
  * A Synchronizer designed to replace the Expression Mode parameter
@@ -27,7 +32,9 @@ import com.isencia.passerelle.message.ManagedMessage;
  * @author fcp94556
  *
  */
-public class DataMessageCombiner extends Transformer {
+public class DataMessageCombiner extends Transformer implements IProjectNamedObject {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DataMessageCombiner.class);
 
 	/**
 	 * 
@@ -96,4 +103,17 @@ public class DataMessageCombiner extends Transformer {
 		return "Combiner";
 	}
 
+	@Override
+	public NamedObj getObject() {
+		return this;
+	}
+
+	public IProject getProject() {
+		try {
+			return ModelUtils.getProject(this);
+		} catch (Exception e) {
+			logger.error("Cannot get the project for actor "+getName(), e);
+			return null;
+		}
+	}
 }

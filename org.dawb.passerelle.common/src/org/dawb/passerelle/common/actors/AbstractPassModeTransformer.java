@@ -37,6 +37,7 @@ import ptolemy.kernel.util.ChangeListener;
 import ptolemy.kernel.util.ChangeRequest;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
+import ptolemy.kernel.util.NamedObj;
 import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
@@ -51,7 +52,7 @@ import com.isencia.passerelle.message.MessageHelper;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public abstract class AbstractPassModeTransformer extends Transformer implements IVariableProvider {
+public abstract class AbstractPassModeTransformer extends Transformer implements IVariableProvider, IProjectNamedObject {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractPassModeTransformer.class);
 
@@ -376,7 +377,7 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 
 	}
 
-	protected IProject getProject() {
+	public IProject getProject() {
 		try {
 			return ModelUtils.getProject(this);
 		} catch (Exception e) {
@@ -456,4 +457,9 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		if (recInputHandler==null) return isFinishRequested();
 		return recInputHandler.isInputComplete();
 	}
+	
+	public NamedObj getObject() {
+		return this;
+	}
+
 }
