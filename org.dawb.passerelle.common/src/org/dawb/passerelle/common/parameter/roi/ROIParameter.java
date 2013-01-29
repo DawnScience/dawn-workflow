@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
+import org.dawb.common.ui.plot.roi.ROIDialog;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -54,7 +55,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 			@Override
 			protected Object openDialogBox(Control cellEditorWindow) {
 								
-				final ROIDialog dialog = new ROIDialog(cellEditorWindow.getShell(), getContainer()); // extends BeanDialog
+				final ROIDialog dialog = new ROIDialog(cellEditorWindow.getShell()); // extends BeanDialog
 				dialog.create();
 				dialog.getShell().setSize(550,450); // As needed
 				dialog.getShell().setText("Edit Region of Interest");

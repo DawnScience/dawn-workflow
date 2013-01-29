@@ -18,6 +18,7 @@ import java.io.ObjectOutputStream;
 
 import org.castor.core.util.Base64Decoder;
 import org.castor.core.util.Base64Encoder;
+import org.dawb.common.ui.plot.function.FunctionDialog;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;
