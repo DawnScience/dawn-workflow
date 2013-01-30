@@ -101,7 +101,7 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 			DataMessageComponent ret = getTransformedMessage(cache);
 			try {
 				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(cache), ret);
-				bean.setPortName(input.getDisplayName());
+				if (bean!=null) bean.setPortName(input.getDisplayName());
 				ActorUtils.debug(this, bean);
 			} catch (Exception e) {
 				logger.trace("Unable to debug!", e);

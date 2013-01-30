@@ -116,7 +116,7 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 			if (despatch!=null) setDataNames(despatch, cache);
 			try {
 				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(cache), despatch);
-				bean.setPortName(input.getDisplayName());
+				if (bean!=null) bean.setPortName(input.getDisplayName());
 				ActorUtils.debug(this, bean);
 			} catch (Exception e) {
 				logger.trace("Unable to debug!", e);

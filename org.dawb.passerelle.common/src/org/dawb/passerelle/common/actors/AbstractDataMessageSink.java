@@ -93,7 +93,7 @@ public abstract class AbstractDataMessageSink extends AbstractPassModeSink {
 			ActorUtils.setActorExecuting(this, true);
 			try {
 				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(cache) );
-				bean.setPortName(input.getDisplayName());
+				if (bean!=null) bean.setPortName(input.getDisplayName());
 				ActorUtils.debug(this, bean);
 			} catch (Exception e) {
 				logger.trace("Unable to debug!", e);
