@@ -47,6 +47,7 @@ public class DataMessageCombiner extends Transformer implements IProjectNamedObj
 	public DataMessageCombiner(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
 		cache = new ArrayList<DataMessageComponent>(7);
+		ActorUtils.createDebugAttribute(this);
 	}
 
 	public void doPreInitialize() throws InitializationException{
