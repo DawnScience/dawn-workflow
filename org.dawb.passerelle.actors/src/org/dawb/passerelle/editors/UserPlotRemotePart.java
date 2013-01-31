@@ -36,7 +36,6 @@ import org.dawb.common.ui.plot.trace.ITrace;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
-import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
