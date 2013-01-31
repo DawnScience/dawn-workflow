@@ -38,6 +38,11 @@ public class UserPlotBean extends UserDataBean {
 	private List<String> axesNames;
 	
 	/**
+	 * The name(s) of the data to use, may be null.
+	 */
+	private List<String> dataNames;
+
+	/**
 	 * If a tool has been run its data may be provided here.
 	 * If a tool should be selected by default, its id is here.
 	 */
@@ -94,6 +99,8 @@ public class UserPlotBean extends UserDataBean {
 		result = prime * result
 				+ ((axesNames == null) ? 0 : axesNames.hashCode());
 		result = prime * result
+				+ ((dataNames == null) ? 0 : dataNames.hashCode());
+		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result
 				+ ((toolData == null) ? 0 : toolData.hashCode());
@@ -115,6 +122,11 @@ public class UserPlotBean extends UserDataBean {
 			if (other.axesNames != null)
 				return false;
 		} else if (!axesNames.equals(other.axesNames))
+			return false;
+		if (dataNames == null) {
+			if (other.dataNames != null)
+				return false;
+		} else if (!dataNames.equals(other.dataNames))
 			return false;
 		if (description == null) {
 			if (other.description != null)
@@ -170,6 +182,14 @@ public class UserPlotBean extends UserDataBean {
 
 	public boolean isEmpty() {
 		return super.isEmpty()&&description==null&&toolData==null&&toolId==null;
+	}
+
+	public List<String> getDataNames() {
+		return dataNames;
+	}
+
+	public void setDataNames(List<String> dataNames) {
+		this.dataNames = dataNames;
 	}
 
 }

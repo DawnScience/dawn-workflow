@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -149,13 +150,17 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart {
 		if (bean.getData()!=null) {
 			// Plot whatever was in the bean, if one 2D dataset is encountered use that
 			// since it is exclusive.
-			final AbstractDataset image = getFirst2DDataset(bean.getData());
+			final Map<String,Serializable> data = new HashMap<String, Serializable>(bean.getData());
+			if (bean.getDataNames()!=null && !bean.getDataNames().isEmpty()) {
+				data.keySet().retainAll(bean.getDataNames());
+			}
+			final AbstractDataset image = getFirst2DDataset(data);
 			// TODO Other plotting modes
 			// TODO Plot title?
 			if (image!=null) { // We plot in 2D
 				system.createPlot2D(image, getAxes(bean), null);
 			} else { // We plot in 1D
-				system.createPlot1D(getXAxis(bean), get1DDatasets(bean.getData()), null);
+				system.createPlot1D(getXAxis(bean), get1DDatasets(data), null);
 			}
 		}
 		

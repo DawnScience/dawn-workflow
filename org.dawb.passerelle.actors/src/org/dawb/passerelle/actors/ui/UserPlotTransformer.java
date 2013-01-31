@@ -78,7 +78,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 		}
 	}
 
-	private StringParameter inputTypeParam, toolId, description, axisNames;
+	private StringParameter inputTypeParam, toolId, description, axisNames, dataNames;
 	private Parameter       silent;
 	
 	public UserPlotTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
@@ -108,6 +108,9 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 		
 		axisNames = new StringParameter(this, "Axis Names");
 		registerConfigurableParameter(axisNames);
+		
+		dataNames = new StringParameter(this, "Data Names");
+		registerConfigurableParameter(dataNames);
 
 		silent = new Parameter(this, "Silent");
 		silent.setToken(new BooleanToken(false));
@@ -155,6 +158,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 				bean.setToolId(toolId.getExpression());
 				bean.setSilent(((BooleanToken)silent.getToken()).booleanValue());
 				bean.setAxesNames(ListUtils.getList(axisNames.getExpression()));
+				bean.setDataNames(ListUtils.getList(dataNames.getExpression()));
 				if (description.getExpression()!=null && !"".equals(description.getExpression())) {
 					bean.setDescription(description.getExpression());
 				}
