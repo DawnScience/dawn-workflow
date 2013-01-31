@@ -8,6 +8,7 @@ import java.util.List;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.resources.IProject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,6 +89,13 @@ public class DataMessageCombiner extends Transformer implements IProjectNamedObj
 			
 			final DataMessageComponent despatch = MessageUtils.mergeAll(cache);
 			if (despatch==null) return null;
+			try {
+				UserDebugBean bean = ActorUtils.create(this, MessageUtils.mergeAll(cache), despatch);
+				if (bean!=null) bean.setPortName(input.getDisplayName());
+				ActorUtils.debug(this, bean);
+			} catch (Exception e) {
+				logger.trace("Unable to debug!", e);
+			}
 			
 			despatch.putScalar("operation.time."+getName(), DateFormat.getDateTimeInstance().format(new Date()));
 			despatch.putScalar("operation.type."+getName(), "Combine");
