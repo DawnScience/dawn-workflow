@@ -2,6 +2,7 @@ package org.dawb.workbench.jmx;
 
 import java.io.Serializable;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 public class UserDataBean extends ActorBean {
@@ -32,6 +33,43 @@ public class UserDataBean extends ActorBean {
 	 * name propagated to the workflow normally.
 	 */
 	private Map<String,Serializable> rois;
+	
+	public void merge(UserDataBean with) {
+		
+		data   = mergeMap(data,   with.data);
+		scalar = mergeStringMap(scalar, with.scalar);
+		rois   = mergeMap(rois,   with.rois);
+	}
+
+	
+	protected List<String> mergeList(List<String> col, List<String> with) {
+		if (col==null) {
+			return with;
+		} else {
+			if (with!=null) col.addAll(with);
+		}
+		return col;
+	}
+
+	protected Map<String, Serializable> mergeMap(Map<String, Serializable> col, Map<String, Serializable> with) {
+		if (col==null) {
+			return with;
+		} else {
+			if (with!=null) col.putAll(with);
+		}
+		return col;
+	}
+
+
+	protected Map<String, String> mergeStringMap(Map<String, String> col, Map<String, String> with) {
+		if (col==null) {
+			return with;
+		} else {
+			if (with!=null) col.putAll(with);
+		}
+		return col;
+	}
+
 
 	public Map<String, Serializable> getData() {
 		return data;

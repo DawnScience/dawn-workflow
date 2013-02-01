@@ -192,7 +192,9 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart {
 		final AbstractPlottingSystem asystem = (AbstractPlottingSystem)system;
 		if (bean.getToolId()!=null && asystem.getToolPage(bean.getToolId())!=null) {
 			
-			final ToolPageRole role = asystem.getToolPage(bean.getToolId()).getToolPageRole();
+			final IToolPage    page = asystem.getToolPage(bean.getToolId());
+			final ToolPageRole role = page.getToolPageRole();
+			page.setToolData(bean);
 			try {
 				asystem.setToolVisible(bean.getToolId(), role, null);
 				Display.getDefault().asyncExec(new Runnable() {
@@ -369,13 +371,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart {
 				    
 					// TODO Fit tool does not give datasets for the
 					// peaks drawn to the same resolution as the original data.
-					
-//					AbstractDataset  x = line.getXData();
-//					final String xName = line.getName()+"_x";
-//					if (x!=null && !ret.getData().containsKey(xName)) {
-//	 				    x.setName(xName);
-//						ret.addList(xName, x);
-//					}
+					// Perhaps use some kind of downsampling to make the same?
 					
 				}
 			}
@@ -400,6 +396,11 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart {
 				ret.setToolId(tool.getToolId());
 				ret.setToolData(tool.getToolData());
 			}
+		}
+		
+		if (ret.getToolData()!=null && ret.getToolData() instanceof UserPlotBean) {
+			UserPlotBean toolData = (UserPlotBean)ret.getToolData();
+			ret.merge(toolData);
 		}
 		
 		return ret;

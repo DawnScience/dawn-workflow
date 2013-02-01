@@ -10,6 +10,7 @@
 package org.dawb.passerelle.actors.ui;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -153,12 +154,14 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 				bean.setPartName("Review Plot");
 				bean.setDialog(isDialog);
 				bean.setScalar(scalar);
-				bean.setData(input.getList());
+				bean.setData(getList(input));
 				bean.setRois(input.getRois());
+				bean.setFunctions(input.getFunctions());
 				bean.setToolId(toolId.getExpression());
 				bean.setSilent(((BooleanToken)silent.getToken()).booleanValue());
-				bean.setAxesNames(ListUtils.getList(axisNames.getExpression()));
-				bean.setDataNames(ListUtils.getList(dataNames.getExpression()));
+				bean.setAxesNames(getAxesNames());
+				bean.setDataNames(getDataNames());
+				bean.setFunctions(input.getFunctions());
 				if (description.getExpression()!=null && !"".equals(description.getExpression())) {
 					bean.setDescription(description.getExpression());
 				}
@@ -177,9 +180,11 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 					input.addScalar(uRet.getScalar());				
 					input.addList(uRet.getData());
 					input.addRois(uRet.getRois());
+					input.addFunctions(uRet.getFunctions());
 									
-					Serializable toolData = uRet.getToolData();
 	                // TODO Custom tool data?
+					// Serializable toolData = uRet.getToolData();
+					// Not needed for FunctionTool, maybe for fitting?
 					
 					return input;
 					
@@ -194,6 +199,24 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 		} catch (Exception e) {
 			throw createDataMessageException("Cannot allow user to modify message '"+getName()+"'", e);
 		}
+	}
+
+	private List<String> getAxesNames() {
+		return ListUtils.getList(axisNames.getExpression());
+	}
+	private List<String> getDataNames() {
+		return ListUtils.getList(dataNames.getExpression());
+	}
+
+	private Map<String, Serializable> getList(DataMessageComponent input) {
+		
+		final Map<String,Serializable> data = new HashMap<String, Serializable>(input.getList());
+		final List<String> retainedNames = getDataNames();
+		if (retainedNames!=null && !retainedNames.isEmpty()) {
+			if (getAxesNames()!=null) retainedNames.addAll(getAxesNames());
+			data.keySet().retainAll(retainedNames);
+		}
+		return data;
 	}
 
 	@Override

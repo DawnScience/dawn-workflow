@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Bean holds data sent to plot something and also much that the user did 
@@ -25,6 +26,12 @@ public class UserPlotBean extends UserDataBean {
 	 * to continue.
 	 */
 	private boolean userPlottedSomething = false;
+	
+	/**
+	 * Functions extending AFuction usually.
+	 */
+	private Map<String,Serializable> functions;
+
 	
 	/**
 	 * The list of the axes in the order x,y,z. Made be size one, two or three.
@@ -60,6 +67,15 @@ public class UserPlotBean extends UserDataBean {
 	 * or their data may have been lost.
 	 */
 	private String toolId;
+	
+	public void merge(UserPlotBean with) {
+		super.merge(with);
+		axesNames = mergeList(axesNames, with.axesNames);		
+		dataNames = mergeList(dataNames, with.dataNames);
+		
+		functions = mergeMap(functions, with.functions);
+	}
+
 
 	public Serializable getToolData() {
 		return toolData;
@@ -103,6 +119,8 @@ public class UserPlotBean extends UserDataBean {
 		result = prime * result
 				+ ((description == null) ? 0 : description.hashCode());
 		result = prime * result
+				+ ((functions == null) ? 0 : functions.hashCode());
+		result = prime * result
 				+ ((toolData == null) ? 0 : toolData.hashCode());
 		result = prime * result + ((toolId == null) ? 0 : toolId.hashCode());
 		result = prime * result + (userPlottedSomething ? 1231 : 1237);
@@ -132,6 +150,11 @@ public class UserPlotBean extends UserDataBean {
 			if (other.description != null)
 				return false;
 		} else if (!description.equals(other.description))
+			return false;
+		if (functions == null) {
+			if (other.functions != null)
+				return false;
+		} else if (!functions.equals(other.functions))
 			return false;
 		if (toolData == null) {
 			if (other.toolData != null)
@@ -190,6 +213,14 @@ public class UserPlotBean extends UserDataBean {
 
 	public void setDataNames(List<String> dataNames) {
 		this.dataNames = dataNames;
+	}
+
+	public Map<String, Serializable> getFunctions() {
+		return functions;
+	}
+
+	public void setFunctions(Map<String, Serializable> functions) {
+		this.functions = functions;
 	}
 
 }
