@@ -230,6 +230,14 @@
             id="org.dawb.passerelle.actors.mathsTile"
             name="Tile">
       </actor>
+      <actor
+            class="org.dawb.passerelle.actors.data.DatasetMean"
+            figureCustomizer="org.dawb.passerelle.actors.data.MathCustomizer"
+            group="org.dawb.passerelle.actors.actorgroup.maths"
+            icon="icons/tile.png"
+            id="org.dawb.passerelle.actors.mathsMean"
+            name="Mean">
+      </actor>
    </extension>
    <extension
          name="Process Actors"

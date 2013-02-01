@@ -1,0 +1,78 @@
+package org.dawb.passerelle.actors.data;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
+
+import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
+import org.dawb.passerelle.common.message.DataMessageComponent;
+import org.dawb.passerelle.common.message.MessageUtils;
+
+import ptolemy.data.expr.StringParameter;
+import ptolemy.kernel.CompositeEntity;
+import ptolemy.kernel.util.IllegalActionException;
+import ptolemy.kernel.util.NameDuplicationException;
+import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+
+import com.isencia.passerelle.actor.ProcessingException;
+
+public class DatasetMean extends AbstractDataMessageTransformer {
+
+	private static final long serialVersionUID = 1L;
+	private StringParameter meanDirection;
+	private StringParameter dataName;
+
+	public DatasetMean(CompositeEntity container, String name)
+			throws NameDuplicationException, IllegalActionException {
+		super(container, name);
+
+		meanDirection = new StringParameter(this, "Mean Direction");
+		meanDirection.setExpression("0");
+		registerConfigurableParameter(meanDirection);
+
+		dataName = new StringParameter(this, "Data to Mean");
+		registerConfigurableParameter(dataName);
+
+	}
+
+	@Override
+	protected DataMessageComponent getTransformedMessage(
+			List<DataMessageComponent> cache) throws ProcessingException {
+
+		// get the data out of the message, name of the item should be specified
+		final Map<String, Serializable> data = MessageUtils.getList(cache);
+
+		// prepare the output message
+		DataMessageComponent result = new DataMessageComponent();
+
+		// put all the datasets in for reprocessing
+		for (String key : data.keySet()) {
+			result.addList(key, (AbstractDataset) data.get(key));
+		}
+
+		// get the required datasets
+		String dataset = dataName.getExpression();
+		int axis = Integer.parseInt(meanDirection.getExpression());
+
+		AbstractDataset dataDS = ((AbstractDataset) data.get(dataset)).clone();
+
+		AbstractDataset mean = dataDS.mean(axis);
+
+		mean.setName(dataDS.getName()+"_mean");
+		
+		result.addList(dataDS.getName()+"_mean", mean);
+
+		return result;
+	}
+
+	@Override
+	protected String getExtendedInfo() {
+		return "Get the mean in a direction of a dataset";
+	}
+	
+	@Override
+	protected String getOperationName() {
+		return "mean";
+	}
+
+}
