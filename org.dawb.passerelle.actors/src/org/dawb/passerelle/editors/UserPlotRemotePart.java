@@ -239,8 +239,10 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart {
 		for (String name : data.keySet()) {
 			Serializable d = data.get(name);
 			if (d instanceof AbstractDataset) {
-				final int rank = ((AbstractDataset)d).getRank();
-				if (rank==2) return (AbstractDataset)d;
+				AbstractDataset dd = (AbstractDataset)d;
+				dd.squeeze();
+				final int rank = dd.getRank();
+				if (rank==2) return dd;
 			}
 		}
 		return null;
