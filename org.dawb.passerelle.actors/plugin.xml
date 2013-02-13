@@ -356,6 +356,13 @@
    <extension
          point="org.eclipse.ui.editors">
       <editor
+            class="org.dawb.passerelle.editors.EdnaActorMultiPageEditor"
+            default="false"
+            icon="icons/edna_editor.gif"
+            id="org.dawb.passerelle.editors.ednaEditor"
+            name="Edna Editor">
+      </editor>
+      <editor
             class="org.dawb.passerelle.editors.UserInputEditor"
             default="false"
             icon="icons/application_form_magnify.png"
