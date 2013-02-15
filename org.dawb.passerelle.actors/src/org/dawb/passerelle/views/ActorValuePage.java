@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.jface.text.source.SourceViewer;
 import org.eclipse.jface.viewers.ColumnLabelProvider;
@@ -48,7 +49,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.isencia.passerelle.workbench.model.editor.ui.editpart.ActorEditPart;
-import com.isencia.passerelle.workbench.model.editor.ui.editpart.RelationEditPart;
 
 /**
  * We wire this page between the Passerelle multipage editor and the Value view which is generic
@@ -351,8 +351,8 @@ public class ActorValuePage extends Page implements ISelectionListener, IPartLis
 						updateInputsOutputs(prov.getInputVariables(), prov.getOutputVariables(), true);
 						return Status.OK_STATUS;
 					}
-				} else if (sel instanceof RelationEditPart) { // Wire
-					final Object source   = ((ActorEditPart)((RelationEditPart)sel).getSource()).getActor();
+				} else if (sel instanceof AbstractConnectionEditPart) { // Wire
+					final Object source   = ((ActorEditPart)((AbstractConnectionEditPart)sel).getSource()).getActor();
 				
 					List<IVariable> inputVariables = null;
 					if (source instanceof IVariableProvider) {
