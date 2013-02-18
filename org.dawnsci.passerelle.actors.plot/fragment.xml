@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<fragment>
+   <extension
+         point="com.isencia.passerelle.engine.actorGroups">
+      <actorgroup
+            icon="icons/folder_chart.png"
+            id="org.dawb.passerelle.actors.dawn.plottinggroup"
+            name="Plotting Actors">
+      </actorgroup>
+   </extension>
+   <extension
+         point="com.isencia.passerelle.engine.actors">
+      <actor
+            class="org.dawb.passerelle.actors.dawn.PlotImageActor"
+            group="org.dawb.passerelle.actors.dawn.plottinggroup"
+            icon="icons/chart_curve_edit.png"
+            id="org.dawb.passerelle.actors.dawn.plotimage"
+            name="Plot Image">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.RegionNormaliseActor"
+            group="org.dawb.passerelle.actors.dawn.plottinggroup"
+            icon="icons/roi_normalise.png"
+            id="org.dawb.passerelle.actors.dawn.regionNormalise"
+            name="Region Normalise">
+      </actor>
+      <!-- This actor has been objected to by the code police in favour of 
+           a format attribute of the original scalar actor
+      <actor
+            class="org.dawb.passerelle.actors.dawn.ScalarActor"
+            figureCustomizer="org.dawb.passerelle.actors.data.MathCustomizer"
+            group="org.dawb.passerelle.actors.actorgroup.maths"
+            icon="icons/scalar.png"
+            id="org.dawb.passerelle.actors.dawn.customscalar"
+            name="Format Scalar">
+      </actor>
+      -->
+      <actor
+            class="org.dawb.passerelle.actors.dawn.RegionSelectAndScale"
+            group="org.dawb.passerelle.actors.dawn.plottinggroup"
+            icon="icons/roi_select.png"
+            id="org.dawb.passerelle.actors.dawn.regionSelectandScale"
+            name="Region Select and Scale">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.FunctionActor"
+            group="org.dawb.passerelle.actors.actorgroup.maths"
+            icon="icons/fx16x16.png"
+            id="org.dawb.passerelle.actors.dawn.function"
+            name="Function">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.ImageRegridActor"
+            group="org.dawb.passerelle.actors.dawn.plottinggroup"
+            icon="icons/image_regrid.gif"
+            id="org.dawb.passerelle.actors.dawn.regridimage"
+            name="Regrid Image">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.Fitting1DActor"
+            group="org.dawb.passerelle.actors.dawn.plottinggroup"
+            icon="icons/peak-fit.png"
+            id="org.dawb.passerelle.actors.dawn.fit1d"
+            name="Fit 1D">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.RegionSelectActor"
+            color="icons/box-profile.png"
+            group="org.dawb.passerelle.actors.dawn.plottinggroup"
+            id="org.dawb.passerelle.actors.dawn.regionselect"
+            name="Region Select">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.CustomDataExportTransformer"
+            group="org.dawb.passerelle.actors.actorgroup.io"
+            icon="icons/data_export.png"
+            id="org.dawb.passerelle.actors.dawn.customdataexport"
+            name="Custom Data Export">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.FitGaussianConvolutedFermiActor"
+            group="org.dawb.passerelle.actors.dawn.plottinggroup"
+            icon="icons/fit-gaussian.png"
+            id="org.dawb.passerelle.actors.dawn.fitGaussianConvolutedFermi"
+            name="Fit Gaussian Convoluted Fermi">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.PolySmoothActor"
+            group="org.dawb.passerelle.actors.dawn.plottinggroup"
+            icon="icons/poly-smooth.png"
+            id="org.dawb.passerelle.actors.dawn.polysmooth"
+            name="Poly Smooth">
+      </actor>
+   </extension>
+
+</fragment>
