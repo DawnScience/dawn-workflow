@@ -499,7 +499,7 @@ AbstractDataMessageTransformer {
 		while (iter.hasNext()) {
 			double value = residualDS.getDouble(iter.index);
 			double disp = Math.abs(value-resMean);
-			if (disp > resStd*3) {
+			if (disp > resStd*3 || value <= 0) {
 				logger.debug(Arrays.toString(ind.getNDPosition(iter.index)));
 				int[] start = ind.getNDPosition(iter.index).clone();
 				int[] stop = start.clone();
