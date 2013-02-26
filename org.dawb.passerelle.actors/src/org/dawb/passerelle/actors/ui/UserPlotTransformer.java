@@ -28,7 +28,6 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserPlotBean;
-import org.eclipse.swt.SWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,7 +145,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 			
 			try {
 				
-				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(getModelPath(), getName(), true, SWT.COLOR_RED)}, new String[]{ActorSelectedBean.class.getName()});
+				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(getModelPath(), getName(), true, 3/**SWT.COLOUR_RED**/)}, new String[]{ActorSelectedBean.class.getName()});
 			
 				DataMessageComponent input = MessageUtils.mergeAll(cache);
 				final UserPlotBean bean = new UserPlotBean();
