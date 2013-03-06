@@ -543,7 +543,7 @@ public class MessageUtils {
 	}
 
 	/**
-	 * JEP evaluation based on scalar values.
+	 * Expression evaluation based on scalar values.
 	 * @param expression
 	 * @param comp
 	 * @return
@@ -557,7 +557,7 @@ public class MessageUtils {
 	}
 	
 	/**
-	 * JEP evaluation based on scalar values.
+	 * Expression evaluation based on scalar values.
 	 * @param expression
 	 * @param comp
 	 * @return double value of evaluation
