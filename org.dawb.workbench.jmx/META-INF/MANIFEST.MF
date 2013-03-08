@@ -1,3 +1,5 @@
+Dependency-Note: There should be no dependencies on this plugin.
+ It is a totally vanilla service interface provider.
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Jmx

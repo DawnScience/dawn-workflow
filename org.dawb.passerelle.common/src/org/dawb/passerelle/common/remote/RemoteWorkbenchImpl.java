@@ -291,7 +291,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				try {
 					
 					final IUserInputService service = (IUserInputService)ServiceManager.getService(IUserInputService.class);
-					final IRemoteWorkbenchPart part  = service.openUserInputPart(bean.getPartName(), bean.isDialog());
+					final IRemoteWorkbenchPart part = (IRemoteWorkbenchPart)service.openUserInputPart(bean.getPartName(), bean.isDialog());
 					
 					if (bean.getPartName()!=null) part.setPartName(bean.getPartName());
 					part.setQueue(queue);
@@ -347,7 +347,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				try {
 					
 					final IUserInputService service = (IUserInputService)ServiceManager.getService(IUserInputService.class);
-					final IRemoteWorkbenchPart part  = service.openUserPlotPart(bean.getPartName(), bean.isDialog());
+					final IRemoteWorkbenchPart part = (IRemoteWorkbenchPart)service.openUserPlotPart(bean.getPartName(), bean.isDialog());
 					
 					if (bean.getPartName()!=null) part.setPartName(bean.getPartName());
 					part.setQueue(queue);
@@ -399,7 +399,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				try {
 					
 					final IUserInputService service = (IUserInputService)ServiceManager.getService(IUserInputService.class);
-					final IRemoteWorkbenchPart part  = service.openDebugPart(bean.getPartName(), bean.isDialog());
+					final IRemoteWorkbenchPart part = (IRemoteWorkbenchPart)service.openDebugPart(bean.getPartName(), bean.isDialog());
 					
 					part.setQueue(queue);
 					part.setUserObject(bean); // Creates all the plotting UI in this case.
