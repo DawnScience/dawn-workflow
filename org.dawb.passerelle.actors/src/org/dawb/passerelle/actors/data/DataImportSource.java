@@ -508,7 +508,9 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			
 			final String pyName    = PythonUtils.getLegalVarName(sliceName, null);
 				
-			final AbstractDataset set = SliceUtils.getSlice(slice, null);
+			final DataHolder      dh  = LoaderFactory.getData(slice.getPath());
+			final ILazyDataset    ld  = dh.getLazyDataset(slice.getName());
+			final AbstractDataset set = SliceUtils.getSlice(ld, slice, null);
 			set.setName(pyName);
 			datasets = new HashMap<String,Serializable>(1);
 			datasets.put(pyName, set);

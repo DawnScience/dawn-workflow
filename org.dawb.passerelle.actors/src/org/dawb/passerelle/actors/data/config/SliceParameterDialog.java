@@ -21,8 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.io.IMetaData;
+import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
+import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
+import uk.ac.diamond.scisoft.analysis.monitor.IMonitor;
 
 public class SliceParameterDialog extends Dialog {
 	
@@ -51,26 +53,15 @@ public class SliceParameterDialog extends Dialog {
 	 * Sets the data which the parameter should slice.
 	 * @param dataSetName
 	 * @param filePath
+	 * @throws Exception 
 	 */
-	public void setData(final String dataSetName,
-			            final String filePath) {
+	public void setData(final String   dataSetName,
+			            final String   filePath,
+			            final IMonitor monitor) throws Exception {
 		
-		final int[] dataShape = getDataShape(dataSetName, filePath);
-		sliceComponent.setData(dataSetName, filePath, dataShape);        
-		
-	}
-
-	
-	private int[] getDataShape(String dataSetName, String filePath) {
-
-		try {
-			final IMetaData data = LoaderFactory.getMetaData(filePath, null);
-			return data.getDataShapes().get(dataSetName);
-		} catch (Exception e) {
-			logger.error("Cannot read data shape "+dataSetName, e);
-		}
-		
-		return null;
+		final DataHolder holder = LoaderFactory.getData(filePath, monitor);
+		final ILazyDataset lazy = holder.getLazyDataset(dataSetName);
+		sliceComponent.setData(lazy, dataSetName, filePath);        
 	}
 
 	public DimsDataList getDimsDataList() {

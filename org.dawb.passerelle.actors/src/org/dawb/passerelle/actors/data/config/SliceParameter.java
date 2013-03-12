@@ -14,7 +14,10 @@ import java.io.File;
 import org.dawb.common.ui.slicing.DimsDataList;
 import org.dawb.passerelle.actors.data.DataImportSource;
 import org.dawb.passerelle.common.parameter.CellEditorParameter;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -83,7 +86,12 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 				dialog.getShell().setSize(400,450); // As needed
 				dialog.getShell().setText("Create Slices for Import");
 			
-				dialog.setData(names[0], path);
+				try {
+					dialog.setData(names[0], path, null);
+				} catch (Throwable e) {
+					ErrorDialog.openError(cellEditorWindow.getShell(), "Extraction error", e.getMessage(), new Status(IStatus.ERROR, "org.dawb.passerelle.actors", "", e));
+					return null;
+				}
 				dialog.setDimsDataList((DimsDataList)getBeanFromValue(DimsDataList.class));
 				
 		        final int ok = dialog.open();
