@@ -15,6 +15,7 @@ import java.util.Queue;
 import org.dawb.common.ui.plot.IPlottingSystem;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ColumnViewer;
@@ -32,7 +33,7 @@ import uk.ac.gda.common.rcp.util.DialogUtils;
  * @author fcp94556
  *
  */
-public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRemoteWorkbenchPart.Closeable {
+public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRemoteWorkbenchPart.Closeable, IAdaptable {
 
 	private final IDeligateWorkbenchPart deligate;
 
@@ -55,6 +56,11 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRe
 		} else {
 			return container;
 		}
+	}
+	
+	public Object getAdapter(Class adapter) {
+		if (deligate instanceof IAdaptable) return ((IAdaptable)deligate).getAdapter(adapter);
+		return null;
 	}
 	
 	protected void createButtonsForButtonBar(Composite parent) {

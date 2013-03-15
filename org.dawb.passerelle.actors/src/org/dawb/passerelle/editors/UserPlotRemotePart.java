@@ -37,6 +37,7 @@ import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.UserPlotBean;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
@@ -62,7 +63,7 @@ import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
 import uk.ac.gda.common.rcp.util.GridUtils;
 
-public class UserPlotRemotePart implements IDeligateWorkbenchPart {
+public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 
 	private static Logger logger = LoggerFactory.getLogger(UserPlotRemotePart.class);
 	
@@ -278,6 +279,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart {
 
 	public void dispose() {
 			
+		if (system!=null) system.dispose();
 		if (queue!=null) {
 			queue.clear();
 			if (queue!=null) {
@@ -450,6 +452,17 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart {
 		} catch (Throwable ne) {
 			logger.error("Cannot set focus!", ne);
 		}
+	}
+
+	@Override
+	public Object getAdapter(Class adapter) {
+		if (adapter == IPlottingSystem.class) {
+			return system;
+		}
+		if (adapter == IToolPageSystem.class) {
+			return system;
+		}
+		return null;
 	}
 
 }
