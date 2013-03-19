@@ -21,6 +21,7 @@ import java.util.Map;
 import org.dawb.common.util.ExpressionUtils;
 import org.dawb.passerelle.common.DatasetConstants;
 import org.dawb.passerelle.common.message.DataMessageComponent.VALUE_TYPE;
+import org.eclipse.core.resources.IProject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -404,8 +405,9 @@ public class MessageUtils {
 		}
 		
 		if (actor!=null) {
-			if (ModelUtils.getProject(actor) != null) {
-				ret.put("project_name", ModelUtils.getProject(actor).getName());
+			IProject project = ModelUtils.getProject(actor);
+			if (project != null) {
+				ret.put("project_name", project.getName());
 			}
 			ret.put("actor_name",   actor.getName());
 		}

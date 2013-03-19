@@ -17,6 +17,14 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.osgi.framework.ServiceRegistration;
+import ptolemy.kernel.util.NamedObj;
+
+import com.isencia.constants.IPropertyNames;
+import com.isencia.passerelle.ext.ModelElementClassProvider;
+import com.isencia.passerelle.validation.version.VersionSpecification;
+
+
 
 /**
  * The activator class controls the plug-in life cycle
@@ -31,6 +39,8 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 	
+	private ServiceRegistration apSvcReg;
+
 	/**
 	 * The constructor
 	 */
@@ -43,7 +53,13 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		System.setProperty("be.isencia.home", ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
+		System.setProperty(IPropertyNames.APP_HOME, ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
+		logger.debug("Registring service for org.dawb.passerelle.actors");
+		apSvcReg = context.registerService(ModelElementClassProvider.class.getName(), new ModelElementClassProvider() {
+			public Class<? extends NamedObj> getClass(String className, VersionSpecification versionSpec) throws ClassNotFoundException {
+				return (Class<? extends NamedObj>) this.getClass().getClassLoader().loadClass(className);
+			}
+		}, null);
 		
 		try {
 			final Bundle bundle = Platform.getBundle("org.dawb.gda.extensions");

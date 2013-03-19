@@ -115,7 +115,7 @@ public class MomlTest {
 	}	
 	@Test
 	public void testValidFile2() throws Throwable {
-		testFile("src/org/dawb/passerelle/actors/test/blueport_test1.moml", true);
+		testFile("src/org/dawb/passerelle/actors/test/blueport_test1.moml", false);
 	}	
 
 	@Test

@@ -138,7 +138,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	 */
 	protected DataImportSource(CompositeEntity container, String name, boolean isFolder) throws IllegalActionException, NameDuplicationException {
 		
-		super(container, ModelUtils.findUniqueActorName(container, name));
+		super(container, ModelUtils.findUniqueActorName(container, ModelUtils.getLegalName(name)));
 		
 		relativePathParam = new Parameter(this, "Relative Path", new BooleanToken(true));
 		registerConfigurableParameter(relativePathParam);
@@ -265,7 +265,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	 */
 	private void appendQueue(final ManagedMessage triggerMsg) {
 		
-		if (getManager()!=null) {
+		if ((getManager()!=null) && (getSourcePath(triggerMsg)!=null)){
 			final File file = new File(getSourcePath(triggerMsg));
 			if (file.isDirectory()) {
 				final List<File> fileList = SortingUtils.getSortedFileList(file);

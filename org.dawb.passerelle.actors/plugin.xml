@@ -92,6 +92,13 @@
             name="Console">
       </actor>
       <actor
+            class="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
+            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            icon="icons/error.gif"
+            id="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
+            name="ErrorHandlerBySeverity">
+      </actor>
+      <actor
             class="org.dawb.passerelle.actors.PassDelay"
             group="com.isencia.passerelle.actor.actorgroup.utilities"
             icon="icons/clock.png"
@@ -449,5 +456,13 @@
             restorable="true">
       </view>
    </extension>
-
+   <extension
+         point="com.isencia.passerelle.engine.actorGroups">
+      <view
+            id="com.isencia.passerelle.actor.actorgroup.submodels"
+            name="Shared Submodels"
+            open="false"
+            priority="0">
+      </view>
+   </extension>
 </plugin>
