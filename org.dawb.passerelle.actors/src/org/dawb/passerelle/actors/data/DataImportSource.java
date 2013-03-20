@@ -611,7 +611,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			 * We load the data, this is an import actor
 			 */
 			final AbstractDataset set = getLoadedData(lazy);
-			set.setStringPolicy(AbstractDataset.STRING_SHAPE);
 			set.setName(name);
 			
 			ret.put(name, set);

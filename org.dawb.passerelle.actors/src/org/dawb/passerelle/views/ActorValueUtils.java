@@ -90,9 +90,6 @@ class ActorValueUtils {
 			Entry<String,?> entry = getEntry(i, inputs);
 			if (entry!=null) {
 				Object value = entry.getValue();
-				if (value instanceof AbstractDataset) {
-					((AbstractDataset)value).setStringPolicy(AbstractDataset.STRING_SHAPE);
-				}
 				val.setInDataType(getType(value));
 				val.setInputName(entry.getKey());
 				val.setInputValue(value);
@@ -100,9 +97,6 @@ class ActorValueUtils {
 			entry = getEntry(i, outputs);
 			if (entry!=null) {
 				Object value = entry.getValue();
-				if (value instanceof AbstractDataset) {
-					((AbstractDataset)value).setStringPolicy(AbstractDataset.STRING_SHAPE);
-				}
 				val.setOutputName(entry.getKey());
 				val.setOutDataType(getType(value));
 				val.setOutputValue(value);
