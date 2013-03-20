@@ -569,4 +569,39 @@ org.apache.commons.math.random:
          version="0.0.0"
          unpack="false"/>
 
+   <plugin
+         id="com.isencia.sherpa.commons.reduced"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.isencia.passerelle.project.repository.api"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.isencia.passerelle.editor.common"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.isencia.passerelle.project.repository.impl.filesystem"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.isencia.passerelle.workbench.starter"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
 </feature>
