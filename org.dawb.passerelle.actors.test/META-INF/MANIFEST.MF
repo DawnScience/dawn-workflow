@@ -14,7 +14,8 @@ Require-Bundle: org.eclipse.ui,
  com.isencia.passerelle.workbench.model.ui;bundle-version="1.0.0",
  org.eclipse.core.resources;bundle-version="3.6.0",
  org.dawb.workbench.jmx;bundle-version="0.8.2",
- org.dawb.passerelle.common
+ org.dawb.passerelle.common,
+ com.isencia.passerelle.editor.common;bundle-version="8.3.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Import-Package: com.isencia.passerelle.workbench.model.launch,
