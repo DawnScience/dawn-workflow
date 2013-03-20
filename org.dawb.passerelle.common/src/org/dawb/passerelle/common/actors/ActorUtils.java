@@ -21,7 +21,6 @@ import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.swt.SWT;
 import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -114,9 +113,9 @@ public class ActorUtils {
 			
 			IClassLoaderService service = (IClassLoaderService)Activator.getService(IClassLoaderService.class);
 			
-			ActorSelectedBean selBean = new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), true, SWT.COLOR_MAGENTA);
+			ActorSelectedBean selBean = new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), true, 11/**SWT.COLOR_MAGENTA**/);
 			selBean.setPortName(bean.getPortName());
-			selBean.setPortColorCode(SWT.COLOR_DARK_MAGENTA);
+			selBean.setPortColorCode(11/**SWT.COLOR_MAGENTA**/);
 			try {
 				if (service!=null) service.setDataAnalysisClassLoaderActive(true);
 					
@@ -202,7 +201,8 @@ public class ActorUtils {
 			final MBeanServerConnection client = ActorUtils.getWorkbenchConnection();
 			if (client==null) return;
 			
-			client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), isExecuting, SWT.COLOR_BLUE)}, new String[]{ActorSelectedBean.class.getName()});
+			final ActorSelectedBean bean = new ActorSelectedBean(actor.getContainer().getSource(), actor.getName(), isExecuting, 9 /**SWT.COLOR_BLUE**/);
+			client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{bean}, new String[]{ActorSelectedBean.class.getName()});
 		
 		} catch (Exception ignored) {
 			logger.trace("Cannot set actor selected", ignored);
