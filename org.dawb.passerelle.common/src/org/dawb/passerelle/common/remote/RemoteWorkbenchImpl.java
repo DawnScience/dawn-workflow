@@ -470,9 +470,9 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
                     if (ed!=null) {
                     	ed.setActorSelected(bean.getActorName(), bean.isSelected(), bean.getColorCode());
                     	
-//                    	if (bean.getPortName()!=null) {
-//                    		ed.setPortSelected(bean.getActorName(), bean.getPortName(), bean.isSelected(), bean.getPortColorCode());
-//                    	}
+                    	if (bean.getPortName()!=null) {
+                    		ed.setPortSelected(bean.getActorName(), bean.getPortName(), bean.isSelected(), bean.getPortColorCode());
+                    	}
                     }
 				    
 				} catch (Exception e) {
