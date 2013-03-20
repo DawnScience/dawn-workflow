@@ -17,7 +17,8 @@ Require-Bundle: org.eclipse.core.runtime,
  com.isencia.passerelle.workbench.model.editor.ui;bundle-version="1.0.0",
  com.isencia.passerelle.workbench.model.ui;bundle-version="1.0.0",
  ptolemy.core;bundle-version="7.0.1",
- uk.ac.gda.common.rcp;bundle-version="1.2.0"
+ uk.ac.gda.common.rcp;bundle-version="1.2.0",
+ com.isencia.passerelle.editor.common;bundle-version="8.3.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.dawb.passerelle.common,

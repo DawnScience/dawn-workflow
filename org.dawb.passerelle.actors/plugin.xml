@@ -52,6 +52,13 @@
             open="false"
             priority="5">
       </actorgroup>
+      <actorgroup
+            icon="icons/error.gif"
+            id="com.isencia.passerelle.actor.actorgroup.errorhandling"
+            name="Error handlers"
+            open="false"
+            priority="4">
+      </actorgroup>
    </extension>
    <extension
          name="General and Other Actors"
@@ -93,10 +100,10 @@
       </actor>
       <actor
             class="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
-            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            group="com.isencia.passerelle.actor.actorgroup.errorhandling"
             icon="icons/error.gif"
             id="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
-            name="ErrorHandlerBySeverity">
+            name="Error handler by severity">
       </actor>
       <actor
             class="org.dawb.passerelle.actors.PassDelay"
