@@ -14,13 +14,19 @@ import java.util.Collection;
 import javax.management.MBeanServerConnection;
 
 import org.dawb.passerelle.common.Activator;
-import org.dawb.passerelle.common.actors.ActorUtils;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 
-import com.isencia.passerelle.actor.Actor;
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.core.PasserelleException.Severity;
 
+/**
+ * This class is used to broadcast a ProcessingException with the DataMessageComponent.
+ * It does not have to be used when sending a ProcessingException, however if it is,
+ * actors connecting to the error port such as the MessageSink can expand values from
+ * the message in their error messages.
+ * 
+ * @author fcp94556
+ *
+ */
 public class DataMessageException extends ProcessingException {
 
 	/**
