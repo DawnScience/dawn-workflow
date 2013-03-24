@@ -92,6 +92,13 @@
             id="org.dawb.passerelle.actors.dawn.polysmooth"
             name="Poly Smooth">
       </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.FunctionToDatasetActor"
+            group="org.dawb.passerelle.actors.actorgroup.maths"
+            icon="icons/fx16x16.png"
+            id="org.dawb.passerelle.actors.dawn.function_to_dataset"
+            name="FunctionToDataset">
+      </actor>
    </extension>
 
 </fragment>
