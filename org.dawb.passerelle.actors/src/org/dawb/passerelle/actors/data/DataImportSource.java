@@ -119,6 +119,19 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	
 	private List<TriggerObject> fileQueue;
 
+	/**
+	 * Required because sometimes the uk.ac.diamond.scisoft.analysis.osgi
+	 * does not run in the workflow run configuration.
+	 */
+	static {
+		try {
+		    for (String ext : H5Loader.EXT) {
+			    LoaderFactory.registerLoader(ext, H5Loader.class,0);
+			}
+		} catch (Exception ne) {
+			logger.error("Cannot ensure that H5Loader is the default!", ne);
+		}
+	}
  
 	/**
 	 * 
