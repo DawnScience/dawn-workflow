@@ -53,7 +53,7 @@
             priority="5">
       </actorgroup>
       <actorgroup
-            icon="icons/error.gif"
+            icon="icons/folder_error.gif"
             id="com.isencia.passerelle.actor.actorgroup.errorhandling"
             name="Error handlers"
             open="false"
@@ -97,13 +97,6 @@
             icon="icons/console.gif"
             id="org.dawb.passerelle.actors.console"
             name="Console">
-      </actor>
-      <actor
-            class="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
-            group="com.isencia.passerelle.actor.actorgroup.errorhandling"
-            icon="icons/error.gif"
-            id="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
-            name="Error handler by severity">
       </actor>
       <actor
             class="org.dawb.passerelle.actors.PassDelay"
@@ -359,6 +352,30 @@
             icon="icons/console.gif"
             id="org.dawb.passerelle.actors.hardware.telnet"
             name="Telnet">
+      </actor>
+   </extension>
+   <extension
+         point="com.isencia.passerelle.engine.actors">
+      <actor
+            class="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
+            group="com.isencia.passerelle.actor.actorgroup.errorhandling"
+            icon="icons/error.gif"
+            id="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
+            name="Error handler by severity">
+      </actor>
+      <actor
+            class="com.isencia.passerelle.actor.error.ErrorHandlerByCausingActor"
+            group="com.isencia.passerelle.actor.actorgroup.errorhandling"
+            icon="icons/error.gif"
+            id="com.isencia.passerelle.actor.error.ErrorHandlerByCausingActor"
+            name="Error handler by causing actor">
+      </actor>
+      <actor
+            class="com.isencia.passerelle.actor.error.ErrorHandlerByCodeRange"
+            group="com.isencia.passerelle.actor.actorgroup.errorhandling"
+            icon="icons/error.gif"
+            id="com.isencia.passerelle.actor.error.ErrorHandlerByCodeRange"
+            name="Error handler by code range">
       </actor>
    </extension>
    <extension
