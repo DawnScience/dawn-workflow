@@ -9,7 +9,6 @@
  */ 
 package org.dawb.passerelle.actors.ui;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,7 +87,7 @@ public class MessageSink extends AbstractDataMessageSink {
 			}
 			
 		}, SWT.SINGLE);
-		messageType.setExpression(MessageDialog.INFORMATION+"");
+		messageType.setExpression(MessageDialog.ERROR+"");
 		registerConfigurableParameter(messageType);
 		
 		messageParam = new StringParameter(this, "Message");
