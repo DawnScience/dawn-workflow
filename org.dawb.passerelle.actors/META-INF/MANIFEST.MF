@@ -35,7 +35,8 @@ Require-Bundle: org.eclipse.ui,
  com.isencia.sherpa.commons.reduced;bundle-version="6.2.5",
  com.isencia.passerelle.editor.common;bundle-version="8.3.0",
  com.isencia.passerelle.project.repository.api;bundle-version="8.3.0",
- ncsa.hdf;bundle-version="2.8.0"
+ ncsa.hdf;bundle-version="2.8.0",
+ org.dawnsci.plotting.api;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
 Import-Package: org.apache.commons.beanutils,

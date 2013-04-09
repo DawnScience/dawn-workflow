@@ -17,7 +17,6 @@ import java.util.Map;
 import javax.management.MBeanServerConnection;
 
 import org.dawb.common.services.IClassLoaderService;
-import org.dawb.common.ui.plot.tool.ToolPageFactory;
 import org.dawb.common.util.list.ListUtils;
 import org.dawb.passerelle.common.Activator;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
@@ -28,6 +27,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserPlotBean;
+import org.dawnsci.plotting.api.tool.ToolPageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

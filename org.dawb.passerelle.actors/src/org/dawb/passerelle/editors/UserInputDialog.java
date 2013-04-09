@@ -12,9 +12,9 @@ package org.dawb.passerelle.editors;
 import java.util.Map;
 import java.util.Queue;
 
-import org.dawb.common.ui.plot.IPlottingSystem;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
+import org.dawnsci.plotting.api.IPlottingSystem;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IDialogConstants;
