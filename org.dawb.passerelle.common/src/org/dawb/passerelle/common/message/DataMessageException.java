@@ -74,7 +74,7 @@ public class DataMessageException extends ProcessingException {
 			DataMessageComponent comp, Throwable rootException) {
 		super(errorCode, message, modelElement, msgContext, rootException);
 		this.dataMessageComponent = comp;
-		dataMessageComponent.putScalar("message_text", message);
+		dataMessageComponent.putScalar("message_text", "Actor: " + modelElement.getFullName() + "\n\n" + message);
 		dataMessageComponent.setError(true);
 		if (rootException != null)
 			dataMessageComponent.putScalar("exception_text", rootException
