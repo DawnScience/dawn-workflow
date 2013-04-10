@@ -31,9 +31,9 @@ import org.dawnsci.plotting.api.region.IRegion;
 import org.dawnsci.plotting.api.region.RegionUtils;
 import org.dawnsci.plotting.api.tool.IToolChangeListener;
 import org.dawnsci.plotting.api.tool.IToolPage;
+import org.dawnsci.plotting.api.tool.IToolPage.ToolPageRole;
 import org.dawnsci.plotting.api.tool.IToolPageSystem;
 import org.dawnsci.plotting.api.tool.ToolChangeEvent;
-import org.dawnsci.plotting.api.tool.IToolPage.ToolPageRole;
 import org.dawnsci.plotting.api.trace.IImageTrace;
 import org.dawnsci.plotting.api.trace.ILineTrace;
 import org.dawnsci.plotting.api.trace.ITrace;
@@ -60,6 +60,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
 import uk.ac.gda.common.rcp.util.GridUtils;
 
@@ -154,7 +155,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 			if (bean.getDataNames()!=null && !bean.getDataNames().isEmpty()) {
 				data.keySet().retainAll(bean.getDataNames());
 			}
-			final AbstractDataset image = getFirst2DDataset(data);
+			final IDataset image = getFirst2DDataset(data);
 			// TODO Other plotting modes
 			// TODO Plot title?
 			if (image!=null) { // We plot in 2D
@@ -224,12 +225,12 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		main.layout(main.getChildren());
 	}
 
-	private List<AbstractDataset> getAxes(UserPlotBean bean) {
+	private List<IDataset> getAxes(UserPlotBean bean) {
 		final List<String>    axes  = bean.getAxesNames();
 		if (axes==null) return null;
 		if (!bean.getData().containsKey(axes.get(0))) return null;
 		if (!bean.getData().containsKey(axes.get(1))) return null;
-		return Arrays.asList((AbstractDataset)bean.getData().get(axes.get(0)), (AbstractDataset)bean.getData().get(axes.get(1)));
+		return Arrays.asList((IDataset)bean.getData().get(axes.get(0)), (IDataset)bean.getData().get(axes.get(1)));
 	}
 	private AbstractDataset getXAxis(UserPlotBean bean) {
 		final List<String>    axes  = bean.getAxesNames();
@@ -250,8 +251,8 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		}
 		return null;
 	}
-	private List<AbstractDataset> get1DDatasets(Map<String, Serializable> data) {
-		List<AbstractDataset> ret = new ArrayList<AbstractDataset>(7);
+	private List<IDataset> get1DDatasets(Map<String, Serializable> data) {
+		List<IDataset> ret = new ArrayList<IDataset>(7);
 		for (String name : data.keySet()) {
 			Serializable d = data.get(name);
 			if (d instanceof AbstractDataset) {
@@ -356,20 +357,20 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 					IImageTrace image = (IImageTrace)iTrace;
 					if (image.getAxes()!=null) {
 						ret.clearAxisNames();
-					    final List<AbstractDataset> axes = image.getAxes();
-					    for (AbstractDataset axis : axes) {
+					    final List<IDataset> axes = image.getAxes();
+					    for (IDataset axis : axes) {
 						    ret.addList(axis.getName(), axis);
 						    ret.addAxisName(axis.getName());
 					    }
 					}
-					AbstractDataset data =  iTrace.getData();
+					IDataset data =  iTrace.getData();
 					data.setName(image.getName());
 					data.setMetadata(null); // Gives some error with Serialization with Diffraction metadata.
 					ret.addList(image.getName(), data);
 
 				} else if (iTrace instanceof ILineTrace) { 
 					ILineTrace line = (ILineTrace)iTrace;
-					AbstractDataset data =  line.getYData();
+					IDataset data =  line.getYData();
  				    data.setName(line.getName());
 					ret.addList(line.getName(), data);
 				    
