@@ -21,6 +21,7 @@ import java.util.Queue;
 import org.dawb.common.ui.plot.AbstractPlottingSystem;
 import org.dawb.common.ui.plot.PlottingFactory;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
+import org.dawb.common.ui.plot.region.RegionService;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.UserPlotBean;
@@ -28,7 +29,6 @@ import org.dawnsci.plotting.api.EmptyWorkbenchPart;
 import org.dawnsci.plotting.api.IPlottingSystem;
 import org.dawnsci.plotting.api.PlotType;
 import org.dawnsci.plotting.api.region.IRegion;
-import org.dawnsci.plotting.api.region.RegionUtils;
 import org.dawnsci.plotting.api.tool.IToolChangeListener;
 import org.dawnsci.plotting.api.tool.IToolPage;
 import org.dawnsci.plotting.api.tool.IToolPage.ToolPageRole;
@@ -170,7 +170,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 			for (String roiName : bean.getRois().keySet()) {
 				final ROIBase roi = (ROIBase)bean.getRois().get(roiName);
 				try {
-					IRegion region = RegionUtils.createRegion(system, roi, roiName);
+					IRegion region = RegionService.createRegion(system, roi, roiName);
 					if (region==null) {
 						logger.error("Cannot create region '"+roiName+"' with ROI "+roi);
 					} else {
@@ -385,7 +385,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		final Collection<IRegion> regions = system.getRegions();
 		if (regions!=null) {
 			for (IRegion iRegion : regions) {
-                ret.addRoi(iRegion.getName(), iRegion.getROI());
+                ret.addRoi(iRegion.getName(), (ROIBase)iRegion.getROI());
 			}
 		}
 
