@@ -20,8 +20,8 @@ import java.util.Queue;
 
 import org.dawb.common.ui.plot.AbstractPlottingSystem;
 import org.dawb.common.ui.plot.PlottingFactory;
-import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.common.ui.plot.region.RegionService;
+import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.UserPlotBean;
