@@ -9,28 +9,19 @@ import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.roi.ROIParameter;
 
-import com.isencia.passerelle.actor.ProcessingException;
-
-import ptolemy.actor.Actor;
-import ptolemy.actor.Director;
-import ptolemy.actor.Initializable;
-import ptolemy.actor.Manager;
-import ptolemy.actor.Receiver;
-import ptolemy.actor.util.FunctionDependency;
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
-import ptolemy.kernel.util.InvalidStateException;
 import ptolemy.kernel.util.NameDuplicationException;
-import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
-import uk.ac.diamond.scisoft.analysis.roi.ROIProfile;
+import uk.ac.diamond.scisoft.analysis.roi.IROI;
 import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
+
+import com.isencia.passerelle.actor.ProcessingException;
 
 public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 
@@ -91,7 +82,7 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		
 		// check the roi list, and see if one exists
 		try {
-			Map<String, ROIBase> rois = MessageUtils.getROIs(cache);
+			Map<String, IROI> rois = MessageUtils.getROIs(cache);
 			
 			if(rois.containsKey(roiName.getExpression())) {
 				if (rois.get(roiName.getExpression()) instanceof RectangularROI) {
@@ -194,7 +185,7 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		//TODO this is an approximate value, should probably be corrected.
 		AbstractDataset k = Maths.sqrt(bindingEnergy).imultiply(0.51168);
 		
-		// Finally calculate k paralell
+		// Finally calculate k parallel
 		AbstractDataset kParallel = Maths.multiply(k, Maths.sin(Maths.toRadians(angleRegion)));
 		
 		// Return the calculated values

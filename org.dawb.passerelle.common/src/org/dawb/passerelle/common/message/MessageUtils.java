@@ -31,7 +31,7 @@ import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.MetaDataAdapter;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
+import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageException;
@@ -258,7 +258,7 @@ public class MessageUtils {
 		final Collection<String> keys = comp.getRois().keySet();
 		for (String key : keys) {
 			Object object = comp.getRois().get(key);
-			if (object instanceof ROIBase) ret.put(key, (Serializable)object);
+			if (object instanceof IROI) ret.put(key, (Serializable)object);
 		}
 		return ret;
 	}
@@ -570,14 +570,14 @@ public class MessageUtils {
         return ExpressionUtils.evaluateExpression(expression, comp.getScalar());
 	}
 
-	public static Map<String, ROIBase> getROIs(final List<DataMessageComponent> cache) throws Exception {
-		Map<String, ROIBase> rois = new LinkedHashMap<String,ROIBase>(1);
+	public static Map<String, IROI> getROIs(final List<DataMessageComponent> cache) throws Exception {
+		Map<String, IROI> rois = new LinkedHashMap<String,IROI>(1);
 		for (DataMessageComponent message : cache) {
 			Map<String, Serializable> map = message.getROIs();
 			if(map!=null){
 				for (String key : map.keySet()) {
-					if (map.get(key) instanceof ROIBase) {
-						rois.put(key, (ROIBase)map.get(key));
+					if (map.get(key) instanceof IROI) {
+						rois.put(key, (IROI)map.get(key));
 					}
 				}
 			}

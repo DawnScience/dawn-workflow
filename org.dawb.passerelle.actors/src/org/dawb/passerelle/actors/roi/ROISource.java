@@ -27,7 +27,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
+import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.message.ManagedMessage;
@@ -79,7 +79,7 @@ public class ROISource extends AbstractDataMessageSource {
 		
 	}
 	
-	public static ROISource createSource(String name, ROIBase roi) throws NameDuplicationException, IllegalActionException {
+	public static ROISource createSource(String name, IROI roi) throws NameDuplicationException, IllegalActionException {
 		ROISource source = new ROISource(new CompositeEntity(), name);
 		source.roiParam.setRoi(roi);
 		return source;
@@ -125,9 +125,9 @@ public class ROISource extends AbstractDataMessageSource {
 	public List<IVariable> getOutputVariables() {
 		try {
 			final String  strName  = ((StringToken) nameParam.getToken()).stringValue();
-			final ROIBase roi      = roiParam.getRoi();
+			final IROI roi      = roiParam.getRoi();
 		    final List<IVariable> ret = new ArrayList<IVariable>(1);
-		    ret.add(new Variable(strName, VARIABLE_TYPE.ROI, roi, ROIBase.class));
+		    ret.add(new Variable(strName, VARIABLE_TYPE.ROI, roi, IROI.class));
 		    return ret;
 		} catch (Exception e) {
 			logger.error("Cannot create outputs for "+getName(), e);

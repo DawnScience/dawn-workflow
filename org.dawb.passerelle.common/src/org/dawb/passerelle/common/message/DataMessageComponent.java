@@ -21,7 +21,7 @@ import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
+import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
 /**
  * This class is similar to a DataHolder in the scisoft diamond
@@ -370,14 +370,14 @@ public class DataMessageComponent implements Serializable {
 	
 	
 	// ROI Methods
-	public void addROI(String name, ROIBase roi) {
+	public void addROI(String name, IROI roi) {
 		if (rois == null) rois = new LinkedHashMap<String,Serializable>(1);
 		rois.put(name, roi);
 	}
 	
-	public ROIBase getROI(String name) {
+	public IROI getROI(String name) {
 		if (rois == null) return null;
-		return (ROIBase) rois.get(name);
+		return (IROI) rois.get(name);
 	}
 	
 	public Map<String,Serializable> getROIs(){

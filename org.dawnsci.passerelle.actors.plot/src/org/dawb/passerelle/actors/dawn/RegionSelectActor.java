@@ -14,7 +14,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
+import uk.ac.diamond.scisoft.analysis.roi.IROI;
 import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
 
 import com.isencia.passerelle.actor.ProcessingException;
@@ -47,7 +47,7 @@ public class RegionSelectActor extends AbstractDataMessageTransformer {
 
 		// check the roi list, and see if one exists
 		try {
-			Map<String, ROIBase> rois = MessageUtils.getROIs(cache);
+			Map<String, IROI> rois = MessageUtils.getROIs(cache);
 
 			if(rois.containsKey(roiName.getExpression())) {
 				if (rois.get(roiName.getExpression()) instanceof RectangularROI) {

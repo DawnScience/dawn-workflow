@@ -41,9 +41,9 @@ import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.rcp.plotting.PlottingMode;
 import uk.ac.diamond.scisoft.analysis.roi.EllipticalFitROI;
 import uk.ac.diamond.scisoft.analysis.roi.EllipticalROI;
+import uk.ac.diamond.scisoft.analysis.roi.IROI;
 import uk.ac.diamond.scisoft.analysis.roi.LinearROI;
 import uk.ac.diamond.scisoft.analysis.roi.PointROI;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
 import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
 import uk.ac.diamond.scisoft.analysis.roi.SectorROI;
 
@@ -142,7 +142,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 		
 	}
 
-	private ROIBase myROI;
+	private IROI myROI;
 
 	@Override
 	protected DataMessageComponent getTransformedMessage(final 
@@ -247,18 +247,18 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					plottingSystem = (AbstractPlottingSystem)PlottingFactory.getPlottingSystem(plotName);
 
 					//Create Region(s)
-					Map<String, ROIBase> rois = null;
+					Map<String, IROI> rois = null;
 					try {
 						rois = MessageUtils.getROIs(cache);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					Set<Map.Entry<String, ROIBase>> roisSet = rois.entrySet();
+					Set<Map.Entry<String, IROI>> roisSet = rois.entrySet();
 					if(!roisSet.isEmpty()){
-						Iterator<Entry<String, ROIBase>> it = roisSet.iterator();
+						Iterator<Entry<String, IROI>> it = roisSet.iterator();
 						while(it.hasNext()){
-							Entry<String,ROIBase> entry = it.next();
+							Entry<String,IROI> entry = it.next();
 							String roiname = entry.getKey();
 							myROI = entry.getValue();
 							createRegion(plottingSystem, myROI, roiname, boxTypeROI);
@@ -274,7 +274,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 		return mc;
 	}
 
-	private void createRegion(final AbstractPlottingSystem plottingSystem, final ROIBase roi, final String roiName, final String boxType){
+	private void createRegion(final AbstractPlottingSystem plottingSystem, final IROI roi, final String roiName, final String boxType){
 		try {
 			if(roi instanceof LinearROI){
 				LinearROI lroi = (LinearROI)roi;

@@ -19,10 +19,9 @@ import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.views.ActorValueObject.ActorValueDataType;
 import org.dawb.workbench.jmx.UserDebugBean;
 
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
+import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
 class ActorValueUtils {
 
@@ -110,7 +109,7 @@ class ActorValueUtils {
 	private static ActorValueDataType getType(Object value) {
 		if (value instanceof IDataset || value instanceof ILazyDataset) {
 			return ActorValueDataType.LIST;
-		} else if (value instanceof ROIBase) {
+		} else if (value instanceof IROI) {
 			return ActorValueDataType.ROI;
 		} else {
 			return ActorValueDataType.SCALAR;

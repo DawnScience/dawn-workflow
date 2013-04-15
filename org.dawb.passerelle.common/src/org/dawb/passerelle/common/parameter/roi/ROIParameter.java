@@ -21,7 +21,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
+import uk.ac.diamond.scisoft.analysis.roi.IROI;
 import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
 
 import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
@@ -89,7 +89,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	public String getRendererText() {
 		if (getExpression()==null || "".equals(getExpression())) return "Click to define roi...";
 		try {
-			final ROIBase roi = getROIFromValue();
+			final IROI roi = getROIFromValue();
 			return roi.getClass().getSimpleName()+"  "+roi.toString();
 		} catch (Throwable e) {
 			return "Click to define roi...";
@@ -100,7 +100,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	 * Decode the roi from a string.
 	 * @return
 	 */
-	private ROIBase getROIFromValue() throws IOException, ClassNotFoundException{
+	private IROI getROIFromValue() throws IOException, ClassNotFoundException{
 		
 		if (getExpression()==null || "".equals(getExpression())) return new RectangularROI();
 
@@ -108,15 +108,15 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
         
 	}
 	
-	private ROIBase getROIFromValue(String expression) throws IOException, ClassNotFoundException {
+	private IROI getROIFromValue(String expression) throws IOException, ClassNotFoundException {
 		final ClassLoader original = Thread.currentThread().getContextClassLoader();
 		ObjectInputStream ois=null;
 		try {
-			Thread.currentThread().setContextClassLoader(ROIBase.class.getClassLoader());
+			Thread.currentThread().setContextClassLoader(IROI.class.getClassLoader());
 			byte[] data = Base64Decoder.decode(getExpression());
 			ois = new ObjectInputStream(new ByteArrayInputStream(data));
 			Object o  = ois.readObject();
-			return (ROIBase)o;
+			return (IROI)o;
         } finally {
 			Thread.currentThread().setContextClassLoader(original);
 			if (ois!=null) ois.close();
@@ -124,7 +124,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	}
 
 
-	public ROIBase getRoi() {
+	public IROI getRoi() {
 		if (getExpression()==null || "".equals(getExpression())) return null;
 		try {
 			return getROIFromValue(getExpression());
@@ -138,7 +138,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	 * @param roi
 	 * @return
 	 */
-	private String getValueFromROI(final ROIBase roi) throws IOException {
+	private String getValueFromROI(final IROI roi) throws IOException {
 		if (roi==null) return "";
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -147,7 +147,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
         return new String(Base64Encoder.encode(baos.toByteArray()));
 	}
 
-	public void setRoi(ROIBase roi) {
+	public void setRoi(IROI roi) {
 		try {
 			setExpression(getValueFromROI(roi));
 		} catch (IOException e) {

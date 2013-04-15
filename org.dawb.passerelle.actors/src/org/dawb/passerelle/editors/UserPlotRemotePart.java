@@ -61,7 +61,7 @@ import org.slf4j.LoggerFactory;
 
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
+import uk.ac.diamond.scisoft.analysis.roi.IROI;
 import uk.ac.gda.common.rcp.util.GridUtils;
 
 public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
@@ -168,7 +168,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 	    // Regions
 		if (bean.getRois()!=null) {
 			for (String roiName : bean.getRois().keySet()) {
-				final ROIBase roi = (ROIBase)bean.getRois().get(roiName);
+				final IROI roi = (IROI)bean.getRois().get(roiName);
 				try {
 					IRegion region = RegionService.createRegion(system, roi, roiName);
 					if (region==null) {
@@ -385,7 +385,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		final Collection<IRegion> regions = system.getRegions();
 		if (regions!=null) {
 			for (IRegion iRegion : regions) {
-                ret.addRoi(iRegion.getName(), (ROIBase)iRegion.getROI());
+                ret.addRoi(iRegion.getName(), iRegion.getROI());
 			}
 		}
 
@@ -456,7 +456,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 	}
 
 	@Override
-	public Object getAdapter(Class adapter) {
+	public Object getAdapter(@SuppressWarnings("rawtypes") Class adapter) {
 		if (adapter == IPlottingSystem.class) {
 			return system;
 		}
