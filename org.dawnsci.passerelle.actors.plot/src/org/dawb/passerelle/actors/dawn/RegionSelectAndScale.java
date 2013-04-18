@@ -16,6 +16,7 @@ import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.InterpolatorUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
@@ -141,7 +142,6 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		final int xInc = roi.getPoint()[0]<roi.getEndPoint()[0] ? 1 : -1;
 		
 		AbstractDataset dataRegion = dataDS;
-		AbstractDataset angleRegion = anglesDS;
 		AbstractDataset energyRegion = energiesDS;
 		
 		int angleStart = (int) roi.getPoint()[1];
@@ -153,12 +153,6 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 				new int[] { angleStop, energyStop },
 				new int[] {yInc, xInc});
 		
-		angleRegion = angleRegion.getSlice(new int[] { angleStart },
-				new int[] { angleStop },
-				new int[] {yInc});
-		angleRegion = angleRegion.reshape(angleRegion.getShape()[0],1);
-		angleRegion = DatasetUtils.tile(angleRegion, dataRegion.getShape()[1]);
-		
 		
 		energyRegion = energyRegion.getSlice(new int[] {energyStart },
 				new int[] {energyStop },
@@ -169,10 +163,12 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		
 		
 		// Correct for initial offsets
-		angleRegion.isubtract(angleOffset);
 		energyRegion.isubtract(energyOffset);
 		
+		// Now would be a good place to make some of the corrections required
+		
 		// No calculate the energies
+		// TODO could be optimised
 		DoubleDataset photonEnergyDS = DoubleDataset.ones(energyRegion.getShape()).imultiply(photonEnergy);
 		DoubleDataset workFunctionDS = DoubleDataset.ones(energyRegion.getShape()).imultiply(workFunction);
 		
@@ -185,20 +181,46 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		//TODO this is an approximate value, should probably be corrected.
 		AbstractDataset k = Maths.sqrt(bindingEnergy).imultiply(0.51168);
 		
-		// Finally calculate k parallel
-		AbstractDataset kParallel = Maths.multiply(k, Maths.sin(Maths.toRadians(angleRegion)));
+		// could correct for K now
+		double kStep = k.peakToPeak().doubleValue()/(dataRegion.getShape()[1]-1);
+		AbstractDataset kAxis = AbstractDataset.arange(k.min().doubleValue()-(kStep), k.max().doubleValue()+(kStep), kStep, AbstractDataset.FLOAT32);
+		result.addList("k_axis", kAxis);
 		
+		AbstractDataset regrid = InterpolatorUtils.remapAxis(dataRegion, 1, k, kAxis);
+		
+		// recreate K axis correctly for the process
+		
+		AbstractDataset newK  = new DoubleDataset(kAxis);
+		newK = newK.reshape(newK.getShape()[0],1);
+		newK = DatasetUtils.tile(newK, regrid.getShape()[0]);
+		newK = DatasetUtils.transpose(newK);
+		
+		// need to calculate angleRegion here
+		AbstractDataset angleRegion = anglesDS;
+		angleRegion.isubtract(angleOffset);
+		angleRegion = angleRegion.getSlice(new int[] { angleStart },
+				new int[] { angleStop },
+				new int[] {yInc});
+		angleRegion = angleRegion.reshape(angleRegion.getShape()[0],1);
+		angleRegion = DatasetUtils.tile(angleRegion, newK.getShape()[1]);
+		
+		
+		// Finally calculate k parallel
+		AbstractDataset kParallel = Maths.multiply(newK, Maths.sin(Maths.toRadians(angleRegion)));
+		
+		// make axis correction to regrid here
+		double KPStep = kParallel.peakToPeak().doubleValue()/(dataRegion.getShape()[0]-1);
+		AbstractDataset kParaAxis = AbstractDataset.arange(kParallel.min().doubleValue()-(KPStep), kParallel.max().doubleValue()+(KPStep), KPStep, AbstractDataset.FLOAT32);
+		result.addList("k_parallel_axis", kParaAxis);
+		
+		regrid = InterpolatorUtils.remapAxis(regrid, 0, kParallel, kParaAxis);
+			
 		// Return the calculated values
 		result.addList("region", dataRegion);
 		result.addList("k", k);
 		result.addList("k_parallel", kParallel);
-		
-		double kStep = k.peakToPeak().doubleValue()/(dataRegion.getShape()[1]-1);
-		AbstractDataset kAxis = AbstractDataset.arange(k.min().doubleValue()-(kStep), k.max().doubleValue()+(kStep), kStep, AbstractDataset.FLOAT32);
-		result.addList("k_axis", kAxis);
-		double KPStep = kParallel.peakToPeak().doubleValue()/(dataRegion.getShape()[0]-1);
-		AbstractDataset kParaAxis = AbstractDataset.arange(kParallel.min().doubleValue()-(KPStep), kParallel.max().doubleValue()+(KPStep), KPStep, AbstractDataset.FLOAT32);
-		result.addList("k_parallel_axis", kParaAxis);
+		result.addList("regrid", regrid);
+	
 		
 		// do the correction and put that into the pipeline., with a name that should be specified.
 		return result;
