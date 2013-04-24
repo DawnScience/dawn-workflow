@@ -43,6 +43,7 @@ public class SliceParameterDialog extends Dialog {
 		this.sliceComponent = new SliceComponent("org.dawb.workbench.views.h5GalleryView");
 		final Control slicer = sliceComponent.createPartControl(parent);
 		slicer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+		sliceComponent.setAxesVisible(false);
 
 		sliceComponent.setVisible(true);
 		
