@@ -75,6 +75,12 @@ public class DataMessageComponent implements Serializable {
 	private Map<String,Serializable> functions;
 	
 	/**
+	 * User objects, any serializable object.
+	 */
+	private Map<String,Object> userObjects;
+
+	
+	/**
 	 * A set of source meta data which may be altered
 	 * to add more information if needed.
 	 */
@@ -414,6 +420,17 @@ public class DataMessageComponent implements Serializable {
 	public void addFunction(String name, AFunction function) {
 		if (functions == null) functions = new LinkedHashMap<String,Serializable>(1);
 		functions.put(name, function);
+	}
+	
+	// Function Methods
+	public void addUserObject(String name, Object userObject) {
+		if (userObjects == null) userObjects = new LinkedHashMap<String,Object>(1);
+		userObjects.put(name, userObject);
+	}
+
+	public Object getUserObject(String name) {
+		if (userObjects == null) return null;
+		return userObjects.get(name);
 	}
 	
 	public AFunction getFunction(String name) {
