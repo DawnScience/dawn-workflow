@@ -181,9 +181,14 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 					input.addRois(uRet.getRois());
 					input.addFunctions(uRet.getFunctions());
 									
-	                // TODO Custom tool data?
-					// Serializable toolData = uRet.getToolData();
-					// Not needed for FunctionTool, maybe for fitting?
+					Serializable toolData = uRet.getToolData();
+					if ((toolData != null) && (toolData instanceof UserPlotBean)) {
+						UserPlotBean plotBean = (UserPlotBean) toolData;
+						input.addScalar(plotBean.getScalar());				
+						input.addList(plotBean.getData());
+						input.addRois(plotBean.getRois());
+						input.addFunctions(plotBean.getFunctions());
+					}
 					
 					return input;
 					
