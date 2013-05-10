@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.dawb.common.util.io.FileUtils;
-import org.dawb.gda.extensions.loaders.H5Loader;
 import org.dawb.passerelle.actors.data.DataImportSource;
 import org.dawb.passerelle.actors.data.FolderImportSource;
 import org.dawb.passerelle.actors.data.SpecImportSource;
 import org.dawb.passerelle.actors.scripts.PythonScript;
+import org.dawnsci.io.h5.H5Loader;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.slf4j.Logger;
