@@ -273,6 +273,24 @@ public class ModelUtils {
 		   
 		        }
 	        }
+	        
+	        // Separate example folder for ICAT workflows.
+	        final File icatDataDir     = new File(examplesDir, "workflows-icat"); // Where the data comes from
+	        if (icatDataDir.exists()) {
+				final IFolder icatExamplesInProject = workflows.getFolder("examples-icat");
+				icatExamplesInProject.create(true, true, mon);
+		        if (icatDataDir.exists()) {
+		        	for (File d : icatDataDir.listFiles()) {
+		        		if (!d.exists())  continue;
+		        		if (!d.canRead()) continue;
+		        		if (!d.isFile())  continue;
+		        		
+		        		final IFile file = icatExamplesInProject.getFile(d.getName());
+		        		file.create(new FileInputStream(d), false, mon);
+		        	}
+		   
+		        }
+	        }
 		}
 
 		ModelUtils.addPasserelleNature(workflows, mon);
