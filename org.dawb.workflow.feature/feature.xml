@@ -125,13 +125,13 @@ This Agreement is governed by the laws of the State of New York and the intellec
    <includes
          id="org.dawb.edna.feature"
          version="0.0.0"/>
-    
-    <includes
-         id="uk.ac.diamond.scisoft.actors.icat.feature"
-         version="0.0.0"/>
-         
+
    <includes
          id="org.dawb.workbench.config.feature"
+         version="0.0.0"/>
+
+   <includes
+         id="uk.ac.diamond.scisoft.icat.actors.feature"
          version="0.0.0"/>
 
    <requires>
