@@ -62,7 +62,7 @@ public class SliceParameterDialog extends Dialog {
 		
 		final DataHolder holder = LoaderFactory.getData(filePath, monitor);
 		final ILazyDataset lazy = holder.getLazyDataset(dataSetName);
-		sliceComponent.setData(lazy, dataSetName, filePath);        
+		sliceComponent.setData(lazy, dataSetName, filePath, false);        
 	}
 
 	public DimsDataList getDimsDataList() {
