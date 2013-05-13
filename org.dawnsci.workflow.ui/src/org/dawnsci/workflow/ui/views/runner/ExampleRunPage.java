@@ -65,6 +65,7 @@ public class ExampleRunPage extends AbstractWorkflowRunPage {
 				try {
 					monitor.beginTask("Execute "+momlPath, 2);
 					context.execute(momlPath, true, monitor);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 					return Status.CANCEL_STATUS;

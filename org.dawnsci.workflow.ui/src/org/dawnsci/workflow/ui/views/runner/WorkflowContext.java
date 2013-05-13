@@ -7,6 +7,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.ui.ISourceProvider;
 
+import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.ExecuteActionEvent;
+import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.ExecuteActionListener;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.RunAction;
 import com.isencia.passerelle.workbench.model.editor.ui.editor.actions.StopAction;
 import com.isencia.passerelle.workbench.model.launch.ModelRunner;
@@ -14,8 +16,10 @@ import com.isencia.passerelle.workbench.model.launch.ModelRunner;
 class WorkflowContext implements IWorkflowContext {
 	
 	private ISourceProvider[] providers;
+	private WorkflowRunView   view;
 
-	public WorkflowContext(ISourceProvider[] providers) {
+	WorkflowContext(WorkflowRunView view, ISourceProvider[] providers) {
+		this.view      = view;
 		this.providers = providers;
 	}
 
@@ -33,12 +37,32 @@ class WorkflowContext implements IWorkflowContext {
 			modelRunner = new ModelRunner();
 			modelRunner.runModel(momlPath,false);
 			modelRunner = null;
+			// RemoteWorkbenchImpl sets the status to the actor running.
+			view.getViewSite().getActionBars().getStatusLineManager().setMessage("");
 			
 		} else {
 			RunAction runAction = new RunAction();		
 			// Try to find IFile or throw exception.
 			IFile file = getResource(momlPath);
 			if (file==null) throw new Exception("The path '"+momlPath+"' is not a file in a project in the workspace. This is required for running in own VM (as JDT is used).");
+			runAction.addExecuteActionListener(new ExecuteActionListener() {	
+				@Override
+				public void stopRequested(ExecuteActionEvent evt) {
+					view.getRunAction().setEnabled(true);
+					view.getStopAction().setEnabled(false);
+				}
+				
+				@Override
+				public void executionRequested(ExecuteActionEvent evt) {
+					view.getRunAction().setEnabled(false);
+					view.getStopAction().setEnabled(true);
+				}
+				
+				@Override
+				public void buttonRefreshRequested(ExecuteActionEvent evt) {
+					view.getViewSite().getActionBars().getToolBarManager().update(false);
+				}
+			});
 			runAction.run(file, false);
 		}
 
@@ -73,6 +97,7 @@ class WorkflowContext implements IWorkflowContext {
 		} else {
 			(new StopAction()).run();
 		}
+		view.getViewSite().getActionBars().getStatusLineManager().setMessage("");
 	}
 
 	@Override

@@ -97,7 +97,7 @@ public class WorkflowRunView extends ViewPart {
 				try {
 					stopAction.setEnabled(true);
 					if (context!=null) context.stop();
-					context = new WorkflowContext(runner.getSourceProviders());
+					context = new WorkflowContext(WorkflowRunView.this, runner.getSourceProviders());
 					runner.run(context);
 					
 				} catch (Exception e) {

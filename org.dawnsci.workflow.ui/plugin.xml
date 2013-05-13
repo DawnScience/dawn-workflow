@@ -2,6 +2,8 @@
 <?eclipse version="3.4"?>
 <plugin>
    <extension-point id="workflowRunPage" name="Workflow Run Page" schema="schema/workflowRunPage.exsd"/>
+   
+   <!--
    <extension
          point="org.eclipse.ui.views">
       <view
@@ -20,4 +22,6 @@
       </workflowRunPage>
    </extension>
 
+   -->
+   
 </plugin>
