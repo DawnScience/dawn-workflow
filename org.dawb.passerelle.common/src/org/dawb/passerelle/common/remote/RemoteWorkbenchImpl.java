@@ -49,7 +49,9 @@ import org.eclipse.swt.SWT;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
+import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.FileStoreEditorInput;
@@ -473,7 +475,14 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
                     	if (bean.getPortName()!=null) {
                     		ed.setPortSelected(bean.getActorName(), bean.getPortName(), bean.isSelected(), bean.getPortColorCode());
                     	}
+                    } else {
+	                	final IWorkbenchPart part = EclipseUtils.getPage().getActivePart();
+	                	if (part instanceof IViewPart) {
+	                		final String status = (bean.isSelected()) ? bean.getActorName() : "";
+	                		((IViewPart)part).getViewSite().getActionBars().getStatusLineManager().setMessage(status);
+	                	}
                     }
+
 				    
 				} catch (Exception e) {
 					logger.error("Cannot open editor ", e);
