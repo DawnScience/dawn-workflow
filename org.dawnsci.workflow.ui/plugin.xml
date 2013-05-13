@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="workflowRunPage" name="Workflow Run Page" schema="schema/workflowRunPage.exsd"/>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            class="org.dawnsci.workflow.ui.views.runner.WorkflowRunView"
+            icon="icons/add.gif"
+            id="org.dawnsci.workflow.ui.view.exampleWorkflowRun"
+            name="Maths Example"
+            restorable="true">
+      </view>
+   </extension>
+   <extension
+         point="org.dawnsci.workflow.ui.workflowRunPage">
+      <workflowRunPage
+            class="org.dawnsci.workflow.ui.views.runner.ExampleRunPage"
+            viewId="org.dawnsci.workflow.ui.view.exampleWorkflowRun">
+      </workflowRunPage>
+   </extension>
+
+</plugin>
