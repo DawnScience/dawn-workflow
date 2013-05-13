@@ -65,11 +65,11 @@ public class TelnetTransformer extends SubstituteTransformer implements Substitu
 	public TelnetTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
 		
-		this.wsdlParam.setDisplayName("Script Location");
-		wsdlParam.setExpression("/${project_name}/src/gda-script.py");
+		this.templateParam.setDisplayName("Script Location");
+		templateParam.setExpression("/${project_name}/src/gda-script.py");
 		
-		this.truststoreParam.setDisplayName("Substitute Temporary Folder");
-		truststoreParam.setExpression("/${project_name}/tmp/");
+		this.outputParam.setDisplayName("Substitute Temporary Folder");
+		outputParam.setExpression("/${project_name}/tmp/");
 		
 		this.uri = new StringParameter(this, "URI");
 		uri.setExpression("localhost");

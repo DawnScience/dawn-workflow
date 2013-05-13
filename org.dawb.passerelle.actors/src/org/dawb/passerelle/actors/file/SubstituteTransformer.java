@@ -64,19 +64,19 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 	
 	protected static Logger logger = LoggerFactory.getLogger(SubstituteTransformer.class);
 	
-	protected ResourceParameter wsdlParam, truststoreParam;
+	protected ResourceParameter templateParam, outputParam;
 	protected StringParameter   encoding;
 
 	public SubstituteTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
 		
-		this.wsdlParam = new ResourceParameter(this, "Template Source");
-		registerConfigurableParameter(wsdlParam);
+		this.templateParam = new ResourceParameter(this, "Template Source");
+		registerConfigurableParameter(templateParam);
 		
-		this.truststoreParam = new ResourceParameter(this, "Output");
-		truststoreParam.setResourceType(IResource.FOLDER);
-		truststoreParam.setExpression("/${project_name}/output/");
-		registerConfigurableParameter(truststoreParam);
+		this.outputParam = new ResourceParameter(this, "Output");
+		outputParam.setResourceType(IResource.FOLDER);
+		outputParam.setExpression("/${project_name}/output/");
+		registerConfigurableParameter(outputParam);
 		
 		this.encoding = new StringParameter(this, "Encoding") {
 			private static final long serialVersionUID = -1902977727142062610L;
@@ -98,10 +98,10 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 		String fromPath   = null;
 		String outputPath = null;
 		try {
-		    fromPath   = ParameterUtils.getSubstituedValue(wsdlParam, cache);
-		    outputPath = ParameterUtils.getSubstituedValue(truststoreParam, cache);
+		    fromPath   = ParameterUtils.getSubstituedValue(templateParam, cache);
+		    outputPath = ParameterUtils.getSubstituedValue(outputParam, cache);
 		} catch (Exception e) {
-			throw createDataMessageException("Cannot substitute parameter of "+wsdlParam.getDisplayName()+" and/or "+truststoreParam.getDisplayName()+" in "+getDisplayName(), e);
+			throw createDataMessageException("Cannot substitute parameter of "+templateParam.getDisplayName()+" and/or "+outputParam.getDisplayName()+" in "+getDisplayName(), e);
 		}
 		
 		// Copy file to new location
@@ -156,7 +156,7 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 	public List<IVariable> getOutputVariables() {
 		
 		final List<IVariable> ret = super.getOutputVariables();
-		ret.add(new Variable("substitute_output", VARIABLE_TYPE.PATH, truststoreParam.getExpression(), String.class));
+		ret.add(new Variable("substitute_output", VARIABLE_TYPE.PATH, outputParam.getExpression(), String.class));
         return ret;
 	}
 	
@@ -192,7 +192,7 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 	}
 
 	private IFile getResource() throws Exception {
-		final String tempPath = ParameterUtils.substitute(wsdlParam.getExpression(), this);
+		final String tempPath = ParameterUtils.substitute(templateParam.getExpression(), this);
 		final IFile  file     = (IFile)ResourceUtils.getResource(tempPath);
 		return file;
 	}
@@ -200,10 +200,10 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 	@Override
 	public String getDefaultSubstitution() {
 		
-		if (wsdlParam.getExpression()==null) return null;
+		if (templateParam.getExpression()==null) return null;
 		StringBuffer buf = null;
 		try {
-			buf = FileUtils.readFile(new File(wsdlParam.getExpression()));
+			buf = FileUtils.readFile(new File(templateParam.getExpression()));
 		} catch (Exception e) {
 			return "";
 		}
