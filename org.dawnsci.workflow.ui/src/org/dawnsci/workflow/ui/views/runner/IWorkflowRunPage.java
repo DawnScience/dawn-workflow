@@ -51,7 +51,7 @@ public interface IWorkflowRunPage {
 	 * Access to the underlying view; so that toolbars and menubars
 	 * can be configured for instance.
 	 * 
-	 * This method will be called after the zro argument constuctor at the
+	 * This method will be called after the zero argument constructor at the
 	 * start of page creation.
 	 * 
 	 * @param view
