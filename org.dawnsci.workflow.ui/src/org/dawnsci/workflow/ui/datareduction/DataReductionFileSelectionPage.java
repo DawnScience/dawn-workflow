@@ -41,8 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.diamond.scisoft.analysis.rcp.plotting.datareduction.DataReductionFilePlotter;
-import uk.ac.diamond.scisoft.analysis.rcp.plotting.datareduction.DataReductionSelectionType;
-import uk.ac.diamond.scisoft.analysis.rcp.plotting.datareduction.DataReductionSelectionType.DATA_TYPE;
 
 public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	
@@ -147,13 +145,33 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 				if (file instanceof IFile) {
 					String fileExtension = ((IFile) file).getFileExtension();
 					String filename = ((IFile) file).getRawLocation().toOSString();
-					DataReductionFilePlotter.plotData(dataPlot, filename, fileExtension, 
-							"/entry1/instrument/analyser/data", 
-							new String[] {
-								"/entry1/instrument/analyser/energies",
-								"/entry1/instrument/analyser/angles"
-							}, 
-							false, false, DATA_TYPE.DATA);
+					if(!dataButton.getSelection()){
+						DataReductionFilePlotter.plotData(dataPlot, filename, fileExtension, 
+								"/entry1/instrument/analyser/data", 
+								true, false, false);
+					}
+					if(!calibrationButton.getSelection()){
+						DataReductionFilePlotter.plotData(calibrationPlot, filename, fileExtension, 
+								"/entry1/instrument/analyser/data", 
+								true, false, false);
+					}
+					if(!detectorButton.getSelection()){
+						DataReductionFilePlotter.plotData(detectorPlot, filename, fileExtension, 
+								"/entry1/instrument/analyser/data", 
+								true, false, false);
+					}
+					if(!backgroundButton.getSelection()){
+						DataReductionFilePlotter.plotData(backgroundPlot, filename, fileExtension, 
+								"/entry1/instrument/analyser/data", 
+								true, false, false);
+					}
+					
+					
+					if(!maskButton.getSelection()){
+						DataReductionFilePlotter.plotData(maskPlot, filename, fileExtension, 
+								"/entry/mask/masks", 
+								true, false, true);
+					}
 				}
 			}
 		}
