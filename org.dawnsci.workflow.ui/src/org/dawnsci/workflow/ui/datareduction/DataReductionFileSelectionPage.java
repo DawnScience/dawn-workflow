@@ -22,7 +22,6 @@ import org.dawb.common.ui.util.GridUtils;
 import org.dawnsci.plotting.api.PlotType;
 import org.dawnsci.workflow.ui.views.runner.AbstractWorkflowRunPage;
 import org.dawnsci.workflow.ui.views.runner.IWorkflowContext;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.swt.SWT;
@@ -40,10 +39,10 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.diamond.scisoft.analysis.rcp.plotting.datareduction.DataReductionFilePlotter;
+import uk.ac.diamond.scisoft.analysis.rcp.plotting.datareduction.DataReductionPlotter;
 
 public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(DataReductionFileSelectionPage.class);
 	private AbstractPlottingSystem dataPlot;
 	private AbstractPlottingSystem calibrationPlot;
@@ -68,7 +67,6 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			// TODO Auto-generated catch block
 			logger.error("TODO put description of error here", e);
 		}
-		
 	}
 
 	@Override
@@ -82,22 +80,20 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 
 		SashForm leftSash = new SashForm(mainSash, SWT.VERTICAL);
 		leftSash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		leftSash.setBackground(new Color(parent.getDisplay(), 192, 192, 192));
 		SashForm middleSash = new SashForm(mainSash, SWT.VERTICAL);
 		middleSash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		middleSash.setBackground(new Color(parent.getDisplay(), 192, 192, 192));
 		SashForm rightSash = new SashForm(mainSash, SWT.VERTICAL);
 		rightSash.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-//		rightSash.setBackground(new Color(parent.getDisplay(), 192, 192, 192));
-		//mainSash.setWeights(new int[] {200, 183, 195});
 
 		// Composite to put the main controls in
 		Composite selectionComp = new Composite(leftSash, SWT.BORDER);
 		selectionComp.setLayout(new GridLayout(1, false));
 		selectionComp.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false));
-		
+
 		Label helpLabel = new Label(selectionComp, SWT.WRAP);
-		helpLabel.setText("Select a file and tick the corresponding checkbox. Once all your data is chosen, press the Run button.");
+		helpLabel.setText("Select a file and tick the corresponding checkbox. " +
+				"Make sure that all your selected data has the same shape." +
+				"Press the Run button to run the Workflow. ");
 		helpLabel.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, true));
 
 		dataButton = new Button(selectionComp, SWT.CHECK);
@@ -115,7 +111,7 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		runWorkflowButton.setText("Run Workflow");
 		runWorkflowButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 		runWorkflowButton.addSelectionListener(runWorkflowListener);
-		
+
 		detectorPlot.createPlotPart(leftSash, "Detector", null, PlotType.IMAGE, workflowRunView.getSite().getPart());
 		detectorPlot.setTitle("Detector");
 
@@ -131,7 +127,6 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		maskPlot.createPlotPart(rightSash, "Mask", null, PlotType.IMAGE, workflowRunView.getSite().getPart());
 		maskPlot.setTitle("Mask");
 
-
 		workflowRunView.getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(fileSelectionListener);
 
 		return mainComposite;
@@ -141,53 +136,36 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		@Override
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if (selection instanceof IStructuredSelection) {
-				Object file = ((IStructuredSelection) selection).getFirstElement();
-				if (file instanceof IFile) {
-					String fileExtension = ((IFile) file).getFileExtension();
-					String filename = ((IFile) file).getRawLocation().toOSString();
-					if(!dataButton.getSelection()){
-						DataReductionFilePlotter.plotData(dataPlot, filename, fileExtension, 
-								"/entry1/instrument/analyser/data", 
-								true, false, false);
-					}
-					if(!calibrationButton.getSelection()){
-						DataReductionFilePlotter.plotData(calibrationPlot, filename, fileExtension, 
-								"/entry1/instrument/analyser/data", 
-								true, false, false);
-					}
-					if(!detectorButton.getSelection()){
-						DataReductionFilePlotter.plotData(detectorPlot, filename, fileExtension, 
-								"/entry1/instrument/analyser/data", 
-								true, false, false);
-					}
-					if(!backgroundButton.getSelection()){
-						DataReductionFilePlotter.plotData(backgroundPlot, filename, fileExtension, 
-								"/entry1/instrument/analyser/data", 
-								true, false, false);
-					}
-					
-					
-					if(!maskButton.getSelection()){
-						DataReductionFilePlotter.plotData(maskPlot, filename, fileExtension, 
-								"/entry/mask/masks", 
-								true, false, true);
-					}
+				if (!dataButton.getSelection()) {
+					DataReductionPlotter.plotData(dataPlot, (IStructuredSelection)selection);
+				}
+				if (!calibrationButton.getSelection()) {
+					DataReductionPlotter.plotData(calibrationPlot, (IStructuredSelection)selection);
+				}
+				if (!detectorButton.getSelection()) {
+					DataReductionPlotter.plotData(detectorPlot, (IStructuredSelection)selection);
+				}
+				if (!backgroundButton.getSelection()) {
+					DataReductionPlotter.plotData(backgroundPlot, (IStructuredSelection)selection);
+				}
+				if (!maskButton.getSelection()) {
+					DataReductionPlotter.plotData(maskPlot, (IStructuredSelection)selection);
 				}
 			}
 		}
 	};
 
 	private SelectionListener runWorkflowListener = new SelectionListener() {
-		
+
 		@Override
 		public void widgetSelected(SelectionEvent e) {
 			widgetDefaultSelected(e);
 		}
-		
+
 		@Override
 		public void widgetDefaultSelected(SelectionEvent e) {
 			// TODO Auto-generated method stub
-			
+
 		}
 	};
 
@@ -199,7 +177,7 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	@Override
 	public void run(IWorkflowContext context) throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -211,8 +189,7 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	@Override
 	public void dispose() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
-	
 }
