@@ -39,6 +39,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.rcp.plotting.datareduction.DataReductionPlotter;
 
 public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
@@ -136,20 +137,21 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		@Override
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if (selection instanceof IStructuredSelection) {
+				IDataset image = DataReductionPlotter.loadData((IStructuredSelection)selection);
 				if (!dataButton.getSelection()) {
-					DataReductionPlotter.plotData(dataPlot, (IStructuredSelection)selection);
+					DataReductionPlotter.plotData(dataPlot, image);
 				}
 				if (!calibrationButton.getSelection()) {
-					DataReductionPlotter.plotData(calibrationPlot, (IStructuredSelection)selection);
+					DataReductionPlotter.plotData(calibrationPlot, image);
 				}
 				if (!detectorButton.getSelection()) {
-					DataReductionPlotter.plotData(detectorPlot, (IStructuredSelection)selection);
+					DataReductionPlotter.plotData(detectorPlot, image);
 				}
 				if (!backgroundButton.getSelection()) {
-					DataReductionPlotter.plotData(backgroundPlot, (IStructuredSelection)selection);
+					DataReductionPlotter.plotData(backgroundPlot, image);
 				}
 				if (!maskButton.getSelection()) {
-					DataReductionPlotter.plotData(maskPlot, (IStructuredSelection)selection);
+					DataReductionPlotter.plotData(maskPlot, image);
 				}
 			}
 		}
