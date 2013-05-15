@@ -208,32 +208,35 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		@Override
 		public void selectionChanged(IWorkbenchPart part, ISelection selection) {
 			if (selection instanceof IStructuredSelection) {
-				image = DataReductionPlotter.loadData((IStructuredSelection)selection);
+				IStructuredSelection structSelection = (IStructuredSelection)selection;
+				image = DataReductionPlotter.loadData(structSelection);
 				if(image == null) return;
 				if (!((SelectedData)viewer.getElementAt(0)).isActive()) {
 					DataReductionPlotter.plotData(dataPlot, image);
 					((SelectedData)viewer.getElementAt(0)).setShape(image.getShape());
-//					dataShapeLabel.setText("["+ formatIntArray(image.getShape())+"]");
+					((SelectedData)viewer.getElementAt(0)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(1)).isActive()) {
 					DataReductionPlotter.plotData(calibrationPlot, image);
 					((SelectedData)viewer.getElementAt(1)).setShape(image.getShape());
+					((SelectedData)viewer.getElementAt(1)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(2)).isActive()) {
 					DataReductionPlotter.plotData(detectorPlot, image);
 					((SelectedData)viewer.getElementAt(2)).setShape(image.getShape());
-//					detectorShapeLabel.setText("["+ formatIntArray(image.getShape())+"]");
+					((SelectedData)viewer.getElementAt(2)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(3)).isActive()) {
 					DataReductionPlotter.plotData(backgroundPlot, image);
 					((SelectedData)viewer.getElementAt(3)).setShape(image.getShape());
-//					backgroundShapeLabel.setText("["+ formatIntArray(image.getShape())+"]");
+					((SelectedData)viewer.getElementAt(3)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(4)).isActive()) {
 					DataReductionPlotter.plotData(maskPlot, image);
 					((SelectedData)viewer.getElementAt(4)).setShape(image.getShape());
-//					maskShapeLabel.setText("["+ formatIntArray(image.getShape())+"]");
+					((SelectedData)viewer.getElementAt(4)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
+				viewer.refresh();
 			}
 		}
 	};
