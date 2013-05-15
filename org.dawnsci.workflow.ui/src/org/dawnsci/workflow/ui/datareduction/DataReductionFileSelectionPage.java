@@ -63,6 +63,13 @@ import uk.ac.diamond.scisoft.analysis.rcp.plotting.datareduction.DataReductionPl
 public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataReductionFileSelectionPage.class);
+
+	private static final String DATA_TYPE = "Data";
+	private static final String CALIB_TYPE = "Calibration";
+	private static final String DETECT_TYPE = "Detector";
+	private static final String BACKGD_TYPE = "Background";
+	private static final String MASK_TYPE = "Mask";
+
 	private AbstractPlottingSystem dataPlot;
 	private AbstractPlottingSystem calibrationPlot;
 	private AbstractPlottingSystem detectorPlot;
@@ -149,20 +156,20 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		runWorkflowButton.setEnabled(isRunWorkflowEnabled());
 		runWorkflowButton.addSelectionListener(runWorkflowListener);
 
-		detectorPlot.createPlotPart(leftSash, "Detector", null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		detectorPlot.setTitle("Detector");
+		detectorPlot.createPlotPart(leftSash, DETECT_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
+		detectorPlot.setTitle(DETECT_TYPE);
 
-		dataPlot.createPlotPart(middleSash, "Data", null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		dataPlot.setTitle("Data");
+		dataPlot.createPlotPart(middleSash, DATA_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
+		dataPlot.setTitle(DATA_TYPE);
 
-		backgroundPlot.createPlotPart(middleSash, "Background", null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		backgroundPlot.setTitle("Background");
+		backgroundPlot.createPlotPart(middleSash, BACKGD_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
+		backgroundPlot.setTitle(BACKGD_TYPE);
 
-		calibrationPlot.createPlotPart(rightSash, "Calibration", null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		calibrationPlot.setTitle("Calibration");
+		calibrationPlot.createPlotPart(rightSash, CALIB_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
+		calibrationPlot.setTitle(CALIB_TYPE);
 
-		maskPlot.createPlotPart(rightSash, "Mask", null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		maskPlot.setTitle("Mask");
+		maskPlot.createPlotPart(rightSash, MASK_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
+		maskPlot.setTitle(MASK_TYPE);
 
 		workflowRunView.getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(fileSelectionListener);
 
@@ -243,11 +250,11 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 
 	private List<SelectedData> createSelectedDataRows(){
 		final List<SelectedData> selectedDataList = new ArrayList<SelectedData>(5);
-		SelectedData dataSelectedData = new SelectedData("Data", new int[]{0, 0}, "-", false);
-		SelectedData calibrationSelectedData = new SelectedData("Calibration", new int[]{0, 0}, "-", false);
-		SelectedData detectorSelectedData = new SelectedData("Detector", new int[]{0, 0}, "-", false);
-		SelectedData backgroundSelectedData = new SelectedData("Background", new int[]{0, 0}, "-", false);
-		SelectedData maskSelectedData = new SelectedData("Mask", new int[]{0, 0}, "-", false);
+		SelectedData dataSelectedData = new SelectedData(DATA_TYPE, new int[]{0, 0}, "-", false);
+		SelectedData calibrationSelectedData = new SelectedData(CALIB_TYPE, new int[]{0, 0}, "-", false);
+		SelectedData detectorSelectedData = new SelectedData(DETECT_TYPE, new int[]{0, 0}, "-", false);
+		SelectedData backgroundSelectedData = new SelectedData(BACKGD_TYPE, new int[]{0, 0}, "-", false);
+		SelectedData maskSelectedData = new SelectedData(MASK_TYPE, new int[]{0, 0}, "-", false);
 		selectedDataList.add(dataSelectedData);
 		selectedDataList.add(calibrationSelectedData);
 		selectedDataList.add(detectorSelectedData);
@@ -303,30 +310,6 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	}
 
 	private boolean isRunWorkflowEnabled(){
-//		int iter = 0;
-//		
-//		for(int i=0; i<radioButtons.length; i++){
-//			if (radioButtons[i].getSelection()) {
-//				iter++;
-//			}
-//		}
-//		SelectedData[] activeButtons = new SelectedData[iter];
-//		iter = 0;
-//		for(int i=0; i<radioButtons.length; i++){
-//			if (radioButtons[i].getSelection()) {
-//				activeButtons[iter++] = radioButtons[i];
-//			}
-//		}
-//		for(int i=0; i<iter; i++){
-//			if(i>0){
-//				if(activeButtons[i-1].getShape() == null) return false;
-//				int[] previousShape = activeButtons[i-1].getShape();
-//				if(activeButtons[i].getShape() == null) return false;
-//				if(!activeButtons[i].getShape().equals(previousShape)){
-//					return false;
-//				}
-//			}
-//		}
 		return true;
 	}
 
