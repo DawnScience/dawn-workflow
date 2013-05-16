@@ -119,7 +119,7 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		mainRecapComp.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false));
 
 		Label helpLabel = new Label(mainRecapComp, SWT.WRAP);
-		helpLabel.setText("Select a file and tick the corresponding checkbox. " +
+		helpLabel.setText("Select a file in the Project Explorer and lock the type. " +
 				"Make sure that all your selected data has the same shape.");
 		helpLabel.setLayoutData(new GridData(SWT.LEFT, SWT.CENTER, true, true));
 
@@ -181,8 +181,8 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		ColumnViewerToolTipSupport.enableFor(viewer,ToolTip.NO_RECREATE);
 
 		TableViewerColumn var = new TableViewerColumn(viewer, SWT.LEFT, 0);
-		var.getColumn().setText("Active");
-		var.getColumn().setWidth(60);
+		var.getColumn().setText("Lock");
+		var.getColumn().setWidth(50);
 		var.setLabelProvider(new SelectedDataLabelProvider(0));
 		SelectedDataEditingSupport regionEditor = new SelectedDataEditingSupport(viewer, 0);
 		var.setEditingSupport(regionEditor);
@@ -194,16 +194,16 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		regionEditor = new SelectedDataEditingSupport(viewer, 1);
 		var.setEditingSupport(regionEditor);
 
-		var = new TableViewerColumn(viewer, SWT.CENTER, 2);
-		var.getColumn().setText("Shape");
-		var.getColumn().setWidth(80);
+		var = new TableViewerColumn(viewer, SWT.LEFT, 2);
+		var.getColumn().setText("File name");
+		var.getColumn().setWidth(200);
 		var.setLabelProvider(new SelectedDataLabelProvider(2));
 		regionEditor = new SelectedDataEditingSupport(viewer, 2);
 		var.setEditingSupport(regionEditor);
 
-		var = new TableViewerColumn(viewer, SWT.LEFT, 3);
-		var.getColumn().setText("File name");
-		var.getColumn().setWidth(200);
+		var = new TableViewerColumn(viewer, SWT.CENTER, 3);
+		var.getColumn().setText("Shape");
+		var.getColumn().setWidth(80);
 		var.setLabelProvider(new SelectedDataLabelProvider(3));
 		regionEditor = new SelectedDataEditingSupport(viewer, 3);
 		var.setEditingSupport(regionEditor);
@@ -218,27 +218,27 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 				IStructuredSelection structSelection = (IStructuredSelection)selection;
 				image = DataReductionPlotter.loadData(structSelection);
 				if(image == null) return;
-				if (!((SelectedData)viewer.getElementAt(0)).isActive()) {
+				if (!((SelectedData)viewer.getElementAt(0)).isLocked()) {
 					DataReductionPlotter.plotData(dataPlot, image);
 					((SelectedData)viewer.getElementAt(0)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(0)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
-				if (!((SelectedData)viewer.getElementAt(1)).isActive()) {
+				if (!((SelectedData)viewer.getElementAt(1)).isLocked()) {
 					DataReductionPlotter.plotData(calibrationPlot, image);
 					((SelectedData)viewer.getElementAt(1)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(1)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
-				if (!((SelectedData)viewer.getElementAt(2)).isActive()) {
+				if (!((SelectedData)viewer.getElementAt(2)).isLocked()) {
 					DataReductionPlotter.plotData(detectorPlot, image);
 					((SelectedData)viewer.getElementAt(2)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(2)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
-				if (!((SelectedData)viewer.getElementAt(3)).isActive()) {
+				if (!((SelectedData)viewer.getElementAt(3)).isLocked()) {
 					DataReductionPlotter.plotData(backgroundPlot, image);
 					((SelectedData)viewer.getElementAt(3)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(3)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
-				if (!((SelectedData)viewer.getElementAt(4)).isActive()) {
+				if (!((SelectedData)viewer.getElementAt(4)).isLocked()) {
 					DataReductionPlotter.plotData(maskPlot, image);
 					((SelectedData)viewer.getElementAt(4)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(4)).setFileName(DataReductionPlotter.getFileName(structSelection));
@@ -320,15 +320,15 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	private class SelectedData {
 
 		private int[] shape;
-		private boolean isActive;
+		private boolean isLocked;
 		private String fileName;
 		private String type;
 
-		public SelectedData(String type, int[] shape, String fileName, boolean isActive) {
+		public SelectedData(String type, int[] shape, String fileName, boolean isLocked) {
 			this.type = type;
 			this.shape = shape;
 			this.fileName = fileName;
-			this.isActive = isActive;
+			this.isLocked = isLocked;
 		}
 
 		public void setShape(int[] shape){
@@ -339,12 +339,12 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			return shape;
 		}
 
-		public boolean isActive() {
-			return isActive;
+		public boolean isLocked() {
+			return isLocked;
 		}
 
-		public void setActive(boolean isActive) {
-			this.isActive = isActive;
+		public void setLocked(boolean isLocked) {
+			this.isLocked = isLocked;
 		}
 
 		public String getFileName() {
@@ -402,13 +402,13 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			final SelectedData myImage = (SelectedData)element;
 			switch (column){
 			case 0:
-				return myImage.isActive();
+				return myImage.isLocked();
 			case 1:
 				return myImage.getType();
 			case 2:
-				return formatIntArray(myImage.getShape());
-			case 3:
 				return myImage.getFileName();
+			case 3:
+				return formatIntArray(myImage.getShape());
 			default:
 				return null;
 			}
@@ -430,16 +430,16 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			final SelectedData myImage = (SelectedData) element;
 			switch (column){
 			case 0:
-				myImage.setActive((Boolean)value);
+				myImage.setLocked((Boolean)value);
 				break;
 			case 1:
 				myImage.setType((String)value);
 				break;
 			case 2:
-				myImage.setShape((int[])value);
+				myImage.setFileName((String)value);
 				break;
 			case 3:
-				myImage.setFileName((String)value);
+				myImage.setShape((int[])value);
 				break;
 			default:
 				break;
@@ -458,15 +458,15 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	private class SelectedDataLabelProvider extends ColumnLabelProvider {
 		
 		private int column;
-		private Image checkedIcon;
-		private Image uncheckedIcon;
+		private Image lockedIcon;
+		private Image unlockedIcon;
 
 		public SelectedDataLabelProvider(int column) {
 			this.column = column;
-			ImageDescriptor id = Activator.getImageDescriptor("icons/ticked.png");
-			checkedIcon   = id.createImage();
-			id = Activator.getImageDescriptor("icons/unticked.gif");
-			uncheckedIcon =  id.createImage();
+			ImageDescriptor id = Activator.getImageDescriptor("icons/lock_small.png");
+			lockedIcon   = id.createImage();
+			id = Activator.getImageDescriptor("icons/lock_open_small.png");
+			unlockedIcon =  id.createImage();
 		}
 
 		@Override
@@ -475,7 +475,7 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			if (!(element instanceof SelectedData)) return null;
 			if (column==0){
 				final SelectedData selectedData = (SelectedData)element;
-				return selectedData.isActive() ? checkedIcon : uncheckedIcon;
+				return selectedData.isLocked() ? lockedIcon : unlockedIcon;
 			}
 			return null;
 		}
@@ -490,23 +490,23 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			case 1:
 				return selectedData.getType();
 			case 2:
-				return formatIntArray(selectedData.getShape());
-			case 3:
 				return selectedData.getFileName();
+			case 3:
+				return formatIntArray(selectedData.getShape());
 			default:
 				return "";
 			}
 		}
 
 		public String getToolTipText(Object element) {
-			return "Tick the checkbox of the selected data you want the workflow to be processed with.";
+			return "Click on the lock icon to select the data you want the workflow to be processed with.";
 		}
 
 		@Override
 		public void dispose(){
 			super.dispose();
-			checkedIcon.dispose();
-			uncheckedIcon.dispose();
+			lockedIcon.dispose();
+			unlockedIcon.dispose();
 		}
 	}
 
