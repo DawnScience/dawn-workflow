@@ -17,6 +17,7 @@
 package org.dawnsci.workflow.ui.datareduction;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.dawb.common.ui.plot.AbstractPlottingSystem;
@@ -148,7 +149,7 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 				return rows.toArray(new SelectedData[rows.size()]);
 			}
 		});
-		viewer.setInput(rows.get(0));
+		viewer.setInput(rows);
 
 		runWorkflowButton = new Button(mainRecapComp, SWT.PUSH);
 		runWorkflowButton.setText("Run Workflow");
@@ -309,7 +310,26 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		workflowRunView.getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(fileSelectionListener);
 	}
 
+	/**
+	 * Check that all the locked data have the same shape
+	 * @return
+	 *       true if all the same shape, false otherwise
+	 */
 	private boolean isRunWorkflowEnabled(){
+		Object input = viewer.getInput();
+		List<?> model = (input instanceof List)? (List<?>) input : null;
+		if(model == null) return false;
+		int[] previousArray = new int[]{0, 0};
+		for (int i = 0; i< model.size(); i ++) {
+			if(model.get(i) instanceof SelectedData){
+				SelectedData data = (SelectedData)model.get(i);
+				if(data.isLocked()){
+					if(i != 0 && !Arrays.equals(data.getShape(), previousArray))
+						return false;
+					previousArray = data.getShape();
+				}
+			}
+		}
 		return true;
 	}
 
@@ -431,6 +451,8 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			switch (column){
 			case 0:
 				myImage.setLocked((Boolean)value);
+				runWorkflowButton.setEnabled(isRunWorkflowEnabled());
+				workflowRunView.getRunAction().setEnabled(isRunWorkflowEnabled());
 				break;
 			case 1:
 				myImage.setType((String)value);
