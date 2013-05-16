@@ -27,6 +27,10 @@ import org.dawnsci.plotting.api.PlotType;
 import org.dawnsci.workflow.ui.Activator;
 import org.dawnsci.workflow.ui.views.runner.AbstractWorkflowRunPage;
 import org.dawnsci.workflow.ui.views.runner.IWorkflowContext;
+import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.IToolBarManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -54,6 +58,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISourceProvider;
+import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -100,6 +105,9 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 
 	@Override
 	public Composite createPartControl(Composite parent) {
+
+		createPersistenceActions(workflowRunView.getViewSite());
+
 		mainComposite = new Composite(parent, SWT.NONE);
 		mainComposite.setLayout(new GridLayout(1, true));
 		GridUtils.removeMargins(mainComposite);
@@ -175,6 +183,35 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		workflowRunView.getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(fileSelectionListener);
 
 		return mainComposite;
+	}
+
+	private void createPersistenceActions(IViewSite iViewSite) {
+		final Action saveAction = new Action("Export data reduction selected Data", IAction.AS_PUSH_BUTTON) {
+			@Override
+			public void run() {
+				//TODO
+			}
+		};
+		saveAction.setToolTipText("Save selected data to persistence file");
+		saveAction.setText("Save");
+		saveAction.setImageDescriptor(Activator.getImageDescriptor("icons/save.png"));
+
+		final Action loadAction = new Action("Import data from persistence file", IAction.AS_PUSH_BUTTON) {
+			@Override
+			public void run() {
+				//TODO
+			}
+		};
+		loadAction.setToolTipText("Load data from persistence file");
+		loadAction.setText("Load");
+		loadAction.setImageDescriptor(Activator.getImageDescriptor("icons/load.png"));
+
+		IToolBarManager toolMan = iViewSite.getActionBars().getToolBarManager();
+		MenuManager menuMan = new MenuManager();
+		toolMan.add(loadAction);
+		menuMan.add(loadAction);
+		toolMan.add(saveAction);
+		menuMan.add(saveAction);
 	}
 
 	protected void createColumns(final TableViewer viewer) {
