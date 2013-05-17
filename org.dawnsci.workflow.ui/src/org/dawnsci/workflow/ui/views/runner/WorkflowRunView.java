@@ -64,8 +64,8 @@ public class WorkflowRunView extends ViewPart {
 
 	@Override
 	public void createPartControl(Composite parent) {
-		component  = runner.createPartControl(parent);
 		createActions();
+		component  = runner.createPartControl(parent);
 		
 		// TODO Do we need a component at the bottom
 		// with start and stop buttons?
