@@ -90,6 +90,12 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	private static final String BACKGD_TYPE = "Background";
 	private static final String MASK_TYPE = "Mask";
 
+	private static final String DATA_TITLE = "Data";
+	private static final String CALIB_TITLE = "Detector Calibration";
+	private static final String DETECT_TITLE = "Detector Response (Divide)";
+	private static final String BACKGD_TITLE = "Background (Subtract)";
+	private static final String MASK_TITLE = "Mask";
+
 	private AbstractPlottingSystem dataPlot;
 	private AbstractPlottingSystem calibrationPlot;
 	private AbstractPlottingSystem detectorPlot;
@@ -179,19 +185,19 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		runWorkflowButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
 
 		detectorPlot.createPlotPart(leftSash, DETECT_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		detectorPlot.setTitle("Detector Response (Divide)");
+		detectorPlot.setTitle(DETECT_TITLE);
 
 		dataPlot.createPlotPart(middleSash, DATA_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		dataPlot.setTitle("Data");
+		dataPlot.setTitle(DATA_TITLE);
 
 		backgroundPlot.createPlotPart(middleSash, BACKGD_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		backgroundPlot.setTitle("Background (Subtract)");
+		backgroundPlot.setTitle(BACKGD_TITLE);
 
 		calibrationPlot.createPlotPart(rightSash, CALIB_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		calibrationPlot.setTitle("Detector Calibration");
+		calibrationPlot.setTitle(CALIB_TITLE);
 
 		maskPlot.createPlotPart(rightSash, MASK_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		maskPlot.setTitle(MASK_TYPE);
+		maskPlot.setTitle(MASK_TITLE);
 
 		workflowRunView.getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(fileSelectionListener);
 
@@ -281,27 +287,27 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 				image = DataReductionPlotter.loadData(structSelection);
 				if(image == null) return;
 				if (!((SelectedData)viewer.getElementAt(0)).isLocked()) {
-					DataReductionPlotter.plotData(dataPlot, image);
+					DataReductionPlotter.plotData(dataPlot, DATA_TITLE, image);
 					((SelectedData)viewer.getElementAt(0)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(0)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(1)).isLocked()) {
-					DataReductionPlotter.plotData(calibrationPlot, image);
+					DataReductionPlotter.plotData(calibrationPlot, CALIB_TITLE, image);
 					((SelectedData)viewer.getElementAt(1)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(1)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(2)).isLocked()) {
-					DataReductionPlotter.plotData(detectorPlot, image);
+					DataReductionPlotter.plotData(detectorPlot, DETECT_TITLE, image);
 					((SelectedData)viewer.getElementAt(2)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(2)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(3)).isLocked()) {
-					DataReductionPlotter.plotData(backgroundPlot, image);
+					DataReductionPlotter.plotData(backgroundPlot, BACKGD_TITLE, image);
 					((SelectedData)viewer.getElementAt(3)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(3)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(4)).isLocked()) {
-					DataReductionPlotter.plotData(maskPlot, image);
+					DataReductionPlotter.plotData(maskPlot, MASK_TITLE, image);
 					((SelectedData)viewer.getElementAt(4)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(4)).setFileName(DataReductionPlotter.getFileName(structSelection));
 				}
