@@ -2,6 +2,8 @@ package org.dawnsci.workflow.ui.updater;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import org.dawb.passerelle.actors.roi.ROISource;
 import org.dawb.passerelle.actors.ui.config.FieldBean;
@@ -137,6 +139,118 @@ public class WorkflowUpdaterImpl implements IWorkflowUpdater{
 				
 				inputEntity.setContainer(flow);
 			};
+
+			FlowManager.save(flow, modelFile.toURI().toURL());
+
+			logger.debug("Model file updated");
+
+		} catch (Exception e) {
+			logger.error("Error copying MOML file:"+e.getMessage());
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void updateInputActor(String actorName, Map<String, String> dataFilePaths){
+		File modelFile = new File(modelFilePath);
+
+		try {
+
+			Flow flow = FlowManager.readMoml(modelFile.toURI().toURL());
+			ComponentEntity dataEntity = flow.getEntity(actorName);
+//			ComponentEntity axesEntity = flow.getEntity("Axes");
+//			ComponentEntity inputEntity = flow.getEntity("Input");
+//			ComponentEntity goldEntity = flow.getEntity("Gold");
+			
+			// for dataEntity
+			if (dataEntity != null) {
+				// data path parameter
+				Attribute pathDataAttr = dataEntity.getAttribute("User Fields");
+				if (pathDataAttr instanceof FieldParameter){
+					FieldContainer fields = (FieldContainer) ((FieldParameter) pathDataAttr).getBeanFromValue(FieldContainer.class);
+					List<FieldBean> fieldList = fields.getFields();
+					for (FieldBean fieldBean : fieldList) {
+						String name = fieldBean.getVariableName();
+						if(dataFilePaths.containsKey(name)){
+							fieldBean.setDefaultValue(dataFilePaths.get(name));
+							FieldParameter fp = ((FieldParameter)pathDataAttr);
+							fp.setExpression(fp.getValueFromBean(fields));
+						}
+					}
+//					if (fields.containsBean("fileName")) {
+//						filenameBean = fields.getBean("fileName");
+//						filenameBean.setDefaultValue((String)dataFilePath);
+//						FieldParameter fp = ((FieldParameter)pathDataAttr);
+//						fp.setExpression(fp.getValueFromBean(fields));
+//					}
+				}
+				pathDataAttr.setContainer(dataEntity);
+				
+				dataEntity.setContainer(flow);
+			
+
+				// data set parameter
+				// TODO not sure if this is required here. (MB)
+				//Attribute dataAttr = dataEntity.getAttribute("Data Sets");
+				//if (dataAttr instanceof StringChoiceParameter)
+				//	((StringChoiceParameter) dataAttr).setExpression("/entry1/analyser/data");
+				//dataAttr.setContainer(dataEntity);
+				
+			};
+
+//			if (goldEntity != null) {
+//				// data path parameter
+//				Attribute pathDataAttr = goldEntity.getAttribute("Path");
+//				if (pathDataAttr instanceof ResourceParameter)
+//					((ResourceParameter) pathDataAttr).setExpression(goldFilePath);
+//				pathDataAttr.setContainer(goldEntity);
+//
+//				// data set parameter
+//				// TODO not sure if this is required here. (MB)
+//				//Attribute dataAttr = dataEntity.getAttribute("Data Sets");
+//				//if (dataAttr instanceof StringChoiceParameter)
+//				//	((StringChoiceParameter) dataAttr).setExpression("/entry1/analyser/data");
+//				//dataAttr.setContainer(dataEntity);
+//				
+//				goldEntity.setContainer(flow);
+//			};
+			
+//			// for AxisEntity
+//			if (axesEntity != null) {
+//				// data path parameter
+//				Attribute pathAxesAttr = axesEntity.getAttribute("Path");
+//				if (pathAxesAttr instanceof ResourceParameter)
+//					((ResourceParameter) pathAxesAttr).setExpression(dataFilePath);
+//				pathAxesAttr.setContainer(axesEntity);
+//	
+//				// xaxis/yaxis data set parameter
+//				//TODO again not sure this should be here (MB)
+//				//Attribute xyaxisAttr = axesEntity.getAttribute("Data Sets");
+//				//if (xyaxisAttr instanceof StringChoiceParameter)
+//				//	((StringChoiceParameter) xyaxisAttr).setExpression("/entry1/analyser/energies, /entry1/analyser/angles");
+//				//xyaxisAttr.setContainer(axesEntity);
+//				
+//				axesEntity.setContainer(flow);
+//			};
+
+//			// for InputEntity
+//			if (inputEntity != null) {
+//				// input filename field parameter(for saving) 
+//				Attribute fileNameAttr = inputEntity.getAttribute("User Fields");
+//				FieldBean filenameBean = null;
+//				if (fileNameAttr instanceof FieldParameter){
+//					FieldContainer fields = (FieldContainer) ((FieldParameter) fileNameAttr).getBeanFromValue(FieldContainer.class);
+//					if (fields.containsBean("fileName")) {
+//						filenameBean = fields.getBean("fileName");
+//						filenameBean.setDefaultValue((String)dataFilePath);
+//						FieldParameter fp = ((FieldParameter)fileNameAttr);
+//						fp.setExpression(fp.getValueFromBean(fields));
+//					}
+//				}
+//				fileNameAttr.setContainer(inputEntity);
+//				
+//				inputEntity.setContainer(flow);
+//			};
 
 			FlowManager.save(flow, modelFile.toURI().toURL());
 

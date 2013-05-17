@@ -1,5 +1,7 @@
 package org.dawnsci.workflow.ui.updater;
 
+import java.util.Map;
+
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
@@ -64,4 +66,13 @@ public interface IWorkflowUpdater {
 	 * @param path
 	 */
 	public void setGoldFilePath(String path);
+
+	/**
+	 * Method that updates an input actor
+	 * @param actorName 
+	 *              the unique actor's name
+	 * @param dataFilePaths
+	 *              key value pair of full file paths and their name
+	 */
+	public void updateInputActor(String actorName, Map<String, String> dataFilePaths);
 }

@@ -19,7 +19,9 @@ package org.dawnsci.workflow.ui.datareduction;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.dawb.common.ui.plot.AbstractPlottingSystem;
 import org.dawb.common.ui.plot.PlottingFactory;
@@ -28,6 +30,8 @@ import org.dawb.common.ui.util.GridUtils;
 //import org.dawb.common.ui.wizard.persistence.datareduction.PersistenceSavingWizard;
 import org.dawnsci.plotting.api.PlotType;
 import org.dawnsci.workflow.ui.Activator;
+import org.dawnsci.workflow.ui.updater.IWorkflowUpdater;
+import org.dawnsci.workflow.ui.updater.WorkflowUpdaterCreator;
 import org.dawnsci.workflow.ui.views.runner.AbstractWorkflowRunPage;
 import org.dawnsci.workflow.ui.views.runner.IWorkflowContext;
 import org.eclipse.core.runtime.FileLocator;
@@ -108,6 +112,8 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	private TableViewer viewer;
 	private List<SelectedData> rows;
 
+	Map<String, String> dataFilePaths = new HashMap<String, String>(5);
+
 	public DataReductionFileSelectionPage() {
 		try {
 			dataPlot = PlottingFactory.createPlottingSystem();
@@ -115,6 +121,12 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			detectorPlot = PlottingFactory.createPlottingSystem();
 			backgroundPlot = PlottingFactory.createPlottingSystem();
 			maskPlot = PlottingFactory.createPlottingSystem();
+			
+			dataFilePaths.put("AFilename", "");
+			dataFilePaths.put("Detector_response_file", "");
+			dataFilePaths.put("Calibration_file", "");
+			dataFilePaths.put("Background_file", "");
+			dataFilePaths.put("Mask_file", "");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			logger.error("TODO put description of error here", e);
@@ -290,26 +302,34 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 					DataReductionPlotter.plotData(dataPlot, DATA_TITLE, image);
 					((SelectedData)viewer.getElementAt(0)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(0)).setFileName(DataReductionPlotter.getFileName(structSelection));
+					dataFilePaths.put("AFilename", DataReductionPlotter.getFullFilePath(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(1)).isLocked()) {
 					DataReductionPlotter.plotData(calibrationPlot, CALIB_TITLE, image);
 					((SelectedData)viewer.getElementAt(1)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(1)).setFileName(DataReductionPlotter.getFileName(structSelection));
+					dataFilePaths.put("Calibration_file", DataReductionPlotter.getFullFilePath(structSelection));
 				}
 				if (!((SelectedData)viewer.getElementAt(2)).isLocked()) {
 					DataReductionPlotter.plotData(detectorPlot, DETECT_TITLE, image);
 					((SelectedData)viewer.getElementAt(2)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(2)).setFileName(DataReductionPlotter.getFileName(structSelection));
+					dataFilePaths.put("Detector_response_file", DataReductionPlotter.getFullFilePath(structSelection));
+
 				}
 				if (!((SelectedData)viewer.getElementAt(3)).isLocked()) {
 					DataReductionPlotter.plotData(backgroundPlot, BACKGD_TITLE, image);
 					((SelectedData)viewer.getElementAt(3)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(3)).setFileName(DataReductionPlotter.getFileName(structSelection));
+					dataFilePaths.put("Background_file", DataReductionPlotter.getFullFilePath(structSelection));
+
 				}
 				if (!((SelectedData)viewer.getElementAt(4)).isLocked()) {
 					DataReductionPlotter.plotData(maskPlot, MASK_TITLE, image);
 					((SelectedData)viewer.getElementAt(4)).setShape(image.getShape());
 					((SelectedData)viewer.getElementAt(4)).setFileName(DataReductionPlotter.getFileName(structSelection));
+					dataFilePaths.put("Mask_file", DataReductionPlotter.getFullFilePath(structSelection));
+
 				}
 				viewer.refresh();
 			}
@@ -352,6 +372,10 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		Path path = new Path("workflows/2D_DataReductionV2.moml");
 		URL url = FileLocator.find(bundle, path, null);
 		final String momlPath = FileLocator.toFileURL(url).getPath(); 
+
+		IWorkflowUpdater updater = WorkflowUpdaterCreator.createWorkflowUpdater("", momlPath);
+		updater.updateInputActor("Image to process", dataFilePaths);
+		
 		final Job run = new Job("Execute "+getTitle()) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
