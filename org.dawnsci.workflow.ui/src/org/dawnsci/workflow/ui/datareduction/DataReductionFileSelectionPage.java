@@ -16,21 +16,33 @@
 
 package org.dawnsci.workflow.ui.datareduction;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import org.dawb.common.ui.plot.AbstractPlottingSystem;
 import org.dawb.common.ui.plot.PlottingFactory;
+//import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.ui.util.GridUtils;
+//import org.dawb.common.ui.wizard.persistence.datareduction.PersistenceSavingWizard;
 import org.dawnsci.plotting.api.PlotType;
 import org.dawnsci.workflow.ui.Activator;
 import org.dawnsci.workflow.ui.views.runner.AbstractWorkflowRunPage;
 import org.dawnsci.workflow.ui.views.runner.IWorkflowContext;
+import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.ActionContributionItem;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.MenuManager;
+import org.eclipse.jface.action.Separator;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.CheckboxCellEditor;
@@ -46,20 +58,22 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
+//import org.eclipse.jface.wizard.IWizard;
+//import org.eclipse.jface.wizard.WizardDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.SashForm;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+//import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.ISourceProvider;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
+import org.osgi.framework.Bundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -83,8 +97,6 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	private AbstractPlottingSystem backgroundPlot;
 	private Composite mainComposite;
 	private Composite recapComp;
-
-	private Button runWorkflowButton;
 
 	private IDataset image;
 	private TableViewer viewer;
@@ -159,23 +171,24 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		});
 		viewer.setInput(rows);
 
-		runWorkflowButton = new Button(mainRecapComp, SWT.PUSH);
+		// add the Run workflow action as a button
+		ActionContributionItem aci = new ActionContributionItem(workflowRunView.getRunAction());
+		aci.fill(mainRecapComp);
+		Button runWorkflowButton = (Button) aci.getWidget();
 		runWorkflowButton.setText("Run Workflow");
 		runWorkflowButton.setLayoutData(new GridData(SWT.CENTER, SWT.CENTER, false, false));
-		runWorkflowButton.setEnabled(isRunWorkflowEnabled());
-		runWorkflowButton.addSelectionListener(runWorkflowListener);
 
 		detectorPlot.createPlotPart(leftSash, DETECT_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		detectorPlot.setTitle(DETECT_TYPE);
+		detectorPlot.setTitle("Detector Response (Divide)");
 
 		dataPlot.createPlotPart(middleSash, DATA_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		dataPlot.setTitle(DATA_TYPE);
+		dataPlot.setTitle("Data");
 
 		backgroundPlot.createPlotPart(middleSash, BACKGD_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		backgroundPlot.setTitle(BACKGD_TYPE);
+		backgroundPlot.setTitle("Background (Subtract)");
 
 		calibrationPlot.createPlotPart(rightSash, CALIB_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
-		calibrationPlot.setTitle(CALIB_TYPE);
+		calibrationPlot.setTitle("Detector Calibration");
 
 		maskPlot.createPlotPart(rightSash, MASK_TYPE, null, PlotType.IMAGE, workflowRunView.getSite().getPart());
 		maskPlot.setTitle(MASK_TYPE);
@@ -186,17 +199,26 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	}
 
 	private void createPersistenceActions(IViewSite iViewSite) {
-		final Action saveAction = new Action("Export data reduction selected Data", IAction.AS_PUSH_BUTTON) {
+		final Action saveAction = new Action("Save selected data to persistence file", IAction.AS_PUSH_BUTTON) {
 			@Override
 			public void run() {
 				//TODO
+				try {
+//					IWizard wiz = EclipseUtils.openWizard(PersistenceSavingWizard.ID, false);
+//					WizardDialog wd = new  WizardDialog(Display.getCurrent().getActiveShell(), wiz);
+//					wd.setTitle(wiz.getWindowTitle());
+//					wd.open();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					logger.error("Error saving file:"+e);
+				}
 			}
 		};
 		saveAction.setToolTipText("Save selected data to persistence file");
 		saveAction.setText("Save");
 		saveAction.setImageDescriptor(Activator.getImageDescriptor("icons/save.png"));
 
-		final Action loadAction = new Action("Import data from persistence file", IAction.AS_PUSH_BUTTON) {
+		final Action loadAction = new Action("Load data from persistence file", IAction.AS_PUSH_BUTTON) {
 			@Override
 			public void run() {
 				//TODO
@@ -208,9 +230,11 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 
 		IToolBarManager toolMan = iViewSite.getActionBars().getToolBarManager();
 		MenuManager menuMan = new MenuManager();
+		toolMan.add(new Separator());
 		toolMan.add(loadAction);
 		menuMan.add(loadAction);
 		toolMan.add(saveAction);
+		toolMan.add(new Separator());
 		menuMan.add(saveAction);
 	}
 
@@ -311,29 +335,34 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		return str;
 	}
 
-	private SelectionListener runWorkflowListener = new SelectionListener() {
-
-		@Override
-		public void widgetSelected(SelectionEvent e) {
-			widgetDefaultSelected(e);
-		}
-
-		@Override
-		public void widgetDefaultSelected(SelectionEvent e) {
-			// TODO Auto-generated method stub
-
-		}
-	};
-
 	@Override
 	public String getTitle() {
 		return "Data Reduction";
 	}
 
 	@Override
-	public void run(IWorkflowContext context) throws Exception {
-		// TODO Auto-generated method stub
-
+	public void run(final IWorkflowContext context) throws Exception {
+		Bundle bundle = Platform.getBundle("uk.ac.diamond.scisoft.analysis.rcp");
+		Path path = new Path("workflows/2D_DataReductionV2.moml");
+		URL url = FileLocator.find(bundle, path, null);
+		final String momlPath = FileLocator.toFileURL(url).getPath(); 
+		final Job run = new Job("Execute "+getTitle()) {
+			@Override
+			protected IStatus run(IProgressMonitor monitor) {
+				try {
+					monitor.beginTask("Execute "+momlPath, 2);
+					context.execute(momlPath, true, monitor);
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+					return Status.CANCEL_STATUS;
+				} finally {
+					monitor.done();
+				}
+				return Status.OK_STATUS;
+			}
+		};
+		run.schedule();
 	}
 
 	@Override
@@ -488,7 +517,6 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			switch (column){
 			case 0:
 				myImage.setLocked((Boolean)value);
-				runWorkflowButton.setEnabled(isRunWorkflowEnabled());
 				workflowRunView.getRunAction().setEnabled(isRunWorkflowEnabled());
 				break;
 			case 1:
