@@ -377,7 +377,7 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		final String momlPath = FileLocator.toFileURL(url).getPath(); 
 
 		IWorkflowUpdater updater = WorkflowUpdaterCreator.createWorkflowUpdater("", momlPath);
-		updater.updateInputActor(INPUT_ACTOR, dataFilePaths);
+		updater.updateInputActor(INPUT_ACTOR, "User Fields", dataFilePaths);
 		
 		final Job run = new Job("Execute "+getTitle()) {
 			@Override

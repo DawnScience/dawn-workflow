@@ -71,8 +71,12 @@ public interface IWorkflowUpdater {
 	 * Method that updates an input actor
 	 * @param actorName 
 	 *              the unique actor's name
-	 * @param dataFilePaths
-	 *              key value pair of full file paths and their name
+	 * @param attributeName
+	 *              the unique name of the attribute
+	 * @param attributeValues
+	 *              key value pair of attribute value name and its corresponding value.
+	 *              Must have at least one pair. An attribute can be a Field parameter and
+	 *              in that case a Map of key-value pairs is necessary.
 	 */
-	public void updateInputActor(String actorName, Map<String, String> dataFilePaths);
+	public void updateInputActor(String actorName, String attributeName, Map<String, String> attributeValues);
 }
