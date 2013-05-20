@@ -100,6 +100,9 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	private static final String BACKGD_TITLE = "Background (Subtract)";
 	private static final String MASK_TITLE = "Mask";
 
+	private static final String MOML_FILE = "workflows/2D_DataReductionV2.moml";
+	private static final String INPUT_ACTOR = "Image to process";
+
 	private AbstractPlottingSystem dataPlot;
 	private AbstractPlottingSystem calibrationPlot;
 	private AbstractPlottingSystem detectorPlot;
@@ -369,12 +372,12 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	@Override
 	public void run(final IWorkflowContext context) throws Exception {
 		Bundle bundle = Platform.getBundle("uk.ac.diamond.scisoft.analysis.rcp");
-		Path path = new Path("workflows/2D_DataReductionV2.moml");
+		Path path = new Path(MOML_FILE);
 		URL url = FileLocator.find(bundle, path, null);
 		final String momlPath = FileLocator.toFileURL(url).getPath(); 
 
 		IWorkflowUpdater updater = WorkflowUpdaterCreator.createWorkflowUpdater("", momlPath);
-		updater.updateInputActor("Image to process", dataFilePaths);
+		updater.updateInputActor(INPUT_ACTOR, dataFilePaths);
 		
 		final Job run = new Job("Execute "+getTitle()) {
 			@Override
