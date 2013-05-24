@@ -13,11 +13,6 @@ import uk.ac.diamond.scisoft.analysis.roi.IROI;
 public interface IWorkflowUpdater {
 
 	/**
-	 * Initialize a model file
-	 */
-	public void initialize();
-
-	/**
 	 * Method that updates a region actor
 	 * @param actorName the unique actor's name
 	 * @param roi the region of interest
@@ -60,12 +55,6 @@ public interface IWorkflowUpdater {
 	 * @param paramValue the parameter value
 	 */
 	public void updateActorParam(String actorName, String paramName, String paramValue);
-
-	/**
-	 * Method that sets the gold file path
-	 * @param path
-	 */
-	public void setGoldFilePath(String path);
 
 	/**
 	 * Method that updates an input actor

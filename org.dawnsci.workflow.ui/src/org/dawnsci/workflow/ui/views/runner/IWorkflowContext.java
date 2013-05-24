@@ -43,4 +43,16 @@ public interface IWorkflowContext {
 	 * @return true if something is being run.
 	 */
 	public boolean isRunning();
+
+	/**
+	 * Sets the Workflow file path
+	 * @param workflowFilePath
+	 */
+	public void setWorkflowFilePath(String workflowFilePath);
+
+	/**
+	 * 
+	 * @return workflowFileName
+	 */
+	public String getWorkflowFilePath();
 }

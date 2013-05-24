@@ -4,12 +4,11 @@ public class WorkflowUpdaterCreator {
 
 	/**
 	 * 
-	 * @param dataFilePath
 	 * @param modelFilePath
 	 * @return
 	 *       a workflow updater
 	 */
-	public static IWorkflowUpdater createWorkflowUpdater(String dataFilePath, String modelFilePath){
-		return new WorkflowUpdaterImpl(dataFilePath, modelFilePath);
+	public static IWorkflowUpdater createWorkflowUpdater(String modelFilePath){
+		return new WorkflowUpdaterImpl(modelFilePath);
 	}
 }

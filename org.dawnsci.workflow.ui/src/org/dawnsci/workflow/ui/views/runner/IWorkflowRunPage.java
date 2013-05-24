@@ -1,5 +1,7 @@
 package org.dawnsci.workflow.ui.views.runner;
 
+import java.util.Map;
+
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.ISourceProvider;
 
@@ -16,7 +18,7 @@ public interface IWorkflowRunPage {
      * a worklflow is so this should use the language of the custom technique they
      * would like to run.
      */
-	public String getTitle();
+	public Map<String, String> getTitles();
 
 	/**
 	 * Creates the custom UI which will configure workflow configuration.

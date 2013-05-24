@@ -101,6 +101,8 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	private static final String MASK_TITLE = "Mask";
 
 	private static final String MOML_FILE = "workflows/2D_DataReductionV2.moml";
+	// temporary used as a moml file until the one above is put in another plugin with this class
+	private static final String MOML_DUMMY = "workflows/dummyFile.moml";
 	private static final String INPUT_ACTOR = "Image to process";
 
 	private AbstractPlottingSystem dataPlot;
@@ -193,7 +195,7 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 		viewer.setInput(rows);
 
 		// add the Run workflow action as a button
-		ActionContributionItem aci = new ActionContributionItem(workflowRunView.getRunAction());
+		ActionContributionItem aci = new ActionContributionItem(workflowRunView.getRunActions().get(MOML_DUMMY));
 		aci.fill(mainRecapComp);
 		Button runWorkflowButton = (Button) aci.getWidget();
 		runWorkflowButton.setText("Run Workflow");
@@ -365,21 +367,26 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 	}
 
 	@Override
-	public String getTitle() {
-		return "Data Reduction";
+	public Map<String, String> getTitles() {
+		Map<String, String> titles = new HashMap<String, String>();
+		titles.put(MOML_DUMMY, "Data Reduction");
+		return titles;
 	}
 
 	@Override
 	public void run(final IWorkflowContext context) throws Exception {
+		//For now take programmatically this workflow file from uk.ac.diamond.analysis.rcp
+		//should be replaced by the resource path provided in the extension point
+		//TODO: make a new Diamond plugin in which to put the workflow and this datareduction page view.
 		Bundle bundle = Platform.getBundle("uk.ac.diamond.scisoft.analysis.rcp");
 		Path path = new Path(MOML_FILE);
 		URL url = FileLocator.find(bundle, path, null);
 		final String momlPath = FileLocator.toFileURL(url).getPath(); 
 
-		IWorkflowUpdater updater = WorkflowUpdaterCreator.createWorkflowUpdater("", momlPath);
+		IWorkflowUpdater updater = WorkflowUpdaterCreator.createWorkflowUpdater(momlPath);
 		updater.updateInputActor(INPUT_ACTOR, "User Fields", dataFilePaths);
 		
-		final Job run = new Job("Execute "+getTitle()) {
+		final Job run = new Job("Execute "+getTitles().get(MOML_DUMMY)) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
@@ -550,7 +557,7 @@ public class DataReductionFileSelectionPage extends AbstractWorkflowRunPage {
 			switch (column){
 			case 0:
 				myImage.setLocked((Boolean)value);
-				workflowRunView.getRunAction().setEnabled(isRunWorkflowEnabled());
+				workflowRunView.getRunActions().get(MOML_DUMMY).setEnabled(isRunWorkflowEnabled());
 				break;
 			case 1:
 				myImage.setType((String)value);

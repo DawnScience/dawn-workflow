@@ -74,6 +74,66 @@
                </appinfo>
             </annotation>
          </attribute>
+         <attribute name="workflowFile1" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The workflow file to run
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="workflowFile2" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="runIcon1" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The Run action icon
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="runIcon2" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="stopIcon1" type="string" use="required">
+            <annotation>
+               <documentation>
+                  The Stop action icon
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
+         <attribute name="stopIcon2" type="string">
+            <annotation>
+               <documentation>
+                  The Stop action icon
+               </documentation>
+               <appinfo>
+                  <meta.attribute kind="resource"/>
+               </appinfo>
+            </annotation>
+         </attribute>
       </complexType>
    </element>
 

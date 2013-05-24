@@ -1,5 +1,8 @@
 package org.dawnsci.workflow.ui.views.runner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.dawnsci.common.widgets.file.ResourceChoiceBox;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -32,8 +35,10 @@ public class ExampleRunPage extends AbstractWorkflowRunPage {
 	private Composite composite;
 
 	@Override
-	public String getTitle() {
-		return "Maths example";
+	public Map<String, String> getTitles() {
+		Map<String, String> titles = new HashMap<String, String>();
+		titles.put("MOML_FILE_PATH", "Maths example");
+		return titles;
 	}
 
 	@Override
@@ -59,7 +64,7 @@ public class ExampleRunPage extends AbstractWorkflowRunPage {
 	public void run(final IWorkflowContext context) throws Exception {
 		
 		final String momlPath = fileBox.getAbsoluteFilePath();
-		final Job run = new Job("Execute "+getTitle()) {
+		final Job run = new Job("Execute "+getTitles().get(momlPath)) {
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {

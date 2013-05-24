@@ -32,124 +32,18 @@ import com.isencia.passerelle.util.ptolemy.ResourceParameter;
 public class WorkflowUpdaterImpl implements IWorkflowUpdater{
 
 	private static Logger logger = LoggerFactory.getLogger(WorkflowUpdaterImpl.class);
-	private String dataFilePath;
 	private String modelFilePath;
-	private String goldFilePath = "";
 
-	public WorkflowUpdaterImpl(String dataFilePath, String modelFilePath) {
-		this.dataFilePath = dataFilePath;
+	public WorkflowUpdaterImpl(String modelFilePath) {
 		this.modelFilePath = modelFilePath;
 	}
 
-	public void setGoldFilePath(String goldFilePath) {
-		this.goldFilePath = goldFilePath;
-	}
-	
 	public void createFile(String filename, String path) throws IOException {
 		File f;
 		f = new File(path+filename);
 		if (!f.exists()) {
 			f.createNewFile();
 			logger.debug("New file "+filename+" has been created to the following directory:"+path);
-		}
-	}
-
-	/**
-	 * Initialize a model file
-	 * this method is deprecated: Use updateInputActor() instead
-	 */
-	@Override
-	@Deprecated
-	public void initialize(){
-		File modelFile = new File(modelFilePath);
-
-		try {
-
-			Flow flow = FlowManager.readMoml(modelFile.toURI().toURL());
-			ComponentEntity dataEntity = flow.getEntity("Data");
-			ComponentEntity axesEntity = flow.getEntity("Axes");
-			ComponentEntity inputEntity = flow.getEntity("Input");
-			ComponentEntity goldEntity = flow.getEntity("Gold");
-			
-			// for dataEntity
-			if (dataEntity != null) {
-				// data path parameter
-				Attribute pathDataAttr = dataEntity.getAttribute("Path");
-				if (pathDataAttr instanceof ResourceParameter)
-					((ResourceParameter) pathDataAttr).setExpression(dataFilePath);
-				pathDataAttr.setContainer(dataEntity);
-
-				// data set parameter
-				// TODO not sure if this is required here. (MB)
-				//Attribute dataAttr = dataEntity.getAttribute("Data Sets");
-				//if (dataAttr instanceof StringChoiceParameter)
-				//	((StringChoiceParameter) dataAttr).setExpression("/entry1/analyser/data");
-				//dataAttr.setContainer(dataEntity);
-				
-				dataEntity.setContainer(flow);
-			};
-
-			if (goldEntity != null) {
-				// data path parameter
-				Attribute pathDataAttr = goldEntity.getAttribute("Path");
-				if (pathDataAttr instanceof ResourceParameter)
-					((ResourceParameter) pathDataAttr).setExpression(goldFilePath);
-				pathDataAttr.setContainer(goldEntity);
-
-				// data set parameter
-				// TODO not sure if this is required here. (MB)
-				//Attribute dataAttr = dataEntity.getAttribute("Data Sets");
-				//if (dataAttr instanceof StringChoiceParameter)
-				//	((StringChoiceParameter) dataAttr).setExpression("/entry1/analyser/data");
-				//dataAttr.setContainer(dataEntity);
-				
-				goldEntity.setContainer(flow);
-			};
-			
-			// for AxisEntity
-			if (axesEntity != null) {
-				// data path parameter
-				Attribute pathAxesAttr = axesEntity.getAttribute("Path");
-				if (pathAxesAttr instanceof ResourceParameter)
-					((ResourceParameter) pathAxesAttr).setExpression(dataFilePath);
-				pathAxesAttr.setContainer(axesEntity);
-	
-				// xaxis/yaxis data set parameter
-				//TODO again not sure this should be here (MB)
-				//Attribute xyaxisAttr = axesEntity.getAttribute("Data Sets");
-				//if (xyaxisAttr instanceof StringChoiceParameter)
-				//	((StringChoiceParameter) xyaxisAttr).setExpression("/entry1/analyser/energies, /entry1/analyser/angles");
-				//xyaxisAttr.setContainer(axesEntity);
-				
-				axesEntity.setContainer(flow);
-			};
-
-			// for InputEntity
-			if (inputEntity != null) {
-				// input filename field parameter(for saving) 
-				Attribute fileNameAttr = inputEntity.getAttribute("User Fields");
-				FieldBean filenameBean = null;
-				if (fileNameAttr instanceof FieldParameter){
-					FieldContainer fields = (FieldContainer) ((FieldParameter) fileNameAttr).getBeanFromValue(FieldContainer.class);
-					if (fields.containsBean("fileName")) {
-						filenameBean = fields.getBean("fileName");
-						filenameBean.setDefaultValue((String)dataFilePath);
-						FieldParameter fp = ((FieldParameter)fileNameAttr);
-						fp.setExpression(fp.getValueFromBean(fields));
-					}
-				}
-				fileNameAttr.setContainer(inputEntity);
-				
-				inputEntity.setContainer(flow);
-			};
-
-			FlowManager.save(flow, modelFile.toURI().toURL());
-
-			logger.debug("Model file updated");
-
-		} catch (Exception e) {
-			logger.error("Error copying MOML file:"+e.getMessage());
-			e.printStackTrace();
 		}
 	}
 

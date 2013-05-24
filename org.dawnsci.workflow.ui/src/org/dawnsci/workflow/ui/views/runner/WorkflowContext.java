@@ -17,6 +17,7 @@ class WorkflowContext implements IWorkflowContext {
 	
 	private ISourceProvider[] providers;
 	private WorkflowRunView   view;
+	private String workflowFilePath;
 
 	WorkflowContext(WorkflowRunView view, ISourceProvider[] providers) {
 		this.view      = view;
@@ -31,7 +32,7 @@ class WorkflowContext implements IWorkflowContext {
 	private ModelRunner modelRunner;
 
 	@Override
-	public void execute(String momlPath, boolean sameVm, IProgressMonitor monitor) throws Exception {
+	public void execute(final String momlPath, boolean sameVm, IProgressMonitor monitor) throws Exception {
 		
 		if (sameVm) {
 			modelRunner = new ModelRunner();
@@ -48,14 +49,14 @@ class WorkflowContext implements IWorkflowContext {
 			runAction.addExecuteActionListener(new ExecuteActionListener() {	
 				@Override
 				public void stopRequested(ExecuteActionEvent evt) {
-					view.getRunAction().setEnabled(true);
-					view.getStopAction().setEnabled(false);
+					view.getRunActions().get(momlPath).setEnabled(true);
+					view.getStopActions().get(momlPath).setEnabled(false);
 				}
 				
 				@Override
 				public void executionRequested(ExecuteActionEvent evt) {
-					view.getRunAction().setEnabled(false);
-					view.getStopAction().setEnabled(true);
+					view.getRunActions().get(momlPath).setEnabled(false);
+					view.getStopActions().get(momlPath).setEnabled(true);
 				}
 				
 				@Override
@@ -105,5 +106,14 @@ class WorkflowContext implements IWorkflowContext {
 		if (modelRunner!=null) return true;
 		return (new StopAction()).isEnabled();
 	}
- 
+
+	@Override
+	public void setWorkflowFilePath(String workflowFilePath) {
+		this.workflowFilePath = workflowFilePath;
+	}
+
+	@Override
+	public String getWorkflowFilePath(){
+		return workflowFilePath;
+	}
 }
