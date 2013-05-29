@@ -2,7 +2,7 @@
 <feature
       id="org.dawb.workflow.feature"
       label="DAWB Workflows"
-      version="1.0.0.qualifier"
+      version="1.2.0.qualifier"
       provider-name="Diamond Light Source">
 
    <description>
