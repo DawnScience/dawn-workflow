@@ -473,6 +473,7 @@
    <extension
          point="org.eclipse.ui.views">
       <view
+            category="com.isencia.passerelle.workbench.model.editor.ui.workflow.category"
             class="org.dawb.passerelle.views.ActorDebugView"
             icon="icons/debug_purple.gif"
             id="org.dawb.passerelle.views.actorDebugView"
