@@ -108,7 +108,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	protected boolean             isMetaRequired = false;
 	
 	private final RegularExpressionParameter filterParam;
-	private String                fileFilter;
 
 	private final ResourceParameter       path;
 	private final StringChoiceParameter   names;
@@ -244,8 +243,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			isMetaRequired = ((BooleanToken)metaParam.getToken()).booleanValue();
 		} else if (attribute == folderParam) {
 			// You cannot change this, it is set in the constuctor and is fixed.
-		} else if (attribute == filterParam) {
-			fileFilter = filterParam.getExpression();
 		} else if (attribute == names) {
 			logger.trace("Data set names changed to : " + names.getExpression());
 			
@@ -283,14 +280,14 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			if (file.isDirectory()) {
 				final List<File> fileList = SortingUtils.getSortedFileList(file);
 				for (File f : fileList) {				
-					if (!isFileLegal(f)) continue;
+					if (!isFileLegal(f, triggerMsg)) continue;
 					final TriggerObject ob = new TriggerObject();
 					ob.setTrigger(triggerMsg);
 					ob.setFile(f);
 					fileQueue.add(ob);
 				}
 			} else {
-				if (isFileLegal(file)) {
+				if (isFileLegal(file, triggerMsg)) {
 					
 					if (isH5Slicing(triggerMsg)) {
 						try {
@@ -338,12 +335,12 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				        && getDataSetNames().length==1;
 	}
 
-	private boolean isFileLegal(File file) {
+	private boolean isFileLegal(File file, final ManagedMessage triggerMsg) {
 		
 		if (file.isDirectory())                  return false;
 		if (file.isHidden())                     return false;
 		if (file.getName().startsWith("."))      return false;
-	    if (!isRequiredFileName(file.getName())) return false;		   
+	    if (!isRequiredFileName(file.getName(), triggerMsg)) return false;		   
         return true;
 	}
 
@@ -395,7 +392,14 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		}
 	}
 	
-    private boolean isRequiredFileName(String fileName) {
+    private boolean isRequiredFileName(String fileName, final ManagedMessage triggerMsg) {
+    	
+    	String fileFilter;
+    	try {
+    		fileFilter = ParameterUtils.getSubstituedValue(filterParam, MessageUtils.coerceMessage(triggerMsg));
+    	} catch (Throwable ne) {
+    		fileFilter = filterParam.getExpression();
+    	}
     	if (fileFilter==null || "".equals(fileFilter)) return true;
 		if (filterParam.isJustWildCard()) {
 			final StringMatcher matcher = new StringMatcher(fileFilter, true, false);
