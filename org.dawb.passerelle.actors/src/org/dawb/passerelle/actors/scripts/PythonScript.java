@@ -175,7 +175,7 @@ public class PythonScript extends AbstractScriptTransformer {
 				service = PythonService.openConnection(pythonCommand.getExpression());
 			}
 	
-			final DataMessageComponent ret = MessageUtils.mergeAll(cache);
+			final DataMessageComponent ret = isPassInputs ? MessageUtils.mergeAll(cache) : new DataMessageComponent();
 			ret.setMeta(MessageUtils.getMeta(cache));
 			ret.putScalar("python_script", getResource().getName());
 			
