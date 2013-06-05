@@ -174,8 +174,13 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		try {
 			final Map<String,String> scalar = MessageUtils.getScalar(cache);
 			final String fileName = scalar!=null ? scalar.get("file_name") : null;
-			final IFile  output   = getOutputPath(fileName);
-			filePath = output.getLocation().toOSString();
+			
+			final Object  output   = getOutputPath(fileName);
+			if (output instanceof File) {
+				filePath = ((File)output).getAbsolutePath();
+			} else {
+				filePath = ((IFile)output).getLocation().toOSString();
+			}
 			
 			final DataMessageComponent comp = new DataMessageComponent();
 			comp.addScalar(MessageUtils.getScalar(cache));
@@ -195,7 +200,9 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				writeImage(filePath, cache, comp);
 			}
 
-			AbstractPassModeTransformer.refreshResource(output);
+			if (output instanceof IResource) {
+				AbstractPassModeTransformer.refreshResource((IResource)output);
+			}
 			
 			return comp;
 			
@@ -454,15 +461,22 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 
 	private String getOutputPath() throws Exception {
 		
+		Object path = null;
 		// Attempt to read file_name from previous nodes, if it will read.
 		final List<IVariable> vars = getInputVariables();
 		for (IVariable input : vars) {
 			if (input != null && input.getVariableName().equals("file_name")) {
-				return getOutputPath(input.getExampleValue().toString()).getLocation().toOSString();
+				path = getOutputPath(input.getExampleValue().toString());
+				break;
 			}
 		}
 
-		return getOutputPath("new_data_file.h5").getLocation().toOSString();
+		if (path==null) path = getOutputPath("new_data_file.h5");
+		if (path instanceof File) {
+			return ((File)path).getAbsolutePath();
+		} else {
+			return ((IFile)path).getLocation().toOSString();
+		}
 	}
 
 	public void doPreInitialize() {
@@ -471,13 +485,13 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 
 	private IFile fileWritingTo;
 
-	private IFile getOutputPath(String fileName) throws Exception {
-		
+	private Object getOutputPath(String fileName) throws Exception {
+				
 		if (fileName==null) fileName = "new_data_file.h5";
 		this.fileWriteType = fileWriteParam.getExpression();
 		this.filePath = filePathParam.getExpression();
 		this.filePath = ParameterUtils.substitute(filePath, this);
-		
+				
 		if (WRITING_CHOICES.get(0).equals(fileWriteType) || WRITING_CHOICES.get(1).equals(fileWriteType)) { //Append to file referenced by Output
 			IFile file = (IFile)ResourcesPlugin.getWorkspace().getRoot().findMember(filePath, true);
 			if (file == null) {
@@ -526,6 +540,19 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				   WRITING_CHOICES.get(4).equals(fileWriteType)) { //Create new file using ${file_name} then use that for everything
 			
 			if (fileName==null) throw createDataMessageException("Inputs to '"+getName()+"' must contain scalar value 'file_name' to determine h5 output name.", null);
+			
+			try {
+				final File dir = new File(filePath);
+				if (dir.exists() && dir.isDirectory() && ResourcesPlugin.getWorkspace().getRoot().findMember(filePath, true)==null) {
+					final String rootName = fileName.indexOf('.')>-1
+		                      ? fileName.substring(0, fileName.lastIndexOf("."))
+		                      : fileName;
+					return FileUtils.getUnique(dir, rootName, getExtension());
+				}
+			} catch (Throwable ne) {
+				// Ignored
+			}
+			
 			if (fileWritingTo == null) {
 				final String rootName = fileName.indexOf('.')>-1
 				                      ? fileName.substring(0, fileName.lastIndexOf("."))
