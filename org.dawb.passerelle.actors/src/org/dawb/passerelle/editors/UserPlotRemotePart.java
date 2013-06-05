@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import org.dawb.common.ui.plot.AbstractPlottingSystem;
 import org.dawb.common.ui.plot.PlottingFactory;
 import org.dawb.common.ui.plot.region.RegionService;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
@@ -191,7 +190,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		}
 		
 		// Tool
-		final AbstractPlottingSystem asystem = (AbstractPlottingSystem)system;
+		final IToolPageSystem asystem = (IToolPageSystem)system.getAdapter(IToolPageSystem.class);
 		if (bean.getToolId()!=null && asystem.getToolPage(bean.getToolId())!=null) {
 			
 			final IToolPage    page = asystem.getToolPage(bean.getToolId());
@@ -389,7 +388,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 			}
 		}
 
-		IToolPageSystem tsystem = (IToolPageSystem)system;
+		IToolPageSystem tsystem = (IToolPageSystem)system.getAdapter(IToolPageSystem.class);
 		// Get the data from the tool required by the actor.
 		if (originalUserPlotBean.getToolId()!=null) {
 			IToolPage       tool    = tsystem.getToolPage(originalUserPlotBean.getToolId());
@@ -449,7 +448,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 	@Override
 	public void setRemoteFocus() {
 		try {
-			((AbstractPlottingSystem)system).setFocus();
+			system.getPlotComposite().setFocus();
 		} catch (Throwable ne) {
 			logger.error("Cannot set focus!", ne);
 		}
