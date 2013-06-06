@@ -78,6 +78,19 @@ public class ExpressionDialog extends BeanDialog {
 	}
 	
 	public int open() {
+		ExpressionContainer eBean = (ExpressionContainer)super.getBean();
+		// this is a trick to feed the existing port names into the outputport builder,
+		// as the If actor and its ExpressionParameter have their port handling logic outside
+		// of the normal parameter value handling mechanisms 
+		// (actor's attributeChanged() is bypassed by the code in this dialog).
+		ArrayList<String> listOutputPortNames = new ArrayList<String>();
+		for (ExpressionBean expression : eBean.getExpressions()) {
+			String name=expression.getOutputPortName();
+			if (!name.equals("output")) {
+				listOutputPortNames.add(name);
+			}
+		}
+		parent.outputPortSetterBuilder.setOutputPortNames(listOutputPortNames.toArray(new String[listOutputPortNames.size()]));
 		expressions.setShowAdditionalFields(true);
         int ret = super.open();
         expressions = null;
