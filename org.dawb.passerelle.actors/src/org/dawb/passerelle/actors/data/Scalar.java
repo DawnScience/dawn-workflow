@@ -151,7 +151,7 @@ public class Scalar extends AbstractDataMessageSource {
 		logInfo("Setting scalar '"+strName+"' to the vale " + value.toString());
 
 		try {
-			return MessageUtils.getDataMessage(despatch);
+			return MessageUtils.getDataMessage(despatch, null);
 		} catch (Exception e) {
 			throw createDataMessageException("Cannot set scalar "+strName, e);
 		}

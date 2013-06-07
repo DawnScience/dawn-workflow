@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE entity PUBLIC "-//UC Berkeley//DTD MoML 1//EN"
     "http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd">
-<entity name="newModel" class="ptolemy.actor.TypedCompositeActor" source="/users/svensson/dawb_workspace_ifactor/workflows/loop_example2.moml">
+<entity name="newModel" class="ptolemy.actor.TypedCompositeActor" source="/mntdirect/_scisoft/dawn/mx/workflow/workflows/examples/loop_example2.moml">
     <property name="_createdBy" class="ptolemy.kernel.attributes.VersionAttribute" value="7.0.1">
     </property>
     <property name="_workbenchVersion" class="ptolemy.kernel.attributes.VersionAttribute" value="0.8.2">
@@ -25,7 +25,7 @@
         </property>
         <property name="User Input Type" class="org.dawb.passerelle.actors.ui.UserModifyTransformer$1" value="Edit with dialog (non-blocking)">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{408.0, 306.0}">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{218.0, 325.0}">
         </property>
     </entity>
     <entity name="DataImportSource" class="org.dawb.passerelle.actors.data.DataImportSource">
@@ -37,8 +37,6 @@
         </property>
         <property name="Folder" class="ptolemy.data.expr.Parameter" value="false">
         </property>
-        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
-        </property>
         <property name="File Filter" class="com.isencia.passerelle.util.ptolemy.RegularExpressionParameter" value="">
         </property>
         <property name="Path" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="${project_name}/data/ref-testscale_1_001.img">
@@ -46,6 +44,8 @@
         <property name="Data Sets" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="">
         </property>
         <property name="Rename Data Sets" class="com.isencia.passerelle.util.ptolemy.StringMapParameter" value="">
+        </property>
+        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
         </property>
         <property name="_location" class="ptolemy.kernel.util.Location" value="{128.0, 149.0}">
         </property>
@@ -67,7 +67,7 @@
         </property>
         <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate after all data received">
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
         </property>
         <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
         </property>
@@ -75,7 +75,7 @@
         </property>
         <property name="Name" class="ptolemy.data.expr.StringParameter" value="x">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{809.0, 331.0}">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{891.0, 241.0}">
         </property>
     </entity>
     <entity name="End" class="org.dawb.passerelle.actors.ui.MessageSink">
@@ -141,11 +141,9 @@
         </property>
     </entity>
     <entity name="If" class="org.dawb.passerelle.actors.ifdynaport.If">
-<display name="If"/>        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
         <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
-        </property>
-        <property name="_icon" class="com.isencia.passerelle.actor.gui.EditorIcon">
         </property>
         <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
         </property>
@@ -155,9 +153,79 @@
         </property>
         <property name="Expressions" class="org.dawb.passerelle.actors.ifdynaport.ExpressionParameter" value="PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGphdmEgdmVyc2lvbj0iMS42LjBfMjMiIGNsYXNzPSJqYXZhLmJlYW5zLlhNTERlY29kZXIiPgogPG9iamVjdCBjbGFzcz0ib3JnLmRhd2IucGFzc2VyZWxsZS5hY3RvcnMuaWZkeW5hcG9ydC5FeHByZXNzaW9uQ29udGFpbmVyIj4KICA8dm9pZCBwcm9wZXJ0eT0iZXhwcmVzc2lvbnMiPgogICA8dm9pZCBpbmRleD0iMCI+CiAgICA8dm9pZCBwcm9wZXJ0eT0iZXhwcmVzc2lvbiI+CiAgICAgPHN0cmluZz54Jmd0OzU8L3N0cmluZz4KICAgIDwvdm9pZD4KICAgPC92b2lkPgogICA8dm9pZCBtZXRob2Q9ImFkZCI+CiAgICA8b2JqZWN0IGNsYXNzPSJvcmcuZGF3Yi5wYXNzZXJlbGxlLmFjdG9ycy5pZmR5bmFwb3J0LkV4cHJlc3Npb25CZWFuIj4KICAgICA8dm9pZCBwcm9wZXJ0eT0iZXhwcmVzc2lvbiI+CiAgICAgIDxzdHJpbmc+eCZsdDs9NTwvc3RyaW5nPgogICAgIDwvdm9pZD4KICAgICA8dm9pZCBwcm9wZXJ0eT0ib3V0cHV0UG9ydE5hbWUiPgogICAgICA8c3RyaW5nPngmbHQ7PTU8L3N0cmluZz4KICAgICA8L3ZvaWQ+CiAgICA8L29iamVjdD4KICAgPC92b2lkPgogIDwvdm9pZD4KIDwvb2JqZWN0Pgo8L2phdmE+Cg==">
         </property>
-        <property name="output port setter builder" class="com.isencia.passerelle.actor.dynaport.OutputPortSetterBuilder">
-        </property>
         <property name="_location" class="ptolemy.kernel.util.Location" value="{301.0, 161.0}">
+        </property>
+        <port name="x<=5" class="com.isencia.passerelle.core.Port">
+            <property name="output"/>
+            <property name="multiport"/>
+        </port>
+    </entity>
+    <entity name="Fork" class="org.dawb.passerelle.actors.flow.Fork">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="_icon" class="com.isencia.passerelle.actor.gui.EditorIcon">
+        </property>
+        <property name="Buffer time (ms)" class="ptolemy.data.expr.Parameter" value="0">
+        </property>
+        <property name="maxRetentionCount" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="maxRetentionTime" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="output port configurer" class="com.isencia.passerelle.actor.dynaport.OutputPortConfigurationExtender">
+        </property>
+        <property name="Output port names (comma-separated)" class="ptolemy.data.expr.StringParameter" value="b1, b2">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{348.0, 363.0}">
+        </property>
+        <port name="requestFinish" class="com.isencia.passerelle.core.ControlPort">
+            <property name="input"/>
+            <property name="multiport"/>
+            <property name="control" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="error" class="com.isencia.passerelle.core.ErrorPort">
+            <property name="output"/>
+            <property name="multiport"/>
+            <property name="error" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="hasFired" class="com.isencia.passerelle.core.ControlPort">
+            <property name="output"/>
+            <property name="multiport"/>
+            <property name="control" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="hasFinished" class="com.isencia.passerelle.core.ControlPort">
+            <property name="output"/>
+            <property name="multiport"/>
+            <property name="control" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="input" class="com.isencia.passerelle.core.Port">
+            <property name="input"/>
+            <property name="multiport"/>
+        </port>
+        <port name="b1" class="com.isencia.passerelle.core.Port">
+            <property name="output"/>
+            <property name="multiport"/>
+        </port>
+        <port name=" b2" class="com.isencia.passerelle.core.Port">
+            <property name="output"/>
+            <property name="multiport"/>
+        </port>
+    </entity>
+    <entity name="Join" class="com.isencia.passerelle.actor.forkjoin.Join">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="_icon" class="com.isencia.passerelle.actor.gui.EditorIcon">
+        </property>
+        <property name="Buffer time (ms)" class="ptolemy.data.expr.Parameter" value="0">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{769.0, 328.0}">
         </property>
         <port name="requestFinish" class="com.isencia.passerelle.core.ControlPort">
             <property name="input"/>
@@ -191,32 +259,12 @@
             <property name="output"/>
             <property name="multiport"/>
         </port>
-        <port name="x<=5" class="com.isencia.passerelle.core.Port">
-            <property name="output"/>
-            <property name="multiport"/>
-        </port>
     </entity>
     <relation name="_R7" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
     <relation name="_R8" class="ptolemy.actor.TypedIORelation">
-        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
-        </property>
-    </relation>
-    <relation name="_R4" class="ptolemy.actor.TypedIORelation">
-        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
-        </property>
-    </relation>
-    <relation name="_R5" class="ptolemy.actor.TypedIORelation">
-        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
-        </property>
-    </relation>
-    <relation name="_R9" class="ptolemy.actor.TypedIORelation">
-        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
-        </property>
-    </relation>
-    <relation name="_R10" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
@@ -236,24 +284,52 @@
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
+    <relation name="_R_9" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_6" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_10" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_7" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_5" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_8" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
     <link port="Review.input" relation="_R_3"/>
-    <link port="Review.output" relation="_R4"/>
-    <link port="Review.output" relation="_R9"/>
+    <link port="Review.output" relation="_R_9"/>
     <link port="DataImportSource.output" relation="_R"/>
     <link port="DataImportSource.trigger" relation="_R7"/>
     <link port="Scalar.output" relation="_R7"/>
-    <link port="Counter.input" relation="_R5"/>
-    <link port="Counter.input" relation="_R10"/>
+    <link port="Counter.input" relation="_R_8"/>
     <link port="Counter.output" relation="_R_4"/>
     <link port="End.input" relation="_R_2"/>
     <link port="End.shownMessage" relation="_R8"/>
     <link port="Stop.input" relation="_R8"/>
-    <link port="Sleep.input" relation="_R4"/>
-    <link port="Sleep.output" relation="_R5"/>
-    <link port="Sleep(1).input" relation="_R9"/>
-    <link port="Sleep(1).output" relation="_R10"/>
+    <link port="Sleep.input" relation="_R_10"/>
+    <link port="Sleep.output" relation="_R_5"/>
+    <link port="Sleep(1).input" relation="_R_6"/>
+    <link port="Sleep(1).output" relation="_R_7"/>
     <link port="If.input" relation="_R_4"/>
     <link port="If.input" relation="_R"/>
     <link port="If.output" relation="_R_2"/>
     <link port="If.x<=5" relation="_R_3"/>
+    <link port="Fork.input" relation="_R_9"/>
+    <link port="Fork.b1" relation="_R_10"/>
+    <link port="Fork. b2" relation="_R_6"/>
+    <link port="Join.input" relation="_R_7"/>
+    <link port="Join.input" relation="_R_5"/>
+    <link port="Join.output" relation="_R_8"/>
 </entity>

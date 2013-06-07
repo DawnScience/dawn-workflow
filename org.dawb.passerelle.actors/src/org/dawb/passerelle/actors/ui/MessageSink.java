@@ -137,7 +137,7 @@ public class MessageSink extends AbstractDataMessageSink {
 			}
 			
 			if (shownMessagePort.getWidth()>0) {
-			    shownMessagePort.broadcast(new PasserelleToken(MessageUtils.getDataMessage(despatch)));
+			    shownMessagePort.broadcast(new PasserelleToken(MessageUtils.getDataMessage(despatch, null)));
 			}
 			
 			

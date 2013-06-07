@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.dawb.passerelle.common.DatasetConstants;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.IVariable;
@@ -95,7 +96,7 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 				final DataMessageComponent despatch = getDespatch();
 				if (despatch==null) return;
 				
-		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch));
+		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
 				cache.clear();
 			}
 			
@@ -141,30 +142,6 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 		return 1;
 	}
 
-	protected boolean doPostFire() throws ProcessingException {
-		
-		final boolean isFinished   = isFinishRequested();
-		final boolean isInputRound = isInputRoundComplete();
-
-		// TODO Check also if all inputs to input have fired once, not only if system has finished.
-		if (isInputRound && isFireEndLoop() && cache.size()>=getMinimumCacheSize()) {
-			DataMessageComponent despatch = null;
-			try {
-				despatch = getDespatch();
-				if (despatch==null) return !isFinished;
-				sendOutputMsg(output, MessageUtils.getDataMessage(despatch));
-				
-			} catch (ProcessingException pe) {
-				throw pe;
-			} catch (Exception ne) {
-				logger.error("Cannot add data from '"+despatch+"'", ne);
-			}
-		}
-		
-		if (isFinished) return false;
-		return true; // Wait for more
-	}
-	
 	protected void doWrapUp() throws TerminationException {
 		super.doWrapUp();
 		if (isFinishRequested()) {

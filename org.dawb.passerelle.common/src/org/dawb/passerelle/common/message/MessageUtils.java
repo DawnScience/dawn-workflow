@@ -345,11 +345,21 @@ public class MessageUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static ManagedMessage getDataMessage(final DataMessageComponent despatch) throws Exception {
-        if (despatch==null) return null;
-		final ManagedMessage     message = MessageFactory.getInstance().createMessage();
-        message.setBodyContent(despatch, DatasetConstants.CONTENT_TYPE_DATA);
-        return message;
+	public static ManagedMessage getDataMessage(final DataMessageComponent despatch, final ManagedMessage originalMessage) throws Exception {
+        if (despatch==null) 
+        	throw new NullPointerException("Result DataMessageComponent must not be null");
+        
+        if(originalMessage!=null) {
+			final ManagedMessage outputMsg = MessageFactory.getInstance().createCausedCopyMessage(originalMessage);
+			outputMsg.setBodyContent(despatch, DatasetConstants.CONTENT_TYPE_DATA);
+			return outputMsg;
+        } else {
+        	// TODO for source actors itś better to use the Actor.createMessage methods 
+        	// as they also add actor-specific system headers in the message.
+			final ManagedMessage message = MessageFactory.getInstance().createMessage();
+	        message.setBodyContent(despatch, DatasetConstants.CONTENT_TYPE_DATA);
+	        return message;
+        }
 	}
 
 	public static String getNames(Collection<? extends Serializable> sets) {
@@ -511,6 +521,12 @@ public class MessageUtils {
 			    ret.add(a);
 			}
 		}
+		return ret;
+	}
+	
+	public static DataMessageComponent copy(DataMessageComponent dmc) {
+		DataMessageComponent ret = new DataMessageComponent();
+		ret.add(dmc);
 		return ret;
 	}
 

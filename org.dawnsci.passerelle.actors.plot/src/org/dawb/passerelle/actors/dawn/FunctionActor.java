@@ -109,7 +109,7 @@ public class FunctionActor extends AbstractDataMessageSource {
 			despatch.addFunction(nameParam.getExpression(), functionParam.getFunction());
 
 			try {
-				return MessageUtils.getDataMessage(despatch);
+				return MessageUtils.getDataMessage(despatch, null);
 			} catch (Exception e) {
 				throw createDataMessageException("Cannot set scalar "+nameParam.getExpression(), e);
 			}

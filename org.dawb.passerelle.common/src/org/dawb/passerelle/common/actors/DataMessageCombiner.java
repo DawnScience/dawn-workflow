@@ -26,6 +26,7 @@ import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 /**
+ * TODO check about deleting this actor completely, it breaks normal message flow handling
  * A Synchronizer designed to replace the Expression Mode parameter
  * 
  * Fires once after each input wire has fired once.
@@ -76,7 +77,7 @@ public class DataMessageCombiner extends Transformer implements IProjectNamedObj
 			final DataMessageComponent despatch = getDespatch();
 			if (despatch==null) return;
 			
-	        sendOutputMsg(output, MessageUtils.getDataMessage(despatch));
+	        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, null));
 			cache.clear();
 		} catch (Exception ne) {
 			throw new TerminationException("Cannot despatch file message!", this, ne);

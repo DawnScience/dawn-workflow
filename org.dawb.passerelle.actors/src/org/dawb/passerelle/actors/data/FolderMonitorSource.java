@@ -258,7 +258,7 @@ public class FolderMonitorSource extends AbstractDataMessageSource {
 				}
 			}
 			
-			return MessageUtils.getDataMessage(ret);
+			return MessageUtils.getDataMessage(ret, null);
 			
 		} catch (Exception ne) {
 			throw createDataMessageException("Cannot extract shared memory", ne);

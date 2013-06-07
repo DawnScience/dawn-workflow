@@ -104,7 +104,7 @@ public class ROISource extends AbstractDataMessageSource {
     		despatch.addROI(nameParam.getExpression(), roiParam.getRoi());
 
     		try {
-    			return MessageUtils.getDataMessage(despatch);
+    			return MessageUtils.getDataMessage(despatch, null);
     		} catch (Exception e) {
     			throw createDataMessageException("Cannot set scalar "+nameParam.getExpression(), e);
     		}

@@ -133,7 +133,7 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 			if (isFireInLoop()) {
 				final DataMessageComponent despatch = getTransformedMessageInternal(cache);
 				if (despatch==null) return;
-		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch));
+		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
 				cache.clear();
 			}
 			
@@ -143,29 +143,6 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 			throw createDataMessageException("Cannot add data from '"+message+"'", ne);
 		}
 	}
-
-	
-	protected boolean doPostFire() throws ProcessingException {
-		
-		final boolean isFinished   = isFinishRequested();
-		final boolean isInputRound = isInputRoundComplete();
-		
-		if ((isFinished || isInputRound) && isFireEndLoop()) {
-			DataMessageComponent despatch = null;
-			try {
-				despatch = getTransformedMessageInternal(cache);
-				if (despatch==null) return !isFinished;
-		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch));
-			} catch (ProcessingException pe) {
-				throw pe;
-			} catch (Exception ne) {
-				logger.error("Cannot add data from '"+despatch+"'", ne);
-			}
-		}
-		
-		return !isFinished;
-	}
-
 
 	protected IResource getResource() throws Exception {
 		

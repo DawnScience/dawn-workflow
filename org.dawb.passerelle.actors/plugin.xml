@@ -64,6 +64,12 @@
          name="General and Other Actors"
          point="com.isencia.passerelle.engine.actors">
       <actor
+            class="com.isencia.passerelle.domain.cap.Director"
+            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            id="com.isencia.passerelle.domain.cap.Director"
+            name="Thread Director">
+      </actor>
+      <actor
             class="org.dawb.passerelle.actors.override.Input"
             group="com.isencia.passerelle.actor.actorgroup.utilities"
             icon="icons/input.png"
@@ -327,6 +333,20 @@
             icon="icons/if.png"
             id="org.dawb.passerelle.actors.ifdynaport"
             name="If">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.flow.Fork"
+            group="org.dawb.passerelle.actors.actorgroup.flowcontrol"
+            icon="icons/fork.png"
+            id="org.dawb.passerelle.actors.flow.Fork"
+            name="Fork">
+      </actor>
+      <actor
+            class="com.isencia.passerelle.actor.forkjoin.Join"
+            group="org.dawb.passerelle.actors.actorgroup.flowcontrol"
+            icon="icons/join.png"
+            id="com.isencia.passerelle.actor.forkjoin.Join"
+            name="Join">
       </actor>
       <actor
             class="com.isencia.passerelle.actor.flow.Synchronizer"

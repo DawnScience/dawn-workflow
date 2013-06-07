@@ -79,7 +79,7 @@ public class TimerSource extends AbstractDataMessageSource {
 					                        
 			ret.putScalar("current_time", String.valueOf(System.currentTimeMillis()));
 			ret.putScalar("total_time",   String.valueOf(totalTime));
-			return MessageUtils.getDataMessage(ret);
+			return MessageUtils.getDataMessage(ret, null);
 		} catch (Exception ne) {
 			throw createDataMessageException("Cannot send data from "+getClass().getSimpleName(), ne);
 		

@@ -172,7 +172,7 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 			if (isFireInLoop() || isLoopPort1SumPort2(true)) {
 				final DataMessageComponent despatch = getDespatch();
 				if (despatch==null) return;
-				sendOutputMsg(output, MessageUtils.getDataMessage(despatch));
+				sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
 			}
 			
 		} catch (ProcessingException pe) {
@@ -227,28 +227,6 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 	}
 	
 
-
-	protected boolean doPostFire() throws ProcessingException {
-		
-		final boolean isFinished   = isFinishRequested();
-		final boolean isInputRound = isInputRoundComplete();
-		
-		if (isInputRound && isFireEndLoop()) {
-			try {
-				final DataMessageComponent despatch = getDespatch();
-				if (despatch==null) return !isFinished; 
-				sendOutputMsg(output, MessageUtils.getDataMessage(despatch));
-			} catch (ProcessingException pe) {
-				throw pe;
-			} catch (Exception ne) {
-				logger.error("Cannot transform data", ne);
-			}
-		}
-		
-		if (isFinished) return false;
-		return true; // Wait for more
-	}
-	
 	protected void doWrapUp() throws TerminationException {
 		super.doWrapUp();
 		if (isFinishRequested()) {

@@ -112,7 +112,7 @@ public class UserInputSource extends AbstractDataMessageSource {
 				final DataMessageComponent  ret    = new DataMessageComponent();
 				ret.addScalar(scalarValues);
 				
-				return MessageUtils.getDataMessage(ret);
+				return MessageUtils.getDataMessage(ret, null);
 			}
 
 			boolean isDialog = INPUT_CHOICES[0].equals(inputTypeParam.getExpression());
@@ -152,7 +152,7 @@ public class UserInputSource extends AbstractDataMessageSource {
 				final DataMessageComponent  ret    = new DataMessageComponent();
 				ret.addScalar(sentScalars);
 				
-				return MessageUtils.getDataMessage(ret);
+				return MessageUtils.getDataMessage(ret, null);
 			
 			} finally {
 				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(getModelPath(), getName(), false, -1)}, new String[]{ActorSelectedBean.class.getName()});
