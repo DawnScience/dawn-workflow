@@ -130,12 +130,10 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 				cache.add(msg);
 			}
 			
-			if (isFireInLoop()) {
-				final DataMessageComponent despatch = getTransformedMessageInternal(cache);
-				if (despatch==null) return;
-		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
-				cache.clear();
-			}
+			final DataMessageComponent despatch = getTransformedMessageInternal(cache);
+			if (despatch==null) return;
+	        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
+			cache.clear();
 			
 		} catch (ProcessingException pe) {
 			throw pe;

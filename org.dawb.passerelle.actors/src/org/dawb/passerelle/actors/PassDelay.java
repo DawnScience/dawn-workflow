@@ -46,7 +46,6 @@ public class PassDelay extends AbstractDataMessageTransformer implements Actor {
 		timeParameter.setTypeEquals(BaseType.DOUBLE);
         registerConfigurableParameter(timeParameter);
         
-		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
 		memoryManagementParam.setVisibility(Settable.NONE);
 		dataSetNaming.setVisibility(Settable.NONE);
 		

@@ -42,7 +42,6 @@ public class MedianDatasets extends AbstractDataMessageTransformer2Port {
 
 	public MedianDatasets(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
-		passModeParameter.setExpression(EXPRESSION_MODE.get(1));
 	}
 		
 	protected DataMessageComponent getTransformedMessage(List<DataMessageComponent> port1Cache, List<DataMessageComponent> port2Cache) throws ProcessingException{

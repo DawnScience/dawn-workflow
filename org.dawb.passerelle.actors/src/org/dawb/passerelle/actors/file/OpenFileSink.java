@@ -58,8 +58,6 @@ public class OpenFileSink extends AbstractDataMessageSink {
 		fileNameParam.setExpression("${file_path}"); // As this is often the variable
 		registerConfigurableParameter(fileNameParam);
 		
-		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
-		
 		memoryManagementParam.setVisibility(Settable.NONE);
 
 	}

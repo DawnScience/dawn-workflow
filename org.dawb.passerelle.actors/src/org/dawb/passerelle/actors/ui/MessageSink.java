@@ -99,8 +99,6 @@ public class MessageSink extends AbstractDataMessageSink {
 		registerConfigurableParameter(messageTitle);
 		
 		memoryManagementParam.setVisibility(Settable.NONE);
-		passModeParameter.setExpression(EXPRESSION_MODE.get(1));
-		passModeParameter.setVisibility(Settable.NONE);
 		
 		shownMessagePort = PortFactory.getInstance().createOutputPort(this, "shownMessage");
 

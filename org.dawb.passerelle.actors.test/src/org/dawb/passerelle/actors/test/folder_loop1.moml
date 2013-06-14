@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE entity PUBLIC "-//UC Berkeley//DTD MoML 1//EN"
     "http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd">
-<entity name="newModel" class="ptolemy.actor.TypedCompositeActor" source="C:\Work\runtime-SDA2\workflows\folder_loop1.moml">
+<entity name="newModel" class="ptolemy.actor.TypedCompositeActor" source="/mntdirect/_scisoft/users/svensson/workspaces/dawn_runtime/test_forkjoin/workflows/actor_tests/folder_loop1.moml">
     <property name="_createdBy" class="ptolemy.kernel.attributes.VersionAttribute" value="7.0.1">
     </property>
     <property name="_workbenchVersion" class="ptolemy.kernel.attributes.VersionAttribute" value="0.8.2">
@@ -19,8 +19,6 @@
         </property>
         <property name="Folder" class="ptolemy.data.expr.Parameter" value="true">
         </property>
-        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
-        </property>
         <property name="File Filter" class="com.isencia.passerelle.util.ptolemy.RegularExpressionParameter" value="billeA*">
         </property>
         <property name="Path" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="${project_name}/data/results">
@@ -28,6 +26,8 @@
         <property name="Data Sets" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="">
         </property>
         <property name="Rename Data Sets" class="com.isencia.passerelle.util.ptolemy.StringMapParameter" value="">
+        </property>
+        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
         </property>
         <property name="_location" class="ptolemy.kernel.util.Location" value="{267.0, 210.0}">
         </property>
@@ -59,25 +59,41 @@
         </property>
         <property name="PassThrough" class="ptolemy.data.expr.Parameter" value="false">
         </property>
-        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate after all data received">
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
         </property>
         <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
         </property>
         <property name="File Path" class="ptolemy.data.expr.StringParameter" value="${file_path}">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{580.0, 215.0}">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{757.0, 215.0}">
+        </property>
+    </entity>
+    <entity name="Combiner" class="org.dawb.passerelle.common.actors.DataMessageCombiner">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="_break_point" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{593.0, 223.0}">
         </property>
     </entity>
     <relation name="_R" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
-    <relation name="_R2" class="ptolemy.actor.TypedIORelation">
+    <relation name="_R_2" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_3" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
     <link port="results.output" relation="_R"/>
     <link port="Data Export.input" relation="_R"/>
-    <link port="Data Export.output" relation="_R2"/>
-    <link port="Open File.input" relation="_R2"/>
+    <link port="Data Export.output" relation="_R_2"/>
+    <link port="Open File.input" relation="_R_3"/>
+    <link port="Combiner.input" relation="_R_2"/>
+    <link port="Combiner.output" relation="_R_3"/>
 </entity>

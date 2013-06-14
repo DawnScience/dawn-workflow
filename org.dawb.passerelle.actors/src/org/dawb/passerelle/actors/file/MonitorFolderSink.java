@@ -70,8 +70,6 @@ public class MonitorFolderSink extends AbstractDataMessageSink {
 		monitorParam.setToken(new BooleanToken(false));
 		registerConfigurableParameter(monitorParam);
 		
-		
-		passModeParameter.setExpression(EXPRESSION_MODE.get(1));	
 		memoryManagementParam.setVisibility(Settable.NONE);
 
 	}

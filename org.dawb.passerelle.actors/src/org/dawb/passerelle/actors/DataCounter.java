@@ -45,12 +45,6 @@ public class DataCounter extends AbstractDataMessageTransformer {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataCounter.class);
 
-	private static List<String> MODES;
-	static {
-		MODES = new ArrayList<String>(3);
-		MODES.addAll(EXPRESSION_MODE);
-		MODES.add("Evaluate on every data input and store value locally.");
-	}
 	
 	private int storedValue;
 	private boolean readValue = false;
@@ -69,15 +63,11 @@ public class DataCounter extends AbstractDataMessageTransformer {
 		nameParam.setDisplayName("Scalar Name");
 		registerConfigurableParameter(nameParam);
 		
-		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
 		memoryManagementParam.setVisibility(Settable.NONE);
 		dataSetNaming.setVisibility(Settable.NONE);
 
 	}
 	
-	protected List<String> getExpressionModes() {
-		return MODES;
-	}
 	
 	@Override
 	protected DataMessageComponent getTransformedMessage(List<DataMessageComponent> cache) throws ProcessingException {
@@ -92,9 +82,9 @@ public class DataCounter extends AbstractDataMessageTransformer {
 		        value  = (int)Double.parseDouble(comp.getScalar(scalarName));
 	        }
 	        readValue = true;
-	        if (MODES.get(2).equals(passModeParameter.getExpression()) && readValue) {
-	        	value = storedValue;	
-	        }
+//	        if (MODES.get(2).equals(passModeParameter.getExpression()) && readValue) {
+//	        	value = storedValue;	
+//	        }
 	        value = value + 1;
 	        storedValue = value;
 	        
@@ -106,9 +96,6 @@ public class DataCounter extends AbstractDataMessageTransformer {
 		} catch (Throwable ne) {
 			throw createDataMessageException("Cannot increment '"+scalarName+"'", ne);
 		}
-	}
-	protected boolean isFireInLoop() {
-		return super.isFireInLoop() || MODES.get(2).equals(passMode);
 	}
 
 	@Override

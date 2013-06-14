@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE entity PUBLIC "-//UC Berkeley//DTD MoML 1//EN"
     "http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd">
-<entity name="new_model" class="ptolemy.actor.TypedCompositeActor" source="C:\Work\debug_dawn_workspace\workflows\new_model.moml">
+<entity name="new_model" class="ptolemy.actor.TypedCompositeActor" source="/mntdirect/_scisoft/dawn/mx/workflow/workflows/examples/fork_wait_model.moml">
     <property name="_createdBy" class="ptolemy.kernel.attributes.VersionAttribute" value="7.0.1">
     </property>
     <property name="_workbenchVersion" class="ptolemy.kernel.attributes.VersionAttribute" value="1.0.0">
@@ -55,7 +55,7 @@
         </property>
         <property name="Dataset Name" class="ptolemy.data.expr.StringParameter" value="">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{430.0, 186.0}">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{625.0, 185.0}">
         </property>
     </entity>
     <entity name="Sleep" class="org.dawb.passerelle.actors.PassDelay">
@@ -63,7 +63,7 @@
         </property>
         <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate after all data received">
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
         </property>
         <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
         </property>
@@ -79,7 +79,7 @@
         </property>
         <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate after all data received">
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
         </property>
         <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
         </property>
@@ -95,14 +95,58 @@
         </property>
         <property name="Output Variable" class="ptolemy.data.expr.StringParameter" value="fred">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{300.0, 184.0}">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{495.0, 183.0}">
         </property>
+    </entity>
+    <entity name="Combiner" class="org.dawb.passerelle.common.actors.DataMessageCombiner">
+        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="_icon" class="com.isencia.passerelle.actor.gui.EditorIcon">
+        </property>
+        <property name="_break_point" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{342.0, 185.0}">
+        </property>
+        <port name="requestFinish" class="com.isencia.passerelle.core.ControlPort">
+            <property name="input"/>
+            <property name="multiport"/>
+            <property name="control" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="error" class="com.isencia.passerelle.core.ErrorPort">
+            <property name="output"/>
+            <property name="multiport"/>
+            <property name="error" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="hasFired" class="com.isencia.passerelle.core.ControlPort">
+            <property name="output"/>
+            <property name="multiport"/>
+            <property name="control" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="hasFinished" class="com.isencia.passerelle.core.ControlPort">
+            <property name="output"/>
+            <property name="multiport"/>
+            <property name="control" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="input" class="com.isencia.passerelle.core.Port">
+            <property name="input"/>
+            <property name="multiport"/>
+        </port>
+        <port name="output" class="com.isencia.passerelle.core.Port">
+            <property name="output"/>
+            <property name="multiport"/>
+        </port>
     </entity>
     <relation name="_R_2" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
-    <relation name="_R" class="ptolemy.actor.TypedIORelation">
+    <relation name="_R_4" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
@@ -110,7 +154,11 @@
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
-    <relation name="_R_4" class="ptolemy.actor.TypedIORelation">
+    <relation name="_R" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_5" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
@@ -119,7 +167,9 @@
     <link port="Data Export.input" relation="_R_4"/>
     <link port="Sleep.input" relation="_R_2"/>
     <link port="Sleep.output" relation="_R_3"/>
-    <link port="Process.input" relation="_R"/>
-    <link port="Process.input" relation="_R_3"/>
+    <link port="Process.input" relation="_R_5"/>
     <link port="Process.output" relation="_R_4"/>
+    <link port="Combiner.input" relation="_R_3"/>
+    <link port="Combiner.input" relation="_R"/>
+    <link port="Combiner.output" relation="_R_5"/>
 </entity>

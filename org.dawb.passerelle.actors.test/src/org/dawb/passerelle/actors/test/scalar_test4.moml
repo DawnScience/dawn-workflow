@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE entity PUBLIC "-//UC Berkeley//DTD MoML 1//EN"
     "http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd">
-<entity name="newModel" class="ptolemy.actor.TypedCompositeActor">
+<entity name="newModel" class="ptolemy.actor.TypedCompositeActor" source="/mntdirect/_scisoft/users/svensson/workspaces/dawn_runtime/test_forkjoin/workflows/actor_tests/scalar_test4.moml">
     <property name="_createdBy" class="ptolemy.kernel.attributes.VersionAttribute" value="7.0.1">
     </property>
     <property name="_workbenchVersion" class="ptolemy.kernel.attributes.VersionAttribute" value="0.8.2">
@@ -15,7 +15,7 @@
         </property>
         <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate after all data received">
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
         </property>
         <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
         </property>
@@ -27,7 +27,7 @@
         </property>
         <property name="Output" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="/${project_name}/output/fred.h5">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{479.0, 191.0}">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{749.0, 200.0}">
         </property>
     </entity>
     <entity name="Open File" class="org.dawb.passerelle.actors.file.OpenFileSink">
@@ -37,13 +37,13 @@
         </property>
         <property name="PassThrough" class="ptolemy.data.expr.Parameter" value="false">
         </property>
-        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate after all data received">
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
         </property>
         <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
         </property>
         <property name="File Path" class="ptolemy.data.expr.StringParameter" value="${file_path}">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{631.0, 193.0}">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{873.0, 194.0}">
         </property>
     </entity>
     <entity name="ref-testscale_1_001" class="org.dawb.passerelle.actors.data.DataImportSource">
@@ -55,8 +55,6 @@
         </property>
         <property name="Folder" class="ptolemy.data.expr.Parameter" value="false">
         </property>
-        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
-        </property>
         <property name="File Filter" class="com.isencia.passerelle.util.ptolemy.RegularExpressionParameter" value="">
         </property>
         <property name="Path" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="data/examples/ref-testscale_1_001.img">
@@ -65,7 +63,9 @@
         </property>
         <property name="Rename Data Sets" class="com.isencia.passerelle.util.ptolemy.StringMapParameter" value="">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{199.0, 138.0}">
+        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{363.0, 138.0}">
         </property>
     </entity>
     <entity name="ref-testscale_1_002" class="org.dawb.passerelle.actors.data.DataImportSource">
@@ -77,8 +77,6 @@
         </property>
         <property name="Folder" class="ptolemy.data.expr.Parameter" value="false">
         </property>
-        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
-        </property>
         <property name="File Filter" class="com.isencia.passerelle.util.ptolemy.RegularExpressionParameter" value="">
         </property>
         <property name="Path" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="data/examples/ref-testscale_1_002.img">
@@ -87,7 +85,9 @@
         </property>
         <property name="Rename Data Sets" class="com.isencia.passerelle.util.ptolemy.StringMapParameter" value="">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{199.0, 239.0}">
+        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{363.0, 239.0}">
         </property>
     </entity>
     <entity name="p" class="org.dawb.passerelle.actors.data.Scalar">
@@ -97,7 +97,7 @@
         </property>
         <property name="Name" class="ptolemy.data.expr.StringParameter" value="p">
         </property>
-        <property name="Value" class="ptolemy.data.expr.StringParameter" value="1">
+        <property name="Value" class="org.dawb.passerelle.actors.data.Scalar$RangeParameter" value="1">
         </property>
         <property name="_location" class="ptolemy.kernel.util.Location" value="{50.0, 138.0}">
         </property>
@@ -109,7 +109,7 @@
         </property>
         <property name="Name" class="ptolemy.data.expr.StringParameter" value="q">
         </property>
-        <property name="Value" class="ptolemy.data.expr.StringParameter" value="1">
+        <property name="Value" class="org.dawb.passerelle.actors.data.Scalar$RangeParameter" value="1">
         </property>
         <property name="_location" class="ptolemy.kernel.util.Location" value="{50.0, 239.0}">
         </property>
@@ -125,8 +125,52 @@
         </property>
         <property name="Name Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Attempt to use image name if there is one.">
         </property>
-        <property name="_location" class="ptolemy.kernel.util.Location" value="{346.0, 199.0}">
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{510.0, 199.0}">
         </property>
+    </entity>
+    <entity name="Combiner" class="org.dawb.passerelle.common.actors.DataMessageCombiner">
+<display name="Combiner"/>        <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
+        </property>
+        <property name="_icon" class="com.isencia.passerelle.actor.gui.EditorIcon">
+        </property>
+        <property name="_break_point" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
+        <property name="_location" class="ptolemy.kernel.util.Location" value="{635.0, 199.0}">
+        </property>
+        <port name="requestFinish" class="com.isencia.passerelle.core.ControlPort">
+            <property name="input"/>
+            <property name="multiport"/>
+            <property name="control" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="error" class="com.isencia.passerelle.core.ErrorPort">
+            <property name="output"/>
+            <property name="multiport"/>
+            <property name="error" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="hasFired" class="com.isencia.passerelle.core.ControlPort">
+            <property name="output"/>
+            <property name="multiport"/>
+            <property name="control" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="hasFinished" class="com.isencia.passerelle.core.ControlPort">
+            <property name="output"/>
+            <property name="multiport"/>
+            <property name="control" class="ptolemy.kernel.util.StringAttribute">
+            </property>
+        </port>
+        <port name="input" class="com.isencia.passerelle.core.Port">
+            <property name="input"/>
+            <property name="multiport"/>
+        </port>
+        <port name="output" class="com.isencia.passerelle.core.Port">
+            <property name="output"/>
+            <property name="multiport"/>
+        </port>
     </entity>
     <relation name="_R2" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
@@ -136,15 +180,15 @@
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
-    <relation name="_R5" class="ptolemy.actor.TypedIORelation">
-        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
-        </property>
-    </relation>
     <relation name="_R6" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
-    <relation name="_R7" class="ptolemy.actor.TypedIORelation">
+    <relation name="_R_4" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <relation name="_R_5" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
@@ -152,16 +196,22 @@
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
         </property>
     </relation>
-    <link port="Data Export.input" relation="_R7"/>
+    <relation name="_R_2" class="ptolemy.actor.TypedIORelation">
+        <property name="width" class="ptolemy.data.expr.Parameter" value="1">
+        </property>
+    </relation>
+    <link port="Data Export.input" relation="_R_5"/>
     <link port="Data Export.output" relation="_R2"/>
     <link port="Open File.input" relation="_R2"/>
     <link port="ref-testscale_1_001.output" relation="_R3"/>
-    <link port="ref-testscale_1_001.trigger" relation="_R5"/>
     <link port="ref-testscale_1_001.trigger" relation="_R"/>
+    <link port="ref-testscale_1_001.trigger" relation="_R_2"/>
     <link port="ref-testscale_1_002.output" relation="_R6"/>
-    <link port="p.output" relation="_R5"/>
-    <link port="q.output" relation="_R"/>
+    <link port="p.output" relation="_R"/>
+    <link port="q.output" relation="_R_2"/>
     <link port="Add.a" relation="_R3"/>
-    <link port="Add.output" relation="_R7"/>
+    <link port="Add.output" relation="_R_4"/>
     <link port="Add.b" relation="_R6"/>
+    <link port="Combiner.input" relation="_R_4"/>
+    <link port="Combiner.output" relation="_R_5"/>
 </entity>

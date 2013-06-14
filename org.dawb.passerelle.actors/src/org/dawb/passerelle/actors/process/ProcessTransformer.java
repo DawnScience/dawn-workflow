@@ -87,8 +87,6 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 		// Control parent parameters
 		memoryManagementParam.setVisibility(Settable.NONE);
 		dataSetNaming.setVisibility(Settable.NONE);
-		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
-		passMode = EXPRESSION_MODE.get(0);
      
 	}
 

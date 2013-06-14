@@ -81,8 +81,8 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 		inputPort2 = PortFactory.getInstance().createInputPort(this, "b", ManagedMessage.class);
 		
 		// Default is to process a and sum b
-		passModeParameter.setExpression( TWO_PORT_EXPRESSION_MODES.get(2));
-		passMode = TWO_PORT_EXPRESSION_MODES.get(2);
+		passModeParameter.setExpression( TWO_PORT_EXPRESSION_MODES.get(1));
+		passMode = TWO_PORT_EXPRESSION_MODES.get(1);
 	}
 	
 	public void doPreInitialize() {
@@ -102,7 +102,7 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 	protected boolean isFireInLoop() {
 		if (port1Cache==null||port1Cache.size()<getMinimumCacheSize()) return false;
 		if (port2Cache==null||port2Cache.size()<getMinimumCacheSize()) return false;
-		return super.isFireInLoop();
+		return true;
 	}
 	
 	protected int getMinimumCacheSize() {
@@ -128,33 +128,16 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 
 	protected boolean doPreFire() throws ProcessingException {
 		
-		if (passMode.equals(TWO_PORT_EXPRESSION_MODES.get(2))) {
-						
-			Token token = null;
+		Token token = inputHandler2.getToken();
+		if (token != null) {
 			try {
-
-				while((token=inputHandler2.getToken())!=null) {
-					ManagedMessage message2  = MessageHelper.getMessageFromToken(token);
-					if (message2!=null) {
-						DataMessageComponent msg = MessageUtils.coerceMessage(message2);
-						port2Cache.add(msg);
-					}
+				ManagedMessage message2  = MessageHelper.getMessageFromToken(token);
+				if (message2!=null) {
+					DataMessageComponent msg = MessageUtils.coerceMessage(message2);
+					port2Cache.add(msg);
 				}
 			} catch (Exception e) {
 			    throw new ProcessingException("Error handling token", token, e);
-			}
-		} else {
-			Token token = inputHandler2.getToken();
-			if (token != null) {
-				try {
-					ManagedMessage message2  = MessageHelper.getMessageFromToken(token);
-					if (message2!=null) {
-						DataMessageComponent msg = MessageUtils.coerceMessage(message2);
-						port2Cache.add(msg);
-					}
-				} catch (Exception e) {
-				    throw new ProcessingException("Error handling token", token, e);
-				}
 			}
 		}
 		return super.doPreFire();
@@ -169,11 +152,9 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 				port1Cache.add(msg);
 			}
 			
-			if (isFireInLoop() || isLoopPort1SumPort2(true)) {
-				final DataMessageComponent despatch = getDespatch();
-				if (despatch==null) return;
-				sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
-			}
+			final DataMessageComponent despatch = getDespatch();
+			if (despatch==null) return;
+			sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
 			
 		} catch (ProcessingException pe) {
 			throw pe;
@@ -239,14 +220,14 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 		
 		if (checkCacheState) {
 			if (port1Cache==null||port1Cache.size()<getMinimumCacheSize()) return false;
-			if (passMode.equals(TWO_PORT_EXPRESSION_MODES.get(2))) {
+			if (passMode.equals(TWO_PORT_EXPRESSION_MODES.get(1))) {
 				final int size = inputPort2.getWidth();
 				if (port2Cache==null||port2Cache.size()<size) return false;
 			} else {
 			    if (port2Cache==null||port2Cache.size()<getMinimumCacheSize()) return false;
 			}
 		}
-		return passMode.equals(TWO_PORT_EXPRESSION_MODES.get(2));
+		return passMode.equals(TWO_PORT_EXPRESSION_MODES.get(1));
 	}
 
 	protected void setUpstreamValues(final DataMessageComponent ret,

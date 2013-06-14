@@ -57,16 +57,6 @@ public abstract class AbstractDataMessageSink extends AbstractPassModeSink {
 	protected void sendMessage(ManagedMessage message) throws ProcessingException {
 		try {
 			final DataMessageComponent comp = MessageUtils.coerceMessage(message);
-			if (isFireOnce()) {
-				if (!firedOnce) {
-					cache.add(comp);
-					sendCachedDataInternal(cache);
-					firedOnce = true;
-				} else {
-					cache.clear();
-					return;
-				}
-			}
 			
 			cache.add(comp);
 			
@@ -75,10 +65,9 @@ public abstract class AbstractDataMessageSink extends AbstractPassModeSink {
 				cache.clear();
 				requestFinish();
 				
-			} else if (isFireInLoop()) {
+			} else {
 				sendCachedDataInternal(cache);
 				cache.clear();
-				
 			}
 			
 		} catch (ProcessingException pe) {
@@ -109,21 +98,7 @@ public abstract class AbstractDataMessageSink extends AbstractPassModeSink {
 	protected boolean doPostFire() throws ProcessingException {
 		
 		final boolean isFinished   = isFinishRequested();
-		final boolean isInputRound = isInputRoundComplete();
-		
-		if ((isInputRound && isFireEndLoop()) || (isFinished && isFireOnFinished())) {
-			try {
-				if (!cache.isEmpty()) {
-					sendCachedDataInternal(cache);
-				}
-
-			} catch (ProcessingException pe) {
-				throw pe;
-			} catch (Exception ne) {
-				logger.error("Cannot process data", ne);
-			}
-		}
-		
+				
 		if (isFinished) return false;
 		return true; // Wait for more
 	}

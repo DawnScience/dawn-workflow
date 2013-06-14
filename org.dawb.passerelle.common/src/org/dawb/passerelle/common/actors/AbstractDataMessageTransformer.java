@@ -90,15 +90,12 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 				DataMessageComponent msg = MessageUtils.coerceMessage(message);
 				cache.add(msg);
 			}
+
+			final DataMessageComponent despatch = getDespatch();
+			if (despatch==null) return;
 			
-			if (isFireInLoop()) {
-				
-				final DataMessageComponent despatch = getDespatch();
-				if (despatch==null) return;
-				
-		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
-				cache.clear();
-			}
+	        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
+			cache.clear();
 			
 		} catch (ProcessingException pe) {
 			throw pe;
@@ -131,11 +128,6 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 		} finally {
 			ActorUtils.setActorExecuting(this, false);
 		}
-	}
-
-	protected boolean isFireInLoop() {
-		if (cache==null||cache.size()<getMinimumCacheSize()) return false;
-		return super.isFireInLoop();
 	}
 	
 	protected int getMinimumCacheSize() {

@@ -84,7 +84,6 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 	public UserPlotTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		
 		super(container, name);
-		this.passModeParameter.setExpression(EXPRESSION_MODE.get(0));
 		memoryManagementParam.setVisibility(Settable.NONE);
 		dataSetNaming.setVisibility(Settable.NONE);
 		

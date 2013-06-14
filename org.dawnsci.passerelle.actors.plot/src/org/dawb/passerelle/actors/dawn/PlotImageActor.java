@@ -137,9 +137,6 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 		registerConfigurableParameter(boxROITypeParam);
 		boxROITypeParam.setExpression(BOX_ROI_TYPE.get(0));
 		
-		//set the expression mode parameter to Evaluate after all data received
-		passModeParameter.setExpression(EXPRESSION_MODE.get(1));
-		
 	}
 
 	private IROI myROI;

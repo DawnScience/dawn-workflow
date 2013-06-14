@@ -127,7 +127,6 @@ public abstract class AbstractEdnaPlugin extends AbstractDataMessageTransformer 
 		outputParam = new ResourceParameter(this, "Output Template", "XML File", "*.xml");
 		registerConfigurableParameter(outputParam);
 
-		passModeParameter.setExpression(EXPRESSION_MODE.get(1));
 		memoryManagementParam.setVisibility(Settable.NONE);
 		dataSetNaming.setVisibility(Settable.NONE);
 		

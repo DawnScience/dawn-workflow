@@ -66,7 +66,6 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 	static {
 		EXPRESSION_MODE = new ArrayList<String>(3);
 		EXPRESSION_MODE.add("Evaluate on every data input");
-		EXPRESSION_MODE.add("Evaluate after all data received");
 	}
 	
 	protected static List<String> MEMORY_MODE;
@@ -183,29 +182,6 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		if (token != null) {
 			processToken(token);
 		} else {
-			// If we must wait until an input round is complete
-			// we do here - HACK warning something broke in RecordingPortHandler by passerelle guys.
-			// Now it no longer blocks properly. Instead we wait here.
-			if (EXPRESSION_MODE.get(1).equals(passModeParameter.getExpression()) ) {
-				if (!isInputRoundComplete() && !isFinishRequested()) {
-					try {
-						Thread.sleep(200); // TODO FIXME Something of a hack. It should be a low risk one.
-						                   // Consider fixing a different way after Dawn 1.0 release.
-						
-						token = recInputHandler.getToken();
-						
-						if (token != null) {
-							processToken(token);
-						} else {
-							message = null;
-						}
-					} catch (InterruptedException e) {
-						logger.trace("Sleeping thread interupted at "+getClass().getName(), e);
-						message = null;
-					}
-				}
-			}
-
 			message = null;
 		}
 
@@ -251,32 +227,6 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		return NAME_MODE;
 	}
 	
-	/**
-	 *  @param attribute The attribute that changed.
-	 *  @exception IllegalActionException   */
-	public void attributeChanged(Attribute attribute) throws IllegalActionException {
-
-		if (attribute == passModeParameter) {
-			passMode = passModeParameter.getExpression();
-		}
-		super.attributeChanged(attribute);
-	}
-
-	protected String getPassMode() {
-		return passMode;
-	}
-
-	protected void setPassMode(String passMode) {
-		this.passMode = passMode;
-	}
-	
-	protected boolean isFireInLoop() {
-		return EXPRESSION_MODE.get(0).equals(passMode);
-	}
-	
-	protected boolean isFireEndLoop() {
-		return EXPRESSION_MODE.get(1).equals(passMode);
-	}
 	
 	protected boolean isCreateClone() {
 		return MEMORY_MODE.get(0).equals(memoryMode);

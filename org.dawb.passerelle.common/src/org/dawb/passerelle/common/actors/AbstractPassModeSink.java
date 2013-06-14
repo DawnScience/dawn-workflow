@@ -51,9 +51,6 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
 	static {
 		EXPRESSION_MODE = new ArrayList<String>(3);
 		EXPRESSION_MODE.add("Evaluate on every data input");
-		EXPRESSION_MODE.add("Evaluate after all data received");
-		EXPRESSION_MODE.add("Evaluate on finished");
-		EXPRESSION_MODE.add("Evaluate on first message then never again");
 	}
 	
 	protected static List<String> MEMORY_MODE;
@@ -84,7 +81,7 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
 		
 		super(container, ModelUtils.findUniqueActorName(container, name));
 		
-		passModeParameter = new StringChoiceParameter(this, "Expression Mode", getExpressionModes(), SWT.SINGLE);
+		passModeParameter = new StringChoiceParameter(this, "Expression Mode", EXPRESSION_MODE, SWT.SINGLE);
 		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
 		registerConfigurableParameter(passModeParameter);
 		passMode = EXPRESSION_MODE.get(0);
@@ -153,16 +150,6 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
 		return true;
 	}
 
-
-	/**
-	 * Override to provide different options for processing the
-	 * ports.
-	 * 
-	 * @return
-	 */
-	protected List<String> getExpressionModes() {
-		return EXPRESSION_MODE;
-	}
 	
 	/**
 	 * Override to provide different options for processing of
@@ -172,41 +159,6 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
 	 */
 	protected List<String> getMemoryModes() {
 		return MEMORY_MODE;
-	}
-
-	/**
-	 *  @param attribute The attribute that changed.
-	 *  @exception IllegalActionException   */
-	public void attributeChanged(Attribute attribute) throws IllegalActionException {
-
-		if (attribute == passModeParameter) {
-			passMode = passModeParameter.getExpression();
-		}
-		super.attributeChanged(attribute);
-	}
-
-	protected String getPassMode() {
-		return passMode;
-	}
-
-	protected void setPassMode(String passMode) {
-		this.passMode = passMode;
-	}
-	
-	protected boolean isFireInLoop() {
-		return EXPRESSION_MODE.get(0).equals(passMode);
-	}
-	
-	protected boolean isFireEndLoop() {
-		return EXPRESSION_MODE.get(1).equals(passMode);
-	}
-	
-	protected boolean isFireOnFinished() {
-		return EXPRESSION_MODE.get(2).equals(passMode);
-	}
-	
-	protected boolean isFireOnce() {
-		return EXPRESSION_MODE.get(3).equals(passMode);
 	}
 	
 	protected boolean isCreateClone() {

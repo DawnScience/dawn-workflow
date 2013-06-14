@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="no"?>
 <!DOCTYPE entity PUBLIC "-//UC Berkeley//DTD MoML 1//EN"
     "http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd">
-<entity name="newModel" class="ptolemy.actor.TypedCompositeActor" source="/users/svensson/debug_workspaces/runtime-dawb-workbench/id14eh4/kappa/test_olof_edna_interfacev2_2.moml">
+<entity name="newModel" class="ptolemy.actor.TypedCompositeActor" source="/mntdirect/_scisoft/users/svensson/workspaces/dawn_runtime/test_forkjoin/workflows/actor_tests/edna/edna_interfacev2_2_test.moml">
     <property name="_createdBy" class="ptolemy.kernel.attributes.VersionAttribute" value="7.0.1">
     </property>
     <property name="_workbenchVersion" class="ptolemy.kernel.attributes.VersionAttribute" value="0.8.2">
@@ -15,7 +15,7 @@
         </property>
         <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate after all data received">
+        <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
         </property>
         <property name="Memory Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Create copy of data leaving original data intact.">
         </property>
@@ -23,9 +23,9 @@
         </property>
         <property name="Plugin Name" class="ptolemy.data.expr.StringParameter" value="EDPluginControlInterfacev2_2">
         </property>
-        <property name="Input Template" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="/${project_name}/edna-xml/XSDataInputInterfacev2_2.xml">
+        <property name="Input Template" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="/workflows/edna-xml/XSDataInputInterfacev2_21.xml">
         </property>
-        <property name="Output Template" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="/${project_name}/edna-xml/XSDataOutputInterfacev2_2.properties">
+        <property name="Output Template" class="com.isencia.passerelle.util.ptolemy.ResourceParameter" value="/workflows/edna-xml/XSDataOutputInterfacev2_21.properties">
         </property>
         <property name="Pass Inputs On" class="ptolemy.data.expr.Parameter" value="true">
         </property>
@@ -37,13 +37,9 @@
         </property>
         <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
-        <property name="_icon" class="com.isencia.passerelle.actor.gui.EditorIcon">
-        </property>
         <property name="Relative Path" class="ptolemy.data.expr.Parameter" value="true">
         </property>
         <property name="Folder" class="ptolemy.data.expr.Parameter" value="false">
-        </property>
-        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
         </property>
         <property name="File Filter" class="com.isencia.passerelle.util.ptolemy.RegularExpressionParameter" value="">
         </property>
@@ -55,47 +51,15 @@
         </property>
         <property name="Data Type" class="org.dawb.passerelle.actors.data.DataImportSource$3" value="Complete data as numerical arrays">
         </property>
+        <property name="Include Meta Data" class="ptolemy.data.expr.Parameter" value="false">
+        </property>
         <property name="_location" class="ptolemy.kernel.util.Location" value="{139.0, 119.0}">
         </property>
-        <port name="requestFinish" class="com.isencia.passerelle.core.ControlPort">
-            <property name="input"/>
-            <property name="multiport"/>
-            <property name="control" class="ptolemy.kernel.util.StringAttribute">
-            </property>
-        </port>
-        <port name="error" class="com.isencia.passerelle.core.ErrorPort">
-            <property name="output"/>
-            <property name="multiport"/>
-            <property name="error" class="ptolemy.kernel.util.StringAttribute">
-            </property>
-        </port>
-        <port name="hasFired" class="com.isencia.passerelle.core.ControlPort">
-            <property name="output"/>
-            <property name="multiport"/>
-            <property name="control" class="ptolemy.kernel.util.StringAttribute">
-            </property>
-        </port>
-        <port name="hasFinished" class="com.isencia.passerelle.core.ControlPort">
-            <property name="output"/>
-            <property name="multiport"/>
-            <property name="control" class="ptolemy.kernel.util.StringAttribute">
-            </property>
-        </port>
-        <port name="output" class="com.isencia.passerelle.core.Port">
-            <property name="output"/>
-            <property name="multiport"/>
-        </port>
-        <port name="trigger" class="com.isencia.passerelle.core.Port">
-            <property name="input"/>
-            <property name="multiport"/>
-        </port>
     </entity>
     <entity name="Data Export" class="org.dawb.passerelle.actors.data.DataExportTransformer">
         <property name="Receiver Q Capacity (-1)" class="ptolemy.data.expr.Parameter" value="-1">
         </property>
         <property name="Receiver Q warning size (-1)" class="ptolemy.data.expr.Parameter" value="-1">
-        </property>
-        <property name="_icon" class="com.isencia.passerelle.actor.gui.EditorIcon">
         </property>
         <property name="Expression Mode" class="com.isencia.passerelle.util.ptolemy.StringChoiceParameter" value="Evaluate on every data input">
         </property>
@@ -111,38 +75,6 @@
         </property>
         <property name="_location" class="ptolemy.kernel.util.Location" value="{499.0, 119.0}">
         </property>
-        <port name="requestFinish" class="com.isencia.passerelle.core.ControlPort">
-            <property name="input"/>
-            <property name="multiport"/>
-            <property name="control" class="ptolemy.kernel.util.StringAttribute">
-            </property>
-        </port>
-        <port name="error" class="com.isencia.passerelle.core.ErrorPort">
-            <property name="output"/>
-            <property name="multiport"/>
-            <property name="error" class="ptolemy.kernel.util.StringAttribute">
-            </property>
-        </port>
-        <port name="hasFired" class="com.isencia.passerelle.core.ControlPort">
-            <property name="output"/>
-            <property name="multiport"/>
-            <property name="control" class="ptolemy.kernel.util.StringAttribute">
-            </property>
-        </port>
-        <port name="hasFinished" class="com.isencia.passerelle.core.ControlPort">
-            <property name="output"/>
-            <property name="multiport"/>
-            <property name="control" class="ptolemy.kernel.util.StringAttribute">
-            </property>
-        </port>
-        <port name="input" class="com.isencia.passerelle.core.Port">
-            <property name="input"/>
-            <property name="multiport"/>
-        </port>
-        <port name="output" class="com.isencia.passerelle.core.Port">
-            <property name="output"/>
-            <property name="multiport"/>
-        </port>
     </entity>
     <relation name="_R" class="ptolemy.actor.TypedIORelation">
         <property name="width" class="ptolemy.data.expr.Parameter" value="1">
