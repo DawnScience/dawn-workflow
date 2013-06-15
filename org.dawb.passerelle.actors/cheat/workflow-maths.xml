@@ -67,16 +67,19 @@
             label="4. Click and drag in a 'Data Export' actor. (NOTE there is a search box above the tree of actors to find things.)">
       </subitem>
        <subitem
-            label="5. Click and drag in an 'Open File' actor.">
+            label="5. Click and drag in an 'Combiner' actor.">
       </subitem>
        <subitem
-            label="6. Create connections between the actors as they were before (ref-testscale_1_001.img going to 'a' and ref-testscale_1_002.img going to 'b'). Note that the export and the file open at the end are connected using the blue 'hasFinished' port. You can position the actors using the blue lining up lines which automatically appear when you click and move an actor, to get the connections to run nicely.">
+            label="6. Click and drag in an 'Open File' actor.">
       </subitem>
        <subitem
-            label="7. The default values of the actor attributes are good enough for this example - hit run and run your version of the maths example!">
+            label="7. Create connections between the actors as they were before (ref-testscale_1_001.img going to 'a' and ref-testscale_1_002.img going to 'b'). You can position the actors using the blue lining up lines which automatically appear when you click and move an actor, to get the connections to run nicely.">
       </subitem>
        <subitem
-            label="8. If your connections are still untidy, try using the actions by clicking on the blue button displaying one point and three wires (you should read 'Connection types' when you pass the mouse hover this button ). These give different connection and router options.">
+            label="8. The default values of the actor attributes are good enough for this example - hit run and run your version of the maths example!">
+      </subitem>
+       <subitem
+            label="9. If your connections are still untidy, try using the actions by clicking on the blue button displaying one point and three wires (you should read 'Connection types' when you pass the mouse hover this button ). These give different connection and router options.">
       </subitem>
     <onCompletion>
       Congratulations, you can now complete simple maths in a workflow and visualize the results. Give it a try with some data from your experiment.

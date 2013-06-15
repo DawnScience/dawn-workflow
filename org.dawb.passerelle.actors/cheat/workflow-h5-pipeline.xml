@@ -49,7 +49,10 @@
             label="5. Add a data export actor (use the 'Pallette' and search for 'Data') and change the 'File Format' to be 'tiff (16-bit)' (you may need to scroll down the drop down box). Now change the 'Output' attribute to '/${project_name}/output/tiff' and connect 'output' port of 'export' to the 'input' port of 'Data Export'.">
       </subitem>
       <subitem
-            label="6. Add a 'Open Images Monitor' actor and connect 'output' of 'Data Export' to 'input' of your new 'Open Images Monitor'. In 'Open Images Monitor' change the 'Expression Mode' parameter to be 'Evaluate on first message and then never again' and change the 'Start Monitor' attribute to be true (ticked).">
+            label="6. Add a 'Combiner' actor and connect 'output' of 'Data Export' to 'input' of your new 'Combiner'. The 'Combiner' actor is necessary for synchronising all upstream actions, i.e. this actor will not fire until all messages have been received. If the 'Combiner' actor is omitted the output file may be opened before all data have been written to it.">
+      </subitem>
+      <subitem
+            label="7. Add a 'Open Images Monitor' actor and connect 'output' of 'Combiner' to 'input' of your new 'Open Images Monitor'. In 'Open Images Monitor' change the 'Start Monitor' attribute to be true (ticked).">
       </subitem>
       <subitem
         label="7. Now try running your new workflow. It will extract the HDF5 images to separate tiff files and show them appearing in the directory '/workflows/output/tiff'. Note that your algorithm is asynchronous, the images are added to the pipeline as fast as they can be extracted and queue into the downstream actors. There are expert parameters for controlling queue size to fit the memory available.">

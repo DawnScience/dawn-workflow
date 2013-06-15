@@ -74,13 +74,16 @@
             label="6. Click and drag in a 'Data Export' actor.">
       </subitem>
        <subitem
-            label="7. Click and drag in an 'Open File' actor.">
+            label="7. Click and drag in a 'Combiner' actor.">
       </subitem>
        <subitem
-            label="8. Connect 'results' to 'a' of 'Subtract'. Connect 'flat_0001.edf' to 'b' of 'Subtract'. Connect the output of 'Subtract' to 'Data Export' and the output of 'Data Export' to 'Open File'.">
+            label="8. Click and drag in an 'Open File' actor.">
       </subitem>
        <subitem
-            label="9. Run the workflow and view the two images contained in the hdf5 file.">
+            label="9. Connect 'results' to 'a' of 'Subtract'. Connect 'flat_0001.edf' to 'b' of 'Subtract'. Connect the output of 'Subtract' to 'Data Export' and the output of 'Data Export' to 'Combiner' to 'Open File'.">
+      </subitem>
+       <subitem
+            label="10. Run the workflow and view the two images contained in the hdf5 file.">
       </subitem>
     <onCompletion>
       Congratulations, you have completed this section. Now try the folder processing on your own folder of images.
