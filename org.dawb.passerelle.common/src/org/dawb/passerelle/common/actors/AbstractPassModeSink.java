@@ -83,7 +83,7 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
 		
 		passModeParameter = new StringChoiceParameter(this, "Expression Mode", EXPRESSION_MODE, SWT.SINGLE);
 		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
-		registerConfigurableParameter(passModeParameter);
+		registerExpertParameter(passModeParameter);
 		passMode = EXPRESSION_MODE.get(0);
 		
 		

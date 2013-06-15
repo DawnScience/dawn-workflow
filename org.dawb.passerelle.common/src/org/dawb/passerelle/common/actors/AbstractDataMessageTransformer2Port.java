@@ -82,6 +82,7 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 		
 		// Default is to process a and sum b
 		passModeParameter.setExpression( TWO_PORT_EXPRESSION_MODES.get(1));
+		registerConfigurableParameter(passModeParameter);
 		passMode = TWO_PORT_EXPRESSION_MODES.get(1);
 	}
 	

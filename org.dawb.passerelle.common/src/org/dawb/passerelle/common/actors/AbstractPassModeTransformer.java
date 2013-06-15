@@ -113,7 +113,7 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		
 		passModeParameter = new StringChoiceParameter(this, "Expression Mode", getExpressionModes(), SWT.SINGLE);
 		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
-		registerConfigurableParameter(passModeParameter);
+		registerExpertParameter(passModeParameter);
 		passMode = EXPRESSION_MODE.get(0);
 		
 		
