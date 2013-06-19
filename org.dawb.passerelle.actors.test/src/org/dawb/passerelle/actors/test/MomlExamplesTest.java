@@ -44,12 +44,10 @@ public class MomlExamplesTest {
 	 * as a part of the MomlExamplesTest
 	 */
 	public static final List<String> blacklist = Arrays.asList(
-			"folder_example.moml",
 			"maths_example3.moml",
 			"motor_example.moml",
 			"plot_fit_example.moml",
 			"plot_image_region_example.moml",
-			"python_numjy_example1.moml", // Not an example anyway anymore
 			"spec_scan_example.moml"
 			);
 
