@@ -158,7 +158,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		folderParam = new Parameter(this, "Folder", new BooleanToken(isFolder));
 		folderParam.setVisibility(Settable.NONE);
 		
-		metaParam = new Parameter(this, "Include Metadata", new BooleanToken(false));
+		metaParam = new Parameter(this, "Include Meta Data", new BooleanToken(false));
 		registerConfigurableParameter(metaParam);
 		
 		filterParam  = new RegularExpressionParameter(this, "File Filter", true);
