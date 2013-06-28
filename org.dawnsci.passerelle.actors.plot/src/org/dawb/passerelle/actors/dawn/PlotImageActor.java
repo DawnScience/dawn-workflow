@@ -19,14 +19,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.dawb.common.ui.plot.AbstractPlottingSystem;
-import org.dawb.common.ui.plot.PlottingFactory;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.dawnsci.plotting.api.IPlottingSystem;
+import org.dawnsci.plotting.api.PlottingFactory;
 import org.dawnsci.plotting.api.region.IRegion;
 import org.dawnsci.plotting.api.region.IRegion.RegionType;
 import org.dawnsci.plotting.api.tool.IToolPage.ToolPageRole;
+import org.dawnsci.plotting.api.tool.IToolPageSystem;
 import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +54,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 
 	private static final long serialVersionUID = 4457133165062873343L;
 	
-	private AbstractPlottingSystem plottingSystem;
+	private IPlottingSystem plottingSystem;
 
 	protected static final List<String> HAS_ROI;
 	static {
@@ -241,7 +242,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					double height = maxPos[1];
 					myROI = new RectangularROI(width, height/2, 0);
 
-					plottingSystem = (AbstractPlottingSystem)PlottingFactory.getPlottingSystem(plotName);
+					plottingSystem = PlottingFactory.getPlottingSystem(plotName);
 
 					//Create Region(s)
 					Map<String, IROI> rois = null;
@@ -271,8 +272,9 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 		return mc;
 	}
 
-	private void createRegion(final AbstractPlottingSystem plottingSystem, final IROI roi, final String roiName, final String boxType){
+	private void createRegion(final IPlottingSystem plottingSystem, final IROI roi, final String roiName, final String boxType){
 		try {
+			final IToolPageSystem system = (IToolPageSystem)plottingSystem.getAdapter(IToolPageSystem.class);
 			if(roi instanceof LinearROI){
 				LinearROI lroi = (LinearROI)roi;
 				IRegion region = plottingSystem.getRegion(roiName);
@@ -282,7 +284,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.LINE);
 					newRegion.setROI(lroi);
 					plottingSystem.addRegion(newRegion);
-					plottingSystem.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
+					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
 			} else if(roi instanceof RectangularROI){
@@ -308,7 +310,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 						newRegion.setROI(rroi);
 						plottingSystem.addRegion(newRegion);
 					}
-					plottingSystem.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
+					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
 			} else if(roi instanceof SectorROI){
@@ -320,7 +322,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.SECTOR);
 					newRegion.setROI(sroi);
 					plottingSystem.addRegion(newRegion);
-					plottingSystem.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
+					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
 			} else if(roi instanceof EllipticalROI){
@@ -332,7 +334,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.ELLIPSE);
 					newRegion.setROI(eroi);
 					plottingSystem.addRegion(newRegion);
-					plottingSystem.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
+					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
 			} else if(roi instanceof EllipticalFitROI){
@@ -344,7 +346,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.ELLIPSEFIT);
 					newRegion.setROI(efroi);
 					plottingSystem.addRegion(newRegion);
-					plottingSystem.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
+					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
 			} else if(roi instanceof PointROI){
@@ -356,7 +358,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.POINT);
 					newRegion.setROI(proi);
 					plottingSystem.addRegion(newRegion);
-					plottingSystem.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
+					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
 			}

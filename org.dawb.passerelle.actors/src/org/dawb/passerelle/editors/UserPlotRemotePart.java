@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import org.dawb.common.ui.plot.PlottingFactory;
 import org.dawb.common.ui.plot.region.RegionService;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
@@ -27,6 +26,7 @@ import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.plotting.api.EmptyWorkbenchPart;
 import org.dawnsci.plotting.api.IPlottingSystem;
 import org.dawnsci.plotting.api.PlotType;
+import org.dawnsci.plotting.api.PlottingFactory;
 import org.dawnsci.plotting.api.region.IRegion;
 import org.dawnsci.plotting.api.tool.IToolChangeListener;
 import org.dawnsci.plotting.api.tool.IToolPage;
