@@ -158,6 +158,11 @@ public class MomlTest {
 	}
 	
 	@Test
+	public void testScalarHDF5() throws Throwable {
+		testScalarInjection("src/org/dawb/passerelle/actors/test/test_h5_scalars.moml",  "/entry/dictionary/name", "/entry/dictionary/power", "/entry/dictionary/probe", "/entry/dictionary/voltage");
+	}
+	
+	@Test
 	public void testCombine() throws Throwable {
 		testVariables("src/org/dawb/passerelle/actors/test/combiner.moml",  "/entry/data/Energy", IHierarchicalDataFile.NUMBER_ARRAY,  "/entry/data/lnI0It");
 	}
