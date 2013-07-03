@@ -21,12 +21,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import ncsa.hdf.object.Dataset;
+
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.ui.slicing.DimsDataList;
 import org.dawb.common.ui.slicing.SliceUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.SortingUtils;
 import org.dawb.gda.extensions.util.DatasetTitleUtils;
+import org.dawb.hdf5.HierarchicalDataFactory;
+import org.dawb.hdf5.IHierarchicalDataFile;
 import org.dawb.passerelle.actors.data.config.SliceParameter;
 import org.dawb.passerelle.common.DatasetConstants;
 import org.dawb.passerelle.common.actors.AbstractDataMessageSource;
@@ -95,7 +99,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 
 	private static final Logger logger = LoggerFactory.getLogger(DataImportSource.class);	
 	
-	private static final String[] DATA_TYPES = new String[] {"Complete data as numerical arrays", "Just path and file name"};
+	private static final String[] DATA_TYPES  = new String[] {"Complete data as numerical arrays", "Complete data as numerical arrays including scalars", "Just path and file name"};
 	private static final String[] SLICE_TYPES = new String[] {"Unique name for each slice", "Same name for each slice"};
 	
 	// Read internally
@@ -555,6 +559,42 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		comp.putScalar("file_name", new File(filePath).getName());
 		comp.putScalar("file_dir",  FileUtils.getDirectory(filePath));
 		
+		// Process any scalars in the HDF5 file if there are any
+		if (DATA_TYPES[1].equals(dataType.getExpression()) && H5Loader.isH5(filePath)) {
+			
+			IHierarchicalDataFile hFile = null;
+			try {
+				hFile = HierarchicalDataFactory.getReader(filePath);
+				final List<String> paths = hFile.getDatasetNames(IHierarchicalDataFile.SCALAR);
+				for (String path : paths) {
+					final Dataset set  = (Dataset)hFile.getData(path);
+					final Object  val  = set.getData();
+					String scalar=null;
+			        if (val instanceof byte[]) {
+			        	scalar = String.valueOf(((byte[])val)[0]);
+			        } else if (val instanceof short[]) {
+			        	scalar = String.valueOf(((short[])val)[0]);
+			        } else if (val instanceof int[]) {
+			        	scalar = String.valueOf(((int[])val)[0]);
+			        } else if (val instanceof long[]) {
+			        	scalar = String.valueOf(((long[])val)[0]);
+			        } else if (val instanceof float[]) {
+			        	scalar = String.valueOf(((float[])val)[0]);
+			        } else if (val instanceof double[]) {
+			        	scalar = String.valueOf(((double[])val)[0]);
+			        } else if (val instanceof String[]) {
+			        	scalar = String.valueOf(((String[])val)[0]);
+			        }
+			        if (scalar!=null) comp.putScalar(set.getName(), scalar);
+				}
+				
+			} catch (Exception ne) {
+				logger.error("Cannot read file "+filePath, ne);
+				
+			} finally {
+				if (file!=null) hFile.close();
+			}
+		}
 		
 		return comp;
 
@@ -569,7 +609,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	
 	private Map<String,Serializable> getDatasets(String filePath, final TriggerObject trigOb) throws Exception {
 		
-		if (!DATA_TYPES[0].equals(dataType.getExpression())) return null; 
+		if (DATA_TYPES[2].equals(dataType.getExpression())) return null; 
 		
 		final String[] ds     = names.getValue();
 
@@ -764,7 +804,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, new File(getSourcePath(null)).getName(), String.class));
 		ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH, FileUtils.getDirectory(getSourcePath(null)), String.class));
 		
-		if (DATA_TYPES[0].equals(dataType.getExpression())) {
+		if (DATA_TYPES[0].equals(dataType.getExpression()) || DATA_TYPES[1].equals(dataType.getExpression())) {
 			
 			getAllDatasetsInFile();// Sets up cache of sizes, which means we can return VARIABLE_TYPE.IMAGE
 			
