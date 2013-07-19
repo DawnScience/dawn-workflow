@@ -30,7 +30,7 @@ import ptolemy.kernel.util.NamedObj;
 
 public class ParameterUtils {
 
-	public static final String VARIABLE_EXPRESSION = "\\$\\{([a-zA-Z0-9_ ]+)\\}";
+	public static final String VARIABLE_EXPRESSION = "\\$\\{([a-zA-Z0-9_ \\.]+)\\}";
 
 
 	public static String getSubstituedValue(final Parameter parameter) throws Exception {
