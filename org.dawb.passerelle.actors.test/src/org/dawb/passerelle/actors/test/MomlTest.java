@@ -184,6 +184,12 @@ public class MomlTest {
 		testVariables("src/org/dawb/passerelle/actors/test/python_variables_test.moml",  "/entry/data/l", "/entry/dictionary/z", "/entry/dictionary/r");
 	}
 	
+	@Test
+	public void testSystemProperties() throws Throwable {
+		testScalarInjection("src/org/dawb/passerelle/actors/test/test_system_properties.moml",  "/entry/dictionary/user.name", "/entry/dictionary/user.home", "/entry/dictionary/os.name");
+	}
+
+	
 // For some reason works interactively but not in unit tests.
 //	@Test
 //	public void testScalarInjection6() throws Throwable {

@@ -167,6 +167,13 @@
             id="org.dawb.passerelle.actors.timerSource"
             name="Timed Source">
       </actor>
+      <actor
+            class="org.dawb.passerelle.actors.data.SystemPropertySource"
+            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            icon="icons/system_properties.png"
+            id="org.dawb.passerelle.actors.systemProperties"
+            name="System Properties">
+      </actor>
    </extension>
    <extension
          name="Maths actors"
@@ -375,6 +382,7 @@
       </actor>
    </extension>
    <extension
+         name="Error Handlers"
          point="com.isencia.passerelle.engine.actors">
       <actor
             class="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
