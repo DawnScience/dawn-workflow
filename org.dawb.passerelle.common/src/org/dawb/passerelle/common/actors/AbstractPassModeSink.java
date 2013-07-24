@@ -23,7 +23,6 @@ import ptolemy.actor.Actor;
 import ptolemy.actor.IOPort;
 import ptolemy.data.Token;
 import ptolemy.kernel.CompositeEntity;
-import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.ChangeListener;
 import ptolemy.kernel.util.ChangeRequest;
 import ptolemy.kernel.util.IllegalActionException;
