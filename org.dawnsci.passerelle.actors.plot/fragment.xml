@@ -76,7 +76,7 @@
             group="org.dawb.passerelle.actors.actorgroup.io"
             icon="icons/data_export.png"
             id="org.dawb.passerelle.actors.dawn.customdataexport"
-            name="Custom Data Export">
+            name="Data Export with Axes">
       </actor>
       <actor
             class="org.dawb.passerelle.actors.dawn.FitGaussianConvolutedFermiActor"
