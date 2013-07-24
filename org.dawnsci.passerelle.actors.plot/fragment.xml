@@ -74,7 +74,7 @@
       <actor
             class="org.dawb.passerelle.actors.dawn.CustomDataExportTransformer"
             group="org.dawb.passerelle.actors.actorgroup.io"
-            icon="icons/data_export.png"
+            icon="icons/data_export_axes.png"
             id="org.dawb.passerelle.actors.dawn.customdataexport"
             name="Data Export with Axes">
       </actor>
