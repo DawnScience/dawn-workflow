@@ -235,6 +235,14 @@
             name="Python">
       </actor>
       <actor
+            class="org.dawb.passerelle.actors.scripts.PythonPydevScript"
+            figureCustomizer="org.dawb.passerelle.actors.data.MathCustomizer"
+            group="org.dawb.passerelle.actors.actorgroup.maths"
+            icon="icons/expression.png"
+            id="org.dawb.passerelle.actors.mathsExpression"
+            name="Python PyDev">
+      </actor>
+      <actor
             class="org.dawb.passerelle.actors.data.Expression"
             figureCustomizer="org.dawb.passerelle.actors.data.MathCustomizer"
             group="org.dawb.passerelle.actors.actorgroup.maths"
