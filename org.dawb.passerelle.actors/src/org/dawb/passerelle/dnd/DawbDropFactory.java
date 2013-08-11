@@ -18,6 +18,7 @@ import org.dawb.common.util.io.FileUtils;
 import org.dawb.passerelle.actors.data.DataImportSource;
 import org.dawb.passerelle.actors.data.FolderImportSource;
 import org.dawb.passerelle.actors.data.SpecImportSource;
+import org.dawb.passerelle.actors.scripts.PythonPydevScript;
 import org.dawb.passerelle.actors.scripts.PythonScript;
 import org.dawnsci.io.h5.H5Loader;
 import org.eclipse.core.resources.IContainer;
@@ -43,7 +44,7 @@ public class DawbDropFactory implements IDropClassFactory {
 		for (String ext : exts) {
 			classes.put(ext, DataImportSource.class);
 		}
-		classes.put("py",   PythonScript.class);
+		classes.put("py",   PythonPydevScript.class);
 		classes.put("jy",   PythonScript.class);
 		classes.put("spec", SpecImportSource.class);
 	}
