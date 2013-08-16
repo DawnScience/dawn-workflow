@@ -12,9 +12,13 @@ package org.dawb.passerelle.actors.data;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.net.URI;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -244,6 +248,10 @@ public class FolderMonitorSource extends AbstractDataMessageSource {
 			
 			final DataMessageComponent  ret = new DataMessageComponent();
 			final TriggerObject        file = fileQueue.remove(0);
+			
+			final int freq = ((IntToken)sourceFreq.getToken()).intValue();
+			waitDuringFileWrite(file.getFile(), freq);
+			
 			reportedFiles.add(new FileObject(file.getFile()));
 			ret.putScalar("file_path", file.getFile().getAbsolutePath());
 			ret.putScalar("file_name", file.getFile().getName());
@@ -263,6 +271,47 @@ public class FolderMonitorSource extends AbstractDataMessageSource {
 		} catch (Exception ne) {
 			throw createDataMessageException("Cannot extract shared memory", ne);
 		
+		}
+	}
+
+	/**
+	 * This can be made better.
+	 * 
+	 * It is really hard to detect other threads in the same VM doing the copy.
+	 * Therefore we only detected external processes writing to the file.
+	 * 
+	 * @param file
+	 * @param freq 
+	 */
+	private void waitDuringFileWrite(File file, int freq) {
+		
+		if (!file.exists())   return;
+		if (!file.canWrite()) return;
+		
+		// This loop can run for 2400*freq, potentially >5 minutes
+		for (int timeout = 2400; timeout>0; timeout--) { 
+			
+			RandomAccessFile rand = null;
+			try {				
+				// Test for other processes writing to this file.				
+				rand    = new RandomAccessFile(file, "rw");
+				return;
+					
+			} catch (Exception ex) {
+				try {
+					Thread.sleep(freq);
+				} catch (Exception ne) {
+					return; // Sleeping can be interrupted and if is, we stop the loop.
+				}
+
+			} finally {
+				if(rand != null) try {
+					rand.close();
+				} catch (IOException ex) {
+					//do nothing
+				}
+			}
+
 		}
 	}
 
