@@ -79,5 +79,16 @@ public interface IWorkflowService {
 	 * @param b
 	 */
 	public void setLogToStandardOut(boolean b);
+	
+	/**
+	 * Sets a system property into the running workflow JVM.
+	 * This property can be tested in actors or anywhere in the workflow process.
+	 * 
+	 * Use with caution as the property might also be an important Java one.
+	 * 
+	 * @param key
+	 * @param value
+	 */
+	public void setProperty(String key, String value);
 
 }

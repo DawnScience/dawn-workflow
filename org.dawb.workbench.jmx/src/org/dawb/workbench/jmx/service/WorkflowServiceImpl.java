@@ -199,4 +199,9 @@ class WorkflowServiceImpl implements IWorkflowService {
 		String os = System.getProperty("os.name");
 		return os != null && os.toLowerCase().startsWith("linux");
 	}
+
+	@Override
+	public void setProperty(String key, String value) {
+		System.setProperty(key, value);
+	}
 }
