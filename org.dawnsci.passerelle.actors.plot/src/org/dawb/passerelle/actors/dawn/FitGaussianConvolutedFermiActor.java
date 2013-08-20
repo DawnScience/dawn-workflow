@@ -406,25 +406,26 @@ AbstractDataMessageTransformer {
 		Integer fitDim = Integer.parseInt(fitDirection.getExpression());
 
 		AbstractDataset dataDS = ((AbstractDataset) data.get(dataset)).clone();
+		int[] shape = dataDS.getShape();
 		AFunction fitFunction = functions.get(function);
 		AbstractDataset xAxisDS = null;
 		if (data.containsKey(xAxis)) {
 			xAxisDS = ((AbstractDataset) data.get(xAxis)).clone();
 		} else {
-			xAxisDS = DoubleDataset.arange(dataDS.getShape()[fitDim], 0, -1);
+			xAxisDS = DoubleDataset.arange(shape[fitDim], 0, -1);
 		}
 		
 		AbstractDataset anglesAxisDS = null;
 		if (data.containsKey(anglesAxis)) {
 			anglesAxisDS = ((AbstractDataset) data.get(anglesAxis)).clone();
 		} else {
-			anglesAxisDS = DoubleDataset.arange(dataDS.getShape()[Math.abs(fitDim-1)], 0, -1);
+			anglesAxisDS = DoubleDataset.arange(shape[Math.abs(fitDim-1)], 0, -1);
 		}
 
 		ArrayList<Slice> slices = new ArrayList<Slice>();
-		for (int i = 0; i < dataDS.getShape().length; i++) {
+		for (int i = 0; i < shape.length; i++) {
 			if (i == fitDim) {
-				slices.add(new Slice(0, dataDS.getShape()[i], 1));
+				slices.add(new Slice(0, shape[i], 1));
 			} else {
 				slices.add(new Slice(0, 1, 1));
 			}
@@ -433,23 +434,23 @@ AbstractDataMessageTransformer {
 		ArrayList<AbstractDataset> parametersDS = new ArrayList<AbstractDataset>(
 				fitFunction.getNoOfParameters());
 		
-		int[] shape = dataDS.getShape().clone();
-		shape[fitDim] = 1;
+		int[] lshape = shape.clone();
+		lshape[fitDim] = 1;
 		
 		for (int i = 0; i < fitFunction.getNoOfParameters(); i++) {
-			DoubleDataset parameterDS = new DoubleDataset(shape);
+			DoubleDataset parameterDS = new DoubleDataset(lshape);
 			parameterDS.squeeze();
 			parametersDS.add(parameterDS);
 		}
 
-		AbstractDataset functionsDS = new DoubleDataset(dataDS.getShape());
-		AbstractDataset residualDS = new DoubleDataset(shape);
+		AbstractDataset functionsDS = new DoubleDataset(shape);
+		AbstractDataset residualDS = new DoubleDataset(lshape);
 		residualDS.squeeze();
 
-		int[] starts = dataDS.getShape().clone();
+		int[] starts = shape.clone();
 		starts[fitDim] = 1;
 		DoubleDataset ind = DoubleDataset.ones(starts);
-		IndexIterator iter = ind.getIterator();
+		IndexIterator iter = ind.getIterator(true);
 
 		int maxthreads = Runtime.getRuntime().availableProcessors();
 		
@@ -458,20 +459,21 @@ AbstractDataMessageTransformer {
 				new ArrayBlockingQueue<Runnable>(10000, true),
 				new ThreadPoolExecutor.CallerRunsPolicy());
 
+		int[] pos = iter.getPos();
 		while (iter.hasNext()) {
-			logger.debug(Arrays.toString(ind.getNDPosition(iter.index)));
-			int[] start = ind.getNDPosition(iter.index).clone();
+			logger.debug(Arrays.toString(pos));
+			int[] start = pos.clone();
 			int[] stop = start.clone();
 			for (int i = 0; i < stop.length; i++) {
 				stop[i] = stop[i] + 1;
 			}
-			stop[fitDim] = dataDS.getShape()[fitDim];
+			stop[fitDim] = shape[fitDim];
 			AbstractDataset slice = dataDS.getSlice(start, stop, null);
 			slice.squeeze();
 
 			FermiGauss localFitFunction = new FermiGauss(functions
 					.get(function).getParameters());
-			int dSlength = dataDS.getShape().length;
+			int dSlength = shape.length;
 			executorService.submit(new Worker(localFitFunction, xAxisDS, anglesAxisDS, slice,
 					dSlength, start, stop, fitDim, parametersDS, functionsDS, residualDS));
 		}
@@ -497,22 +499,22 @@ AbstractDataMessageTransformer {
 				new ThreadPoolExecutor.CallerRunsPolicy());
 
 		while (iter.hasNext()) {
-			double value = residualDS.getDouble(iter.index);
+			double value = residualDS.getDouble(pos);
 			double disp = Math.abs(value-resMean);
 			if (disp > resStd*3 || value <= 0) {
-				logger.debug(Arrays.toString(ind.getNDPosition(iter.index)));
-				int[] start = ind.getNDPosition(iter.index).clone();
+				logger.debug(Arrays.toString(pos));
+				int[] start = pos.clone();
 				int[] stop = start.clone();
 				for (int i = 0; i < stop.length; i++) {
 					stop[i] = stop[i] + 1;
 				}
-				stop[fitDim] = dataDS.getShape()[fitDim];
+				stop[fitDim] = shape[fitDim];
 				AbstractDataset slice = dataDS.getSlice(start, stop, null);
 				slice.squeeze();
 
 				FermiGauss localFitFunction = new FermiGauss(functions
 						.get(function).getParameters());
-				int dSlength = dataDS.getShape().length;
+				int dSlength = shape.length;
 				executorService.submit(new Worker(localFitFunction, xAxisDS, anglesAxisDS, slice,
 						dSlength, start, stop, fitDim, parametersDS, functionsDS, residualDS));
 			}

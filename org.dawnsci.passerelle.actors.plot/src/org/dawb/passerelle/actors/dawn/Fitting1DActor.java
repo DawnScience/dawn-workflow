@@ -95,17 +95,18 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		AbstractDataset dataDS = ((AbstractDataset)data.get(dataset)).clone();
 		AFunction fitFunction = functions.get(function);
 		AbstractDataset xAxisDS = null;
+		int[] shape = dataDS.getShape();
 		if (data.containsKey(xAxis)) {
 			xAxisDS = ((AbstractDataset)data.get(xAxis)).clone();
 		} else {
-			xAxisDS = DoubleDataset.arange(dataDS.getShape()[fitDim],0,-1);
+			xAxisDS = DoubleDataset.arange(shape[fitDim],0,-1);
 		}
 		
 		// get the general parameters from the first fit.
 		ArrayList<Slice> slices = new ArrayList<Slice>();
-		for (int i = 0; i < dataDS.getShape().length; i++) {
+		for (int i = 0; i < shape.length; i++) {
 			if (i == fitDim) {
-				slices.add(new Slice(0,dataDS.getShape()[i], 1));
+				slices.add(new Slice(0,shape[i], 1));
 			} else {
 				slices.add(new Slice(0,1,1));
 			}
@@ -113,31 +114,31 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 			
 		ArrayList<AbstractDataset> parametersDS = new ArrayList<AbstractDataset>(fitFunction.getNoOfParameters()); 
 		for(int i = 0; i < fitFunction.getNoOfParameters(); i++) {
-			int[] shape = dataDS.getShape().clone();
-			shape[fitDim] = 1;
-			DoubleDataset parameterDS = new DoubleDataset(shape);
+			int[] lshape = shape.clone();
+			lshape[fitDim] = 1;
+			DoubleDataset parameterDS = new DoubleDataset(lshape);
 			parameterDS.squeeze();
 			parametersDS.add(parameterDS);
 		}
 		
-		AbstractDataset functionsDS = new DoubleDataset(dataDS.getShape());
+		AbstractDataset functionsDS = new DoubleDataset(shape);
 		
-		int[] starts = dataDS.getShape().clone();
+		int[] starts = shape.clone();
 		starts[fitDim] = 1;
 		DoubleDataset ind = DoubleDataset.ones(starts);
-		IndexIterator iter = ind.getIterator();
-		
+		IndexIterator iter = ind.getIterator(true);
+		int[] pos = iter.getPos();
 		boolean first = true;
 		
 		while(iter.hasNext()) {
 			System.out.println(iter.index);
-			System.out.println(Arrays.toString(ind.getNDPosition(iter.index)));
-			int[] start = ind.getNDPosition(iter.index).clone();
+			System.out.println(Arrays.toString(pos));
+			int[] start = pos.clone();
 			int[] stop = start.clone();
 			for(int i = 0; i < stop.length; i++) {
 				stop[i] = stop[i]+1;
 			}
-			stop[fitDim] = dataDS.getShape()[fitDim];
+			stop[fitDim] = shape[fitDim];
 			AbstractDataset slice = dataDS.getSlice(start, stop, null);
 			slice.squeeze();
 			try {
@@ -148,9 +149,9 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 				} else {
 					fitResult = Fitter.fit(xAxisDS, slice, new ApacheNelderMead(), fitFunction);
 				}
-				int[] position = new int[dataDS.getShape().length-1];
+				int[] position = new int[shape.length-1];
 				int count = 0;
-				for(int i = 0; i < dataDS.getShape().length; i++) {
+				for(int i = 0; i < shape.length; i++) {
 					if(i != fitDim) {
 						position[count] = start[i];
 						count++;
