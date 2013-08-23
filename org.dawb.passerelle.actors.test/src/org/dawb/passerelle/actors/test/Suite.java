@@ -20,6 +20,7 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(org.junit.runners.Suite.class)
 @SuiteClasses({ 
 	
+    MomlExamplesParametersTest.class,
     MomlExamplesTest.class,
     MomlTest.class,
     MomlTestNoJMXService.class
