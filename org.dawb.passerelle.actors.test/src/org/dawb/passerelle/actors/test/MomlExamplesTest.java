@@ -68,6 +68,7 @@ public class MomlExamplesTest {
 		final ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, "org.dawb.common.ui");
 		store.setValue("org.dawb.remote.session.mock", true);
 
+		InterpreterUtils.createPythonInterpreter("python", new NullProgressMonitor());
 	}
 
 	/**
