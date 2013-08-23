@@ -72,27 +72,24 @@ public class DataMessageException extends ProcessingException {
 	public DataMessageException(ErrorCode errorCode, String message,
 			NamedObj modelElement, ManagedMessage msgContext,
 			DataMessageComponent comp, Throwable rootException) {
+		
 		super(errorCode, message, modelElement, msgContext, rootException);
 		this.dataMessageComponent = comp;
 		dataMessageComponent.putScalar("message_text", "Actor name: " + modelElement.getName() + "\n\n" + message);
 		dataMessageComponent.setError(true);
-		if (rootException != null)
+		if (rootException != null) {
 			dataMessageComponent.putScalar("exception_text", rootException
 					.getMessage() != null ? rootException.getMessage()
 					: rootException.getClass().getName());
-
+		}
+		
 		try { // Send this to the workbench log so that it is visible in the log
-				// view.
-			final MBeanServerConnection client = RemoteWorkbenchAgent
-					.getServerConnection(1000);
-			client.invoke(
-					RemoteWorkbenchAgent.REMOTE_WORKBENCH,
-					"logStatus",
-					new Object[] {
-							Activator.getDefault().getBundle()
-									.getSymbolicName(), message, rootException },
-					new String[] { String.class.getName(),
-							String.class.getName(), Throwable.class.getName() });
+			// view.
+			final MBeanServerConnection client = RemoteWorkbenchAgent.getServerConnection(1000);
+			client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "logStatus",
+						  new Object[] {Activator.getDefault().getBundle().getSymbolicName(), message, rootException },
+						  new String[] { String.class.getName(), String.class.getName(), Throwable.class.getName() });
+			
 		} catch (Throwable ignored) {
 			// Nevermind then!
 		}

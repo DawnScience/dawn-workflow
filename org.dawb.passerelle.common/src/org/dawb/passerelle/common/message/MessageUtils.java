@@ -442,6 +442,7 @@ public class MessageUtils {
 			                                    final Collection                 vars,
 			                                    final NamedObj                   actor) throws Exception {
 		
+		if (cache==null) return null;
         final Map<String,String> ret = new HashMap<String,String>(cache.size()*7);
 		for (DataMessageComponent comp : cache) {
 			

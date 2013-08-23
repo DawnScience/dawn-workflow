@@ -46,6 +46,7 @@ import org.eclipse.core.runtime.preferences.InstanceScope;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IEditorReference;
@@ -95,7 +96,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 		
 		if (!PlatformUI.isWorkbenchRunning()) return false;
 		
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		Runnable runnable = new Runnable() {
 
 			@Override
 			public void run() {
@@ -168,7 +169,9 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				}
 			}
 
-		});
+		};
+		run(runnable);
+		
         return !obs.isEmpty();
 	}
 
@@ -181,7 +184,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 		
 		if (!PlatformUI.isWorkbenchRunning()) return false;
 		
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		Runnable runnable = new Runnable() {
 
 			@Override
 			public void run() {
@@ -199,7 +202,9 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				}
 			}
 
-		});
+		};
+		run(runnable);
+		
         return !obs.isEmpty();
 	}
 
@@ -232,13 +237,15 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 			return true;
 		}
 		
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		Runnable runnable = new Runnable() {
 
 			@Override
 			public void run() {
 		        MessageDialog.open(type, PlatformUI.getWorkbench().getDisplay().getActiveShell(), title, message, SWT.NONE);
 			}
-		});
+		};
+		run(runnable);
+		
     	return true;
 	}
 	
@@ -247,7 +254,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 		
 		if (!PlatformUI.isWorkbenchRunning()) return;
 		
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		Runnable runnable = new Runnable() {
 
 			@Override
 			public void run() {
@@ -272,8 +279,25 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				}
 				
 			}
-		});
+		};
+		run(runnable, false); // Must not be sync as logging can get called from editor.
+		
     	return;
+	}
+	
+	private void run(Runnable runnable) {
+		run(runnable, true);
+	}
+	private void run(Runnable runnable, boolean syncExec) {
+		if (Display.getDefault().getThread()==Thread.currentThread()) {
+			runnable.run();
+		} else {
+			if (syncExec) {
+			    PlatformUI.getWorkbench().getDisplay().syncExec(runnable);
+			} else {
+				PlatformUI.getWorkbench().getDisplay().asyncExec(runnable);
+			}
+		}
 	}
 	
 	@Override
@@ -286,7 +310,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 		
 		final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>(1);
 		
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		Runnable runnable = new Runnable() {
 
 			@Override
 			public void run() {
@@ -328,7 +352,8 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 					queue.add(Collections.EMPTY_MAP);
 				}
 			}
-		});
+		};
+		run(runnable);
 		
 		final Map<String,String> newValues = (Map<String,String>)queue.take(); // Blocks until user edits this!
     	return newValues;
@@ -342,7 +367,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 		
 		final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>(1);
 		
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		Runnable runnable = new Runnable() {
 
 			@Override
 			public void run() {
@@ -379,8 +404,9 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				// call return straight away.
 				queue.add(bean);
 			}
-		});
-		
+		};
+        run(runnable);
+        
 		return (UserPlotBean)queue.take(); // Blocks until user edits this!
 		
 	}
@@ -394,7 +420,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 	
 		final BlockingQueue<Object> queue = new LinkedBlockingQueue<Object>(1);
 		
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		Runnable runnable = new Runnable() {
 
 			@Override
 			public void run() {
@@ -430,7 +456,9 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 				// call return straight away.
 				queue.add(bean);
 			}
-		});
+		};
+		
+		run(runnable);
 		
 		return (UserDebugBean)queue.take(); // Blocks until user edits this!
 		
@@ -449,7 +477,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 			if (!isSel) return false;
 		}
 				
-		PlatformUI.getWorkbench().getDisplay().syncExec(new Runnable() {
+		Runnable runnable = new Runnable() {
 
 			@Override
 			public void run() {
@@ -488,7 +516,9 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 					logger.error("Cannot open editor ", e);
 				}
 			}
-		});
+		};
+		
+		run(runnable);
 		
 		// TODO fix this to return if the actor was found.
 		return true;
