@@ -11,6 +11,7 @@ package org.dawb.passerelle.actors.test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.edna.pydev.extensions.utils.InterpreterUtils;
 import org.junit.After;
@@ -75,10 +77,16 @@ public class MomlTest {
 		final IFolder  src  = work.getFolder("src");
 	    if (!src.exists()) src.create(true, true, null);
 	    
-	    final String pyPath = TestUtils.getAbsolutePath(Activator.getDefault().getBundle(), "src/org/dawb/passerelle/actors/test/python_variables_test.py");  		 		
-	    final File   pyFile = new File(pyPath);
-	    final IFile  pyIFile= src.getFile(pyFile.getName());
-	    pyIFile.create(new FileInputStream(pyFile), true, null);
+	    copyPyFile(src, "src/org/dawb/passerelle/actors/test/python_variables_test.py");
+	    copyPyFile(src, "src/org/dawb/passerelle/actors/test/python_pydev_variables_test.py");
+	}
+
+	private static void copyPyFile(final IFolder src, final String relPath)
+			throws CoreException, FileNotFoundException {
+		final String pyPath = TestUtils.getAbsolutePath(Activator.getDefault().getBundle(), relPath);
+		final File   pyFile = new File(pyPath);
+		final IFile  pyIFile= src.getFile(pyFile.getName());
+		pyIFile.create(new FileInputStream(pyFile), true, null);
 	}
 	
 	private IProject workflows;
@@ -184,6 +192,12 @@ public class MomlTest {
 		testVariables("src/org/dawb/passerelle/actors/test/python_variables_test.moml",  "/entry/data/l", "/entry/dictionary/z", "/entry/dictionary/r");
 	}
 	
+	@Test // This one sometimes fails - run again separately if does
+	public void testPythonPyDevVariables1() throws Throwable {
+		InterpreterUtils.createPythonInterpreter("python", new NullProgressMonitor());
+		testVariables("src/org/dawb/passerelle/actors/test/python_pydev_variables_test.moml",  "/entry/data/l", "/entry/dictionary/z", "/entry/dictionary/r");
+	}
+
 	@Test
 	public void testSystemProperties() throws Throwable {
 		testScalarInjection("src/org/dawb/passerelle/actors/test/test_system_properties.moml",  "/entry/dictionary/user.name", "/entry/dictionary/user.home", "/entry/dictionary/os.name");
