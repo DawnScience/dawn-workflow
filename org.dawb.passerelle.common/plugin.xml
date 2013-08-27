@@ -73,16 +73,7 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="org.eclipse.ui.internal.dialogs.EmptyPreferencePage"
-            category="org.dawnsci.preferences.root"
-            id="org.dawnsci.preferences.workflow"
-            name="Workflow">
-      </page>
-   </extension>
-   <extension
-         point="org.eclipse.ui.preferencePages">
-      <page
-            category="org.dawnsci.preferences.workflow"
+            category="com.isencia.passerelle.workbench.model.editor.ui.PasserellePreferences"
             class="org.dawb.passerelle.common.preferences.DataAnalysisPreferencePage"
             id="org.dawb.passerelle.common.preferences.workflow.page"
             name="Workflow Service">
