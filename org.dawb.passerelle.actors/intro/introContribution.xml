@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<introContent>
+  	<extensionContent id="prerelease-perspectives" style="style.css" name="Pre-release Perspectives" path="perspectives/@">
+		<group id="prerelease-perspectives-group" style-id="content-group">
+       		<link label="(Pre-release) Workflows" url="http://org.eclipse.ui.intro/runAction?pluginId=org.dawnsci.intro&amp;class=org.dawnsci.intro.actions.OpenPerspectiveAction&amp;name=org.dawb.passerelle.actors.intro.WorkflowIntroLauncher" id="passerelle-workflow" style-id="content-link">
+          		<text>Designing scientific algorithms in a visual way</text>
+       		</link>
+       	</group>
+  	</extensionContent>
+</introContent>

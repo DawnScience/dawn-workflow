@@ -526,4 +526,21 @@
             priority="0">
       </view>
    </extension>
+   <extension
+         point="org.dawnsci.introRegister">
+      <introPageRegister
+            class="org.dawb.passerelle.actors.intro.WorkflowIntroLauncher"
+            description="Designing scientific algorithms in a visual way."
+            icon="icons/Workflow128x128.png"
+            id="org.dawb.passerelle.actors.introPageRegister"
+            name="(Pre-release) Workflows">
+      </introPageRegister>
+   </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.dawnsci.intro.universalConfig"
+            content="intro/introContribution.xml">
+      </configExtension>
+   </extension>
 </plugin>
