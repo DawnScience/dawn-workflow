@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import ncsa.hdf.object.Dataset;
 
@@ -28,7 +30,6 @@ import org.dawb.common.ui.slicing.DimsDataList;
 import org.dawb.common.ui.slicing.SliceUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.SortingUtils;
-import org.dawb.gda.extensions.util.DatasetTitleUtils;
 import org.dawb.hdf5.HierarchicalDataFactory;
 import org.dawb.hdf5.IHierarchicalDataFile;
 import org.dawb.passerelle.actors.data.config.SliceParameter;
@@ -185,7 +186,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			@Override
 			public Map<String,String> getVisibleChoices() {
 				getAllDatasetsInFile();
-			    return DatasetTitleUtils.getChoppedNames(cachedDatasets);
+			    return getChoppedNames(cachedDatasets);
 			}
 		}, SWT.MULTI);
 		
@@ -199,7 +200,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			@Override
 			public Map<String,String> getVisibleKeyChoices() {
 				getAllDatasetsInFile();
-			    return DatasetTitleUtils.getChoppedNames(cachedDatasets);
+			    return getChoppedNames(cachedDatasets);
 			}
 			@Override
 			public Collection<String> getSelectedChoices() {		
@@ -468,7 +469,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		final String[]           sets = getAllDatasetsInFile();
 		if (sets == null || sets.length<1) return null;
 		
-		String rootName = DatasetTitleUtils.getRootName(cachedDatasets);
+		String rootName = getRootName(cachedDatasets);
         if (rootName==null) rootName = "";
         
 		final Map<String,String> ret  = new LinkedHashMap<String,String>(7);
@@ -853,5 +854,46 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		triggeredOnce = true;
 		appendQueue(triggerMsg);
 	}
+	/**
+	 * 
+	 * @param names
+	 * @return
+	 */
+	public static Map<String,String> getChoppedNames(final Collection<String> names) {
+		
+		final String rootName = getRootName(names);
+		if (rootName==null)      return null;
+		if (rootName.length()<1) return null;
+
+		final Map<String,String> chopped = new HashMap<String,String>(names.size());
+		for (String name : names) {
+			chopped.put(name, name.substring(rootName.length()));
+		}
+		return chopped;
+	}
+	private static final Pattern ROOT_PATTERN = Pattern.compile("(\\/[a-zA-Z0-9]+\\/).+");
+
+	public static String getRootName(Collection<String> names) {
+		
+		if (names==null) return null;
+		String rootName = null;
+		for (String name : names) {
+			final Matcher matcher = ROOT_PATTERN.matcher(name);
+			if (matcher.matches()) {
+				final String rName = matcher.group(1);
+				if (rootName!=null && !rootName.equals(rName)) {
+					rootName = null;
+					break;
+				}
+				rootName = rName;
+			} else {
+				rootName = null;
+				break;
+			}
+		}
+		return rootName;
+	}
+
+
 
 }
