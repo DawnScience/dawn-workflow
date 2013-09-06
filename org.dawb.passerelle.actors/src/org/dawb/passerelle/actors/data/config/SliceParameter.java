@@ -11,9 +11,9 @@ package org.dawb.passerelle.actors.data.config;
 
 import java.io.File;
 
-import org.dawb.common.ui.slicing.DimsDataList;
 import org.dawb.passerelle.actors.data.DataImportSource;
 import org.dawb.passerelle.common.parameter.CellEditorParameter;
+import org.dawnsci.slicing.api.system.DimsDataList;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;

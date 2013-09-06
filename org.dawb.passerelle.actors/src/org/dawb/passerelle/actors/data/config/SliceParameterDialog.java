@@ -9,8 +9,10 @@
  */ 
 package org.dawb.passerelle.actors.data.config;
 
-import org.dawb.common.ui.slicing.DimsDataList;
-import org.dawb.common.ui.slicing.SliceComponent;
+import org.dawnsci.slicing.api.SlicingFactory;
+import org.dawnsci.slicing.api.system.DimsDataList;
+import org.dawnsci.slicing.api.system.ISliceSystem;
+import org.dawnsci.slicing.api.system.SliceSource;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
@@ -31,7 +33,7 @@ public class SliceParameterDialog extends Dialog {
 	private static Logger logger = LoggerFactory.getLogger(SliceParameterDialog.class);
 	
 	private DimsDataList   dimsDataList;
-	private SliceComponent sliceComponent;
+	private ISliceSystem   sliceComponent;
 	
 	protected SliceParameterDialog(Shell parentShell, NamedObj container) {
 		super(parentShell);
@@ -40,7 +42,12 @@ public class SliceParameterDialog extends Dialog {
 	
 	public Control createDialogArea(Composite parent) {
 		
-		this.sliceComponent = new SliceComponent("org.dawb.workbench.views.h5GalleryView");
+		try {
+			this.sliceComponent = SlicingFactory.createSliceSystem("org.dawb.workbench.views.h5GalleryView");
+		} catch (Exception e) {
+			logger.error("Cannot create a slice system!", e);
+			return null;
+		}
 		final Control slicer = sliceComponent.createPartControl(parent);
 		slicer.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		sliceComponent.setAxesVisible(false);
@@ -62,7 +69,7 @@ public class SliceParameterDialog extends Dialog {
 		
 		final DataHolder holder = LoaderFactory.getData(filePath, monitor);
 		final ILazyDataset lazy = holder.getLazyDataset(dataSetName);
-		sliceComponent.setData(lazy, dataSetName, filePath, false);        
+		sliceComponent.setData(new SliceSource(lazy, dataSetName, filePath, false));        
 	}
 
 	public DimsDataList getDimsDataList() {

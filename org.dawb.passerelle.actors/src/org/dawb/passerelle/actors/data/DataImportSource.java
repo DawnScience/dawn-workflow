@@ -26,8 +26,6 @@ import java.util.regex.Pattern;
 import ncsa.hdf.object.Dataset;
 
 import org.dawb.common.python.PythonUtils;
-import org.dawb.common.ui.slicing.DimsDataList;
-import org.dawb.common.ui.slicing.SliceUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.SortingUtils;
 import org.dawb.hdf5.HierarchicalDataFactory;
@@ -46,6 +44,8 @@ import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawnsci.io.h5.H5LazyDataset;
 import org.dawnsci.io.h5.H5Loader;
+import org.dawnsci.slicing.api.system.DimsDataList;
+import org.dawnsci.slicing.api.util.SliceUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.gmf.runtime.common.core.util.StringMatcher;
@@ -63,6 +63,7 @@ import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
+import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
 import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
@@ -532,7 +533,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				
 			final DataHolder      dh  = LoaderFactory.getData(slice.getPath());
 			final ILazyDataset    ld  = dh.getLazyDataset(slice.getName());
-			final AbstractDataset set = SliceUtils.getSlice(ld, slice, null);
+			final IDataset set = SliceUtils.getSlice(ld, slice, null);
 			set.setName(pyName);
 			datasets = new HashMap<String,Serializable>(1);
 			datasets.put(pyName, set);
