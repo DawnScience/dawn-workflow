@@ -49,6 +49,7 @@ Import-Package: com.isencia.util,
  org.eclipse.debug.ui,
  org.eclipse.gmf.runtime.common.core.util,
  org.eclipse.ui.console,
+ org.eclipse.ui.intro.config,
  org.edna.pydev.extensions.utils,
  org.python.pydev.core,
  org.slf4j

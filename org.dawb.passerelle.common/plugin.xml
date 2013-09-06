@@ -85,5 +85,12 @@
             class="org.dawb.passerelle.common.preferences.PreferenceInitializer">
       </initializer>
    </extension>
+   <extension
+         point="org.eclipse.ui.intro.configExtension">
+      <configExtension
+            configId="org.dawnsci.intro.universalConfig"
+            content="intro/data.xml">
+      </configExtension>
+   </extension>
 
 </plugin>
