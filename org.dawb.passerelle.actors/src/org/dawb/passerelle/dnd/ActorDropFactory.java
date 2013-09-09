@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.dawb.common.services.ILoaderService;
+import org.dawb.common.services.ServiceManager;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.passerelle.actors.data.DataImportSource;
 import org.dawb.passerelle.actors.data.FolderImportSource;
@@ -28,19 +30,19 @@ import org.slf4j.LoggerFactory;
 
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
-import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
 
 import com.isencia.passerelle.workbench.model.editor.ui.dnd.IDropClassFactory;
 import com.isencia.passerelle.workbench.model.ui.command.CreateComponentCommand;
 
-public class DawbDropFactory implements IDropClassFactory {
+public class ActorDropFactory implements IDropClassFactory {
 
-	private static Logger logger = LoggerFactory.getLogger(DawbDropFactory.class);
+	private static Logger logger = LoggerFactory.getLogger(ActorDropFactory.class);
 	
 	private final Map<String, Class<? extends NamedObj>>  classes;
-	public DawbDropFactory() {
+	public ActorDropFactory() throws Exception {
 		classes = new HashMap<String, Class<? extends NamedObj>>(7);
-		final Collection<String> exts = LoaderFactory.getSupportedExtensions();
+		final ILoaderService service = (ILoaderService)ServiceManager.getService(ILoaderService.class);
+		final Collection<String> exts = service.getSupportedExtensions();
 		for (String ext : exts) {
 			classes.put(ext, DataImportSource.class);
 		}
@@ -73,7 +75,8 @@ public class DawbDropFactory implements IDropClassFactory {
 
 			IMetaData data;
 			try {
-				data = LoaderFactory.getMetaData(filePath, null);
+				final ILoaderService service = (ILoaderService)ServiceManager.getService(ILoaderService.class);
+				data = service.getMetaData(filePath, null);
 			} catch (Exception e) {
 				logger.error("Cannot get meta data for "+filePath, e);
 				return;

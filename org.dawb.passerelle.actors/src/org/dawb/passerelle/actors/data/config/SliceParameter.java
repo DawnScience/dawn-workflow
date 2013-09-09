@@ -13,6 +13,7 @@ import java.io.File;
 
 import org.dawb.passerelle.actors.data.DataImportSource;
 import org.dawb.passerelle.common.parameter.CellEditorParameter;
+import org.dawnsci.slicing.api.SliceDialog;
 import org.dawnsci.slicing.api.system.DimsDataList;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -81,7 +82,7 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 			@Override
 			protected Object openDialogBox(Control cellEditorWindow) {
 								
-				final SliceParameterDialog dialog = new SliceParameterDialog(cellEditorWindow.getShell(), getContainer()); // extends BeanDialog
+				final SliceDialog dialog = new SliceDialog(cellEditorWindow.getShell(), false); // extends BeanDialog
 				dialog.create();
 				dialog.getShell().setSize(400,450); // As needed
 				dialog.getShell().setText("Create Slices for Import");

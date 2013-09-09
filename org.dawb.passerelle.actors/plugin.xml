@@ -417,7 +417,7 @@
    <extension
          point="com.isencia.passerelle.workbench.model.editor.ui.dropFactory">
       <dropFactory
-            class="org.dawb.passerelle.dnd.DawbDropFactory">
+            class="org.dawb.passerelle.dnd.ActorDropFactory">
       </dropFactory>
    </extension>
    <extension
