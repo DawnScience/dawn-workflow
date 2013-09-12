@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cheatsheet title="Debugging Python in Workflows">
+
+	<intro>
+		<description>
+		    In this tutorial we will look at running python directly using pydev which includes allowing python scripts to run in the debugger. This tutorial will show you how to debug your own python scripts.
+	    </description>
+	</intro>
+
+   <item
+         title="Workflow Perspective">
+      <description>
+         Please choose the workflow perspective if you do not already have it selected (nothing will happen if you do not).
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.perspectives.showPerspective(org.eclipse.ui.perspectives.showPerspective.perspectiveId=org.edna.workbench.application.perspective.WorkflowPerspective)"/>
+   </item>
+   <item
+         title="Run Python Workflow">
+      <description>
+         Open the pydev workflow below, take a look at what is happening and try running it. You must have a pydev interpreter configured (under Window->Preferences->Pydev->Interpreter Python).You will need numpy available to import in order to run this example. When it runs, the python code generates a new dataset which is passed back to the hdf5 file written and is available for plotting. Plot 'data/Energy' vs 'data/lnI0It' for instance. 
+      </description>
+      <command
+            required="false"
+            serialization="org.eclipse.ui.navigate.openResource(filePath=workflows/examples/python_pydev_numpy_example1.moml)"/>
+   </item>
+   
+   
+   <item title="Debug">
+      <description>
+         In this section we will look at how to use python with debugging from a workflow.
+      </description>
+      <subitem
+            label="1. If your workflow did not run in the previous step, select the 'Python Pydev' actor and ensure that the 'Interpreter' attribute is set to the python interpreter you are using in pydev.">
+      </subitem>
+      <subitem
+            label="2. In your 'Python Pydev' actor ensure that the 'Run Script in Debug Mode' is set to true (ticked).">
+      </subitem>
+      <subitem
+            label="3. Go the 'Debug' Perspective (Window - Open Perspective - Other... - Debug).">
+      </subitem>
+      <subitem
+            label="4. Under the 'Pydev' menu choose 'Start Debug Server'.">
+      </subitem>
+       <subitem
+            label="5. Go back to the Workflow perspective, right click on 'Python Pydev' and open the python file.">
+      </subitem>
+       <subitem
+            label="6. In the script in double click in the margin near the assignment of the variable 'lnI0It'. This will create a green breakpoint which will stop the script at this point.">
+      </subitem>
+       <subitem
+            label="7. Run the workflow. The debugger will start when the python is run. You can go back to the 'Debug' perspective and actually see the values of variables running in the workflow! Look at the view entitled 'Variables' to do this.">
+      </subitem>
+      
+    </item>
+      
+   <item title="Conclusion">
+      <description>
+         We have seen in this section that it is possible to actively debug python scripts providing the pydev actor is used. This enables workflows to integrate with python.
+      </description>
+    <onCompletion>
+      Congratulations, now try linking a real data anlysis script to a workflow and debugging it!
+    </onCompletion>
+   </item>
+   
+</cheatsheet>

@@ -77,14 +77,24 @@
          <param name="path" value="workflow-ui.xml">
          </param>
       </task>
-      <task kind="cheatsheet" name="Python" skip="false">
+      <task kind="cheatsheet" name="Python" skip="true">
          <intro>
-            An introduction to running python and jython scripts which transform data in the workflows using any python based algorithm.
+            This cheat sheet uses the deprecated python actor, which works without using pydev. The pydev actor allows the pydev interpreter to be used with workflows and works with debuggers! Go staight to the pydev debug workflow to learn how to use it.
          </intro>
          <onCompletion>
             <b>Conclusion</b>
          </onCompletion>
          <param name="path" value="workflow-python.xml">
+         </param>
+      </task>
+      <task kind="cheatsheet" name="Pydev Debug" skip="false">
+         <intro>
+            An introduction to running python in pydev and to debugging using the pydev actor.
+         </intro>
+         <onCompletion>
+            <b>Conclusion</b>
+         </onCompletion>
+         <param name="path" value="workflow-pydev.xml">
          </param>
       </task>
       <task kind="cheatsheet" name="Batch" skip="true">
