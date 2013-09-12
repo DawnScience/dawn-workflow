@@ -499,7 +499,7 @@ AbstractDataMessageTransformer {
 				new ThreadPoolExecutor.CallerRunsPolicy());
 
 		while (iter.hasNext()) {
-			double value = residualDS.getDouble(pos);
+			double value = residualDS.getDouble(pos[0]);
 			double disp = Math.abs(value-resMean);
 			if (disp > resStd*3 || value <= 0) {
 				logger.debug(Arrays.toString(pos));
