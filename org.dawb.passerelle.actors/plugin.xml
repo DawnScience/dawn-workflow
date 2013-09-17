@@ -393,6 +393,13 @@
          name="Error Handlers"
          point="com.isencia.passerelle.engine.actors">
       <actor
+            class="com.isencia.passerelle.actor.error.ErrorCatcher"
+            group="com.isencia.passerelle.actor.actorgroup.errorhandling"
+            icon="icons/error.gif"
+            id="com.isencia.passerelle.actor.error.ErrorCatcher"
+            name="Error catcher">
+      </actor>
+      <actor
             class="com.isencia.passerelle.actor.error.ErrorHandlerBySeverity"
             group="com.isencia.passerelle.actor.actorgroup.errorhandling"
             icon="icons/error.gif"
