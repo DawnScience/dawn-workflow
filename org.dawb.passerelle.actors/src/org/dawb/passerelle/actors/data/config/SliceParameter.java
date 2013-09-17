@@ -90,6 +90,8 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 				try {
 					dialog.setData(names[0], path, null);
 				} catch (Throwable e) {
+					String message = e.getMessage();
+					if (message==null || "".equals(message)) message = "Cannot slice data in "+path;
 					ErrorDialog.openError(cellEditorWindow.getShell(), "Extraction error", e.getMessage(), new Status(IStatus.ERROR, "org.dawb.passerelle.actors", "", e));
 					return null;
 				}
