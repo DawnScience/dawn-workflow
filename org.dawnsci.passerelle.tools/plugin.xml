@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension-point id="batchTool" name="Batch Tool" schema="schema/batchTool.exsd"/>
+   <extension
+         point="org.dawnsci.passerelle.tools.batchTool">
+      <batchTool
+            class="org.dawnsci.passerelle.tools.fitting.PeakFittingBatchTool"
+            id="org.dawnsci.passerelle.tools.fittingBatchTool"
+            tool_id="org.dawb.workbench.plotting.tools.fittingTool">
+      </batchTool>
+   </extension>
+
+</plugin>

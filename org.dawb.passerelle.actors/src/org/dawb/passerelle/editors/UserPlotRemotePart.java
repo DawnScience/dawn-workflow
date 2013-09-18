@@ -19,10 +19,12 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.dawb.common.ui.plot.region.RegionService;
+import org.dawb.common.ui.util.GridUtils;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.UserPlotBean;
+import org.dawnsci.passerelle.tools.BatchToolFactory;
 import org.dawnsci.plotting.api.EmptyWorkbenchPart;
 import org.dawnsci.plotting.api.IPlottingSystem;
 import org.dawnsci.plotting.api.PlotType;
@@ -62,7 +64,6 @@ import org.slf4j.LoggerFactory;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
-import uk.ac.gda.common.rcp.util.GridUtils;
 
 public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 
@@ -224,7 +225,11 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 				}
 			});
 		}
+		
 		autoApplyButton.setSelection(bean.isAutomaticallyApply());
+		final boolean isBatchAvailable = BatchToolFactory.isBatchTool(bean.getToolId());
+		GridUtils.setVisible(autoApplyButton, isBatchAvailable);
+   
 		if (wrapper!=null) wrapper.update(true);
 		plotComposite.layout(plotComposite.getChildren());
 		main.layout(main.getChildren());
@@ -412,7 +417,9 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 			UserPlotBean toolData = (UserPlotBean)ret.getToolData();
 			ret.merge(toolData);
 		}
-		ret.setAutomaticallyApply(autoApplyButton.getSelection());
+		
+		final boolean isBatchAvailable = BatchToolFactory.isBatchTool(originalUserPlotBean.getToolId());
+		ret.setAutomaticallyApply(isBatchAvailable && autoApplyButton.getSelection());
 		
 		return ret;
 	}
