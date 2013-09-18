@@ -66,6 +66,7 @@ import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
 import uk.ac.diamond.scisoft.analysis.io.DataHolder;
+import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
 import uk.ac.diamond.scisoft.analysis.io.SliceObject;
@@ -294,34 +295,35 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				}
 			} else {
 				if (isFileLegal(file, triggerMsg)) {
-					
-					if (isH5Slicing(triggerMsg)) {
-						try {
-							final IMetaData meta  = LoaderFactory.getMetaData(file.getAbsolutePath(), null);
-	                        final int[]    shape  = meta.getDataShapes().get(getDataSetNames()[0]);
-							final List<SliceObject> slices = SliceUtils.getExpandedSlices(shape, slicing.getBeanFromValue(DimsDataList.class));
-						    int index = 0;
-							for (SliceObject sliceObject : slices) {
-								final TriggerObject ob = new TriggerObject();
-								ob.setTrigger(triggerMsg);
-								ob.setFile(file);
-								ob.setSlice(sliceObject);
-								ob.setIndex(index);
-								fileQueue.add(ob);
-								index++;
-							}
-							
-						} catch (Exception ne) {
-							// This is the end!
-							logger.error("Problem reading slices in data import.", ne);
-							requestFinish();
+
+					try {
+						final IDataHolder holder  = LoaderFactory.getData(file.getAbsolutePath(), null);
+						ILazyDataset lz = holder.getDataset(getDataSetNames()[0]);
+						if (lz==null) lz = holder.getDataset(0);
+						final int[]    shape  = lz.getShape();
+						
+						final List<SliceObject> slices = SliceUtils.getExpandedSlices(shape, slicing.getBeanFromValue(DimsDataList.class));
+						int index = 0;
+						for (SliceObject sliceObject : slices) {
+							final TriggerObject ob = new TriggerObject();
+							ob.setTrigger(triggerMsg);
+							ob.setFile(file);
+							ob.setSlice(sliceObject);
+							ob.setIndex(index);
+							fileQueue.add(ob);
+							index++;
 						}
-					} else {
-						final TriggerObject ob = new TriggerObject();
-						ob.setTrigger(triggerMsg);
-						ob.setFile(file);
-						fileQueue.add(ob);
+
+					} catch (Exception ne) {
+						// This is the end!
+						logger.error("Problem reading slices in data import.", ne);
+						requestFinish();
 					}
+				} else {
+					final TriggerObject ob = new TriggerObject();
+					ob.setTrigger(triggerMsg);
+					ob.setFile(file);
+					fileQueue.add(ob);
 				}
 			}
 			
@@ -329,16 +331,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				logger.info("No files found in '"+file.getAbsolutePath()+"'. Filter is set to: "+filterParam.getExpression());
 			}
 		}
-	}
-	
-	private boolean isH5Slicing(final ManagedMessage triggerMsg) {
-		final String  ext      = FileUtils.getFileExtension(getSourcePath(triggerMsg));
-		final boolean isH5File = LoaderFactory.getLoaderClass(ext) == H5Loader.class;
-		
-		return isH5File && this.slicing.getExpression()!=null 
-				        && !"".equals(slicing.getExpression()) 
-				        && getDataSetNames()!=null 
-				        && getDataSetNames().length==1;
 	}
 
 	private boolean isFileLegal(File file, final ManagedMessage triggerMsg) {
@@ -532,7 +524,8 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			final String pyName    = PythonUtils.getLegalVarName(sliceName, null);
 				
 			final DataHolder      dh  = LoaderFactory.getData(slice.getPath());
-			final ILazyDataset    ld  = dh.getLazyDataset(slice.getName());
+			ILazyDataset    ld  = dh.getLazyDataset(slice.getName());
+			if (ld==null) ld = dh.getLazyDataset(0);
 			final IDataset set = SliceUtils.getSlice(ld, slice, null);
 			set.setName(pyName);
 			datasets = new HashMap<String,Serializable>(1);

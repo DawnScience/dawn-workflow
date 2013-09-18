@@ -27,6 +27,8 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserPlotBean;
+import org.dawnsci.passerelle.tools.BatchToolFactory;
+import org.dawnsci.passerelle.tools.IBatchTool;
 import org.dawnsci.plotting.api.tool.ToolPageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,7 +81,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 	}
 
 	private StringParameter inputTypeParam, toolId, description, axisNames, dataNames;
-	private Parameter       silent;
+	private Parameter       silent, autoApplyDefault;
 	
 	public UserPlotTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		
@@ -115,11 +117,22 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 		silent.setToken(new BooleanToken(false));
 		registerConfigurableParameter(silent);
 
+		autoApplyDefault = new Parameter(this, "Automatic default value");
+		autoApplyDefault.setToken(new BooleanToken(true));
+		registerConfigurableParameter(autoApplyDefault);
+
 	}
 
 	protected boolean doPreFire() throws ProcessingException {
         return super.doPreFire();
 	}
+	
+	/**
+	 * These two fields are used if they have run the tool once and
+	 * would like to run it from here onwards in batch.
+	 */
+	private boolean      isAutomaticallyProcess=false;
+	private Serializable toolSetup=null;
 	
 	@Override
 	protected DataMessageComponent getTransformedMessage(List<DataMessageComponent> cache) throws ProcessingException {
@@ -160,6 +173,9 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 				bean.setAxesNames(getAxesNames());
 				bean.setDataNames(getDataNames());
 				bean.setFunctions(input.getFunctions());
+				bean.setAutomaticallyApply(((BooleanToken)autoApplyDefault.getToken()).booleanValue());
+				bean.setToolData(toolSetup);
+				
 				if (description.getExpression()!=null && !"".equals(description.getExpression())) {
 					bean.setDescription(description.getExpression());
 				}
@@ -168,11 +184,20 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 				try {
 					if (service!=null) service.setDataAnalysisClassLoaderActive(true);
 					
-					final UserPlotBean uRet   = (UserPlotBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "createPlotInput", new Object[]{bean}, new String[]{UserPlotBean.class.getName()});
+					UserPlotBean uRet=null;
+					if (isAutomaticallyProcess) {
+						final IBatchTool batchTool = BatchToolFactory.getBatchTool(toolId.getExpression());
+						if (batchTool==null) throw new Exception("Batch tool for plot tool "+toolId.getExpression()+" does not exist!");
+						uRet = batchTool.process(bean);
+					} else {
+						uRet = (UserPlotBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "createPlotInput", new Object[]{bean}, new String[]{UserPlotBean.class.getName()});
+					}
 					if (uRet==null || uRet.isEmpty()) {
 						requestFinish();
 						return null;
 					} 
+					
+					isAutomaticallyProcess = uRet.isAutomaticallyApply();
 					
 					input.setMeta(MessageUtils.getMeta(cache));
 					input.addScalar(uRet.getScalar());				
@@ -180,9 +205,9 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 					input.addRois(uRet.getRois());
 					input.addFunctions(uRet.getFunctions());
 									
-					Serializable toolData = uRet.getToolData();
-					if ((toolData != null) && (toolData instanceof UserPlotBean)) {
-						UserPlotBean plotBean = (UserPlotBean) toolData;
+					toolSetup = uRet.getToolData();
+					if ((toolSetup != null) && (toolSetup instanceof UserPlotBean)) {
+						UserPlotBean plotBean = (UserPlotBean) toolSetup;
 						input.addScalar(plotBean.getScalar());				
 						input.addList(plotBean.getData());
 						input.addRois(plotBean.getRois());

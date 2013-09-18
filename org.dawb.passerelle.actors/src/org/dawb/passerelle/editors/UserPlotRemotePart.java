@@ -19,10 +19,12 @@ import java.util.Map;
 import java.util.Queue;
 
 import org.dawb.common.ui.plot.region.RegionService;
+import org.dawb.common.ui.util.GridUtils;
 import org.dawb.common.ui.widgets.ActionBarWrapper;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.UserPlotBean;
+import org.dawnsci.passerelle.tools.BatchToolFactory;
 import org.dawnsci.plotting.api.EmptyWorkbenchPart;
 import org.dawnsci.plotting.api.IPlottingSystem;
 import org.dawnsci.plotting.api.PlotType;
@@ -51,6 +53,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -61,7 +64,6 @@ import org.slf4j.LoggerFactory;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
-import uk.ac.gda.common.rcp.util.GridUtils;
 
 public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 
@@ -78,6 +80,8 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 	private Composite                  plotComposite, toolComposite, main;
 	private SashForm                   contents;
 	private CLabel                     customLabel;
+
+	private Button autoApplyButton;
 
 	public UserPlotRemotePart() {		
 		try {
@@ -134,6 +138,9 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		
 		contents.setWeights(new int[]{100,0});
 		
+		this.autoApplyButton = new Button(main, SWT.CHECK);
+		autoApplyButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false));
+		autoApplyButton.setText("Automatically apply for other plots, using the same settings");
 	}
 	
     /**
@@ -219,6 +226,10 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 			});
 		}
 		
+		autoApplyButton.setSelection(bean.isAutomaticallyApply());
+		final boolean isBatchAvailable = BatchToolFactory.isBatchTool(bean.getToolId());
+		GridUtils.setVisible(autoApplyButton, isBatchAvailable);
+   
 		if (wrapper!=null) wrapper.update(true);
 		plotComposite.layout(plotComposite.getChildren());
 		main.layout(main.getChildren());
@@ -406,6 +417,9 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 			UserPlotBean toolData = (UserPlotBean)ret.getToolData();
 			ret.merge(toolData);
 		}
+		
+		final boolean isBatchAvailable = BatchToolFactory.isBatchTool(originalUserPlotBean.getToolId());
+		ret.setAutomaticallyApply(isBatchAvailable && autoApplyButton.getSelection());
 		
 		return ret;
 	}

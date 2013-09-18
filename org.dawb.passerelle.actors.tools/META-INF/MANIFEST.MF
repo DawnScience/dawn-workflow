@@ -1,8 +1,0 @@
-Manifest-Version: 1.0
-Bundle-ManifestVersion: 2
-Bundle-Name: Tools
-Bundle-SymbolicName: org.dawb.passerelle.actors.tools;singleton:=true
-Bundle-Version: 1.0.0.qualifier
-Bundle-Vendor: Diamond Light Source Ltd.
-Fragment-Host: org.dawb.passerelle.actors
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
