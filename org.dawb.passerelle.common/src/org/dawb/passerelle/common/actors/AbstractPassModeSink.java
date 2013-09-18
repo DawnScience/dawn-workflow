@@ -91,7 +91,6 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
 		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), SWT.SINGLE);
 		memoryManagementParam.setExpression(MEMORY_MODE.get(0));
 		registerConfigurableParameter(memoryManagementParam);
-		memoryManagementParam.setVisibility(Settable.NONE);
 		memoryMode = MEMORY_MODE.get(0);
 		
 		this.cachedUpstreamVariables = new ArrayList<IVariable>(7);

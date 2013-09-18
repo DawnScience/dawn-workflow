@@ -120,7 +120,6 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), SWT.SINGLE);
 		memoryManagementParam.setExpression(MEMORY_MODE.get(0));
 		registerConfigurableParameter(memoryManagementParam);
-		memoryManagementParam.setVisibility(Settable.NONE);
 		memoryMode = MEMORY_MODE.get(0);
 		
 		dataSetNaming = new StringChoiceParameter(this, "Name Mode", getNameModes(), SWT.SINGLE);

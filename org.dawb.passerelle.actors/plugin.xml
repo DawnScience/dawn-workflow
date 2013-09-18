@@ -377,6 +377,13 @@
             id="org.dawb.passerelle.actors.dmSynchronizer"
             name="Combiner">
       </actor>
+      <actor
+            class="org.dawb.passerelle.common.actors.DataMessageFilter"
+            group="org.dawb.passerelle.actors.actorgroup.flowcontrol"
+            icon="icons/filter.gif"
+            id="org.dawb.passerelle.actors.dmFilter"
+            name="Filter">
+      </actor>
    </extension>
    <extension
          name="Hardware"
