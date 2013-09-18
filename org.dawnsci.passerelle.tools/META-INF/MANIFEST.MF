@@ -6,7 +6,8 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.dawnsci.passerelle.tools.Activator
 Bundle-Vendor: DLS
 Require-Bundle: org.eclipse.core.runtime,
- org.dawb.workbench.jmx;bundle-version="1.0.0"
+ org.dawb.workbench.jmx;bundle-version="1.0.0",
+ org.dawnsci.plotting.tools;bundle-version="1.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.dawnsci.passerelle.tools

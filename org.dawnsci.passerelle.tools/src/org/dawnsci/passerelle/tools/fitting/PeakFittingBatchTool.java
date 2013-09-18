@@ -7,7 +7,8 @@ public class PeakFittingBatchTool implements IBatchTool {
 
 	@Override
 	public UserPlotBean process(UserPlotBean bean) {
-		// TODO Auto-generated method stub
+		
+        
 		return bean;
 	}
 
