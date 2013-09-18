@@ -28,6 +28,7 @@ import ptolemy.kernel.util.ChangeRequest;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
+import ptolemy.kernel.util.Settable;
 
 import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
@@ -83,12 +84,14 @@ public abstract class AbstractPassModeSink extends Sink implements IVariableProv
 		passModeParameter = new StringChoiceParameter(this, "Expression Mode", EXPRESSION_MODE, SWT.SINGLE);
 		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
 		registerExpertParameter(passModeParameter);
+		passModeParameter.setVisibility(Settable.NONE);
 		passMode = EXPRESSION_MODE.get(0);
 		
 		
 		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), SWT.SINGLE);
 		memoryManagementParam.setExpression(MEMORY_MODE.get(0));
 		registerConfigurableParameter(memoryManagementParam);
+		memoryManagementParam.setVisibility(Settable.NONE);
 		memoryMode = MEMORY_MODE.get(0);
 		
 		this.cachedUpstreamVariables = new ArrayList<IVariable>(7);
