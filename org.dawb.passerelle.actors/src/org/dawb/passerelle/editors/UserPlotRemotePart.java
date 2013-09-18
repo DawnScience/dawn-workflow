@@ -51,6 +51,7 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IEditorPart;
@@ -78,6 +79,8 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 	private Composite                  plotComposite, toolComposite, main;
 	private SashForm                   contents;
 	private CLabel                     customLabel;
+
+	private Button autoApplyButton;
 
 	public UserPlotRemotePart() {		
 		try {
@@ -134,6 +137,9 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		
 		contents.setWeights(new int[]{100,0});
 		
+		this.autoApplyButton = new Button(main, SWT.CHECK);
+		autoApplyButton.setLayoutData(new GridData(SWT.RIGHT, SWT.FILL, true, false));
+		autoApplyButton.setText("Automatically apply for other plots, using the same settings");
 	}
 	
     /**
@@ -218,7 +224,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 				}
 			});
 		}
-		
+		autoApplyButton.setSelection(bean.isAutomaticallyApply());
 		if (wrapper!=null) wrapper.update(true);
 		plotComposite.layout(plotComposite.getChildren());
 		main.layout(main.getChildren());
@@ -406,6 +412,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 			UserPlotBean toolData = (UserPlotBean)ret.getToolData();
 			ret.merge(toolData);
 		}
+		ret.setAutomaticallyApply(autoApplyButton.getSelection());
 		
 		return ret;
 	}

@@ -79,7 +79,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 	}
 
 	private StringParameter inputTypeParam, toolId, description, axisNames, dataNames;
-	private Parameter       silent;
+	private Parameter       silent, autoApplyDefault;
 	
 	public UserPlotTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		
@@ -115,11 +115,17 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 		silent.setToken(new BooleanToken(false));
 		registerConfigurableParameter(silent);
 
+		autoApplyDefault = new Parameter(this, "Automatic default value");
+		autoApplyDefault.setToken(new BooleanToken(true));
+		registerConfigurableParameter(autoApplyDefault);
+
 	}
 
 	protected boolean doPreFire() throws ProcessingException {
         return super.doPreFire();
 	}
+	
+	private boolean isAutomaticallyProcess=false;
 	
 	@Override
 	protected DataMessageComponent getTransformedMessage(List<DataMessageComponent> cache) throws ProcessingException {
@@ -160,6 +166,8 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 				bean.setAxesNames(getAxesNames());
 				bean.setDataNames(getDataNames());
 				bean.setFunctions(input.getFunctions());
+				bean.setAutomaticallyApply(((BooleanToken)autoApplyDefault.getToken()).booleanValue());
+				
 				if (description.getExpression()!=null && !"".equals(description.getExpression())) {
 					bean.setDescription(description.getExpression());
 				}
@@ -168,11 +176,19 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 				try {
 					if (service!=null) service.setDataAnalysisClassLoaderActive(true);
 					
-					final UserPlotBean uRet   = (UserPlotBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "createPlotInput", new Object[]{bean}, new String[]{UserPlotBean.class.getName()});
+					UserPlotBean uRet=null;
+					if (isAutomaticallyProcess) {
+						// TODO ...
+						// Get extension point for batch tools and process in batch.
+					} else {
+						uRet = (UserPlotBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "createPlotInput", new Object[]{bean}, new String[]{UserPlotBean.class.getName()});
+					}
 					if (uRet==null || uRet.isEmpty()) {
 						requestFinish();
 						return null;
 					} 
+					
+					isAutomaticallyProcess = uRet.isAutomaticallyApply();
 					
 					input.setMeta(MessageUtils.getMeta(cache));
 					input.addScalar(uRet.getScalar());				

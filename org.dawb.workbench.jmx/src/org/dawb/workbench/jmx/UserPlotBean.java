@@ -68,6 +68,13 @@ public class UserPlotBean extends UserDataBean {
 	 */
 	private String toolId;
 	
+	/**
+	 * The user may choose to run a tool over the plot automatically
+	 * without prompting them again with a dialog. If set, the last tool,
+	 * in its last configuration will be run again.
+	 */
+	private boolean isAutomaticallyApply;
+	
 	public void merge(UserPlotBean with) {
 		super.merge(with);
 		axesNames = mergeList(axesNames, with.axesNames);		
@@ -221,6 +228,16 @@ public class UserPlotBean extends UserDataBean {
 
 	public void setFunctions(Map<String, Serializable> functions) {
 		this.functions = functions;
+	}
+
+
+	public boolean isAutomaticallyApply() {
+		return isAutomaticallyApply;
+	}
+
+
+	public void setAutomaticallyApply(boolean isShowDialog) {
+		this.isAutomaticallyApply = isShowDialog;
 	}
 
 }
