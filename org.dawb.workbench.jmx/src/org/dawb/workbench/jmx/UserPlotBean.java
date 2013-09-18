@@ -112,6 +112,9 @@ public class UserPlotBean extends UserDataBean {
 		ret.setDescription(getDescription());
 		ret.setToolData(getToolData());
 		
+		ret.setUserPlottedSomething(userPlottedSomething);
+		ret.setAutomaticallyApply(isAutomaticallyApply);
+		
 		return ret;
 	}
 
