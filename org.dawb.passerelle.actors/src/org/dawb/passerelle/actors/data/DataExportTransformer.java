@@ -444,7 +444,6 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				s = file.appendDataset(name,  d, shape, a.getBuffer(), group);
 			}
 			file.setNexusAttribute(s, Nexus.SDS);
-			file.setAttribute(s, "original_name", a.getName());
 		}			
 	}
 

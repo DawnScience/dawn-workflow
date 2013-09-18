@@ -6,8 +6,17 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.dawnsci.passerelle.tools.Activator
 Bundle-Vendor: DLS
 Require-Bundle: org.eclipse.core.runtime,
+ org.eclipse.core.commands;bundle-version="3.6.1",
  org.dawb.workbench.jmx;bundle-version="1.0.0",
- org.dawnsci.plotting.tools;bundle-version="1.2.0"
+ uk.ac.diamond.scisoft.analysis;bundle-version="1.3.0",
+ uk.ac.diamond.scisoft.analysis.api;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Export-Package: org.dawnsci.passerelle.tools
+Export-Package: org.dawnsci.passerelle.tools,
+ org.dawnsci.passerelle.tools.util
+Import-Package: javax.vecmath,
+ org.eclipse.jface.preference,
+ org.eclipse.ui.preferences,
+ org.slf4j;version="1.5.6",
+ ptolemy.actor;version="7.0.1",
+ ptolemy.kernel.util;version="7.0.1"

@@ -2,6 +2,8 @@ package org.dawnsci.passerelle.tools;
 
 import org.dawb.workbench.jmx.UserPlotBean;
 
+import ptolemy.kernel.util.NamedObj;
+
 /**
  * 
  * A tool, which is like a plotting tool, and can run in batch from workflows.
@@ -19,6 +21,6 @@ public interface IBatchTool {
 	 * @param bean
 	 * @return
 	 */
-	UserPlotBean process(UserPlotBean bean);
+	UserPlotBean process(UserPlotBean bean, NamedObj parent) throws Exception;
 
 }

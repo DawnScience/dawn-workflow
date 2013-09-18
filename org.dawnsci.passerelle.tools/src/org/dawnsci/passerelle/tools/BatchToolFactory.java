@@ -25,7 +25,11 @@ public class BatchToolFactory {
 			
 	    	final String ptid = e.getAttribute("tool_id");
 	    	if (ptid.equals(plotToolId)) {
-	    		return (IBatchTool)e.createExecutableExtension("class");
+	    		IBatchTool bt = (IBatchTool)e.createExecutableExtension("class");
+	    		if (bt instanceof AbstractBatchTool) {
+	    			((AbstractBatchTool)bt).setBatchToolId(e.getAttribute("id"));
+	    		}
+	    		return bt;
 	    	}
 		}
 		return null;

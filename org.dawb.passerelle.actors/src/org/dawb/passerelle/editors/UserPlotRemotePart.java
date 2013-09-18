@@ -9,11 +9,7 @@
  */ 
 package org.dawb.passerelle.editors;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -25,6 +21,7 @@ import org.dawb.passerelle.actors.Activator;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.BatchToolFactory;
+import org.dawnsci.passerelle.tools.util.BatchToolUtils;
 import org.dawnsci.plotting.api.EmptyWorkbenchPart;
 import org.dawnsci.plotting.api.IPlottingSystem;
 import org.dawnsci.plotting.api.PlotType;
@@ -61,7 +58,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
@@ -154,20 +150,15 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		
 		system.createPlotPart(plotComposite, bean.getPartName(), wrapper, PlotType.XY, part);
 		
-		if (bean.getData()!=null) {
-			// Plot whatever was in the bean, if one 2D dataset is encountered use that
-			// since it is exclusive.
-			final Map<String,Serializable> data = new HashMap<String, Serializable>(bean.getData());
-			if (bean.getDataNames()!=null && !bean.getDataNames().isEmpty()) {
-				data.keySet().retainAll(bean.getDataNames());
-			}
-			final IDataset image = getFirst2DDataset(data);
+		final List<IDataset> data = BatchToolUtils.getPlottableData(bean);
+		if (data!=null) {
+			
 			// TODO Other plotting modes
 			// TODO Plot title?
-			if (image!=null) { // We plot in 2D
-				system.createPlot2D(image, getAxes(bean), null);
+			if (data.size()==1 && data.get(0).getRank()==2) { // We plot in 2D
+				system.createPlot2D(data.get(0), BatchToolUtils.getImageAxes(bean), null);
 			} else { // We plot in 1D
-				system.createPlot1D(getXAxis(bean), get1DDatasets(data), null);
+				system.createPlot1D(BatchToolUtils.getXAxis(bean), data, null);
 			}
 		}
 		
@@ -233,44 +224,6 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		if (wrapper!=null) wrapper.update(true);
 		plotComposite.layout(plotComposite.getChildren());
 		main.layout(main.getChildren());
-	}
-
-	private List<IDataset> getAxes(UserPlotBean bean) {
-		final List<String>    axes  = bean.getAxesNames();
-		if (axes==null) return null;
-		if (!bean.getData().containsKey(axes.get(0))) return null;
-		if (!bean.getData().containsKey(axes.get(1))) return null;
-		return Arrays.asList((IDataset)bean.getData().get(axes.get(0)), (IDataset)bean.getData().get(axes.get(1)));
-	}
-	private AbstractDataset getXAxis(UserPlotBean bean) {
-		final List<String>    axes  = bean.getAxesNames();
-		if (axes==null) return null;
-		if (!bean.getData().containsKey(axes.get(0))) return null;
-		return (AbstractDataset)bean.getData().get(axes.get(0));
-	}
-
-	private AbstractDataset getFirst2DDataset(Map<String, Serializable> data) {
-		for (String name : data.keySet()) {
-			Serializable d = data.get(name);
-			if (d instanceof AbstractDataset) {
-				AbstractDataset dd = (AbstractDataset)d;
-				dd.squeeze();
-				final int rank = dd.getRank();
-				if (rank==2) return dd;
-			}
-		}
-		return null;
-	}
-	private List<IDataset> get1DDatasets(Map<String, Serializable> data) {
-		List<IDataset> ret = new ArrayList<IDataset>(7);
-		for (String name : data.keySet()) {
-			Serializable d = data.get(name);
-			if (d instanceof AbstractDataset) {
-				final int rank = ((AbstractDataset)d).getRank();
-				if (rank==1) ret.add( (AbstractDataset)d );
-			}
-		}
-		return ret;
 	}
 
 	/**

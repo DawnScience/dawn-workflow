@@ -188,7 +188,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 					if (isAutomaticallyProcess) {
 						final IBatchTool batchTool = BatchToolFactory.getBatchTool(toolId.getExpression());
 						if (batchTool==null) throw new Exception("Batch tool for plot tool "+toolId.getExpression()+" does not exist!");
-						uRet = batchTool.process(bean);
+						uRet = batchTool.process(bean, this);
 					} else {
 						uRet = (UserPlotBean)client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "createPlotInput", new Object[]{bean}, new String[]{UserPlotBean.class.getName()});
 					}
