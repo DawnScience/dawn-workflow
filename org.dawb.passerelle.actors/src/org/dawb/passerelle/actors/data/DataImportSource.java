@@ -611,7 +611,11 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		// TODO Eclipse progress?
 		Map<String, ILazyDataset> data = null;
 		if (ds!=null&&ds.length>0) {
-			data = LoaderFactory.getDataSets(filePath, Arrays.asList(ds), null);
+			final IDataHolder dh = LoaderFactory.getData(filePath);
+			if (dh!=null) {
+				data = dh.toLazyMap();
+				data.keySet().retainAll(Arrays.asList(ds));
+			}
 		}
 		
 		if (data == null) {
