@@ -294,12 +294,13 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 					fileQueue.add(ob);
 				}
 			} else {
-				if (isFileLegal(file, triggerMsg)) {
+				if (isFileLegal(file, triggerMsg) && slicing.getExpression()!=null && !"".equals(slicing.getExpression())) {
 
 					try {
 						final IDataHolder holder  = LoaderFactory.getData(file.getAbsolutePath(), null);
-						ILazyDataset lz = holder.getDataset(getDataSetNames()[0]);
-						if (lz==null) lz = holder.getDataset(0);
+						ILazyDataset      lz      = getDataSetNames()!=null && getDataSetNames()[0]!=null && !"".equals(getDataSetNames()[0])
+								                  ? holder.getLazyDataset(getDataSetNames()[0])
+								                  : holder.getLazyDataset(0);
 						final int[]    shape  = lz.getShape();
 						
 						final List<SliceObject> slices = SliceUtils.getExpandedSlices(shape, slicing.getBeanFromValue(DimsDataList.class));
@@ -338,8 +339,8 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		if (file.isDirectory())                  return false;
 		if (file.isHidden())                     return false;
 		if (file.getName().startsWith("."))      return false;
-	    if (!isRequiredFileName(file.getName(), triggerMsg)) return false;		   
-        return true;
+	    if (!isRequiredFileName(file.getName(), triggerMsg)) return false;	
+       return true;
 	}
 
 	public boolean hasNoMoreMessages() {
