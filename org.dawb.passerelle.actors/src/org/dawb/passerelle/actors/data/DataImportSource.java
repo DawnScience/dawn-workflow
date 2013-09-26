@@ -45,6 +45,7 @@ import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawnsci.io.h5.H5LazyDataset;
 import org.dawnsci.io.h5.H5Loader;
 import org.dawnsci.slicing.api.system.DimsDataList;
+import org.dawnsci.slicing.api.system.SliceSource;
 import org.dawnsci.slicing.api.util.SliceUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -301,9 +302,9 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 						ILazyDataset      lz      = getDataSetNames()!=null && getDataSetNames()[0]!=null && !"".equals(getDataSetNames()[0])
 								                  ? holder.getLazyDataset(getDataSetNames()[0])
 								                  : holder.getLazyDataset(0);
-						final int[]    shape  = lz.getShape();
-						
-						final List<SliceObject> slices = SliceUtils.getExpandedSlices(shape, slicing.getBeanFromValue(DimsDataList.class));
+								                  
+						final SliceSource       data   = new SliceSource(holder, lz, lz.getName(), file.getAbsolutePath(), false);
+						final List<SliceObject> slices = SliceUtils.getExpandedSlices(data, slicing.getBeanFromValue(DimsDataList.class));
 						int index = 0;
 						for (SliceObject sliceObject : slices) {
 							final TriggerObject ob = new TriggerObject();
