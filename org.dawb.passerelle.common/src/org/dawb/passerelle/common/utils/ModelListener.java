@@ -23,10 +23,10 @@ public class ModelListener implements IModelListener {
 	private static final Logger logger = LoggerFactory.getLogger(ModelListener.class);
 
 	@Override
-	public void executionStarted() {
+	public void executionStarted(boolean requireDebug) {
 		try {
 			MBeanServerConnection client = ActorUtils.getWorkbenchConnection();
-			if (client!=null) client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "executionStarted", null, null);
+			if (client!=null) client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "executionStarted", new Object[]{requireDebug}, new String[]{boolean.class.getName()});
 			
 		} catch (Exception ne) {
 			logger.error("Cannot notify of terminate!", ne);
