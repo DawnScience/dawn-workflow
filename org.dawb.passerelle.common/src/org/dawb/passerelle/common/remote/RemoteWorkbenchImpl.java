@@ -63,7 +63,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
-import com.python.pydev.debug.remote.client_api.PydevRemoteDebuggerServer;
 /**
  * 
  * Class to interact with various plugins running in the workbench UI.
@@ -77,12 +76,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 	private static final Logger logger = LoggerFactory.getLogger(RemoteWorkbenchImpl.class);
 	
 	@Override
-	public void executionStarted(boolean requireDebugger) {
-		if (requireDebugger) {
-			if (!PydevRemoteDebuggerServer.isRunning()) {
-				PydevRemoteDebuggerServer.startServer();
-			}
-		}
+	public void executionStarted() {
 		ModelListener.notifyExecutionStarted();
 	}
 	@Override

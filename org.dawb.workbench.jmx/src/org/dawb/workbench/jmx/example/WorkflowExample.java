@@ -170,7 +170,7 @@ public class WorkflowExample {
 		private boolean tangoSpecMockMode = true;
 
 		@Override
-		public void executionStarted(boolean requireDebugger) {
+		public void executionStarted() {
 			// Start notification
 		}
 		
