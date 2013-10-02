@@ -103,8 +103,8 @@ public class RemoteWorkbenchManager extends StandardMBean implements RemoteWorkb
 	/**
 	 * 
 	 */
-	public void executionStarted() {
-		rmDelegate.executionStarted();
+	public void executionStarted(boolean requireDebugger) {
+		rmDelegate.executionStarted(requireDebugger);
 		sendNotification(START_CODE);
 	}
 	
