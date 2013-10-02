@@ -38,6 +38,9 @@ import ptolemy.kernel.util.Settable;
 
 import com.isencia.passerelle.actor.Actor;
 import com.isencia.passerelle.actor.ProcessingException;
+import com.isencia.passerelle.actor.v5.ActorContext;
+import com.isencia.passerelle.actor.v5.ProcessRequest;
+import com.isencia.passerelle.actor.v5.ProcessResponse;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
 import com.isencia.passerelle.workbench.model.actor.IResourceActor;
@@ -122,8 +125,9 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 	}
 	
 	@Override
-	protected void doFire(ManagedMessage message) throws ProcessingException {
-		
+	protected void process(ActorContext ctxt, ProcessRequest request,
+			ProcessResponse response) throws ProcessingException {
+		ManagedMessage message = request.getMessage(input);
 		try {
 			if (message!=null) {
 				DataMessageComponent msg = MessageUtils.coerceMessage(message);
@@ -133,10 +137,9 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 			final DataMessageComponent despatch = getTransformedMessageInternal(cache);
 			if (despatch==null) return;
 	        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
-			cache.clear();
 			
 		} catch (ProcessingException pe) {
-			throw pe;
+			throw new ProcessingException(pe.getErrorCode(), pe.getMessage(), pe.getModelElement(), message, pe.getCause());
 		} catch (Exception ne) {
 			throw createDataMessageException("Cannot add data from '"+message+"'", ne);
 		}

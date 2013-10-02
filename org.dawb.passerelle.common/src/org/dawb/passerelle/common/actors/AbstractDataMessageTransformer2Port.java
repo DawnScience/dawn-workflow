@@ -10,7 +10,9 @@
 package org.dawb.passerelle.common.actors;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -55,6 +57,8 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 	 */
 	private static final long serialVersionUID = -6609512817357858738L;
 	
+	protected List<DataMessageComponent> port1Cache = null;
+	protected List<DataMessageComponent> port2Cache = null;
 	
 	/**
 	 *  NOTE Ports must be public for composites to work.
@@ -120,8 +124,8 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 				throw new DataMessageException(ErrorCode.ERROR, "Cannot send messages with scalar data only to port '" +input.getName()+ "' of '"+getName()+"'", this, null, dataMsgComp, null);
 			}
 			
-			List<DataMessageComponent> port1Cache = Arrays.asList(dataMsgComp);
-			List<DataMessageComponent> port2Cache = Arrays.asList(modifierDataMsgComp);
+			port1Cache = Arrays.asList(dataMsgComp);
+			port2Cache = Arrays.asList(modifierDataMsgComp);
 			final DataMessageComponent despatch = getTransformedMessage(port1Cache , MessageUtils.mergeScalar(port2Cache));
 			if (despatch!=null) setDataNames(despatch, port1Cache);
 
@@ -163,4 +167,12 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 		ret.addScalar(MessageUtils.getScalar(port1Cache));
 		ret.addScalar(MessageUtils.getScalar(port2Cache), false);
 	}
+	
+	protected DataMessageException createDataMessageException(String msg, Throwable e) throws DataMessageException {
+		final Collection<DataMessageComponent> inputs = new ArrayList<DataMessageComponent>(7);
+		inputs.addAll(port2Cache);
+		inputs.addAll(port1Cache);
+		return new DataMessageException(msg, this, inputs, e);
+	}
+
 }

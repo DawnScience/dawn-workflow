@@ -55,6 +55,8 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 	
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDataMessageTransformer.class);
 
+	protected DataMessageComponent dataMsgComp = null;
+
 	public AbstractDataMessageTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
 	}
@@ -65,7 +67,7 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 	protected void process(ActorContext ctxt, ProcessRequest request,
 			ProcessResponse response) throws ProcessingException {
 		ManagedMessage message = request.getMessage(input);
-		DataMessageComponent dataMsgComp = null;
+		dataMsgComp = null;
 		try {
 			if (message!=null) {
 				dataMsgComp = MessageUtils.coerceMessage(message);
@@ -75,8 +77,7 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
 			}
 		} catch (ProcessingException pe) {
-			throw pe;
-		
+			throw new ProcessingException(pe.getErrorCode(), pe.getMessage(), pe.getModelElement(), message, pe.getCause());
 		} catch (Exception ne) {
 			throw new DataMessageException(ErrorCode.ERROR, "Cannot add data", this, message, dataMsgComp, ne);
 		}
@@ -109,6 +110,11 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 	}
 	
 
+	
+	protected DataMessageException createDataMessageException(String msg,Throwable e) throws DataMessageException {
+		return new DataMessageException(msg, this, dataMsgComp, e);
+	}
+	
 	
 	protected String getModelPath() {
 		if (getContainer()==null) return null;

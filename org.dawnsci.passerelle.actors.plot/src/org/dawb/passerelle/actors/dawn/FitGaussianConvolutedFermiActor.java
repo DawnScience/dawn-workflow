@@ -281,7 +281,7 @@ AbstractDataMessageTransformer {
 
 		String fitConvolutionValue = "Off";
 		try {
-			fitConvolutionValue = ParameterUtils.getSubstituedValue(fitConvolution, cache);
+			fitConvolutionValue = ParameterUtils.getSubstituedValue(fitConvolution, dataMsgComp);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

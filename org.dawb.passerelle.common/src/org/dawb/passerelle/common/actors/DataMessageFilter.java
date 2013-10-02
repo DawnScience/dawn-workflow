@@ -44,7 +44,6 @@ public class DataMessageFilter extends AbstractDataMessageTransformer {
 		functionFilter = new StringParameter(this, "Function Filter");
 		registerConfigurableParameter(functionFilter);
 		
-		passModeParameter.setVisibility(Settable.NONE);
 	    memoryManagementParam.setVisibility(Settable.NONE);;
 		dataSetNaming.setVisibility(Settable.NONE);;
 	}
