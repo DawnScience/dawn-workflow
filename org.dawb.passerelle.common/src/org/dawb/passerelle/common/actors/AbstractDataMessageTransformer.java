@@ -10,7 +10,7 @@
 package org.dawb.passerelle.common.actors;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -28,11 +28,12 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 
-import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.actor.TerminationException;
+import com.isencia.passerelle.actor.v5.ActorContext;
+import com.isencia.passerelle.actor.v5.ProcessRequest;
+import com.isencia.passerelle.actor.v5.ProcessResponse;
+import com.isencia.passerelle.core.ErrorCode;
 import com.isencia.passerelle.message.ManagedMessage;
-import com.isencia.passerelle.message.MessageFactory;
 
 /**
  * A Transformer which caches all messages coming into the doFire() and then
@@ -52,63 +53,41 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 	 */
 	private static final long serialVersionUID = 8697753304302318301L;
 	
-	protected final List<DataMessageComponent> cache;
-	
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDataMessageTransformer.class);
 
 	public AbstractDataMessageTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
-		cache = new ArrayList<DataMessageComponent>(7);
 	}
 	
-	public void doPreInitialize() throws InitializationException{
-		cache.clear();
-	}
-	
-	protected boolean alreadyFiredOneBlankMessage = false;
-	
-	protected boolean doPreFire() throws ProcessingException {
-		
-        final boolean ret = super.doPreFire();
-        
-        // We fire once a blank message.
-        if (getMinimumCacheSize()<1 && message==null && input.getWidth()<1 && !alreadyFiredOneBlankMessage) {
-        	alreadyFiredOneBlankMessage = true;
-        	message = MessageFactory.getInstance().createMessage();
-        }
-        return ret;
-	}
-
 	protected abstract DataMessageComponent getTransformedMessage(List<DataMessageComponent> cache) throws ProcessingException;
 	
 	@Override
-	protected void doFire(ManagedMessage message) throws ProcessingException {
-		
+	protected void process(ActorContext ctxt, ProcessRequest request,
+			ProcessResponse response) throws ProcessingException {
+		ManagedMessage message = request.getMessage(input);
+		DataMessageComponent dataMsgComp = null;
 		try {
 			if (message!=null) {
-				DataMessageComponent msg = MessageUtils.coerceMessage(message);
-				cache.add(msg);
+				dataMsgComp = MessageUtils.coerceMessage(message);
+				final DataMessageComponent despatch = getDespatch(dataMsgComp);
+				if (despatch==null) return;
+				
+		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
 			}
-
-			final DataMessageComponent despatch = getDespatch();
-			if (despatch==null) return;
-			
-	        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
-			cache.clear();
-			
 		} catch (ProcessingException pe) {
 			throw pe;
 		
 		} catch (Exception ne) {
-			throw createDataMessageException("Cannot add data from '"+message+"'", ne);
+			throw new DataMessageException(ErrorCode.ERROR, "Cannot add data", this, message, dataMsgComp, ne);
 		}
 	}
 	
-	private DataMessageComponent getDespatch() throws ProcessingException {
+	private DataMessageComponent getDespatch(DataMessageComponent dataMsgComp) throws ProcessingException {
 		
 		try {
 			ActorUtils.setActorExecuting(this, true);
 
+			List<DataMessageComponent> cache = Arrays.asList(dataMsgComp);
 			final DataMessageComponent despatch = getTransformedMessage(cache);
 			if (despatch!=null) setDataNames(despatch, cache);
 			try {
@@ -129,22 +108,7 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 		}
 	}
 	
-	protected int getMinimumCacheSize() {
-		return 1;
-	}
 
-	protected void doWrapUp() throws TerminationException {
-		super.doWrapUp();
-		if (isFinishRequested()) {
-			cache.clear();
-		}
-	}
-
-	
-	protected DataMessageException createDataMessageException(String msg,Throwable e) throws DataMessageException {
-		return new DataMessageException(msg, this, cache, e);
-	}
-	
 	
 	protected String getModelPath() {
 		if (getContainer()==null) return null;

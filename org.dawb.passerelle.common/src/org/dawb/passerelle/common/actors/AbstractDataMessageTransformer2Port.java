@@ -10,8 +10,7 @@
 package org.dawb.passerelle.common.actors;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -22,27 +21,29 @@ import org.dawb.workbench.jmx.UserDebugBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ptolemy.data.Token;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 
-import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.actor.TerminationException;
+import com.isencia.passerelle.actor.v5.ActorContext;
+import com.isencia.passerelle.actor.v5.ProcessRequest;
+import com.isencia.passerelle.actor.v5.ProcessResponse;
+import com.isencia.passerelle.core.ErrorCode;
+import com.isencia.passerelle.core.PasserelleException;
 import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.core.PortFactory;
-import com.isencia.passerelle.core.PortHandler;
+import com.isencia.passerelle.core.PortMode;
 import com.isencia.passerelle.message.ManagedMessage;
-import com.isencia.passerelle.message.MessageHelper;
+import com.isencia.passerelle.message.MessageInputContext;
 
 /**
- * A Transformer which caches all messages coming into the doFire() and then
- * forces the implemented to define a method to generate the output message
- * from the cache. The cache is ordered although the order in which the messages
- * are recieved in the first place is not guaranteed.
- * 
- * The two ports can be used for non-symmetric operations like substract, divide.
+ * A Transformer which gets its data messages from the normal input port, and one modifier message
+ * from a second input port. This modifier message can be used in operations on the data messages.
+ * <p>
+ * E.g. data messages can contain images read from a folder, and the modifier message can contain 
+ * a background image that can then be subtracted from each data message.
+ * </p>
  * 
  * @author gerring
  *
@@ -55,125 +56,73 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 	private static final long serialVersionUID = -6609512817357858738L;
 	
 	
-	protected final List<DataMessageComponent> port1Cache;
-	protected final List<DataMessageComponent> port2Cache;
-	
 	/**
 	 *  NOTE Ports must be public for composites to work.
 	 */
     public  Port           inputPort2;
-	private PortHandler    inputHandler2;
+    
+    private DataMessageComponent modifierDataMsgComp;
 
-	protected static final List<String> TWO_PORT_EXPRESSION_MODES;
-	static {
-		TWO_PORT_EXPRESSION_MODES = new ArrayList<String>(7);
-		TWO_PORT_EXPRESSION_MODES.addAll(EXPRESSION_MODE);
-		TWO_PORT_EXPRESSION_MODES.add("Evaluate when input to a and cache b");
-	}
-	
 	protected static final Logger logger = LoggerFactory.getLogger(AbstractDataMessageTransformer2Port.class);
 
 	public AbstractDataMessageTransformer2Port(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
-		port1Cache = new ArrayList<DataMessageComponent>(7);
-		port2Cache = new ArrayList<DataMessageComponent>(7);
 		input.setName("a");
-		inputPort2 = PortFactory.getInstance().createInputPort(this, "b", ManagedMessage.class);
-		
-		// Default is to process a and sum b
-		passModeParameter.setExpression( TWO_PORT_EXPRESSION_MODES.get(1));
-		registerConfigurableParameter(passModeParameter);
-		passMode = TWO_PORT_EXPRESSION_MODES.get(1);
+		inputPort2 = PortFactory.getInstance().createInputPort(this, "b", PortMode.PUSH, null);
 	}
 	
-	public void doPreInitialize() {
-		port1Cache.clear();
-		port2Cache.clear();
-	}
-	/**
-	 * Override to provide different options for processing the
-	 * ports.
-	 * 
-	 * @return
-	 */
-	protected List<String> getExpressionModes() {
-		return TWO_PORT_EXPRESSION_MODES;
-	}
-	
-	protected boolean isFireInLoop() {
-		if (port1Cache==null||port1Cache.size()<getMinimumCacheSize()) return false;
-		if (port2Cache==null||port2Cache.size()<getMinimumCacheSize()) return false;
-		return true;
-	}
-	
-	protected int getMinimumCacheSize() {
-		return 1;
-	}
 
 	protected abstract DataMessageComponent getTransformedMessage(List<DataMessageComponent> port1Cache, List<DataMessageComponent> port2Cache) throws ProcessingException;
 	
-	/*
-	 *  (non-Javadoc)
-	 * @see be.isencia.passerelle.actor.Actor#doInitialize()
-	 */
-	protected void doInitialize() throws InitializationException {
-		
-		this.inputHandler2 = new PortHandler(inputPort2);
-
-		if (inputPort2.getWidth()>0) {
-			inputHandler2.start();
-		}
-		super.doInitialize();
-			
-	}
-
-	protected boolean doPreFire() throws ProcessingException {
-		
-		Token token = inputHandler2.getToken();
-		if (token != null) {
+	@Override
+	public void offer(MessageInputContext ctxt) throws PasserelleException {
+		super.offer(ctxt);
+		if(inputPort2.getName().equals(ctxt.getPortName())) {
 			try {
-				ManagedMessage message2  = MessageHelper.getMessageFromToken(token);
-				if (message2!=null) {
-					DataMessageComponent msg = MessageUtils.coerceMessage(message2);
-					port2Cache.add(msg);
-				}
+				modifierDataMsgComp = MessageUtils.coerceMessage(ctxt.getMsg());
 			} catch (Exception e) {
-			    throw new ProcessingException("Error handling token", token, e);
+				throw new PasserelleException(
+						ErrorCode.MSG_CONTENT_TYPE_ERROR, this, e);
 			}
 		}
-		return super.doPreFire();
 	}
 	
 	@Override
-	protected void doFire(ManagedMessage message) throws ProcessingException {
-		
+	protected boolean doPreFire() throws ProcessingException {
+		return super.doPreFire() && (modifierDataMsgComp!=null);
+	}
+	
+	@Override
+	protected void process(ActorContext ctxt, ProcessRequest request,
+			ProcessResponse response) throws ProcessingException {
+		ManagedMessage message = request.getMessage(input);
+		DataMessageComponent dataMsgComp = null;
 		try {
 			if (message!=null) {
-				DataMessageComponent msg = MessageUtils.coerceMessage(message);
-				port1Cache.add(msg);
+				dataMsgComp = MessageUtils.coerceMessage(message);
+				final DataMessageComponent despatch = getDespatch(dataMsgComp, modifierDataMsgComp);
+				if (despatch==null) return;
+				sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
 			}
-			
-			final DataMessageComponent despatch = getDespatch();
-			if (despatch==null) return;
-			sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
-			
 		} catch (ProcessingException pe) {
-			throw pe;
+			throw new ProcessingException(pe.getErrorCode(), pe.getMessage(), pe.getModelElement(), message, pe.getCause());
 		} catch (Exception ne) {
-			throw createDataMessageException("Cannot add data from '"+message+"'", ne);
+			throw new DataMessageException(ErrorCode.ERROR, "Cannot add data", this, message, dataMsgComp, ne);
 		}
 	}
 	
-	private DataMessageComponent getDespatch() throws ProcessingException {
+	private DataMessageComponent getDespatch(DataMessageComponent dataMsgComp, DataMessageComponent modifierDataMsgComp) throws ProcessingException {
 		
 		try {
 			ActorUtils.setActorExecuting(this, true);
 			
-			if (MessageUtils.isScalarOnly(port1Cache)) {
-				throw createDataMessageException("Cannot send messages with scalar data only to port 'a' of '"+getName()+"'", null);
+			if (dataMsgComp.isScalarOnly()) {
+				throw new DataMessageException(ErrorCode.ERROR, "Cannot send messages with scalar data only to port '" +input.getName()+ "' of '"+getName()+"'", this, null, dataMsgComp, null);
 			}
 			
-			final DataMessageComponent despatch = getTransformedMessage(port1Cache, MessageUtils.mergeScalar(port2Cache));
+			List<DataMessageComponent> port1Cache = Arrays.asList(dataMsgComp);
+			List<DataMessageComponent> port2Cache = Arrays.asList(modifierDataMsgComp);
+			final DataMessageComponent despatch = getTransformedMessage(port1Cache , MessageUtils.mergeScalar(port2Cache));
 			if (despatch!=null) setDataNames(despatch, port1Cache);
 
 			try {
@@ -194,9 +143,6 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 			
 
 			port1Cache.clear();
-			if (!isLoopPort1SumPort2(false)) {
-				port2Cache.clear();
-			}
 			if (despatch==null) return null;
 			
 			despatch.putScalar("operation.time."+getName(), DateFormat.getDateTimeInstance().format(new Date()));
@@ -209,28 +155,6 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 	}
 	
 
-	protected void doWrapUp() throws TerminationException {
-		super.doWrapUp();
-		if (isFinishRequested()) {
-			port1Cache.clear();
-			port2Cache.clear();
-		}
-	}
-
-	protected boolean isLoopPort1SumPort2(boolean checkCacheState) {
-		
-		if (checkCacheState) {
-			if (port1Cache==null||port1Cache.size()<getMinimumCacheSize()) return false;
-			if (passMode.equals(TWO_PORT_EXPRESSION_MODES.get(1))) {
-				final int size = inputPort2.getWidth();
-				if (port2Cache==null||port2Cache.size()<size) return false;
-			} else {
-			    if (port2Cache==null||port2Cache.size()<getMinimumCacheSize()) return false;
-			}
-		}
-		return passMode.equals(TWO_PORT_EXPRESSION_MODES.get(1));
-	}
-
 	protected void setUpstreamValues(final DataMessageComponent ret,
 									final List<DataMessageComponent> port1Cache,
 									final List<DataMessageComponent> port2Cache) {
@@ -239,12 +163,4 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 		ret.addScalar(MessageUtils.getScalar(port1Cache));
 		ret.addScalar(MessageUtils.getScalar(port2Cache), false);
 	}
-	
-	protected DataMessageException createDataMessageException(String msg, Throwable e) throws DataMessageException {
-		final Collection<DataMessageComponent> inputs = new ArrayList<DataMessageComponent>(7);
-		inputs.addAll(port2Cache);
-		inputs.addAll(port1Cache);
-		return new DataMessageException(msg, this, inputs, e);
-	}
-
 }

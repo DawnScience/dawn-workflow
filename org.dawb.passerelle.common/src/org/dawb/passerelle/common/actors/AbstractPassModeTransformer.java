@@ -30,7 +30,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ptolemy.actor.IOPort;
-import ptolemy.data.Token;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.ChangeListener;
 import ptolemy.kernel.util.ChangeRequest;
@@ -41,17 +40,15 @@ import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 
-import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.actor.Transformer;
-import com.isencia.passerelle.core.PasserelleException;
+import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.core.Port;
+import com.isencia.passerelle.core.PortFactory;
 import com.isencia.passerelle.message.ManagedMessage;
-import com.isencia.passerelle.message.MessageHelper;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public abstract class AbstractPassModeTransformer extends Transformer implements IVariableProvider, IProjectNamedObject {
+public abstract class AbstractPassModeTransformer extends Actor implements IVariableProvider, IProjectNamedObject {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractPassModeTransformer.class);
 
@@ -61,11 +58,6 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 	private static final long serialVersionUID = -1903160956377231213L;
 
 
-	protected static List<String> EXPRESSION_MODE;
-	static {
-		EXPRESSION_MODE = new ArrayList<String>(3);
-		EXPRESSION_MODE.add("Evaluate on every data input");
-	}
 	
 	protected static List<String> MEMORY_MODE;
 	static {
@@ -82,40 +74,27 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		NAME_MODE.add("Use name of this actor as the data set name.");
 	}
 	
-	protected final StringChoiceParameter passModeParameter;
-	protected String                      passMode;
-
-	protected final StringChoiceParameter memoryManagementParam;
+	public final StringChoiceParameter memoryManagementParam;
 	protected String                      memoryMode;
 	
-	protected final StringChoiceParameter dataSetNaming;
+	public final StringChoiceParameter dataSetNaming;
 	protected String                      namingMode;
 	
-	/**
-	 * Could be protected but no need at the moment.
-	 */
-	protected RecordingPortHandler recInputHandler;
-
+	public Port input;
+	public Port output;
+	
+	
 	/**
 	 * Cached variables
 	 */
 	private ArrayList<IVariable> cachedUpstreamVariables;
     
-	/**
-	 *  NOTE Ports must be public for composites to work.
-	 */
-    public IOPort finishedPort;
-	
 	public AbstractPassModeTransformer(final CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		
 		super(container, ModelUtils.findUniqueActorName(container, name));
 		
-		passModeParameter = new StringChoiceParameter(this, "Expression Mode", getExpressionModes(), SWT.SINGLE);
-		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
-		registerExpertParameter(passModeParameter);
-		passModeParameter.setVisibility(Settable.NONE);
-		passMode = EXPRESSION_MODE.get(0);
-		
+		input = PortFactory.getInstance().createInputPort(this, null);
+		output = PortFactory.getInstance().createOutputPort(this);
 		
 		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), SWT.SINGLE);
 		memoryManagementParam.setExpression(MEMORY_MODE.get(0));
@@ -143,71 +122,9 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 		});
 		
 		
-		// find the finished port
-		final List outputs = outputPortList();
-		if (outputs!=null) for (Object object : outputs) {
-			if (object instanceof IOPort) {
-				IOPort port = (IOPort)object;
-				if (port.getName()!=null&&port.getName().equals("hasFinished")) {
-					this.finishedPort = port;
-				}
-			}
-		}
-		
 		ActorUtils.createDebugAttribute(this);
 	}
 
-	/*
-	 *  (non-Javadoc)
-	 * @see be.isencia.passerelle.actor.Actor#doInitialize()
-	 */
-	protected void doInitialize() throws InitializationException {
-		if (logger.isTraceEnabled()) logger.trace(getInfo());
-			
-		recInputHandler = new RecordingPortHandler(input, true);
-		if(input.getWidth()>0) {
-			recInputHandler.start();
-		}
-		
-		if(logger.isTraceEnabled())
-			logger.trace(getInfo()+" - exit ");
-
-	}
-	
-	protected boolean doPreFire() throws ProcessingException {
-		
-		if (logger.isTraceEnabled()) logger.trace(getInfo()+" doPreFire() - entry");
-		
-		Token token = recInputHandler.getToken();
-		if (token != null) {
-			processToken(token);
-		} else {
-			message = null;
-		}
-
-		if (logger.isTraceEnabled()) logger.trace(getInfo()+" doPreFire() - exit");
-		
-
-		return true;
-	}
-
-	private void processToken(Token token) throws ProcessingException {
-		try {
-			message = MessageHelper.getMessageFromToken(token);
-		} catch (PasserelleException e) {
-		    throw new ProcessingException("Error handling token", token, e);
-		}		
-	}
-
-	/**
-	 * Override to provide different options for processing the
-	 * ports.
-	 * 
-	 * @return
-	 */
-	protected List<String> getExpressionModes() {
-		return EXPRESSION_MODE;
-	}
 	/**
 	 * Override to provide different options for processing of
 	 * memory.
@@ -389,23 +306,8 @@ public abstract class AbstractPassModeTransformer extends Transformer implements
 	protected ManagedMessage lastOutput;
 	
 	protected void sendOutputMsg(Port port, ManagedMessage message) throws ProcessingException, IllegalArgumentException {
-		if (port==output && finishedPort!=null && finishedPort.numberOfSinks()>0) lastOutput = message;		
+		if (port==output && hasFinishedPort.numberOfSinks()>0) lastOutput = message;		
 		super.sendOutputMsg(port,message);
-	}
-	
-    /**
-     * Returns true when each input has fired received one message and 
-     * the queue has dealt with it.
-     * 
-     * If true is returned then the count of which port has been received is
-     * reset. True is returned once and then reset, after all input wires have
-     * fired again, it will be true again.
-     * 
-     * @return
-     */
-	protected boolean isInputRoundComplete() {
-		if (recInputHandler==null) return isFinishRequested();
-		return recInputHandler.isInputComplete();
 	}
 	
 	public NamedObj getObject() {
