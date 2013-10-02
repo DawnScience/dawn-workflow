@@ -35,7 +35,7 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 	}
 
 	@Override
-	public void executionStarted(boolean requireDebugger) {
+	public void executionStarted() {
 		// Start notification
 	}
 	

@@ -31,7 +31,7 @@ public interface IRemoteWorkbench {
 	 * Called in RCP mode when the execution of the model 
 	 * has started. Works in debug and run.
 	 **/
-	public void executionStarted(boolean requireDebugger);
+	public void executionStarted();
 	
 	/**
 	 * Called in RCP mode when the execution of the model 
