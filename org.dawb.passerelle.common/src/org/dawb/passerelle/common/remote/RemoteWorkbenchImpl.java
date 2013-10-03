@@ -83,8 +83,16 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 		 * detects that a workflow may be running - even if it does not need
 		 * the pydev debugger.
 		 */
-		if (!PydevRemoteDebuggerServer.isRunning()) {
-			PydevRemoteDebuggerServer.startServer();
+		try {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					if (!PydevRemoteDebuggerServer.isRunning()) {
+						PydevRemoteDebuggerServer.startServer();
+					}
+				}
+			});
+		} catch (Throwable ne) {
+			logger.error("Cannot automatically start the debug server!", ne);
 		}
 		ModelListener.notifyExecutionStarted();
 	}
