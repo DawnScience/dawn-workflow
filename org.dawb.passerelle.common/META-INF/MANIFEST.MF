@@ -38,6 +38,7 @@ Bundle-Vendor: ESRF
 Bundle-ClassPath: .,
  lib/castor-1.3.2-core.jar
 Import-Package: com.isencia.util,
+ com.python.pydev.debug.remote.client_api,
  org.apache.commons.digester.substitution,
  org.dawb.common.services,
  org.dawb.common.util,

@@ -63,6 +63,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.isencia.passerelle.workbench.model.editor.ui.editor.PasserelleModelMultiPageEditor;
+import com.python.pydev.debug.remote.client_api.PydevRemoteDebuggerServer;
 /**
  * 
  * Class to interact with various plugins running in the workbench UI.
@@ -77,6 +78,22 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 	
 	@Override
 	public void executionStarted() {
+		/**
+		 * We now just always start the python debugger when the workbench
+		 * detects that a workflow may be running - even if it does not need
+		 * the pydev debugger.
+		 */
+		try {
+			Display.getDefault().asyncExec(new Runnable() {
+				public void run() {
+					if (!PydevRemoteDebuggerServer.isRunning()) {
+						PydevRemoteDebuggerServer.startServer();
+					}
+				}
+			});
+		} catch (Throwable ne) {
+			logger.error("Cannot automatically start the debug server!", ne);
+		}
 		ModelListener.notifyExecutionStarted();
 	}
 	@Override
