@@ -146,7 +146,7 @@ public abstract class AbstractDataMessageTransformer2Port extends AbstractPassMo
 			}
 			
 
-			port1Cache.clear();
+//			port1Cache.clear();
 			if (despatch==null) return null;
 			
 			despatch.putScalar("operation.time."+getName(), DateFormat.getDateTimeInstance().format(new Date()));
