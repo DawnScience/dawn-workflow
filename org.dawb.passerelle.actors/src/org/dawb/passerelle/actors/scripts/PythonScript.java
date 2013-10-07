@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.dawb.common.python.PythonUtils;
-import org.dawb.common.python.rpc.PythonService;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.IVariable;
@@ -26,6 +25,7 @@ import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.jython.ActorInterpreterUtils;
+import org.dawnsci.python.rpc.PythonService;
 import org.eclipse.core.resources.IResource;
 import org.python.core.PyObject;
 import org.python.core.PyProxy;

@@ -498,6 +498,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			try {
 			    DataMessageComponent dmc = MessageUtils.coerceMessage(trigOb.getTrigger());
 			    comp.addScalar(dmc.getScalar());
+			    comp.addList(dmc.getList());
 			    comp.addRois(dmc.getRois());
 			    comp.addFunctions(dmc.getFunctions());
 			} catch (Throwable ignored) {
@@ -547,7 +548,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			}
 		}
 		
-		if (datasets!=null) comp.setList(datasets);
+		if (datasets!=null) comp.addList(datasets);
 		if (isMetaRequired) {
 			IMetaData meta =  LoaderFactory.getMetaData(filePath, null);
 			comp.setMeta(meta);

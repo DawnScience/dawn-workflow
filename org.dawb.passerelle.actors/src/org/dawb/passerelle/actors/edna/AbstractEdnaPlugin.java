@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 
 import org.dawb.common.python.EDJob;
 import org.dawb.common.python.PythonUtils;
-import org.dawb.common.python.rpc.PythonService;
 import org.dawb.common.util.SubstituteUtils;
 import org.dawb.common.util.io.Grep;
 import org.dawb.common.util.io.IFileUtils;
@@ -44,6 +43,7 @@ import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawb.passerelle.editors.EdnaActorMultiPageEditor;
 import org.dawb.passerelle.editors.SubstitutionParticipant;
 import org.dawb.passerelle.editors.XPathParticipant;
+import org.dawnsci.python.rpc.PythonService;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
