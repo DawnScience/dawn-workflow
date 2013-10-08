@@ -20,6 +20,7 @@ import java.util.Map;
 import org.dawb.common.python.PythonUtils;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
+import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.MessageUtils;
@@ -243,6 +244,8 @@ public class PythonScript extends AbstractScriptTransformer {
     		return ret;
     		
 
+		} catch (DataMessageException e) {
+			throw e;
 		} catch (Throwable e) {
 			throw createDataMessageException(e.getMessage(), e);
 		} finally {
