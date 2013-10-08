@@ -107,7 +107,7 @@ public class MomlExamplesTest {
 
  		final long endSize = Runtime.getRuntime().totalMemory();
  		final long leak    = (endSize-startSize);
- 		if (leak>700000000) throw new Exception("The memory leak is too large! It is "+leak);
+ 		if (leak>1000000000) throw new Exception("The memory leak is too large! It is "+leak);
 		System.out.println("The memory leak opening example workflows is "+leak);
 	}	
 	

@@ -10,6 +10,7 @@
 package org.dawb.passerelle.common.actors;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.dawb.passerelle.common.message.DataMessageComponent;
@@ -41,37 +42,29 @@ public abstract class AbstractDataMessageSink extends AbstractPassModeSink {
 	 */
 	private static final long serialVersionUID = -8638005806521694925L;
 	
-	private List<DataMessageComponent> cache;
-	private boolean firedOnce=false;
+	private DataMessageComponent dataMsgComp;
 	
 	public AbstractDataMessageSink(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
-		cache = new ArrayList<DataMessageComponent>(7);
 	}
 
-	public void doPreInitialize() {
-		cache.clear();
-	}
 
 	@Override
 	protected void sendMessage(ManagedMessage message) throws ProcessingException {
 		try {
-			final DataMessageComponent comp = MessageUtils.coerceMessage(message);
-			
-			cache.add(comp);
-			
+			dataMsgComp = MessageUtils.coerceMessage(message);
+			List<DataMessageComponent> cache = Arrays.asList(dataMsgComp);
+
 			if (message instanceof ErrorMessageContainer) {
 				sendCachedDataInternal(cache);
-				cache.clear();
 				requestFinish();
 				
 			} else {
 				sendCachedDataInternal(cache);
-				cache.clear();
 			}
 			
 		} catch (ProcessingException pe) {
-			throw pe;
+			throw new ProcessingException(pe.getErrorCode(), pe.getMessage(), pe.getModelElement(), message, pe.getCause());
 		} catch (Exception ne) {
 			throw createDataMessageException("Cannot add data from '"+message+"'", ne);
 		}
@@ -95,23 +88,10 @@ public abstract class AbstractDataMessageSink extends AbstractPassModeSink {
 	
 	protected abstract void sendCachedData(List<DataMessageComponent> cache) throws ProcessingException;
 
-	protected boolean doPostFire() throws ProcessingException {
-		
-		final boolean isFinished   = isFinishRequested();
-				
-		if (isFinished) return false;
-		return true; // Wait for more
-	}
 	
-	protected void doWrapUp() throws TerminationException {
-		super.doWrapUp();
-		if (isFinishRequested()) {
-			cache.clear();
-		}
-	}
 	
 	protected DataMessageException createDataMessageException(String msg,Throwable e) throws DataMessageException {
-		return new DataMessageException(msg, this, cache, e);
+		return new DataMessageException(msg, this, dataMsgComp, e);
 	}
 	
 }
