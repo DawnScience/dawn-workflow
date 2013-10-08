@@ -379,28 +379,30 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 		IHierarchicalDataFile file = null;
 		try {
 			// Will create one if not there.
-			if (isWritingSingleFile()) {
-				if (cachedFile == null) {
-					if (WRITING_CHOICES.get(1).equals(fileWriteType)) {
-						final File iof = new File(filePath);
-						if (iof.exists()) iof.delete();
-					}
-
-					boolean fileinuse = true;
-					while(fileinuse) {
-						try {
-							cachedFile = HierarchicalDataFactory.getWriter(filePath);
-							fileinuse = false;
-						} catch (Exception e) {
-							System.out.println("Waiting for other writing to be complete");
-							Thread.sleep(1000);
-						}	
-					}
-				}
-				file = cachedFile;
-			} else {
-				file = HierarchicalDataFactory.getWriter(filePath);
-			}
+//			if (isWritingSingleFile()) {
+//				if (cachedFile == null) {
+//					if (WRITING_CHOICES.get(1).equals(fileWriteType)) {
+//						final File iof = new File(filePath);
+//						if (iof.exists()) iof.delete();
+//					}
+//
+//					boolean fileinuse = true;
+//					while(fileinuse) {
+//						try {
+//							cachedFile = HierarchicalDataFactory.getWriter(filePath);
+//							fileinuse = false;
+//						} catch (Exception e) {
+//							System.out.println("Waiting for other writing to be complete");
+//							Thread.sleep(1000);
+//						}	
+//					}
+//				}
+//				file = cachedFile;
+//			} else {
+//				file = HierarchicalDataFactory.getWriter(filePath);
+//			}
+			file = HierarchicalDataFactory.getWriter(filePath, true);
+			
 			final Map<String, Serializable>  data = MessageUtils.getList(cache);
 			//			final Map<String,String>    scal = MessageUtils.getScalar(cache);
 
@@ -441,7 +443,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				final Datatype      datatype = H5Utils.getDatatype(myData);
 				final long[]         shape = new long[myData.getShape().length];
 				for (int i = 0; i < shape.length; i++) shape[i] = myData.getShape()[i];
-				final Dataset dataset = file.createDataset(dataSaveName,  datatype, shape, myData.getBuffer(), parent);
+				final Dataset dataset = file.appendDataset(dataSaveName,  datatype, shape, myData.getBuffer(), parent);
 				file.setNexusAttribute(dataset, Nexus.SDS);
 			}
 
@@ -449,7 +451,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				final Datatype      xDatatype = H5Utils.getDatatype(xAxisData);
 				final long[]         xShape = new long[xAxisData.getShape().length];
 				for (int i = 0; i < xShape.length; i++) xShape[i] = xAxisData.getShape()[i];
-				final Dataset xDataset = file.createDataset(axis1SaveName,  xDatatype, xShape, xAxisData.getBuffer(), parent);
+				final Dataset xDataset = file.appendDataset(axis1SaveName,  xDatatype, xShape, xAxisData.getBuffer(), parent);
 				file.setNexusAttribute(xDataset, Nexus.SDS);
 			}
 
@@ -457,7 +459,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				final Datatype      yDatatype = H5Utils.getDatatype(yAxisData);
 				final long[]         yShape = new long[yAxisData.getShape().length];
 				for (int i = 0; i < yShape.length; i++) yShape[i] = yAxisData.getShape()[i];
-				final Dataset yDataset = file.createDataset(axis2SaveName,  yDatatype, yShape, yAxisData.getBuffer(), parent);
+				final Dataset yDataset = file.appendDataset(axis2SaveName,  yDatatype, yShape, yAxisData.getBuffer(), parent);
 				file.setNexusAttribute(yDataset, Nexus.SDS);
 			}
 
