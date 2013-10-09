@@ -14,6 +14,11 @@
             id="org.dawnsci.passerelle.tools.imageNormBatchTool"
             tool_id="org.dawb.workbench.plotting.tools.imageNormalisationProcessTool">
       </batchTool>
+      <batchTool
+            class="org.dawnsci.passerelle.tools.image.ImageARPESRemapBatchTool"
+            id="org.dawnsci.passerelle.tools.imageARPESRemapBatchTool"
+            tool_id="org.dawb.workbench.plotting.tools.imageARPESRemappingProcessTool">
+      </batchTool>
    </extension>
 
 </plugin>
