@@ -4,7 +4,7 @@ Bundle-Name: Tools
 Bundle-SymbolicName: org.dawnsci.passerelle.tools;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.dawnsci.passerelle.tools.Activator
-Bundle-Vendor: DLS
+Bundle-Vendor: Diamond Light Source
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.commands;bundle-version="3.6.1",
  org.dawb.workbench.jmx;bundle-version="1.0.0",
