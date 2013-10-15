@@ -78,21 +78,24 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 	
 	@Override
 	public void executionStarted() {
-		/**
-		 * We now just always start the python debugger when the workbench
-		 * detects that a workflow may be running - even if it does not need
-		 * the pydev debugger.
-		 */
-		try {
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					if (!PydevRemoteDebuggerServer.isRunning()) {
-						PydevRemoteDebuggerServer.startServer();
+		
+		if (Boolean.getBoolean("org.dawb.passerelle.common.remote.startPythonDebugger")) {
+			/**
+			 * We now just always start the python debugger when the workbench
+			 * detects that a workflow may be running - even if it does not need
+			 * the pydev debugger.
+			 */
+			try {
+				Display.getDefault().asyncExec(new Runnable() {
+					public void run() {
+						if (!PydevRemoteDebuggerServer.isRunning()) {
+							PydevRemoteDebuggerServer.startServer();
+						}
 					}
-				}
-			});
-		} catch (Throwable ne) {
-			logger.error("Cannot automatically start the debug server!", ne);
+				});
+			} catch (Throwable ne) {
+				logger.error("Cannot automatically start the debug server!", ne);
+			}
 		}
 		ModelListener.notifyExecutionStarted();
 	}
