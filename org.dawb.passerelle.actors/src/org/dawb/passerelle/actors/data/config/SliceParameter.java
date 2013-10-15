@@ -96,6 +96,7 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 					return null;
 				}
 				dialog.setDimsDataList((DimsDataList)getBeanFromValue(DimsDataList.class));
+				dialog.setRangesAllowed(true);
 				
 		        final int ok = dialog.open();
 		        if (ok == Dialog.OK) {
