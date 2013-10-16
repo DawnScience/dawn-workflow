@@ -45,6 +45,7 @@ import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawnsci.io.h5.H5LazyDataset;
 import org.dawnsci.io.h5.H5Loader;
 import org.dawnsci.slicing.api.system.DimsDataList;
+import org.dawnsci.slicing.api.system.ISliceRangeSubstituter;
 import org.dawnsci.slicing.api.system.SliceSource;
 import org.dawnsci.slicing.api.util.SliceUtils;
 import org.eclipse.core.resources.IResource;
@@ -304,7 +305,9 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 								                  : holder.getLazyDataset(0);
 								                  
 						final SliceSource       data   = new SliceSource(holder, lz, lz.getName(), file.getAbsolutePath(), false);
-						final List<SliceObject> slices = SliceUtils.getExpandedSlices(data, slicing.getBeanFromValue(DimsDataList.class));
+						final List<SliceObject> slices = SliceUtils.getExpandedSlices(data, 
+								                                                      (DimsDataList)slicing.getBeanFromValue(DimsDataList.class),
+								                                                      createSliceRangeSubstituter(triggerMsg));
 						int index = 0;
 						for (SliceObject sliceObject : slices) {
 							final TriggerObject ob = new TriggerObject();
@@ -332,6 +335,27 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			if (fileQueue!=null && fileQueue.isEmpty()) {
 				logger.info("No files found in '"+file.getAbsolutePath()+"'. Filter is set to: "+filterParam.getExpression());
 			}
+		}
+	}
+
+	private ISliceRangeSubstituter createSliceRangeSubstituter(ManagedMessage triggerMsg) {
+		
+		try {
+            final DataMessageComponent cmp = MessageUtils.coerceMessage(triggerMsg);
+            return new ISliceRangeSubstituter() {
+				
+				@Override
+				public String substitute(final String value) {
+					try {
+						return ParameterUtils.getSubstituedValue(value, DataImportSource.this, Arrays.asList(cmp));
+					} catch (Exception e) {
+						logger.error("Cannot expand '"+value+"'!");
+						return value;
+					}
+				}
+			};
+		} catch (Throwable ne) {
+		    return null;
 		}
 	}
 
