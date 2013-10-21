@@ -32,7 +32,7 @@ import org.dawnsci.python.rpc.PythonRunScriptService;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.python.pydev.core.IInterpreterInfo;
-import org.python.pydev.core.Tuple;
+import org.python.pydev.shared_core.structure.Tuple;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
