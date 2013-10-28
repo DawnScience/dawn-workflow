@@ -90,6 +90,11 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 		dataSetNaming.setVisibility(Settable.NONE);
 		
 		inputTypeParam = new StringParameter(this,"User Input Type") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public String[] getChoices() {
 				return INPUT_CHOICES;
 			}
@@ -98,6 +103,11 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 		registerConfigurableParameter(inputTypeParam);
 		
 		toolId = new StringParameter(this,"Tool id") {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
 			public String[] getChoices() {
 				return TOOL_CHOICES;
 			}
@@ -134,6 +144,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 	private boolean      isAutomaticallyProcess=false;
 	private Serializable toolSetup=null;
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	protected DataMessageComponent getTransformedMessage(List<DataMessageComponent> cache) throws ProcessingException {
 		
@@ -199,12 +210,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 					
 					isAutomaticallyProcess = uRet.isAutomaticallyApply();
 					
-					input.setMeta(MessageUtils.getMeta(cache));
-					input.addScalar(uRet.getScalar());				
-					input.addList(uRet.getData());
-					input.addRois(uRet.getRois());
-					input.addFunctions(uRet.getFunctions());
-									
+					// @TODO Improve the user plot bean mechanism in dedicated tools (ImageProcessingTool)
 					toolSetup = uRet.getToolData();
 					if ((toolSetup != null) && (toolSetup instanceof UserPlotBean)) {
 						UserPlotBean plotBean = (UserPlotBean) toolSetup;
@@ -213,6 +219,12 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 						input.addRois(plotBean.getRois());
 						input.addFunctions(plotBean.getFunctions());
 					}
+	
+					input.setMeta(MessageUtils.getMeta(cache));
+					input.addScalar(uRet.getScalar());				
+					input.addList(uRet.getData());
+					input.addRois(uRet.getRois());
+					input.addFunctions(uRet.getFunctions());
 					
 					return input;
 					

@@ -57,15 +57,18 @@ public class ParameterUtils {
 		return stringValue;
 	}
 
-
 	public static String getSubstituedValue(final Parameter parameter, final List<DataMessageComponent> cache) throws Exception {
 
-		String       stringValue = parameter.getExpression();
+		return getSubstituedValue(parameter.getExpression(), parameter.getContainer(), cache);
+	}
+	
+	public static String getSubstituedValue(final String stringValue, final NamedObj container, final List<DataMessageComponent> cache) throws Exception {
+
 		if (stringValue==null || "".equals(stringValue.trim())) return null;
 
 		final List<String> vars = Grep.group(stringValue, VARIABLE_EXPRESSION, 1);
 
-		final Map<String,String> values = MessageUtils.getValues(cache, vars, parameter.getContainer());
+		final Map<String,String> values = MessageUtils.getValues(cache, vars, container);
 		
 		// Commented out while waiting for a fix
 //		try {
@@ -74,8 +77,7 @@ public class ParameterUtils {
 //		} catch (Throwable ignored) {
 //			// We just try any eclipse vars
 //		}
-		stringValue = SubstituteUtils.substitute(stringValue, values);
-		return stringValue;
+		return SubstituteUtils.substitute(stringValue, values);
 	}
 
 

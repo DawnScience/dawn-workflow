@@ -312,39 +312,9 @@ AbstractDataMessageTransformer {
 
 		// Now fit the system quickly using several assumptions
 
-		// get the approximate fwhm and required width for calculation
-		double width = initialFit.approximateFWHM(temperature);
-
-		double fermiEdge = initialFit.getParameterValue(0);
+		final AbstractDataset trimmedXAxis = xAxis;
+		final AbstractDataset trimmedValues = values;
 		
-		// pull out the appropriate slice
-		Integer sliceStop = xAxis.getShape()[0];
-		Integer sliceStart = 0;
-		try {
-			
-			Double afterCrossing = DatasetUtils.crossings(xAxis, fermiEdge + width)
-					.get(0);
-			sliceStop = (int) Math.floor(afterCrossing);
-		} catch (Exception e) {
-			// Not an issue as this is handled
-			logger.debug("Minnor Issue occured, but this is handled, simply put here for reporting",e);
-		}
-
-		try {
-			Double beforeCrossing = DatasetUtils.crossings(xAxis, fermiEdge - width)
-					.get(0);
-			sliceStart = (int) Math.floor(beforeCrossing);
-		} catch (Exception e) {
-			// Not an issue as this is not required
-			logger.debug("Minnor Issue occured, but this is handled, simply put here for reporting",e);
-		}
-
-		final AbstractDataset trimmedXAxis = xAxis.getSlice(new Slice(
-				sliceStart, sliceStop));
-		final AbstractDataset trimmedValues = values.getSlice(new Slice(
-				sliceStart, sliceStop));
-
-
 		// set up the temperature and approximate FWHM correctly
 		//initialFit.getParameter(1).setValue(temperature);
 		//initialFit.getParameter(5).setValue(approximateFWHM);

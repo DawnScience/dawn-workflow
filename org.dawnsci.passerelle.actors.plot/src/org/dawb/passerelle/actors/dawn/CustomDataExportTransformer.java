@@ -108,16 +108,20 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 	private Parameter         datasetSaveNameParam;
 	private Parameter         axis1Param;
 	private Parameter         axis2Param;
+	private Parameter         axis3Param;
 	private Parameter         axis1SaveParam;
 	private Parameter         axis2SaveParam;
+	private Parameter         axis3SaveParam;
 	private ResourceParameter filePathParam;
 	//	private FieldParameter    fieldParam;
 	@SuppressWarnings("unused")
-	private String            fileFormat, filePath, fileWriteType, dataName, dataSaveName, dataSavePath, axis1, axis2, axis1Save, axis2Save;
+	private String            fileFormat, filePath, fileWriteType, dataName, dataSaveName, dataSavePath, axis1, axis2, axis3, axis1Save, axis2Save, axis3Save;
 	private static String AXIS1_NAME = "axis1_name";
 	private static String AXIS2_NAME = "axis2_name";
+	private static String AXIS3_NAME = "axis3_name";
 	private static String AXIS1_SAVENAME = "axis1_savename";
 	private static String AXIS2_SAVENAME = "axis2_savename";
+	private static String AXIS3_SAVENAME = "axis3_savename";
 	private static String DATA_SAVEPATH = "data_savepath";
 	private static String DATA_NAME = "data_name";
 	private static String DATA_SAVENAME = "data_savename";
@@ -172,11 +176,17 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 		axis2Param = new StringParameter(this, "Axis 2 Name");
 		registerConfigurableParameter(axis2Param);
 
+		axis3Param = new StringParameter(this, "Axis 3 Name");
+		registerConfigurableParameter(axis3Param);
+
 		axis1SaveParam = new StringParameter(this, "Axis 1 Name Save");
 		registerConfigurableParameter(axis1SaveParam);
 
 		axis2SaveParam = new StringParameter(this, "Axis 2 Name Save");
 		registerConfigurableParameter(axis2SaveParam);
+
+		axis3SaveParam = new StringParameter(this, "Axis 3 Name Save");
+		registerConfigurableParameter(axis3SaveParam);
 
 		memoryManagementParam.setVisibility(Settable.NONE);
 		dataSetNaming.setVisibility(Settable.NONE);
@@ -198,10 +208,14 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 			axis1 = axis1Param.getExpression();
 		} else if (attribute == axis2Param) {
 			axis2 = axis2Param.getExpression();
+		} else if (attribute == axis3Param) {
+			axis3 = axis3Param.getExpression();
 		} else if (attribute == axis1SaveParam) {
 			axis1Save = axis1SaveParam.getExpression();
 		} else if (attribute == axis2SaveParam) {
 			axis2Save = axis2SaveParam.getExpression();
+		} else if (attribute == axis3SaveParam) {
+			axis3Save = axis3SaveParam.getExpression();
 		} else if (attribute == fileWriteParam) {
 			fileWriteType = fileWriteParam.getExpression();
 			if (WRITING_CHOICES.get(0).equals(fileWriteType)||WRITING_CHOICES.get(1).equals(fileWriteType)) {
@@ -245,6 +259,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 
 			comp.putScalar(AXIS1_NAME, ParameterUtils.getSubstituedValue(axis1Param, cache));
 			comp.putScalar(AXIS2_NAME, ParameterUtils.getSubstituedValue(axis2Param, cache));
+			comp.putScalar(AXIS3_NAME, ParameterUtils.getSubstituedValue(axis3Param, cache));
 
 			comp.putScalar(DATA_NAME, ParameterUtils.getSubstituedValue(datasetNameParam, cache));
 
@@ -252,6 +267,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 
 			comp.putScalar(AXIS1_SAVENAME, ParameterUtils.getSubstituedValue(axis1SaveParam, cache));
 			comp.putScalar(AXIS2_SAVENAME, ParameterUtils.getSubstituedValue(axis2SaveParam, cache));
+			comp.putScalar(AXIS3_SAVENAME, ParameterUtils.getSubstituedValue(axis3SaveParam, cache));
 
 			comp.putScalar(DATA_SAVENAME, ParameterUtils.getSubstituedValue(datasetSaveNameParam, cache));
 
@@ -385,22 +401,25 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 						final File iof = new File(filePath);
 						if (iof.exists()) iof.delete();
 					}
+					cachedFile = HierarchicalDataFactory.getWriter(filePath, true);
 
-					boolean fileinuse = true;
-					while(fileinuse) {
-						try {
-							cachedFile = HierarchicalDataFactory.getWriter(filePath);
-							fileinuse = false;
-						} catch (Exception e) {
-							System.out.println("Waiting for other writing to be complete");
-							Thread.sleep(1000);
-						}	
-					}
+//					boolean fileinuse = true;
+//					while(fileinuse) {
+//						try {
+//							cachedFile = HierarchicalDataFactory.getWriter(filePath);
+//							fileinuse = false;
+//						} catch (Exception e) {
+//							System.out.println("Waiting for other writing to be complete");
+//							Thread.sleep(1000);
+//						}	
+//					}
 				}
 				file = cachedFile;
 			} else {
-				file = HierarchicalDataFactory.getWriter(filePath);
+//				file = HierarchicalDataFactory.getWriter(filePath);
+				file = HierarchicalDataFactory.getWriter(filePath, true);
 			}
+			
 			final Map<String, Serializable>  data = MessageUtils.getList(cache);
 			//			final Map<String,String>    scal = MessageUtils.getScalar(cache);
 
@@ -428,20 +447,23 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 
 			String axis1name = ret.getScalar(AXIS1_NAME);
 			String axis2name = ret.getScalar(AXIS2_NAME);
+			String axis3name = ret.getScalar(AXIS3_NAME);
 			String dataName = ret.getScalar(DATA_NAME);
 			String axis1SaveName = ret.getScalar(AXIS1_SAVENAME);
 			String axis2SaveName = ret.getScalar(AXIS2_SAVENAME);
+			String axis3SaveName = ret.getScalar(AXIS3_SAVENAME);
 			String dataSaveName = ret.getScalar(DATA_SAVENAME);
 
 			AbstractDataset xAxisData = (AbstractDataset)data.get(axis1name);
 			AbstractDataset yAxisData = (AbstractDataset)data.get(axis2name);
+			AbstractDataset zAxisData = (AbstractDataset)data.get(axis3name);
 			AbstractDataset myData = (AbstractDataset)data.get(dataName);
 
 			if(myData != null){
 				final Datatype      datatype = H5Utils.getDatatype(myData);
 				final long[]         shape = new long[myData.getShape().length];
 				for (int i = 0; i < shape.length; i++) shape[i] = myData.getShape()[i];
-				final Dataset dataset = file.createDataset(dataSaveName,  datatype, shape, myData.getBuffer(), parent);
+				final Dataset dataset = file.appendDataset(dataSaveName,  datatype, shape, myData.getBuffer(), parent);
 				file.setNexusAttribute(dataset, Nexus.SDS);
 			}
 
@@ -449,7 +471,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				final Datatype      xDatatype = H5Utils.getDatatype(xAxisData);
 				final long[]         xShape = new long[xAxisData.getShape().length];
 				for (int i = 0; i < xShape.length; i++) xShape[i] = xAxisData.getShape()[i];
-				final Dataset xDataset = file.createDataset(axis1SaveName,  xDatatype, xShape, xAxisData.getBuffer(), parent);
+				final Dataset xDataset = file.replaceDataset(axis1SaveName,  xDatatype, xShape, xAxisData.getBuffer(), parent);
 				file.setNexusAttribute(xDataset, Nexus.SDS);
 			}
 
@@ -457,8 +479,16 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				final Datatype      yDatatype = H5Utils.getDatatype(yAxisData);
 				final long[]         yShape = new long[yAxisData.getShape().length];
 				for (int i = 0; i < yShape.length; i++) yShape[i] = yAxisData.getShape()[i];
-				final Dataset yDataset = file.createDataset(axis2SaveName,  yDatatype, yShape, yAxisData.getBuffer(), parent);
+				final Dataset yDataset = file.replaceDataset(axis2SaveName,  yDatatype, yShape, yAxisData.getBuffer(), parent);
 				file.setNexusAttribute(yDataset, Nexus.SDS);
+			}
+
+			if(zAxisData != null){
+				final Datatype      zDatatype = H5Utils.getDatatype(zAxisData);
+				final long[]         zShape = new long[zAxisData.getShape().length];
+				for (int i = 0; i < zShape.length; i++) zShape[i] = zAxisData.getShape()[i];
+				final Dataset zDataset = file.replaceDataset(axis3SaveName,  zDatatype, zShape, zAxisData.getBuffer(), parent);
+				file.setNexusAttribute(zDataset, Nexus.SDS);
 			}
 
 			//			if (scal!=null) for (String name : scal.keySet()) {
