@@ -46,7 +46,7 @@ import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcRemoteException;
 import uk.ac.diamond.scisoft.python.JythonInterpreterUtils;
 import uk.ac.gda.util.list.ListUtils;
 
-import com.isencia.passerelle.actor.Actor;
+import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
 
 /**

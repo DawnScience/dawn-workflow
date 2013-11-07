@@ -36,7 +36,7 @@ import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.Settable;
 
-import com.isencia.passerelle.actor.Actor;
+import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.v5.ActorContext;
 import com.isencia.passerelle.actor.v5.ProcessRequest;
@@ -138,6 +138,8 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 			if (despatch==null) return;
 	        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
 			
+		} catch (DataMessageException dme) {
+			throw dme;
 		} catch (ProcessingException pe) {
 			throw new ProcessingException(pe.getErrorCode(), pe.getMessage(), pe.getModelElement(), message, pe.getCause());
 		} catch (Exception ne) {

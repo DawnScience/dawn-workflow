@@ -23,7 +23,7 @@ import com.isencia.passerelle.core.ErrorCode;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageException;
 
-import com.isencia.passerelle.actor.Actor;
+import com.isencia.passerelle.actor.v5.Actor;
 
 /**
  * This class is used to broadcast a ProcessingException with the
