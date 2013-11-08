@@ -70,6 +70,12 @@
             name="Thread Director">
       </actor>
       <actor
+            class="com.isencia.passerelle.domain.et.ETDirector"
+            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            id="com.isencia.passerelle.domain.et.ETDirector"
+            name="Event Director">
+      </actor>
+      <actor
             class="org.dawb.passerelle.actors.override.Input"
             group="com.isencia.passerelle.actor.actorgroup.utilities"
             icon="icons/input.png"
