@@ -140,6 +140,13 @@
             name="File Import">
       </actor>
       <actor
+            class="org.dawb.passerelle.actors.data.DataAppendTransformer"
+            group="org.dawb.passerelle.actors.actorgroup.io"
+            icon="icons/database--plus.png"
+            id="org.dawb.passerelle.actors.fileDataHandler"
+            name="Data Append">
+      </actor>
+      <actor
             class="org.dawb.passerelle.actors.data.FolderImportSource"
             group="org.dawb.passerelle.actors.actorgroup.io"
             icon="icons/folder_import.png"

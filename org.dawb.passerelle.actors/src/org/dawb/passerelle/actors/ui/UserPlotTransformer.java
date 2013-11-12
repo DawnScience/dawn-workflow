@@ -167,7 +167,7 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 			boolean isDialog = INPUT_CHOICES[0].equals(inputTypeParam.getExpression());
 			
 			try {
-				
+				ActorUtils.setLocked(true);
 				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(getModelPath(), getName(), true, 3/**SWT.COLOUR_RED**/)}, new String[]{ActorSelectedBean.class.getName()});
 			
 				DataMessageComponent input = MessageUtils.mergeAll(cache);
@@ -229,6 +229,9 @@ public class UserPlotTransformer extends AbstractDataMessageTransformer {
 					return input;
 					
 				} finally {
+					
+					ActorUtils.setLocked(false);
+
 					if (service!=null) service.setDataAnalysisClassLoaderActive(false);
 				}
 				
