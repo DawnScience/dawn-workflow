@@ -59,7 +59,7 @@
             label="6. Find the actor called 'Scalar' and click and drag it into the workflow.">
       </subitem>
       <subitem
-            label="7. Go to the palette part and find the 'Connection' mode. Create a connection between the output of 'Scalar' and the input to 'Message' by joining the white output arrow head of Scalar to the white input arrow head of Message. These arrow heads are known as 'Ports'.">
+            label="7. Go to the area to the left of the workflow diagram and find the action to add a 'Connection'. Create a connection between the output of 'Scalar' and the input to 'Message' by joining the white output arrow head of Scalar to the white input arrow head of Message. These arrow heads are known as 'Ports'.">
       </subitem>
       <subitem
             label="8. Go to the main toolbar of the application and find the green play button labelled 'Run the workflow from start to end, until finished'. There may also be white play button with a green circular surround labeled 'Run'. We do not need this for now, just use the green play button.">
