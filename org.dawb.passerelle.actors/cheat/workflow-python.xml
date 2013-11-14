@@ -19,7 +19,7 @@
    <item
          title="Run Python Workflow">
       <description>
-         Open the python workflow below, take a look at what is happening and try running it. You will need numpy available to import in order to run this example. When it runs, the python code generates a new dataset which is passed back to the hdf5 file written and is available for plotting. Plot 'data/Energy' vs 'data/lnI0It' for instance. 
+         Open the python workflow using the button below (which opens python_numpy_example1.moml), take a look at what is happening and try running it. You will need numpy available to import in order to run this example. When it runs, the python code generates a new dataset which is passed back to the hdf5 file written and is available for plotting. Plot 'data/Energy' vs 'data/lnI0It' for instance. 
       </description>
       <command
             required="false"
