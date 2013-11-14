@@ -107,8 +107,7 @@ public class MomlExamplesParametersTest {
 				InstanceScope.INSTANCE, "org.dawb.common.ui");
 		store.setValue("org.dawb.remote.session.mock", true);
 
-		InterpreterUtils.createPythonInterpreter("python",
-				new NullProgressMonitor());
+		InterpreterUtils.createPythonInterpreter("python", "python", new NullProgressMonitor());
 	}
 
 	@Test

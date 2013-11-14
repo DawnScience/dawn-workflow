@@ -41,7 +41,7 @@ public class MomlUITest {
 	@BeforeClass
 	public static void before() throws Exception {
 		
-    	InterpreterUtils.createPythonInterpreter("python", new NullProgressMonitor());
+		InterpreterUtils.createPythonInterpreter("python", "python", new NullProgressMonitor());
 		ModelUtils.createWorkflowProject("workflows", ResourcesPlugin.getWorkspace().getRoot(), true, null);
 		ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 	}

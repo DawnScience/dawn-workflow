@@ -194,7 +194,7 @@ public class MomlTest {
 	
 	@Test // This one sometimes fails - run again separately if does
 	public void testPythonPyDevVariables1() throws Throwable {
-		InterpreterUtils.createPythonInterpreter("python", new NullProgressMonitor());
+		InterpreterUtils.createPythonInterpreter("python", "python", new NullProgressMonitor());
 		testVariables("src/org/dawb/passerelle/actors/test/python_pydev_variables_test.moml",  "/entry/data/l", "/entry/dictionary/z", "/entry/dictionary/r");
 	}
 
