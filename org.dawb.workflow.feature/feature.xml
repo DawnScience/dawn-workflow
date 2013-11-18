@@ -156,7 +156,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
       <import plugin="uk.ac.diamond.scisoft.analysis"/>
       <import plugin="com.isencia.passerelle.commons"/>
       <import plugin="com.springsource.slf4j.api"/>
-      <import plugin="uk.ac.gda.common.rcp"/>
       <import plugin="uk.ac.gda.common"/>
       <import plugin="org.eclipse.core.filesystem" version="1.3.1" match="greaterOrEqual"/>
       <import plugin="org.eclipse.ui.ide" version="3.6.1" match="greaterOrEqual"/>
@@ -395,5 +394,12 @@ This Agreement is governed by the laws of the State of New York and the intellec
          download-size="0"
          install-size="0"
          version="0.0.0"/>
+
+   <plugin
+         id="org.dawnsci.common.widgets"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
 
 </feature>
