@@ -38,11 +38,11 @@ import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
-import uk.ac.gda.util.map.MapUtils;
 
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.util.ptolemy.StringMapParameter;
+import com.isencia.passerelle.workbench.util.MapUtils;
 
 /**
  * Used to delegate

@@ -21,6 +21,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawnsci.common.richbeans.components.cell.FieldComponentCellEditor;
 import org.dawnsci.common.richbeans.components.scalebox.RangeBox;
+import org.dawnsci.doe.DOEUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -33,7 +34,6 @@ import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.gda.doe.DOEUtils;
 
 import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;

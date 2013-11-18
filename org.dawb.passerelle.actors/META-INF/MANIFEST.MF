@@ -30,7 +30,6 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.gef;bundle-version="3.6.1",
  org.eclipse.wst.sse.ui;bundle-version="1.3.0",
  ncsa.hdf;bundle-version="2.8.0",
- uk.ac.gda.common,
  uk.ac.diamond.scisoft.analysis.api;bundle-version="1.0.0",
  uk.ac.diamond.scisoft.analysis;bundle-version="1.3.0",
  org.dawnsci.io;bundle-version="1.0.0",
@@ -38,7 +37,8 @@ Require-Bundle: org.eclipse.ui,
  org.dawnsci.slicing.api;bundle-version="1.0.0",
  org.dawnsci.passerelle.tools;bundle-version="1.0.0",
  org.dawnsci.python.rpc;bundle-version="1.0.0",
- org.dawnsci.common.widgets;bundle-version="1.2.0"
+ org.dawnsci.common.widgets;bundle-version="1.2.0",
+ org.dawnsci.doe;bundle-version="1.2.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
 Import-Package: com.isencia.passerelle.actor.forkjoin,
