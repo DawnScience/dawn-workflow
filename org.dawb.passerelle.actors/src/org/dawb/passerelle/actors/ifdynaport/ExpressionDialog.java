@@ -16,6 +16,8 @@ import java.util.Set;
 import org.dawb.common.ui.util.GridUtils;
 import org.dawb.passerelle.actors.ifdynaport.ExpressionBean;
 import org.dawb.passerelle.actors.ifdynaport.ExpressionContainer;
+import org.dawnsci.common.richbeans.components.selector.VerticalListEditor;
+import org.dawnsci.common.richbeans.dialog.BeanDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
@@ -23,10 +25,6 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
 
 import ptolemy.kernel.util.NamedObj;
-
-
-import uk.ac.gda.richbeans.components.selector.VerticalListEditor;
-import uk.ac.gda.richbeans.dialog.BeanDialog;
 
 public class ExpressionDialog extends BeanDialog {
 

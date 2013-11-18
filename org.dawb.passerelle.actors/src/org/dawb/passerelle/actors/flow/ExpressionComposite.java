@@ -11,14 +11,13 @@ package org.dawb.passerelle.actors.flow;
 
 import java.util.Map;
 
+import org.dawnsci.common.richbeans.components.wrappers.TextWrapper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Label;
-
-import uk.ac.gda.richbeans.components.wrappers.TextWrapper;
 
 public class ExpressionComposite extends Composite {
 

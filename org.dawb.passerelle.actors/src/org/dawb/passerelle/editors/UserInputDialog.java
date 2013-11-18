@@ -12,6 +12,7 @@ package org.dawb.passerelle.editors;
 import java.util.Map;
 import java.util.Queue;
 
+import org.dawb.common.ui.util.DialogUtils;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawb.workbench.jmx.IRemoteWorkbenchPart;
 import org.dawnsci.plotting.api.IPlottingSystem;
@@ -23,8 +24,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
-
-import uk.ac.gda.common.rcp.util.DialogUtils;
 
 /**
  * A dialog allowing an implementation of IRemoteWorkbenchPart to run

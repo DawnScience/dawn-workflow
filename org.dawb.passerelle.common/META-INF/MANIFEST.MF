@@ -16,12 +16,12 @@ Require-Bundle: org.eclipse.core.runtime,
  org.dawnsci.plotting.api;bundle-version="1.0.0",
  uk.ac.diamond.scisoft.analysis,
  uk.ac.diamond.scisoft.analysis.api;bundle-version="1.0.0",
- uk.ac.gda.common.rcp;bundle-version="1.2.0",
  com.isencia.passerelle.workbench.model;bundle-version="1.1.0",
  com.isencia.passerelle.workbench.model.editor.ui;bundle-version="1.0.0",
  com.isencia.passerelle.workbench.model.ui;bundle-version="1.0.0",
  com.isencia.passerelle.editor.common;bundle-version="8.3.0",
- ptolemy.core;bundle-version="7.0.1"
+ ptolemy.core;bundle-version="7.0.1",
+ org.dawnsci.common.widgets;bundle-version="1.2.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Export-Package: org.dawb.passerelle.common,
