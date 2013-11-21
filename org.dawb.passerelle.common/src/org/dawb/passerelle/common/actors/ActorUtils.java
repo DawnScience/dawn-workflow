@@ -235,4 +235,34 @@ public class ActorUtils {
 		
 		return workbenchConnection;
 	}
+	
+	/**
+	 * A boolean to record if sources should wait which they may optionally check.
+	 * This boolean is separate to pausing the whole manager because for some reason
+	 * passerelle does not unpause when the resume method is called.
+	 * 
+	 * This pausing almost certainly cannot be used with the event model.
+	 */
+	private static ReentrantLock paused = new ReentrantLock();
+	
+	/**
+	 * Must call from try finally.
+	 * @param lock
+	 */
+	public static void setLocked(boolean lock) {
+		if (lock) {
+			paused.lock();
+		} else {
+			paused.unlock();
+		}
+	}
+	
+	public static void waitWhileLocked() {
+		try {
+		    paused.lock();
+		    paused.unlock();
+		} catch (IllegalMonitorStateException ime) {
+			return; // It got locked by another thread on the setPaused but that is ok.
+		}
+	}
 }

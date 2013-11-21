@@ -140,6 +140,7 @@ public class UserModifyTransformer extends AbstractDataMessageTransformer {
 			
 			try {
 				
+				ActorUtils.setLocked(true);
 				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(getModelPath(), getName(), true, SWT.COLOR_RED)}, new String[]{ActorSelectedBean.class.getName()});
 			
 				final UserInputBean bean = new UserInputBean();
@@ -170,6 +171,7 @@ public class UserModifyTransformer extends AbstractDataMessageTransformer {
 				
 				return ret;
 			} finally {
+				ActorUtils.setLocked(false);
 				client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "setActorSelected", new Object[]{new ActorSelectedBean(getModelPath(), getName(), false, -1)}, new String[]{ActorSelectedBean.class.getName()});
 			}
 			

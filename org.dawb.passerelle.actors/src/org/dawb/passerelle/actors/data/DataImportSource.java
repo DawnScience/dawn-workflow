@@ -15,13 +15,9 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import ncsa.hdf.object.Dataset;
 
@@ -33,16 +29,13 @@ import org.dawb.hdf5.IHierarchicalDataFile;
 import org.dawb.passerelle.actors.data.config.SliceParameter;
 import org.dawb.passerelle.common.DatasetConstants;
 import org.dawb.passerelle.common.actors.AbstractDataMessageSource;
-import org.dawb.passerelle.common.message.AbstractDatasetProvider;
+import org.dawb.passerelle.common.actors.ActorUtils;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.IVariable;
-import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.MessageUtils;
-import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
-import org.dawnsci.io.h5.H5LazyDataset;
 import org.dawnsci.io.h5.H5Loader;
 import org.dawnsci.slicing.api.system.DimsDataList;
 import org.dawnsci.slicing.api.system.ISliceRangeSubstituter;
@@ -63,8 +56,6 @@ import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
-import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
 import uk.ac.diamond.scisoft.analysis.io.DataHolder;
@@ -72,7 +63,6 @@ import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
 import uk.ac.diamond.scisoft.analysis.io.SliceObject;
-import uk.ac.gda.util.map.MapUtils;
 
 import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
@@ -126,6 +116,8 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	private final SliceParameter          slicing;
 	
 	private List<TriggerObject> fileQueue;
+
+	private final DataImportDelegate delegate;
 
 	/**
 	 * Required because sometimes the uk.ac.diamond.scisoft.analysis.osgi
@@ -185,12 +177,13 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		names = new StringChoiceParameter(this, "Data Sets", new IAvailableChoices() {		
 			@Override
 			public String[] getChoices() {
-				return getAllDatasetsInFile();
+                Collection<String> names = delegate.getAllDatasetsInFile();
+                if (names==null || names.isEmpty()) return null;
+                return names.toArray(new String[names.size()]);
 			}
 			@Override
 			public Map<String,String> getVisibleChoices() {
-				getAllDatasetsInFile();
-			    return getChoppedNames(cachedDatasets);
+			    return delegate.getChoppedNames();
 			}
 		}, SWT.MULTI);
 		
@@ -199,12 +192,11 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		rename = new StringMapParameter(this, "Rename Data Sets", new IAvailableMap() {		
 			@Override
 			public Map<String,String> getMap() {
-				return getDataSetsRenameName();
+				return delegate.getDataSetsRenameName();
 			}
 			@Override
 			public Map<String,String> getVisibleKeyChoices() {
-				getAllDatasetsInFile();
-			    return getChoppedNames(cachedDatasets);
+			    return delegate.getChoppedNames();
 			}
 			@Override
 			public Collection<String> getSelectedChoices() {		
@@ -235,6 +227,9 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		sliceNameType.setExpression(SLICE_TYPES[0]);
 		registerConfigurableParameter(sliceNameType);
 
+		
+		delegate = new DataImportDelegate(path, names, relativePathParam, rename);
+
 	}
 	
 	/**
@@ -244,8 +239,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 
 		if(logger.isTraceEnabled()) logger.trace(getInfo()+" :"+attribute);
 		if (attribute == path) {
-			cachedDatasets = null;
-			cachedShapes   = null;
+			delegate.clear();
 		} else if (attribute == relativePathParam) {
 			isPathRelative = ((BooleanToken)relativePathParam.getToken()).booleanValue();
 		} else if (attribute == metaParam) {
@@ -263,8 +257,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	@Override
 	public void doPreInitialize() {
 		fileQueue      = null;
-		cachedDatasets = null;
-		cachedShapes   = null;
+		delegate.clear();
 	}
 
 	@Override
@@ -284,8 +277,8 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	 */
 	private void appendQueue(final ManagedMessage triggerMsg) {
 		
-		if ((getManager()!=null) && (getSourcePath(triggerMsg)!=null)){
-			final File file = new File(getSourcePath(triggerMsg));
+		if ((getManager()!=null) && (delegate.getSourcePath(triggerMsg)!=null)){
+			final File file = new File(delegate.getSourcePath(triggerMsg));
 			if (file.isDirectory()) {
 				final List<File> fileList = SortingUtils.getSortedFileList(file);
 				for (File f : fileList) {				
@@ -383,6 +376,9 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			return null;
 		}
 		
+		// Stops data being loaded while a modal dialog is being shown to user.
+		ActorUtils.waitWhileLocked();
+		
 		ManagedMessage msg = MessageFactory.getInstance().createMessage();
 		final TriggerObject file = fileQueue.remove(0);
 		try {
@@ -395,7 +391,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 
 		} catch (Exception ne) {
 			fileQueue.clear();
-			throw new DataMessageException("Cannot read data from '"+getSourcePath(msg)+"'", this, ne);
+			throw new DataMessageException("Cannot read data from '"+delegate.getSourcePath(msg)+"'", this, ne);
 		}
 			
 		try {
@@ -411,8 +407,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		super.doWrapUp();
 		if (isFinishRequested()) {
 			fileQueue.clear();
-			if (cachedDatasets!=null) cachedDatasets.clear();
-			if (cachedShapes!=null)   cachedShapes.clear();
+			delegate.clear();
 		}
 	}
 	
@@ -433,87 +428,10 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		}
 	}
 
-	private Collection<String>  cachedDatasets = null;	
-	private Map<String,int[]>   cachedShapes   = null;	
-	
-    protected String[] getAllDatasetsInFile() {
-		if (cachedDatasets==null && getSourcePath(null)!=null) {
-			try {
-				String path = getSourcePath(null);
-				File   file = new File(path);
-				if (!file.exists()) return null;
-				
-				// For directories we assume that all files contain the same data sets.
-				if (file.isDirectory()) {
-					final File[] files = file.listFiles();
-					for (int i = 0; i < files.length; i++) {
-						if (!files[i].isDirectory()) {
-							file = files[i];
-							break;
-						}
-					}
-				}
-				
-				final IMetaData meta  = LoaderFactory.getMetaData(file.getAbsolutePath(), null);
-				if (meta!=null && meta.getDataNames()!=null) {
-				    Collection<String> names = meta.getDataNames();
-				    Map<String,int[]>  shapes= meta.getDataShapes();
-				    
-				    // If single image, rename
-				    if (names!=null&&names.size()==1&&shapes!=null&&shapes.size()==1 && shapes.get(names.iterator().next())!=null && shapes.get(names.iterator().next()).length==2) {
-				    	final int[] shape = shapes.get(names.iterator().next());
-				    	cachedDatasets = Arrays.asList(new String[]{"image"});
-				    	cachedShapes   = new HashMap<String,int[]>(1);
-				    	cachedShapes.put("image", shape);
-				    	
-				    } else {
-				    	cachedDatasets = names;
-				    	cachedShapes   = shapes;
-				    }
-				}
-			} catch (Exception e) {
-				logger.error("Cannot get data set names from "+getSourcePath(null), e);
-				cachedDatasets = Collections.emptyList();
-				cachedShapes   = Collections.emptyMap();
-			}
-		}
-		if (cachedDatasets!=null&&!cachedDatasets.isEmpty()) {
-			return cachedDatasets.toArray(new String[cachedDatasets.size()]);
-		}
-		return null;
-	}
 
-	private Map<String, String> getDataSetsRenameName() {
-		
-		final String[]           sets = getAllDatasetsInFile();
-		if (sets == null || sets.length<1) return null;
-		
-		String rootName = getRootName(cachedDatasets);
-        if (rootName==null) rootName = "";
-        
-		final Map<String,String> ret  = new LinkedHashMap<String,String>(7);
-		for (String setName : sets) {
-			try {
-				ret.put(setName, PythonUtils.getLegalVarName(setName.substring(rootName.length()), ret.values()));
-			} catch (Exception e) {
-				ret.put(setName, setName);
-			}
-		}
-		
-		if (rename.getExpression()==null) {
-			return ret;
-		}
-		
-		final Map<String,String> existing = MapUtils.getMap(rename.getExpression());
-		if (existing!=null) {
-			existing.keySet().retainAll(ret.keySet());
-			ret.putAll(existing);
-		}
-		
-		return ret;
-	}
 	
 	protected DataMessageComponent getData(final TriggerObject trigOb) throws Exception {
+		
 		
 		// Add everything non-data from upstream that we can, then decide on the details
 		// like data slicing.
@@ -543,7 +461,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			final String datasetPath = getDataSetNames()[0];
 			slice.setName(datasetPath);
 			
-			String sliceName = getMappedName(datasetPath);
+			String sliceName = delegate.getMappedName(datasetPath);
 			if (SLICE_TYPES[0].equals(sliceNameType.getExpression())) {
 				sliceName = sliceName+"_slice_"+trigOb.getIndex();
 			} 
@@ -559,7 +477,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			datasets.put(pyName, set);
 			
 		} else {
-			datasets = getDatasets(filePath, trigOb);
+			datasets = (DATA_TYPES[2].equals(dataType.getExpression())) ? null : delegate.getDatasets(filePath, trigOb);
 		}
 		
 		// Add messages from upsteam, if any.
@@ -629,148 +547,15 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		return names.getValue();
 	}
 	
-	private Map<String,Serializable> getDatasets(String filePath, final TriggerObject trigOb) throws Exception {
-		
-		if (DATA_TYPES[2].equals(dataType.getExpression())) return null; 
-		
-		final String[] ds     = names.getValue();
-
-		// TODO Eclipse progress?
-		Map<String, ILazyDataset> data = null;
-		if (ds!=null&&ds.length>0) {
-			final IDataHolder dh = LoaderFactory.getData(filePath);
-			if (dh!=null) {
-				data = dh.toLazyMap();
-				data.keySet().retainAll(Arrays.asList(ds));
-			}
-		}
-		
-		if (data == null) {
-			DataHolder dh = LoaderFactory.getData(filePath, null);
-			data = dh.getMap();
-			if (ds!=null&&ds.length>0) {
-				data.keySet().retainAll(Arrays.asList(ds));
-			}
-		}
-		
-		final Map<String, Object> raw;
-		if (ds==null) {
-			raw = new LinkedHashMap<String, Object>();
-			if (isSingleImage(data)) {
-				final ILazyDataset image = data.values().iterator().next();
-				final String       name  = trigOb!=null && trigOb.getIndex()>-1
-						                 ? "image"
-						                 : "image"+trigOb.getIndex();
-				image.setName(name);
-				raw.put(name, image);
-			} else {
-			    raw.putAll(data);
-			}
-		} else {
-			raw = new LinkedHashMap<String, Object>();
-			for (String name : ds) {
-				raw.put(name, data.get(name));
-			}
-		}
-		
-		
-		final Map<String,String> nameMap = getDataSetNameMap();
-		final Map<String,Serializable> ret = new HashMap<String,Serializable>(raw.size());
-		
-		// Set name and not to print data in string
-		for (String name : raw.keySet()) {
-
-			final ILazyDataset lazy = (ILazyDataset)raw.get(name);
-			if (lazy==null) continue;
-			
-			if (nameMap!=null) {
-				final String newName = nameMap.get(name);
-				if (newName!=null && !"".equals(newName)) {
-					name = newName;
-				}
-			}
-
-			/**
-			 * We load the data, this is an import actor
-			 */
-			final AbstractDataset set = getLoadedData(lazy);
-			set.setName(name);
-			
-			ret.put(name, set);
-
-		}
-		
-	    return ret;
-	}
-
-	private boolean isSingleImage(Map<String, ILazyDataset> data) {
-		if (data.size()!=1) return false;
-		final ILazyDataset set = data.values().iterator().next();
-		return set.getShape()!=null && set.getShape().length==2;
-	}
-
-	private AbstractDataset getLoadedData(ILazyDataset lazy) throws Exception {
-		
-		if (lazy instanceof H5LazyDataset) {
-		    return ((H5LazyDataset)lazy).getCompleteData(null);
-		} else if (lazy instanceof AbstractDataset) {
-			return (AbstractDataset) lazy;
-		}
-
-		return DatasetUtils.convertToAbstractDataset(lazy.getSlice());
-	}
-
-	private Map<String, String> getDataSetNameMap() {
-		final String map = this.rename.getExpression();
-		if (map == null) return null;
-		final Map<String,String> nameMap = MapUtils.getMap(map);
-		if (nameMap==null || nameMap.isEmpty()) return null;
-		return nameMap;
-	}
-	
-	private String getMappedName(final String hdfName) {
-		final Map<String,String> nameMap = getDataSetNameMap();
-        if (nameMap==null) return hdfName;
-        if (!nameMap.containsKey(hdfName)) return hdfName;
-        return nameMap.get(hdfName);
-	}
-	
 	@Override
 	protected String getExtendedInfo() {
 		return "A source which uses  the GDA 'LoaderFactory' to read a DataHandler which can be used to access data";
 	}
 	
 	public String getSourcePath() {
-		return getSourcePath(null);
+		return delegate.getSourcePath();
 	}
 
-	private String getSourcePath(final ManagedMessage manMsg) {
-
-		String sourcePath=null;
-		try {
-			final DataMessageComponent comp = manMsg!=null ? MessageUtils.coerceMessage(manMsg) : null;
-			sourcePath = ParameterUtils.getSubstituedValue(this.path, comp);
-		} catch (Exception e) {
-			// Can happen when they have an expand in the parameter that
-			// is not resolved until run time.
-			logger.info("Cannot substitute parameter "+path, e);
-		}
-
-		if (isPathRelative) {
-			try {
-				final IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(sourcePath, true);
-				if (res==null) return  null;
-				sourcePath = res.getLocation().toOSString();
-			} catch (NullPointerException ne) {
-				return null;
-			}
-		}
-		
-        getStandardMessageHeaders().put(ManagedMessage.SystemHeader.HEADER_SOURCE_INFO,sourcePath);
-
-		return sourcePath;
-	}
-	
 	private Object getResource() {
 		
 		if (isPathRelative) {
@@ -784,12 +569,12 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 
 			return ResourcesPlugin.getWorkspace().getRoot().findMember(sourcePath, true);
 		} else {
-			return new File(getSourcePath(null));
+			return new File(delegate.getSourcePath());
 		}
 	}
 	
 	private String getResourceTypeName() {
-		final File file = new File(getSourcePath(null));
+		final File file = new File(delegate.getSourcePath());
 		return file!=null ? "'"+file.getName()+"'" : "";
 	}
 		
@@ -817,47 +602,8 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	@Override
 	public List<IVariable> getOutputVariables() {
 		
-		final List<IVariable> ret = new ArrayList<IVariable>(7);
-		if (getSourcePath(null)==null)  {
-			final String msg = "Invalid Path '"+path.getExpression()+"'";
-			ret.add(new Variable("file_path", VARIABLE_TYPE.PATH,   msg, String.class));
-			ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, msg, String.class));
-			ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH,   msg, String.class));
-			return ret;
-		}
-		
-		ret.add(new Variable("file_path", VARIABLE_TYPE.PATH, getSourcePath(null), String.class));
-		ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, new File(getSourcePath(null)).getName(), String.class));
-		ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH, FileUtils.getDirectory(getSourcePath(null)), String.class));
-		
-		if (DATA_TYPES[0].equals(dataType.getExpression()) || DATA_TYPES[1].equals(dataType.getExpression())) {
-			
-			getAllDatasetsInFile();// Sets up cache of sizes, which means we can return VARIABLE_TYPE.IMAGE
-			
-			String[] ds     = names.getValue();
-			if (ds==null||ds.length<1) ds = getAllDatasetsInFile();
-			if (ds!=null&&ds.length>0) {
-				for (int i = 0; i < ds.length; i++) {
-					final Map<String,String> varNames = getDataSetNameMap();
-					final String name  = varNames!=null&&varNames.containsKey(ds[i])
-					                   ? varNames.get(ds[i])
-					                   : ds[i];
-					if (cachedShapes!=null) {
-						final int[] shape = cachedShapes.get(ds[i]);
-						final VARIABLE_TYPE type = shape!=null&&shape.length==2
-						                         ? VARIABLE_TYPE.IMAGE
-						                         : VARIABLE_TYPE.ARRAY;
-						final AbstractDatasetProvider example = new AbstractDatasetProvider(shape);
-					    ret.add(new Variable(name, type, example, AbstractDataset.class));
-	
-					} else {
-					    ret.add(new Variable(name, VARIABLE_TYPE.ARRAY, new AbstractDatasetProvider(), AbstractDataset.class));
-					}
-				}
-			}
-		}
-		
-		return ret;
+		boolean isFullData = DATA_TYPES[0].equals(dataType.getExpression()) || DATA_TYPES[1].equals(dataType.getExpression());
+		return delegate.getOutputVariables(isFullData);
 	}
 	
 	private boolean triggeredOnce = false;
@@ -879,46 +625,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		triggeredOnce = true;
 		appendQueue(triggerMsg);
 	}
-	/**
-	 * 
-	 * @param names
-	 * @return
-	 */
-	public static Map<String,String> getChoppedNames(final Collection<String> names) {
-		
-		final String rootName = getRootName(names);
-		if (rootName==null)      return null;
-		if (rootName.length()<1) return null;
-
-		final Map<String,String> chopped = new HashMap<String,String>(names.size());
-		for (String name : names) {
-			chopped.put(name, name.substring(rootName.length()));
-		}
-		return chopped;
-	}
-	private static final Pattern ROOT_PATTERN = Pattern.compile("(\\/[a-zA-Z0-9]+\\/).+");
-
-	public static String getRootName(Collection<String> names) {
-		
-		if (names==null) return null;
-		String rootName = null;
-		for (String name : names) {
-			final Matcher matcher = ROOT_PATTERN.matcher(name);
-			if (matcher.matches()) {
-				final String rName = matcher.group(1);
-				if (rootName!=null && !rootName.equals(rName)) {
-					rootName = null;
-					break;
-				}
-				rootName = rName;
-			} else {
-				rootName = null;
-				break;
-			}
-		}
-		return rootName;
-	}
-
 
 
 }
