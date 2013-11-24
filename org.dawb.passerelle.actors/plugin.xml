@@ -8,6 +8,13 @@
             id="com.isencia.passerelle.actor.actorgroup.utilities"
             name="General"
             open="false"
+            priority="12">
+      </actorgroup>
+      <actorgroup
+            icon="icons/folder.gif"
+            id="com.isencia.passerelle.actor.actorgroup.directors"
+            name="Directors"
+            open="false"
             priority="11">
       </actorgroup>
       <actorgroup
@@ -61,13 +68,19 @@
       </actorgroup>
    </extension>
    <extension
-         name="General and Other Actors"
+         name="Directors"
          point="com.isencia.passerelle.engine.actors">
       <actor
             class="com.isencia.passerelle.domain.cap.Director"
-            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            group="com.isencia.passerelle.actor.actorgroup.directors"
             id="com.isencia.passerelle.domain.cap.Director"
             name="Thread Director">
+      </actor>
+      <actor
+            class="com.isencia.passerelle.domain.cap.CapDirector"
+            group="com.isencia.passerelle.actor.actorgroup.directors"
+            id="com.isencia.passerelle.domain.cap.CapDirector"
+            name="Cap Director">
       </actor>
       <actor
             class="com.isencia.passerelle.domain.et.ETDirector"
@@ -75,6 +88,10 @@
             id="com.isencia.passerelle.domain.et.ETDirector"
             name="Event Director">
       </actor>
+   </extension>
+   <extension
+         name="General and Other Actors"
+         point="com.isencia.passerelle.engine.actors">
       <actor
             class="org.dawb.passerelle.actors.override.Input"
             group="com.isencia.passerelle.actor.actorgroup.utilities"
