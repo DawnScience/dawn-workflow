@@ -84,7 +84,7 @@
       </actor>
       <actor
             class="com.isencia.passerelle.domain.et.ETDirector"
-            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            group="com.isencia.passerelle.actor.actorgroup.directors"
             id="com.isencia.passerelle.domain.et.ETDirector"
             name="Event Director">
       </actor>
