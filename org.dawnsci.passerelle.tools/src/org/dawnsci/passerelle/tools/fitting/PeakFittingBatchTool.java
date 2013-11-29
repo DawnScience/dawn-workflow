@@ -67,13 +67,12 @@ public class PeakFittingBatchTool extends AbstractBatchTool {
 		}
 
 		final IOptimizer optimizer = BatchFittingUtils.getOptimizer();
-		List<CompositeFunction> composites =  Generic1DFitter.fitPeakFunctions(peaks, x, y, BatchFittingUtils.getPeakType(), optimizer, BatchFittingUtils.getSmoothing(), setup.getSquirts().size(), 0.0, false, false, new IMonitor.Stub() {
+		List<CompositeFunction> composites =  Generic1DFitter.fitPeakFunctions(peaks, x, y, BatchFittingUtils.getPeakClass(), optimizer, BatchFittingUtils.getSmoothing(), setup.getSquirts().size(), 0.0, false, false, new IMonitor.Stub() {
 			@Override
 			public boolean isCancelled() {
 				return ((TypedAtomicActor)parent).getDirector().isStopRequested();
 			}
 		});
-		
 		
 		// We set the same trace data and regions as would
 		// be there if the fitting had run in the ui.
