@@ -33,6 +33,7 @@ import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.Fermi;
+import uk.ac.diamond.scisoft.analysis.fitting.functions.IFunction;
 
 import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
 
@@ -146,7 +147,7 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 	 * @param function
 	 * @return
 	 */
-	private String getValueFromFunction(final AFunction function) throws IOException {
+	private String getValueFromFunction(final IFunction function) throws IOException {
 		if (function==null) return "";
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		ObjectOutputStream oos = new ObjectOutputStream(baos);
@@ -155,7 +156,7 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 		return new String(Base64Encoder.encode(baos.toByteArray()));
 	}
 
-	public void setFunction(AFunction function) {
+	public void setFunction(IFunction function) {
 		try {
 			setExpression(getValueFromFunction(function));
 		} catch (IOException e) {
