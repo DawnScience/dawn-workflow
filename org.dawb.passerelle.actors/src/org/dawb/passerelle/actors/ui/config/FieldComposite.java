@@ -14,6 +14,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.dawb.common.ui.util.GridUtils;
+import org.dawnsci.common.richbeans.beans.IFieldWidget;
+import org.dawnsci.common.richbeans.components.file.FileBox;
+import org.dawnsci.common.richbeans.components.scalebox.NumberBox;
+import org.dawnsci.common.richbeans.components.scalebox.StandardBox;
+import org.dawnsci.common.richbeans.components.selector.VerticalListEditor;
+import org.dawnsci.common.richbeans.components.wrappers.BooleanWrapper;
+import org.dawnsci.common.richbeans.components.wrappers.ComboWrapper;
+import org.dawnsci.common.richbeans.components.wrappers.SpinnerWrapper;
+import org.dawnsci.common.richbeans.components.wrappers.TextWrapper;
+import org.dawnsci.common.richbeans.event.ValueAdapter;
+import org.dawnsci.common.richbeans.event.ValueEvent;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.layout.GridData;
@@ -21,19 +33,6 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
-
-import uk.ac.gda.common.rcp.util.GridUtils;
-import uk.ac.gda.richbeans.beans.IFieldWidget;
-import uk.ac.gda.richbeans.components.file.FileBox;
-import uk.ac.gda.richbeans.components.scalebox.NumberBox;
-import uk.ac.gda.richbeans.components.scalebox.StandardBox;
-import uk.ac.gda.richbeans.components.selector.VerticalListEditor;
-import uk.ac.gda.richbeans.components.wrappers.BooleanWrapper;
-import uk.ac.gda.richbeans.components.wrappers.ComboWrapper;
-import uk.ac.gda.richbeans.components.wrappers.SpinnerWrapper;
-import uk.ac.gda.richbeans.components.wrappers.TextWrapper;
-import uk.ac.gda.richbeans.event.ValueAdapter;
-import uk.ac.gda.richbeans.event.ValueEvent;
 
 /**
  * A dialog which can be used with the Rich Beans Framework
@@ -243,7 +242,7 @@ public class FieldComposite extends Composite {
 		textChoices.setEditorClass(StringValueBean.class);
 		textChoices.setEditorUI(new TextValueComposite(textChoices, SWT.NONE));
 		textChoices.setNameField("textValue");
-		GridUtils.setVisibleAndLayout(textChoices, false);
+		GridUtils.setVisible(textChoices, false);
 
 		updateVisibleProperties();
 	}

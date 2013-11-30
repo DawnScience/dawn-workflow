@@ -12,6 +12,7 @@ package org.dawb.passerelle.editors;
 import java.io.File;
 
 import org.dawb.common.services.IUserInputService;
+import org.dawb.common.ui.util.DialogUtils;
 import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.passerelle.views.ActorDebugView;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
@@ -25,8 +26,6 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.ui.services.AbstractServiceFactory;
 import org.eclipse.ui.services.IServiceLocator;
-
-import uk.ac.gda.common.rcp.util.DialogUtils;
 
 public class UserInputService extends AbstractServiceFactory implements IUserInputService {
 

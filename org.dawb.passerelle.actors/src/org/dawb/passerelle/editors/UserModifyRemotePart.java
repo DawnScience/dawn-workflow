@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.TreeMap;
 
+import org.dawb.common.ui.util.GridUtils;
 import org.dawb.common.ui.viewers.AppliableTableViewer;
 import org.dawb.common.util.SubstituteUtils;
 import org.dawb.common.util.text.NumberUtils;
@@ -25,6 +26,15 @@ import org.dawb.passerelle.actors.Activator;
 import org.dawb.passerelle.actors.ui.config.FieldBean;
 import org.dawb.passerelle.actors.ui.config.FieldContainer;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
+import org.dawnsci.common.richbeans.beans.BeanUI;
+import org.dawnsci.common.richbeans.beans.IFieldWidget;
+import org.dawnsci.common.richbeans.components.cell.FieldComponentCellEditor;
+import org.dawnsci.common.richbeans.components.file.FileBox;
+import org.dawnsci.common.richbeans.components.file.FileBox.ChoiceType;
+import org.dawnsci.common.richbeans.components.scalebox.NumberBox;
+import org.dawnsci.common.richbeans.components.wrappers.ComboWrapper;
+import org.dawnsci.common.richbeans.components.wrappers.SpinnerWrapper;
+import org.dawnsci.common.richbeans.components.wrappers.TextWrapper;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -66,17 +76,6 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.ui.part.ResourceTransfer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import uk.ac.gda.common.rcp.util.GridUtils;
-import uk.ac.gda.richbeans.beans.BeanUI;
-import uk.ac.gda.richbeans.beans.IFieldWidget;
-import uk.ac.gda.richbeans.components.cell.FieldComponentCellEditor;
-import uk.ac.gda.richbeans.components.file.FileBox;
-import uk.ac.gda.richbeans.components.file.FileBox.ChoiceType;
-import uk.ac.gda.richbeans.components.scalebox.NumberBox;
-import uk.ac.gda.richbeans.components.wrappers.ComboWrapper;
-import uk.ac.gda.richbeans.components.wrappers.SpinnerWrapper;
-import uk.ac.gda.richbeans.components.wrappers.TextWrapper;
 
 public class UserModifyRemotePart implements IDeligateWorkbenchPart {
 

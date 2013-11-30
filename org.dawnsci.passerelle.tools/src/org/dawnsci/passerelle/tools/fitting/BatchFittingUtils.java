@@ -96,7 +96,7 @@ public class BatchFittingUtils {
 		return getPlottingPreferenceStore().getDouble(FittingConstants.QUALITY);
 	}
 
-	public static final APeak getPeakType() {
+	public static Class<? extends APeak> getPeakClass() {
 		try {
 			
 			final String peakClass = getPlottingPreferenceStore().getString(FittingConstants.PEAK_TYPE);
@@ -109,19 +109,19 @@ public class BatchFittingUtils {
 		} catch (Exception ne) {
 			logger.error("Cannot determine peak type required!", ne);
 			getPlottingPreferenceStore().setValue(FittingConstants.PEAK_TYPE, Gaussian.class.getName());
-		    return new Gaussian(1, 1, 1, 1);
+		    return Gaussian.class;
 		}
 	}	
 	
-	public static final Map<String, APeak> getPeakOptions() {
-		final Map<String, APeak> opts = new LinkedHashMap<String, APeak>(4);
-		opts.put(Gaussian.class.getName(),    new Gaussian(1, 1, 1, 1));
-		opts.put(Lorentzian.class.getName(),  new Lorentzian(1, 1, 1, 1));
-		opts.put(PearsonVII.class.getName(),  new PearsonVII(1, 1, 1, 1));
-		opts.put(PseudoVoigt.class.getName(), new PseudoVoigt(1, 1, 1, 1));
+	public static Map<String, Class <? extends APeak>> getPeakOptions() {
+		final Map<String, Class <? extends APeak>> opts = new LinkedHashMap<String, Class <? extends APeak>>(4);
+		opts.put(Gaussian.class.getName(),    Gaussian.class);
+		opts.put(Lorentzian.class.getName(),  Lorentzian.class);
+		opts.put(PearsonVII.class.getName(),  PearsonVII.class);
+		opts.put(PseudoVoigt.class.getName(), PseudoVoigt.class);
 		return opts;
 	}
-	
+
 	public static final int getPolynomialOrderRequired() {
 		return getPlottingPreferenceStore().getInt(FittingConstants.POLY_ORDER);
 	}

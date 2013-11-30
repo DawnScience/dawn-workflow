@@ -9,15 +9,14 @@
  */ 
 package org.dawb.passerelle.actors.ui.config;
 
+import org.dawnsci.common.richbeans.beans.IFieldWidget;
+import org.dawnsci.common.richbeans.components.wrappers.TextWrapper;
+import org.dawnsci.common.richbeans.event.ValueListener;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
-
-import uk.ac.gda.richbeans.beans.IFieldWidget;
-import uk.ac.gda.richbeans.components.wrappers.TextWrapper;
-import uk.ac.gda.richbeans.event.ValueListener;
 
 public class TextValueComposite extends Composite {
 

@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.dawb.common.python.PyDevUtils;
 import org.dawb.common.python.PyDevUtils.AvailableInterpreter;
 import org.dawb.common.python.PythonUtils;
+import org.dawb.common.util.list.ListUtils;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
@@ -47,7 +48,6 @@ import ptolemy.kernel.util.IllegalActionException;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcException;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcRemoteException;
-import uk.ac.gda.util.list.ListUtils;
 
 import com.isencia.passerelle.actor.Actor;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
