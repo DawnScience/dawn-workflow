@@ -10,6 +10,7 @@
 package org.dawb.passerelle.common.preferences;
 
 import org.dawb.passerelle.common.Activator;
+import org.dawnsci.common.richbeans.components.scalebox.RangeBox;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -20,9 +21,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
-
-
-import uk.ac.gda.richbeans.components.scalebox.RangeBox;
 
 public class DataAnalysisPreferencePage extends PreferencePage implements IWorkbenchPreferencePage {
 

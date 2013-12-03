@@ -9,6 +9,7 @@
  */
 package org.dawb.passerelle.actors.scripts;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.dawb.common.python.PyDevUtils;
 import org.dawb.common.python.PyDevUtils.AvailableInterpreter;
 import org.dawb.common.python.PythonUtils;
+import org.dawb.common.util.list.ListUtils;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
@@ -33,6 +35,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.python.pydev.core.IInterpreterInfo;
 import org.python.pydev.shared_core.structure.Tuple;
+import org.python.pydev.shared_core.structure.Tuple3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +48,6 @@ import ptolemy.kernel.util.IllegalActionException;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcException;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcRemoteException;
-import uk.ac.gda.util.list.ListUtils;
 
 import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
@@ -163,8 +165,9 @@ public class PythonPydevScript extends AbstractScriptTransformer {
 				pythonRunScriptService = new PythonRunScriptService(
 						stopService, isDebug);
 			} else {
+				File containingDirectory = getResource().getLocation().toFile().getParentFile();
 				pythonRunScriptService = getService(isDebug, getProject(),
-						info.info);
+						info.info, containingDirectory);
 			}
 
 			@SuppressWarnings("unchecked")
@@ -255,23 +258,30 @@ public class PythonPydevScript extends AbstractScriptTransformer {
 		}
 	}
 
-	private static List<Tuple<Tuple<IProject, IInterpreterInfo>, AnalysisRpcPythonPyDevService>> services = Collections
-			.synchronizedList(new ArrayList<Tuple<Tuple<IProject, IInterpreterInfo>, AnalysisRpcPythonPyDevService>>());
+	private static List<Tuple<Tuple3<IProject, IInterpreterInfo, File>, AnalysisRpcPythonPyDevService>> services = Collections
+			.synchronizedList(new ArrayList<Tuple<Tuple3<IProject, IInterpreterInfo, File>, AnalysisRpcPythonPyDevService>>());
 
+	/**
+	 * Get a PythonRunScriptService, launching an AnalysisRpcPythonPyDevService if no suitable
+	 * ones exist already in the {@link #services} cache.
+	 * <p>
+	 * To be suitable, a Python process must refer to the same IProject, IInterpreterInfo and
+	 * the same source directory for the run script.
+	 */
 	private static PythonRunScriptService getService(boolean isDebug,
-			final IProject project, final IInterpreterInfo info)
+			final IProject project, final IInterpreterInfo info, final File containingDirectory)
 			throws IOException, AnalysisRpcException {
 		synchronized (services) {
-			Tuple<IProject, IInterpreterInfo> tuple = new Tuple<IProject, IInterpreterInfo>(
-					project, info);
-			for (Tuple<Tuple<IProject, IInterpreterInfo>, AnalysisRpcPythonPyDevService> service : services) {
+			Tuple3<IProject, IInterpreterInfo, File> tuple = new Tuple3<IProject, IInterpreterInfo, File>(
+					project, info, containingDirectory);
+			for (Tuple<Tuple3<IProject, IInterpreterInfo, File>, AnalysisRpcPythonPyDevService> service : services) {
 				if (service.o1.equals(tuple)) {
 					return new PythonRunScriptService(service.o2, isDebug, true);
 				}
 			}
 			AnalysisRpcPythonPyDevService rpcservice = new AnalysisRpcPythonPyDevService(
 					info, project);
-			services.add(new Tuple<Tuple<IProject, IInterpreterInfo>, AnalysisRpcPythonPyDevService>(
+			services.add(new Tuple<Tuple3<IProject, IInterpreterInfo, File>, AnalysisRpcPythonPyDevService>(
 					tuple, rpcservice));
 			return new PythonRunScriptService(rpcservice, isDebug);
 		}

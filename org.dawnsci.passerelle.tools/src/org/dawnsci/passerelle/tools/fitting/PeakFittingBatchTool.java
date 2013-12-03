@@ -7,7 +7,6 @@ import org.dawnsci.passerelle.tools.AbstractBatchTool;
 
 import ptolemy.actor.TypedAtomicActor;
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.IAnalysisMonitor;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IntegerDataset;
@@ -16,6 +15,7 @@ import uk.ac.diamond.scisoft.analysis.fitting.functions.CompositeFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.FunctionSquirts;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.IPeak;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.IdentifiedPeak;
+import uk.ac.diamond.scisoft.analysis.monitor.IMonitor;
 import uk.ac.diamond.scisoft.analysis.optimize.IOptimizer;
 import uk.ac.diamond.scisoft.analysis.roi.LinearROI;
 import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
@@ -67,13 +67,12 @@ public class PeakFittingBatchTool extends AbstractBatchTool {
 		}
 
 		final IOptimizer optimizer = BatchFittingUtils.getOptimizer();
-		List<CompositeFunction> composites =  Generic1DFitter.fitPeakFunctions(peaks, x, y, BatchFittingUtils.getPeakType(), optimizer, BatchFittingUtils.getSmoothing(), setup.getSquirts().size(), 0.0, false, false, new IAnalysisMonitor() {
+		List<CompositeFunction> composites =  Generic1DFitter.fitPeakFunctions(peaks, x, y, BatchFittingUtils.getPeakClass(), optimizer, BatchFittingUtils.getSmoothing(), setup.getSquirts().size(), 0.0, false, false, new IMonitor.Stub() {
 			@Override
-			public boolean hasBeenCancelled() {
+			public boolean isCancelled() {
 				return ((TypedAtomicActor)parent).getDirector().isStopRequested();
 			}
 		});
-		
 		
 		// We set the same trace data and regions as would
 		// be there if the fitting had run in the ui.

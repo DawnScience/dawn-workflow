@@ -33,7 +33,6 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.gda.util.OSUtils;
 
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
@@ -96,14 +95,14 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 		try {
 			
 			final String                 cmd;
-			if (OSUtils.isWindowsOS() && winCmdParam.getExpression()!=null && !"".equals(winCmdParam.getExpression())) {
+			if (isWindowsOS() && winCmdParam.getExpression()!=null && !"".equals(winCmdParam.getExpression())) {
 				cmd = ParameterUtils.getSubstituedValue(winCmdParam, cache);
 			} else {
 				cmd = ParameterUtils.getSubstituedValue(cmdParam, cache);
 			}
 			
 			final ManagedCommandline command = new ManagedCommandline();
-			if (OSUtils.isLinuxOS()) {
+			if (isLinuxOS()) {
 				command.addArguments(new String[]{"/bin/sh", "-c", cmd});
 			} else {
 				command.addArguments(new String[]{"cmd.exe", "/C", cmd});
@@ -157,7 +156,19 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 		}
 		
 	}
-	
+	/**
+	 * @return true if windows
+	 */
+	static public boolean isWindowsOS() {
+		return (System.getProperty("os.name").indexOf("Windows") == 0);
+	}
+	/**
+	 * @return true if linux
+	 */
+	public static boolean isLinuxOS() {
+		String os = System.getProperty("os.name");
+		return os != null && os.startsWith("Linux");
+	}
     /**
      * Adds the scalar and the 
      */

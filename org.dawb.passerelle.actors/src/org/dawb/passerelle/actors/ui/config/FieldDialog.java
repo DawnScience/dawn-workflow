@@ -10,6 +10,11 @@
 package org.dawb.passerelle.actors.ui.config;
 
 import org.dawb.common.ui.util.GridUtils;
+import org.dawnsci.common.richbeans.components.selector.BeanSelectionEvent;
+import org.dawnsci.common.richbeans.components.selector.BeanSelectionListener;
+import org.dawnsci.common.richbeans.components.selector.VerticalListEditor;
+import org.dawnsci.common.richbeans.components.wrappers.TextWrapper;
+import org.dawnsci.common.richbeans.dialog.BeanDialog;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
@@ -20,11 +25,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
 
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.gda.richbeans.components.selector.BeanSelectionEvent;
-import uk.ac.gda.richbeans.components.selector.BeanSelectionListener;
-import uk.ac.gda.richbeans.components.selector.VerticalListEditor;
-import uk.ac.gda.richbeans.components.wrappers.TextWrapper;
-import uk.ac.gda.richbeans.dialog.BeanDialog;
+
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 

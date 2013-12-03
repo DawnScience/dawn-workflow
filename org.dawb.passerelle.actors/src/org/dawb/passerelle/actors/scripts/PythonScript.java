@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.dawb.common.python.PythonUtils;
+import org.dawb.common.util.list.ListUtils;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
@@ -44,7 +45,6 @@ import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcException;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcRemoteException;
 import uk.ac.diamond.scisoft.python.JythonInterpreterUtils;
-import uk.ac.gda.util.list.ListUtils;
 
 import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
