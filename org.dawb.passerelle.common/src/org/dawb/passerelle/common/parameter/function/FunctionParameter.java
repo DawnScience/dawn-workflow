@@ -1,5 +1,5 @@
-/*
- * Copyright (c) 2012 European Synchrotron Radiation Facility,
+/*-
+ * Copyright (c) 2013 European Synchrotron Radiation Facility,
  *                    Diamond Light Source Ltd.
  *
  * All rights reserved. This program and the accompanying materials
@@ -10,14 +10,10 @@
 
 package org.dawb.passerelle.common.parameter.function;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
-import org.castor.core.util.Base64Decoder;
-import org.castor.core.util.Base64Encoder;
+import org.dawb.common.services.IPersistenceService;
+import org.dawb.common.services.ServiceManager;
 import org.dawnsci.common.widgets.gda.function.FunctionDialog;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -34,6 +30,8 @@ import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.Fermi;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.IFunction;
+import uk.ac.diamond.scisoft.analysis.persistence.bean.function.FunctionBean;
+import uk.ac.diamond.scisoft.analysis.persistence.bean.function.FunctionBeanConverter;
 
 import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
 
@@ -106,7 +104,7 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 	 * Decode the function from a string.
 	 * @return
 	 */
-	private AFunction getFunctionFromValue() throws IOException, ClassNotFoundException{
+	private AFunction getFunctionFromValue() throws Exception {
 		
 		if (getExpression()==null || "".equals(getExpression())) {
 			Fermi fermi = new Fermi(new double[]{0,0,0,0});
@@ -117,19 +115,10 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 		
 	}
 	
-	private AFunction getFunctionFromValue(String expression) throws IOException, ClassNotFoundException {
-		final ClassLoader original = Thread.currentThread().getContextClassLoader();
-		ObjectInputStream ois=null;
-		try {
-			Thread.currentThread().setContextClassLoader(AFunction.class.getClassLoader());
-			byte[] data = Base64Decoder.decode(getExpression());
-			ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o  = ois.readObject();
-			return (AFunction)o;
-		} finally {
-			Thread.currentThread().setContextClassLoader(original);
-			if (ois!=null) ois.close();
-		}
+	private AFunction getFunctionFromValue(String expression) throws Exception {
+		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
+		FunctionBean fbean = service.unmarshallToFunctionBean(expression);
+		return (AFunction) FunctionBeanConverter.functionBeanToIFunction(fbean);
 	}
 
 
@@ -148,12 +137,17 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 	 * @return
 	 */
 	private String getValueFromFunction(final IFunction function) throws IOException {
-		if (function==null) return "";
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ObjectOutputStream oos = new ObjectOutputStream(baos);
-		oos.writeObject( function );
-		oos.close();
-		return new String(Base64Encoder.encode(baos.toByteArray()));
+		if (function == null)
+			return "";
+		// Convert IFunction to FunctionBean
+		FunctionBean fbean = FunctionBeanConverter.iFunctionToFunctionBean(function.getName(), function);
+		try {
+			IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
+			return service.marshallFromFunctionBean(fbean);
+		} catch (Exception e) {
+			logger.error("Error marshalling to IFunction to JSON:"+ e);
+			return "";
+		}
 	}
 
 	public void setFunction(IFunction function) {

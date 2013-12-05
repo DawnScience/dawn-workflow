@@ -1,13 +1,9 @@
 package org.dawb.passerelle.common.parameter.roi;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
-import org.castor.core.util.Base64Decoder;
-import org.castor.core.util.Base64Encoder;
+import org.dawb.common.services.IPersistenceService;
+import org.dawb.common.services.ServiceManager;
 import org.dawnsci.common.widgets.gda.roi.ROIDialog;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
@@ -21,6 +17,8 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
+import uk.ac.diamond.scisoft.analysis.persistence.bean.roi.ROIBean;
+import uk.ac.diamond.scisoft.analysis.persistence.bean.roi.ROIBeanConverter;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
 import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
 
@@ -100,27 +98,17 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	 * Decode the roi from a string.
 	 * @return
 	 */
-	private IROI getROIFromValue() throws IOException, ClassNotFoundException{
+	private IROI getROIFromValue() throws Exception {
 		
 		if (getExpression()==null || "".equals(getExpression())) return new RectangularROI();
 
 		return getROIFromValue(getExpression());
-        
 	}
 	
-	private IROI getROIFromValue(String expression) throws IOException, ClassNotFoundException {
-		final ClassLoader original = Thread.currentThread().getContextClassLoader();
-		ObjectInputStream ois=null;
-		try {
-			Thread.currentThread().setContextClassLoader(IROI.class.getClassLoader());
-			byte[] data = Base64Decoder.decode(getExpression());
-			ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o  = ois.readObject();
-			return (IROI)o;
-        } finally {
-			Thread.currentThread().setContextClassLoader(original);
-			if (ois!=null) ois.close();
-        }
+	private IROI getROIFromValue(String expression) throws Exception {
+		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
+		ROIBean rbean = service.unmarshallToROIBean(expression);
+		return ROIBeanConverter.roiBeanToIROI(rbean);
 	}
 
 
@@ -139,12 +127,17 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	 * @return
 	 */
 	private String getValueFromROI(final IROI roi) throws IOException {
-		if (roi==null) return "";
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject( roi );
-        oos.close();
-        return new String(Base64Encoder.encode(baos.toByteArray()));
+		if (roi==null)
+			return "";
+		// Convert IROI to ROIBean
+		ROIBean rbean = ROIBeanConverter.iroiToROIBean(roi.getName(), roi);
+		try {
+			IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
+			return service.marshallFromROIBean(rbean);
+		} catch (Exception e) {
+			logger.error("Error marshalling IROI to JSON:"+ e);
+			return "";
+		}
 	}
 
 	public void setRoi(IROI roi) {
