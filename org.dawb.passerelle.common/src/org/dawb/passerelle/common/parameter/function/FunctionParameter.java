@@ -10,8 +10,11 @@
 
 package org.dawb.passerelle.common.parameter.function;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 
+import org.castor.core.util.Base64Decoder;
 import org.dawb.common.services.IPersistenceService;
 import org.dawb.common.services.ServiceManager;
 import org.dawnsci.common.widgets.gda.function.FunctionDialog;
@@ -114,13 +117,32 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 		return getFunctionFromValue(getExpression());
 		
 	}
-	
+
 	private AFunction getFunctionFromValue(String expression) throws Exception {
 		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
 		FunctionBean fbean = service.unmarshallToFunctionBean(expression);
-		return (AFunction) FunctionBeanConverter.functionBeanToIFunction(fbean);
+		// if bean is null, try decoding from base 64 value
+		if (fbean == null) {
+			return getFunctionFromEncoded64Value(expression);
+		} else {
+			return (AFunction) FunctionBeanConverter.functionBeanToIFunction(fbean);
+		}
 	}
 
+	private AFunction getFunctionFromEncoded64Value(String expression) throws IOException, ClassNotFoundException {
+		final ClassLoader original = Thread.currentThread().getContextClassLoader();
+		ObjectInputStream ois=null;
+		try {
+			Thread.currentThread().setContextClassLoader(AFunction.class.getClassLoader());
+			byte[] data = Base64Decoder.decode(getExpression());
+			ois = new ObjectInputStream(new ByteArrayInputStream(data));
+			Object o  = ois.readObject();
+			return (AFunction)o;
+		} finally {
+			Thread.currentThread().setContextClassLoader(original);
+			if (ois!=null) ois.close();
+		}
+	}
 
 	public AFunction getFunction() {
 		if (getExpression()==null || "".equals(getExpression())) return null;
