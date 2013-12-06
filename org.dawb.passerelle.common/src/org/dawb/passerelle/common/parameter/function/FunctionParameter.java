@@ -120,7 +120,7 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 
 	private AFunction getFunctionFromValue(String expression) throws Exception {
 		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
-		FunctionBean fbean = service.unmarshallToFunctionBean(expression);
+		FunctionBean fbean = (FunctionBean) service.unmarshal(expression);
 		// if bean is null, try decoding from base 64 value
 		if (fbean == null) {
 			return getFunctionFromEncoded64Value(expression);
@@ -165,7 +165,7 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 		FunctionBean fbean = FunctionBeanConverter.iFunctionToFunctionBean(function.getName(), function);
 		try {
 			IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
-			return service.marshallFromFunctionBean(fbean);
+			return service.marshal(fbean);
 		} catch (Exception e) {
 			logger.error("Error marshalling to IFunction to JSON:"+ e);
 			return "";

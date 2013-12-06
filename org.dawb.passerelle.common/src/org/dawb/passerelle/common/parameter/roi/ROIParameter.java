@@ -110,7 +110,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 
 	private IROI getROIFromValue(String expression) throws Exception {
 		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
-		ROIBean rbean = service.unmarshallToROIBean(expression);
+		ROIBean rbean = (ROIBean)service.unmarshal(expression);
 		// if bean  result is null, try to retrieve the value from a base64 encoded value
 		if (rbean == null) {
 			return getROIFromEncoded64Value(expression);
@@ -155,7 +155,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 		ROIBean rbean = ROIBeanConverter.iroiToROIBean(roi.getName(), roi);
 		try {
 			IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
-			return service.marshallFromROIBean(rbean);
+			return service.marshal(rbean);
 		} catch (Exception e) {
 			logger.error("Error marshalling IROI to JSON:"+ e);
 			return "";
