@@ -10,11 +10,8 @@
 
 package org.dawb.passerelle.common.parameter.function;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 
-import org.castor.core.util.Base64Decoder;
 import org.dawb.common.services.IPersistenceService;
 import org.dawb.common.services.ServiceManager;
 import org.dawnsci.common.widgets.gda.function.FunctionDialog;
@@ -120,27 +117,19 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 
 	private AFunction getFunctionFromValue(String expression) throws Exception {
 		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
-		FunctionBean fbean = (FunctionBean) service.unmarshal(expression);
-		// if bean is null, try decoding from base 64 value
-		if (fbean == null) {
-			return getFunctionFromEncoded64Value(expression);
-		} else {
-			return (AFunction) FunctionBeanConverter.functionBeanToIFunction(fbean);
-		}
-	}
-
-	private AFunction getFunctionFromEncoded64Value(String expression) throws IOException, ClassNotFoundException {
-		final ClassLoader original = Thread.currentThread().getContextClassLoader();
-		ObjectInputStream ois=null;
 		try {
-			Thread.currentThread().setContextClassLoader(AFunction.class.getClassLoader());
-			byte[] data = Base64Decoder.decode(getExpression());
-			ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o  = ois.readObject();
-			return (AFunction)o;
-		} finally {
-			Thread.currentThread().setContextClassLoader(original);
-			if (ois!=null) ois.close();
+			FunctionBean fbean = (FunctionBean) service.unmarshal(expression);
+			return (AFunction) FunctionBeanConverter.functionBeanToIFunction(fbean);
+		} catch (Exception e) {
+			// if not a JSon value try to retrieve the value from a base64 encoded value
+			String exception = e.getClass().toString();
+			if (exception.endsWith("JsonParseException")) {
+				logger.error("Error reading value from Function, replace the Function actor by a new one: "+ e);
+				return null;
+			} else {
+				logger.error("Error reading value from ROI: "+ e);
+				return null;
+			}
 		}
 	}
 

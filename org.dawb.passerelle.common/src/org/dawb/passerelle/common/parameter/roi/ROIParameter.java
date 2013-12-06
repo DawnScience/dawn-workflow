@@ -1,10 +1,7 @@
 package org.dawb.passerelle.common.parameter.roi;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
 
-import org.castor.core.util.Base64Decoder;
 import org.dawb.common.services.IPersistenceService;
 import org.dawb.common.services.ServiceManager;
 import org.dawnsci.common.widgets.gda.roi.ROIDialog;
@@ -110,27 +107,19 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 
 	private IROI getROIFromValue(String expression) throws Exception {
 		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
-		ROIBean rbean = (ROIBean)service.unmarshal(expression);
-		// if bean  result is null, try to retrieve the value from a base64 encoded value
-		if (rbean == null) {
-			return getROIFromEncoded64Value(expression);
-		} else {
-			return ROIBeanConverter.roiBeanToIROI(rbean);
-		}
-	}
-
-	private IROI getROIFromEncoded64Value (String Expression) throws IOException, ClassNotFoundException {
-		final ClassLoader original = Thread.currentThread().getContextClassLoader();
-		ObjectInputStream ois=null;
 		try {
-			Thread.currentThread().setContextClassLoader(IROI.class.getClassLoader());
-			byte[] data = Base64Decoder.decode(getExpression());
-			ois = new ObjectInputStream(new ByteArrayInputStream(data));
-			Object o  = ois.readObject();
-			return (IROI)o;
-		} finally {
-			Thread.currentThread().setContextClassLoader(original);
-			if (ois!=null) ois.close();
+			ROIBean rbean = (ROIBean)service.unmarshal(expression);
+			return ROIBeanConverter.roiBeanToIROI(rbean);
+		} catch (Exception e) {
+			// if not a JSon value try to retrieve the value from a base64 encoded value
+			String exception = e.getClass().toString();
+			if (exception.endsWith("JsonParseException")) {
+				logger.error("Error reading value from ROI, replace the Region actor by a new one: "+ e);
+				return null;
+			} else {
+				logger.error("Error reading value from ROI: "+ e);
+				return null;
+			}
 		}
 	}
 
