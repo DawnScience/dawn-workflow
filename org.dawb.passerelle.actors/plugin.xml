@@ -163,11 +163,11 @@
             name="File Import">
       </actor>
       <actor
-            class="org.dawb.passerelle.actors.data.DataAppendTransformer"
+            class="org.dawb.passerelle.actors.data.DataListSource"
             group="org.dawb.passerelle.actors.actorgroup.io"
-            icon="icons/database--plus.png"
-            id="org.dawb.passerelle.actors.fileDataHandler"
-            name="Data Append">
+            icon="icons/files_import.png"
+            id="org.dawb.passerelle.actors.fileDataList"
+            name="Files Import">
       </actor>
       <actor
             class="org.dawb.passerelle.actors.data.FolderImportSource"
@@ -182,6 +182,13 @@
             icon="icons/folder_monitor.gif"
             id="org.dawb.passerelle.actors.folderMonitorSource"
             name="Folder Monitor">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.data.DataAppendTransformer"
+            group="org.dawb.passerelle.actors.actorgroup.io"
+            icon="icons/database--plus.png"
+            id="org.dawb.passerelle.actors.fileDataHandler"
+            name="Data Append">
       </actor>
       <actor
             class="org.dawb.passerelle.actors.data.DataExportTransformer"

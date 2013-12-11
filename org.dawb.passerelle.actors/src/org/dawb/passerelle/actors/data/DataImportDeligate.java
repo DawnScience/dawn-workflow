@@ -99,8 +99,6 @@ class DataImportDelegate {
 				return null;
 			}
 		}
-		
-        //getStandardMessageHeaders().put(ManagedMessage.SystemHeader.HEADER_SOURCE_INFO,sourcePath);
 
 		return sourcePath;
 	}

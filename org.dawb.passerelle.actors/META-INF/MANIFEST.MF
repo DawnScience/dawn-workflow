@@ -38,7 +38,8 @@ Require-Bundle: org.eclipse.ui,
  org.dawnsci.passerelle.tools;bundle-version="1.0.0",
  org.dawnsci.python.rpc;bundle-version="1.0.0",
  org.dawnsci.common.widgets;bundle-version="1.2.0",
- org.dawnsci.doe;bundle-version="1.2.0"
+ org.dawnsci.doe;bundle-version="1.2.0",
+ com.isencia.sherpa.commons.reduced;bundle-version="6.2.5"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ClassPath: .
 Import-Package: com.isencia.passerelle.actor.forkjoin,

@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
@@ -361,7 +360,7 @@ public class DataMessageComponent implements Serializable {
 		return (list==null || list.isEmpty()) && scalar!=null && scalar.size()>0;
 	}
 
-	public void addList(String name, AbstractDataset a) {
+	public void addList(String name, IDataset a) {
 		if (list==null) list = new LinkedHashMap<String,Serializable>(1);
 		list.put(name, a);
 	}
