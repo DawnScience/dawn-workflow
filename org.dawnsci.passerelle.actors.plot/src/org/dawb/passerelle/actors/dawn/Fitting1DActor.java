@@ -161,7 +161,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 					parametersDS.get(p).set(fitResult.getParameter(p).getValue(), position);
 				}
 				
-				DoubleDataset resultFunctionDS = fitResult.makeDataset(xAxisDS);
+				DoubleDataset resultFunctionDS = fitResult.calculateValues(xAxisDS);
 				functionsDS.setSlice(resultFunctionDS, start, stop, null);
 				
 			} catch (Exception e) {

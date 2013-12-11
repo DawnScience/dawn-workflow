@@ -75,7 +75,7 @@ public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 		
 		// process the data
 		// TODO Add Null Protection here.
-		DoubleDataset createdDS = function.makeDataset(xAxisDS);
+		DoubleDataset createdDS = function.calculateValues(xAxisDS);
 		createdDS.setName(dataset);
 		
 		// Add it to the result

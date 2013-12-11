@@ -168,14 +168,15 @@ AbstractDataMessageTransformer {
 
 				FermiGauss fg = new FermiGauss(f0, f1, f2, f3, f4, p0);
 
-				AbstractDataset fermiDS = fg.makeDataset(xAxis);
-
-				AbstractDataset residual = Maths.subtract(fermiDS,
-						observed);
-
-				residual.ipower(2);
-
-				return (Double) residual.sum();
+				return fg.residual(true, observed, xAxis);
+//				AbstractDataset fermiDS = fg.calculateValues(xAxis);
+//
+//				AbstractDataset residual = Maths.subtract(fermiDS,
+//						observed);
+//
+//				residual.ipower(2);
+//
+//				return (Double) residual.sum();
 			}
 		};
 
@@ -219,7 +220,7 @@ AbstractDataMessageTransformer {
 
 				FermiGauss fg = new FermiGauss(p0, f1, p2, p3, p4, p5);
 
-				AbstractDataset fermiDS = fg.makeDataset(xAxis);
+				AbstractDataset fermiDS = fg.calculateValues(xAxis);
 
 				AbstractDataset residual = Maths.subtract(fermiDS, observed);
 				residual.ipower(2);
@@ -261,7 +262,7 @@ AbstractDataMessageTransformer {
 		String plotName = updatePlotName.getExpression();
 		if (!plotName.isEmpty()) {
 			try {
-				AbstractDataset fermiDS = fitFunction.makeDataset(xAxis);
+				AbstractDataset fermiDS = fitFunction.calculateValues(xAxis);
 				SDAPlotter.plot(plotName, xAxis, new IDataset[] { fermiDS,
 						values });
 			} catch (Exception e) {
@@ -599,7 +600,7 @@ AbstractDataMessageTransformer {
 				logger.debug("Soething happend during the Mu update process",e);
 			}
 			
-			DoubleDataset resultFunctionDS = fitResult.makeDataset(xAxisDS);
+			DoubleDataset resultFunctionDS = fitResult.calculateValues(xAxisDS);
 			functionsDS.setSlice(resultFunctionDS, start, stop, null);
 			
 			AbstractDataset residual = Maths.subtract(slice, resultFunctionDS);
