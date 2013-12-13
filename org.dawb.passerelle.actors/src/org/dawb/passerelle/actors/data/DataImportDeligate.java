@@ -318,7 +318,7 @@ class DataImportDelegate {
 		
 		if (data == null) {
 			DataHolder dh = LoaderFactory.getData(filePath, null);
-			data = dh.getMap();
+			data = dh.toLazyMap();
 			if (ds!=null&&ds.length>0) {
 				data.keySet().retainAll(Arrays.asList(ds));
 			}
