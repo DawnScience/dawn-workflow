@@ -28,12 +28,16 @@ import com.isencia.passerelle.message.MessageFactory;
 public class SystemPropertySource extends AbstractDataMessageSource {
 
 	private StringParameter propertyNames;
+	private StringParameter renameNames;
 
 	public SystemPropertySource(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
 		
 		this.propertyNames = new StringParameter(this, "Property Names");
 		registerConfigurableParameter(propertyNames);
+		
+		this.renameNames = new StringParameter(this, "Rename Names");
+		registerConfigurableParameter(renameNames);
 	}
 
 	/**
@@ -64,10 +68,25 @@ public class SystemPropertySource extends AbstractDataMessageSource {
 	}
 	
 	private DataMessageComponent getSystemProperties() {
+		
 		DataMessageComponent ret = new DataMessageComponent();
 		final List<String> names = ListUtils.getList(propertyNames.getExpression());
-		for (String name : names) {
-			ret.putScalar(name, System.getProperty(name));
+		
+		List<String> renames = null;
+		if (renameNames.getExpression()!=null && !"".equals(renameNames.getExpression())) {
+			renames =  ListUtils.getList(renameNames.getExpression());
+		}
+		for (int i = 0; i < names.size(); i++) {
+	        final String key = names.get(i);
+	        String name = key;
+	        if (renames!=null) {
+	        	try {
+	        		name = renames.get(i);
+	        	} catch (Throwable ignored) {
+	        		name = key;
+	        	}
+	        }
+			ret.putScalar(name, System.getProperty(key));
 		}
 		return ret;
 	}
