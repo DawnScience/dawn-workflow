@@ -44,7 +44,7 @@ public class FieldBean implements Serializable {
 	
 	public FieldBean() {
 		this.variableName = "x";
-		this.uiClass = "uk.ac.gda.richbeans.components.wrappers.TextWrapper";
+		this.uiClass = "org.dawnsci.common.richbeans.components.wrappers.TextWrapper";
 		uiLabel      = null;
 		upperBound   = 1000;
 		lowerBound   = 0;
@@ -79,6 +79,10 @@ public class FieldBean implements Serializable {
 
 
 	public String getUiClass() {
+		// Deal with old paths
+		if (uiClass!=null && uiClass.contains("uk.ac.gda.richbeans.components")) {
+			uiClass = uiClass.replace("uk.ac.gda.richbeans.components", "org.dawnsci.common.richbeans.components");
+		}
 		return uiClass;
 	}
 
