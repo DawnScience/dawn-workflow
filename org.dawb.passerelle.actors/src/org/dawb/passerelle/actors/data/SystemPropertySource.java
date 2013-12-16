@@ -29,6 +29,7 @@ public class SystemPropertySource extends AbstractDataMessageSource {
 
 	private StringParameter propertyNames;
 	private StringParameter renameNames;
+	private StringParameter defaultValues;
 
 	public SystemPropertySource(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
@@ -38,6 +39,10 @@ public class SystemPropertySource extends AbstractDataMessageSource {
 		
 		this.renameNames = new StringParameter(this, "Rename Names");
 		registerConfigurableParameter(renameNames);
+		
+		this.defaultValues = new StringParameter(this, "Default Values");
+		registerConfigurableParameter(defaultValues);
+
 	}
 
 	/**
@@ -76,6 +81,11 @@ public class SystemPropertySource extends AbstractDataMessageSource {
 		if (renameNames.getExpression()!=null && !"".equals(renameNames.getExpression())) {
 			renames =  ListUtils.getList(renameNames.getExpression());
 		}
+		
+		List<String> dvalues = null;
+		if (defaultValues.getExpression()!=null && !"".equals(defaultValues.getExpression())){
+			dvalues =  ListUtils.getList(defaultValues.getExpression());
+		}
 		for (int i = 0; i < names.size(); i++) {
 	        final String key = names.get(i);
 	        String name = key;
@@ -86,7 +96,16 @@ public class SystemPropertySource extends AbstractDataMessageSource {
 	        		name = key;
 	        	}
 	        }
-			ret.putScalar(name, System.getProperty(key));
+	        String value = System.getProperty(key);
+	        if (value == null && dvalues!=null) {
+	        	try {
+	        		value = dvalues.get(i);
+	        	} catch (Throwable ignored) {
+	        		value = null;
+	        	}
+	        }
+	        if (value==null) continue;
+			ret.putScalar(name, value);
 		}
 		return ret;
 	}
