@@ -279,10 +279,8 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 			} else { // Write an image
 				writeImage(filePath, cache, comp);
 			}
-
-			//			AbstractPassModeTransformer.refreshResource(output);
-
-			return comp;
+			
+			return MessageUtils.mergeAll(cache);
 
 		} catch (Exception ne) {
 			throw createDataMessageException("Cannot write to "+filePath, ne);
