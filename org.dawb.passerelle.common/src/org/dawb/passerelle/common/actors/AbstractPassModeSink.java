@@ -32,13 +32,12 @@ import ptolemy.kernel.util.Settable;
 
 import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.actor.Sink;
 import com.isencia.passerelle.core.PasserelleException;
 import com.isencia.passerelle.message.MessageHelper;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public abstract class AbstractPassModeSink extends Sink implements IVariableProvider, IProjectNamedObject {
+public abstract class AbstractPassModeSink extends AbstractSink implements IVariableProvider, IProjectNamedObject {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractPassModeSink.class);
 	
