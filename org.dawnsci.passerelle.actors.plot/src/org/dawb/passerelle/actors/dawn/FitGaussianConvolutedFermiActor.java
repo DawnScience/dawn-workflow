@@ -597,7 +597,13 @@ AbstractDataMessageTransformer {
 			try {
 				SDAPlotter.plot("Mu", anglesAxisDS, parametersDS.get(0));
 			} catch (Exception e) {
-				logger.debug("Soething happend during the Mu update process",e);
+				logger.debug("Something happend during the Mu update process",e);
+			}
+			
+			try {
+				SDAPlotter.plot("Resolution", anglesAxisDS, parametersDS.get(5));
+			} catch (Exception e) {
+				logger.debug("Something happend during the resolution update process",e);
 			}
 			
 			DoubleDataset resultFunctionDS = fitResult.calculateValues(xAxisDS);
