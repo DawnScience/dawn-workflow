@@ -9,7 +9,6 @@
  */ 
 package org.dawb.passerelle.common.actors;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -25,7 +24,6 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.actor.TerminationException;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.internal.ErrorMessageContainer;
 
