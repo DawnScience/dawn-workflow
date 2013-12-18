@@ -8,6 +8,7 @@ import org.dawnsci.passerelle.tools.AbstractBatchTool;
 
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.InterpolatorUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
@@ -51,7 +52,24 @@ public class ImageARPESRemapBatchTool extends AbstractBatchTool {
 		// Do the processing here if required
 		if (auxiliaryData != null) {
 			AbstractDataset newEnergyAxis = Maths.subtract(originalAxes.get(0), auxiliaryData.mean());
-			correctedData = InterpolatorUtils.remapOneAxis((AbstractDataset) data, 1, (AbstractDataset) auxiliaryData, (AbstractDataset) originalAxes.get(0), newEnergyAxis);
+			AbstractDataset differences = Maths.subtract(auxiliaryData, auxiliaryData.mean());
+			
+			double meanSteps = (originalAxes.get(0).max().doubleValue()-originalAxes.get(0).min().doubleValue())/(float)originalAxes.get(0).getShape()[0];
+			
+			AbstractDataset differenceInts = Maths.floor(Maths.divide(differences, meanSteps));
+			
+			correctedData = new DoubleDataset(data.getShape());
+			for(int y = 0; y < correctedData.getShape()[0]; y++) {
+				int min = Math.max(differenceInts.getInt(y), 0);
+				int max = Math.min(correctedData.getShape()[1]+differenceInts.getInt(y), correctedData.getShape()[1]);
+				int ref = 0;
+				for(int xx = min; xx < max; xx++) {
+					correctedData.set(data.getObject(y,xx), y,ref);
+					ref++;
+				}
+			}
+			
+			//correctedData = InterpolatorUtils.remapOneAxis((AbstractDataset) data, 1, (AbstractDataset) auxiliaryData, (AbstractDataset) originalAxes.get(0), newEnergyAxis);
 			correctedAxes = new ArrayList<IDataset>();
 			correctedAxes.add(newEnergyAxis.clone());
 			correctedAxes.add(originalAxes.get(1).clone());
