@@ -168,7 +168,7 @@ AbstractDataMessageTransformer {
 
 				FermiGauss fg = new FermiGauss(f0, f1, f2, f3, f4, p0);
 
-				return fg.residual(true, observed, xAxis);
+				return fg.residual(true, observed, null, new IDataset[] {xAxis});
 //				AbstractDataset fermiDS = fg.calculateValues(xAxis);
 //
 //				AbstractDataset residual = Maths.subtract(fermiDS,
