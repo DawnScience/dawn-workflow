@@ -38,7 +38,6 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.SDAPlotter;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
-import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IndexIterator;
@@ -168,7 +167,7 @@ AbstractDataMessageTransformer {
 
 				FermiGauss fg = new FermiGauss(f0, f1, f2, f3, f4, p0);
 
-				return fg.residual(true, observed, xAxis);
+				return fg.residual(true, observed, null, new IDataset[] {xAxis});
 //				AbstractDataset fermiDS = fg.calculateValues(xAxis);
 //
 //				AbstractDataset residual = Maths.subtract(fermiDS,
