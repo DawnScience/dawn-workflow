@@ -32,7 +32,8 @@ import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageHelper;
 
 /**
- * Base class for all Sources with a trigger port.
+  * The AbstractTriggeredSource class is a copy of the Passerelle class com.isencia.passerelle.actor.AbstractTriggeredSource
+ *  and modified to inherit from AbstractSource. Olof Svensson, 2013-12-18
  * 
  * @author dirk
  */

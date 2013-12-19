@@ -41,7 +41,8 @@ import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageHelper;
 
 /**
- * Base class for all Passerelle sinks:
+ * The AbstractSink class is a copy of the Passerelle class com.isencia.passerelle.actor.Sink
+ * and modified to inherit from actorv5. Olof Svensson, 2013-12-18
  * 
  * @author erwin
  */

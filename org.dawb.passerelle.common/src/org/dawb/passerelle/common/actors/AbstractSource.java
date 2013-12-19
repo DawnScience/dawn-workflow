@@ -33,8 +33,8 @@ import com.isencia.passerelle.core.PortFactory;
 import com.isencia.passerelle.message.ManagedMessage;
 
 /**
- * Source A base class for all actors that connect to datafeeds in the "outside" world and then feed the data as
- * messages into a Passerelle application.
+ * The AbstractSource class is a copy of the Passerelle class com.isencia.passerelle.actor.Source
+ * and modified to inherit from actorv5. Olof Svensson, 2013-12-18
  * 
  * @author erwin
  */
