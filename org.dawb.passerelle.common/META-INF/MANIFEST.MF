@@ -37,8 +37,8 @@ Export-Package: org.dawb.passerelle.common,
 Bundle-Vendor: ESRF
 Bundle-ClassPath: .,
  lib/castor-1.3.2-core.jar
-Import-Package: com.isencia.util,
- com.isencia.sherpa.commons,
+Import-Package: com.isencia.sherpa.commons,
+ com.isencia.util,
  com.python.pydev.debug.remote.client_api;bundle-version="[3.0.0,3.1.0)",
  org.apache.commons.digester.substitution,
  org.dawb.common.services,
@@ -54,4 +54,5 @@ Import-Package: com.isencia.util,
  org.eclipse.ui.intro.config,
  org.edna.pydev.extensions.utils,
  org.python.pydev.core;bundle-version="[3.0.0,3.1.0)",
- org.slf4j
+ org.slf4j,
+ ptolemy.actor.gui.style;version="7.0.1"

@@ -34,12 +34,11 @@ import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
 
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.actor.TriggeredSource;
 import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public abstract class AbstractDataMessageSource extends TriggeredSource implements IVariableProvider, IProjectNamedObject {
+public abstract class AbstractDataMessageSource extends AbstractTriggeredSource implements IVariableProvider, IProjectNamedObject {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDataMessageSource.class);
 	/**
