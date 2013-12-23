@@ -82,12 +82,13 @@
             id="com.isencia.passerelle.domain.cap.CapDirector"
             name="Cap Director">
       </actor>
+      <!-- Temporarily removed from the workflow palette, see DAWNSCI-811
       <actor
             class="com.isencia.passerelle.domain.et.ETDirector"
             group="com.isencia.passerelle.actor.actorgroup.directors"
             id="com.isencia.passerelle.domain.et.ETDirector"
             name="Event Director">
-      </actor>
+      </actor> -->
    </extension>
    <extension
          name="General and Other Actors"

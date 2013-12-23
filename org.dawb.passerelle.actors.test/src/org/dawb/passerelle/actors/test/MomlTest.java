@@ -117,10 +117,11 @@ public class MomlTest {
 	public void testInvalidFile3() throws Throwable {
 		testFile("src/org/dawb/passerelle/actors/test/scalar_error2.moml", true);
 	}	
-	@Test
-	public void testValidFile1() throws Throwable {
-		testFile("src/org/dawb/passerelle/actors/test/scalar_error3.moml", false);
-	}	
+//	Commented out due to problem with the event director, see DAWNSCI-811
+//	@Test
+//	public void testValidFile1() throws Throwable {
+//		testFile("src/org/dawb/passerelle/actors/test/scalar_error3.moml", false);
+//	}	
 	@Test
 	public void testValidFile2() throws Throwable {
 		testFile("src/org/dawb/passerelle/actors/test/blueport_test1.moml", false);
