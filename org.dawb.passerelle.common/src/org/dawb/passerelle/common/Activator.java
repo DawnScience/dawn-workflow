@@ -9,6 +9,9 @@
  */ 
 package org.dawb.passerelle.common;
 
+import org.eclipse.core.runtime.IBundleGroup;
+import org.eclipse.core.runtime.IBundleGroupProvider;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
@@ -40,6 +43,29 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin       = this;
 		this.context = context;
+		
+		if (System.getProperty("dawn.workbench.version")==null) {
+			String version  = null;
+			try {
+				IBundleGroupProvider[] providers = Platform.getBundleGroupProviders();  
+				if (providers != null) {  
+					MAIN_LOOP: for (IBundleGroupProvider provider : providers) {  
+						IBundleGroup[] bundleGroups = provider.getBundleGroups();  
+						for (IBundleGroup group : bundleGroups) {  
+							if (group.getIdentifier().equals("org.dawnsci.base.product.feature")) {  
+								version = group.getVersion();  
+								break MAIN_LOOP;
+							}  
+						}  
+					}  
+				}   
+			} catch (Throwable ignored) {
+				// Intentionally ignore any error
+				version = null;
+			}
+			if (version==null) version = getBundle().getVersion().toString();
+			System.setProperty("dawn.workbench.version", version);
+		}
 	}
 
 	/*

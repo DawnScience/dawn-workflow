@@ -130,9 +130,9 @@ public class ModelUtils {
 		"<!DOCTYPE entity PUBLIC \"-//UC Berkeley//DTD MoML 1//EN\"\n" +
 		"    \"http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd\">\n" +
 		"<entity name=\""+modelFile.getName().substring(0, modelFile.getName().indexOf('.'))+"\" class=\"ptolemy.actor.TypedCompositeActor\" source=\""+modelFile.getLocation().toOSString()+"\">\n" +
-		"    <property name=\"_createdBy\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\"7.0.1\">\n" +
+		"    <property name=\"_createdBy\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\"7.0.1.4\">\n" +
 		"    </property>\n" +
-		"    <property name=\"_workbenchVersion\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\"1.0.0.qualifier\">\n" +
+		"    <property name=\"_dawnVersion\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\""+System.getProperty("dawn.workbench.version")+"\">\n" +
 		"    </property>\n" +
 		"    <property name=\"Director\" class=\"com.isencia.passerelle.domain.cap.Director\">\n" +
 		"       <property name=\"_location\" class=\"ptolemy.kernel.util.Location\" value=\"{20, 20}\">\n" +
@@ -217,8 +217,8 @@ public class ModelUtils {
 			"<?xml version=\"1.0\" standalone=\"no\"?> \r\n" + 
 			"<!DOCTYPE entity PUBLIC \"-//UC Berkeley//DTD MoML 1//EN\" \"http://ptolemy.eecs.berkeley.edu/xml/dtd/MoML_1.dtd\"> \r\n" +
             "<entity name=\"newModel\" class=\"ptolemy.actor.TypedCompositeActor\"> \r\n" +
-            "   <property name=\"_createdBy\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\"7.0.1\" /> \r\n" +
-            "   <property name=\"_workbenchVersion\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\""+System.getProperty("dawb.workbench.version")+"\" /> \r\n" +
+            "   <property name=\"_createdBy\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\"7.0.1.4\" /> \r\n" +
+            "   <property name=\"_dawnVersion\" class=\"ptolemy.kernel.attributes.VersionAttribute\" value=\""+System.getProperty("dawn.workbench.version")+"\" /> \r\n" +
             "   <property name=\"Director\" class=\"com.isencia.passerelle.domain.cap.Director\" > \r\n" +
         	"      <property name=\"_location\" class=\"ptolemy.kernel.util.Location\" value=\"{20, 20}\" /> \r\n" +
             "   </property> \r\n" +
