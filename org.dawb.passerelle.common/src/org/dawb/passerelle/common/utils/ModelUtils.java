@@ -254,26 +254,6 @@ public class ModelUtils {
 	   
 	        }
 	        
-	        // Separate example folder for EDNA workflows.
-	        // Edna workflows are not currently supported in the SDA product. Therefore
-	        // we only do this in dawb.
-	        final File ednaDataDir     = new File(examplesDir, "workflows-edna"); // Where the data comes from
-	        if (ednaDataDir.exists()) {
-				final IFolder ednaExamplesInProject = workflows.getFolder("examples-edna");
-				ednaExamplesInProject.create(true, true, mon);
-		        if (ednaDataDir.exists()) {
-		        	for (File d : ednaDataDir.listFiles()) {
-		        		if (!d.exists())  continue;
-		        		if (!d.canRead()) continue;
-		        		if (!d.isFile())  continue;
-		        		
-		        		final IFile file = ednaExamplesInProject.getFile(d.getName());
-		        		file.create(new FileInputStream(d), false, mon);
-		        	}
-		   
-		        }
-	        }
-	        
 	        // Separate example folder for ICAT workflows.
 	        final File icatDataDir     = new File(examplesDir, "workflows-icat"); // Where the data comes from
 	        if (icatDataDir.exists()) {
