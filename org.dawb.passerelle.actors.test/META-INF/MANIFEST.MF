@@ -30,5 +30,4 @@ Import-Package: com.isencia.passerelle.workbench.model.launch,
  org.slf4j,
  ptolemy.moml
 Export-Package: org.dawb.passerelle.actors.test,
- org.dawb.passerelle.actors.test.edna,
  org.dawb.passerelle.actors.test.ui
