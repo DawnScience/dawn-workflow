@@ -123,10 +123,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
          version="1.0.0.qualifier"/>
 
    <includes
-         id="org.dawb.edna.feature"
-         version="0.0.0"/>
-
-   <includes
          id="org.dawb.workbench.config.feature"
          version="0.0.0"/>
 
