@@ -19,13 +19,13 @@ import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.IFileUtils;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
+import org.dawb.passerelle.common.message.ISubstitutionEditor;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.SubstitutionParticipant;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
-import org.dawb.passerelle.editors.SubstitutionEditor;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -184,7 +184,7 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 			
 			ret.setResource(getResource());
 			ret.setResourceTypeName("Substitution Editor");
-			ret.setEditorId(SubstitutionEditor.ID);
+			ret.setEditorId("org.dawb.passerelle.editors.substitutionEditor");
 			return ret;
 		} 
 		
@@ -233,7 +233,7 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 
 	@Override
 	public void partOpened(IWorkbenchPart part, ResourceObject ob) {
-		final SubstitutionEditor ed = (SubstitutionEditor)part;
+		final ISubstitutionEditor ed = (ISubstitutionEditor)part;
 		ed.setSubstitutionParticipant(this);
 		part.setFocus();
 	}
