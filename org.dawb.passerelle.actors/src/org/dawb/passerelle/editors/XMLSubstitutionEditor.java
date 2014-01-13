@@ -18,6 +18,7 @@ import org.dawb.common.ui.util.GridUtils;
 import org.dawb.common.util.SubstituteUtils;
 import org.dawb.passerelle.actors.Activator;
 import org.dawb.passerelle.common.message.IVariable;
+import org.dawb.passerelle.common.message.SubstitutionParticipant;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;

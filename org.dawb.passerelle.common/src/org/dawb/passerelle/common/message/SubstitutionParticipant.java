@@ -7,7 +7,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */ 
-package org.dawb.passerelle.editors;
+package org.dawb.passerelle.common.message;
 
 import java.util.List;
 import java.util.Map;
