@@ -61,13 +61,6 @@ public class Activator extends AbstractUIPlugin {
 			}
 		}, null);
 		
-		try {
-			final Bundle bundle = Platform.getBundle("org.dawb.gda.extensions");
-			if (bundle==null) throw new Exception("Cannot load bundle org.dawb.gda.extensions!");
-			bundle.start();
-		} catch (Exception e) {
-			logger.error("Cannot override plot server in GDA!", e);
-		}
 		plugin = this;
 	}
 
