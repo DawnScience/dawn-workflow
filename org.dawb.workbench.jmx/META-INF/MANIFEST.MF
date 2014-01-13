@@ -8,8 +8,7 @@ Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: ESRF
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: .,
- py4j0.7.jar
+Bundle-ClassPath: .
 Export-Package: org.dawb.workbench.jmx,
  org.dawb.workbench.jmx.example,
  org.dawb.workbench.jmx.service
