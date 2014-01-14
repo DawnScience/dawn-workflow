@@ -37,7 +37,7 @@ import com.isencia.passerelle.message.MessageHelper;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public abstract class AbstractPassModeSink extends AbstractSink implements IVariableProvider, IProjectNamedObject {
+public abstract class AbstractPassModeSink extends AbstractSink implements IVariableProvider, IProjectNamedObject, IDescriptionProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractPassModeSink.class);
 	
@@ -228,6 +228,17 @@ public abstract class AbstractPassModeSink extends AbstractSink implements IVari
 
 	public NamedObj getObject() {
 		return this;
+	}
+
+	private String description;
+
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

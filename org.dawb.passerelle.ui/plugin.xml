@@ -56,6 +56,14 @@
             name="Debug Actor"
             restorable="true">
       </view>
+      <view
+            category="com.isencia.passerelle.workbench.model.editor.ui.workflow.category"
+            class="org.dawb.passerelle.ui.views.WorkflowDocumentationView"
+            icon="icons/book-bookmark.png"
+            id="org.dawb.passerelle.ui.documentationView"
+            name="Documentation"
+            restorable="true">
+      </view>
    </extension>
    <extension
          point="org.eclipse.ui.services">
@@ -67,4 +75,11 @@
          </service>
       </serviceFactory>
    </extension>
+      <extension
+         point="org.dawb.common.ui.valueProviderPage">
+      <value_page
+            class="org.dawb.passerelle.ui.views.ActorValuePage">
+      </value_page>
+   </extension>
+   
 </plugin>

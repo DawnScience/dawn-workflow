@@ -48,13 +48,14 @@ public class WorkflowPerspective implements IPerspectiveFactory {
         viewFolder.addView("org.dawb.passerelle.views.ValueView");
         viewFolder.addView(IConsoleConstants.ID_CONSOLE_VIEW);
         {
-        	IFolderLayout folderLayout = layout.createFolder("folder", IPageLayout.RIGHT, 0.76f, IPageLayout.ID_EDITOR_AREA);
+        	IFolderLayout folderLayout = layout.createFolder("folder", IPageLayout.RIGHT, 0.68f, IPageLayout.ID_EDITOR_AREA);
         	try {
         		folderLayout.addView("org.dawb.workbench.views.dataSetView");
         	} catch (Throwable ne) {
         		// Its allowed
         	}
         	folderLayout.addView("org.dawb.common.ui.views.dashboardView");
+        	folderLayout.addView("org.dawb.passerelle.ui.documentationView");
         	folderLayout.addView("org.dawb.workbench.views.imageMonitorView");
         }
         {

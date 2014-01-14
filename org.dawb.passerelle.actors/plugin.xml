@@ -504,12 +504,6 @@
       </toc>
    </extension>
    <extension
-         point="org.dawb.common.ui.valueProviderPage">
-      <value_page
-            class="org.dawb.passerelle.views.ActorValuePage">
-      </value_page>
-   </extension>
-   <extension
          point="org.eclipse.ui.services">
        <serviceFactory
             factoryClass="org.dawb.passerelle.service.TransferService">

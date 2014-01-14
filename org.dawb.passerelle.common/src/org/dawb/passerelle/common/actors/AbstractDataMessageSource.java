@@ -38,7 +38,7 @@ import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public abstract class AbstractDataMessageSource extends AbstractTriggeredSource implements IVariableProvider, IProjectNamedObject {
+public abstract class AbstractDataMessageSource extends AbstractTriggeredSource implements IVariableProvider, IProjectNamedObject, IDescriptionProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractDataMessageSource.class);
 	/**
@@ -210,4 +210,16 @@ public abstract class AbstractDataMessageSource extends AbstractTriggeredSource 
 		return this;
 	}
 	
+
+	private String description;
+
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 }
