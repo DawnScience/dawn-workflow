@@ -40,7 +40,7 @@ public class BatchToolUtils {
 	 * @param bean
 	 * @return
 	 */
-	public static AbstractDataset getXAxis(UserPlotBean bean) {
+	public static IDataset getXAxis(UserPlotBean bean) {
 		final List<String>    axes  = bean.getAxesNames();
 		if (axes==null) return null;
 		if (!bean.getData().containsKey(axes.get(0))) return null;

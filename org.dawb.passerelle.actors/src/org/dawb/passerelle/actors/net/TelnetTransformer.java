@@ -9,7 +9,6 @@
  */ 
 package org.dawb.passerelle.actors.net;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.Closeable;
@@ -19,21 +18,19 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.List;
 
 import org.dawb.common.util.SubstituteUtils;
-import org.dawb.common.util.io.FileUtils;
 import org.dawb.passerelle.actors.file.SubstituteTransformer;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.IVariable;
-import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
-import org.dawb.passerelle.editors.SubstitutionParticipant;
+import org.dawb.passerelle.common.message.SubstitutionParticipant;
+import org.dawb.passerelle.common.message.Variable;
 
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;

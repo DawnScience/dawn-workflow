@@ -48,7 +48,7 @@ import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
-public abstract class AbstractPassModeTransformer extends Actor implements IVariableProvider, IProjectNamedObject {
+public abstract class AbstractPassModeTransformer extends Actor implements IVariableProvider, IProjectNamedObject, IDescriptionProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractPassModeTransformer.class);
 
@@ -57,8 +57,6 @@ public abstract class AbstractPassModeTransformer extends Actor implements IVari
 	 */
 	private static final long serialVersionUID = -1903160956377231213L;
 
-
-	
 	protected static List<String> MEMORY_MODE;
 	static {
 		MEMORY_MODE = new ArrayList<String>(3);
@@ -312,6 +310,18 @@ public abstract class AbstractPassModeTransformer extends Actor implements IVari
 	
 	public NamedObj getObject() {
 		return this;
+	}
+
+
+	private String description;
+
+	
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 }

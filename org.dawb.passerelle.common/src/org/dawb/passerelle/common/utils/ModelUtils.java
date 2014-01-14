@@ -31,6 +31,9 @@ import org.eclipse.ui.PlatformUI;
 import org.edna.pydev.extensions.utils.PydevProjectUtils;
 import org.python.pydev.core.IPythonNature;
 
+import ptolemy.actor.CompositeActor;
+import ptolemy.kernel.ComponentEntity;
+
 /**
  *   ModelUtils
  *
@@ -293,5 +296,22 @@ public class ModelUtils {
 		workflows.setDescription(description, mon);
 		
 	}
+
+	
+	 /**
+	   * Currently does not do much as toplevel.getEntity(...) does this search.
+	   * 
+	   * @param toplevel
+	   * @param actorName
+	   * @return
+	   */
+	  public static ComponentEntity findEntityByName(CompositeActor toplevel, String actorName) {
+
+	    ComponentEntity entity = toplevel.getEntity(actorName);
+	    if (entity != null)
+	      return entity;
+
+	    return null;
+	  }
 
 }

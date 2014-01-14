@@ -74,6 +74,16 @@
             priority="4">
       </actorgroup>
    </extension>
+
+   <extension
+         point="com.isencia.passerelle.engine.actorGroups">
+      <view
+            id="com.isencia.passerelle.actor.actorgroup.submodels"
+            name="Shared Submodels"
+            open="false"
+            priority="0">
+      </view>
+   </extension>
    <extension
          name="General and Other Actors"
          point="com.isencia.passerelle.engine.actors">
@@ -490,52 +500,7 @@
             class="org.dawb.passerelle.dnd.ActorDropFactory">
       </dropFactory>
    </extension>
-   <extension
-         point="org.eclipse.ui.editors">
-      <editor
-            class="org.dawb.passerelle.editors.EdnaActorMultiPageEditor"
-            default="false"
-            icon="icons/edna_editor.gif"
-            id="org.dawb.passerelle.editors.ednaEditor"
-            name="Edna Editor">
-      </editor>
-      <editor
-            class="org.dawb.passerelle.editors.UserInputEditor"
-            default="false"
-            icon="icons/application_form_magnify.png"
-            id="org.dawb.passerelle.editors.UserModifyEditor"
-            name="Review">
-      </editor>
-      <editor
-            class="org.dawb.passerelle.editors.SubstitutionEditor"
-            default="true"
-            extensions="mac"
-            icon="icons/xml_substitute.png"
-            id="org.dawb.passerelle.editors.substitutionEditor"
-            name="Substitution Editor">
-         <contentTypeBinding
-               contentTypeId="org.dawb.passerelle.actors.macContent">
-         </contentTypeBinding>
-      </editor>
-   </extension>
-   <extension
-         point="org.eclipse.core.contenttype.contentTypes">
-      <content-type
-            base-type="org.eclipse.core.runtime.text"
-            file-extensions="mac"
-            id="org.dawb.passerelle.actors.macContent"
-            name="Spec Macro"
-            priority="high">
-         <property
-               default="UTF-8"
-               name="org.eclipse.core.runtime.charset">
-         </property>
-         <describer
-               class="org.dawb.passerelle.editors.SubstitutionDescriber">
-         </describer>
-      </content-type>
-   </extension>
-   <extension
+    <extension
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
             id="org.dawb.passerelle.actors.cheat.sheet.category"
@@ -557,44 +522,13 @@
       </toc>
    </extension>
    <extension
-         point="org.dawb.common.ui.valueProviderPage">
-      <value_page
-            class="org.dawb.passerelle.views.ActorValuePage">
-      </value_page>
-   </extension>
-   <extension
          point="org.eclipse.ui.services">
-      <serviceFactory
-            factoryClass="org.dawb.passerelle.editors.UserInputService">
-         <service
-               serviceClass="org.dawb.common.services.IUserInputService"></service>
-      </serviceFactory>
-      <serviceFactory
+       <serviceFactory
             factoryClass="org.dawb.passerelle.service.TransferService">
          <service
                serviceClass="org.dawb.common.services.ITransferService">
          </service>
       </serviceFactory>
-   </extension>
-   <extension
-         point="org.eclipse.ui.views">
-      <view
-            category="com.isencia.passerelle.workbench.model.editor.ui.workflow.category"
-            class="org.dawb.passerelle.views.ActorDebugView"
-            icon="icons/debug_purple.gif"
-            id="org.dawb.passerelle.views.actorDebugView"
-            name="Debug Actor"
-            restorable="true">
-      </view>
-   </extension>
-   <extension
-         point="com.isencia.passerelle.engine.actorGroups">
-      <view
-            id="com.isencia.passerelle.actor.actorgroup.submodels"
-            name="Shared Submodels"
-            open="false"
-            priority="0">
-      </view>
    </extension>
    <extension
          point="org.dawnsci.introRegister">

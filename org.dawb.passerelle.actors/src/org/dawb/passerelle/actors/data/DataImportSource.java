@@ -186,7 +186,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			    return delegate.getChoppedNames();
 			}
 		}, SWT.MULTI);
-		
+
 		registerConfigurableParameter(names);
 		
 		rename = new StringMapParameter(this, "Rename Data Sets", new IAvailableMap() {		
@@ -230,6 +230,8 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		
 		delegate = new DataImportDelegate(path, names, relativePathParam, rename);
 
+		
+		setDescription("This source imports datasets using the loader service produced by Diamond Light Source. This loader service allows datasets in many formats to be imported and used in the workflow like numpy arrays. HDF5 files are supported, in this case you will need the path to the dataset in HDF5.");
 	}
 	
 	/**
