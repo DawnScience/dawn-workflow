@@ -56,10 +56,10 @@
             label="5. Change the message type to be INFORMATION.">
       </subitem>
       <subitem
-            label="6. Find the actor called 'Scalar' and click and drag it into the workflow.">
+            label="6. Find the actor called &apos;Start&apos; and click and drag it into the workflow. The Start actor is a so called &apos;source&apos; actor. Source actors are distinguished from other types of actors by having a green background and no input port. All workflows need to have at least one source actor which will set the workflow going. You can find more source actors in the palette in the folder &apos;Sources&apos;.">
       </subitem>
       <subitem
-            label="7. Go to the area to the left of the workflow diagram and find the action to add a 'Connection'. Create a connection between the output of 'Scalar' and the input to 'Message' by joining the white output arrow head of Scalar to the white input arrow head of Message. These arrow heads are known as 'Ports'.">
+            label="7. Go to the area to the left of the workflow diagram and find the action to add a &apos;Connection&apos;. Create a connection between the output of &apos;Start&apos; and the input to &apos;Message&apos; by joining the white output arrow head of Start to the white input arrow head of Message. These arrow heads are known as &apos;Ports&apos;.">
       </subitem>
       <subitem
             label="8. Go to the main toolbar of the application and find the green play button labelled 'Run the workflow from start to end, until finished'. There may also be white play button with a green circular surround labeled 'Run'. We do not need this for now, just use the green play button.">

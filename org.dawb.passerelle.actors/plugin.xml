@@ -8,12 +8,19 @@
             id="com.isencia.passerelle.actor.actorgroup.utilities"
             name="General"
             open="false"
-            priority="12">
+            priority="13">
       </actorgroup>
       <actorgroup
             icon="icons/folder.gif"
             id="com.isencia.passerelle.actor.actorgroup.directors"
             name="Directors"
+            open="false"
+            priority="12">
+      </actorgroup>
+      <actorgroup
+            icon="icons/folder.gif"
+            id="com.isencia.passerelle.actor.actorgroup.sources"
+            name="Sources"
             open="false"
             priority="11">
       </actorgroup>
@@ -66,29 +73,6 @@
             open="false"
             priority="4">
       </actorgroup>
-   </extension>
-   <extension
-         name="Directors"
-         point="com.isencia.passerelle.engine.actors">
-      <actor
-            class="com.isencia.passerelle.domain.cap.Director"
-            group="com.isencia.passerelle.actor.actorgroup.directors"
-            id="com.isencia.passerelle.domain.cap.Director"
-            name="Thread Director">
-      </actor>
-      <actor
-            class="com.isencia.passerelle.domain.cap.CapDirector"
-            group="com.isencia.passerelle.actor.actorgroup.directors"
-            id="com.isencia.passerelle.domain.cap.CapDirector"
-            name="Cap Director">
-      </actor>
-      <!-- Temporarily removed from the workflow palette, see DAWNSCI-811
-      <actor
-            class="com.isencia.passerelle.domain.et.ETDirector"
-            group="com.isencia.passerelle.actor.actorgroup.directors"
-            id="com.isencia.passerelle.domain.et.ETDirector"
-            name="Event Director">
-      </actor> -->
    </extension>
    <extension
          name="General and Other Actors"
@@ -157,34 +141,6 @@
             name="Counter">
       </actor>
       <actor
-            class="org.dawb.passerelle.actors.data.DataImportSource"
-            group="org.dawb.passerelle.actors.actorgroup.io"
-            icon="icons/file_import.png"
-            id="org.dawb.passerelle.actors.fileDataHandler"
-            name="File Import">
-      </actor>
-      <actor
-            class="org.dawb.passerelle.actors.data.DataListSource"
-            group="org.dawb.passerelle.actors.actorgroup.io"
-            icon="icons/files_import.png"
-            id="org.dawb.passerelle.actors.fileDataList"
-            name="Files Import">
-      </actor>
-      <actor
-            class="org.dawb.passerelle.actors.data.FolderImportSource"
-            group="org.dawb.passerelle.actors.actorgroup.io"
-            icon="icons/folder_import.png"
-            id="org.dawb.passerelle.actors.folderDataHandler"
-            name="Folder Import">
-      </actor>
-      <actor
-            class="org.dawb.passerelle.actors.data.FolderMonitorSource"
-            group="org.dawb.passerelle.actors.actorgroup.io"
-            icon="icons/folder_monitor.gif"
-            id="org.dawb.passerelle.actors.folderMonitorSource"
-            name="Folder Monitor">
-      </actor>
-      <actor
             class="org.dawb.passerelle.actors.data.DataAppendTransformer"
             group="org.dawb.passerelle.actors.actorgroup.io"
             icon="icons/database--plus.png"
@@ -198,19 +154,89 @@
             id="org.dawb.passerelle.actors.dataExport"
             name="Data Export">
       </actor>
+   </extension>
+   <extension
+         name="Directors"
+         point="com.isencia.passerelle.engine.actors">
+      <actor
+            class="com.isencia.passerelle.domain.cap.Director"
+            group="com.isencia.passerelle.actor.actorgroup.directors"
+            id="com.isencia.passerelle.domain.cap.Director"
+            name="Thread Director">
+      </actor>
+      <actor
+            class="com.isencia.passerelle.domain.cap.CapDirector"
+            group="com.isencia.passerelle.actor.actorgroup.directors"
+            id="com.isencia.passerelle.domain.cap.CapDirector"
+            name="Cap Director">
+      </actor>
+      <!-- Temporarily removed from the workflow palette, see DAWNSCI-811
+      <actor
+            class="com.isencia.passerelle.domain.et.ETDirector"
+            group="com.isencia.passerelle.actor.actorgroup.directors"
+            id="com.isencia.passerelle.domain.et.ETDirector"
+            name="Event Director">
+      </actor> -->
+   </extension>
+   <extension
+         name="Sources"
+         point="com.isencia.passerelle.engine.actors">
+      <actor
+            class="org.dawb.passerelle.actors.Start"
+            group="com.isencia.passerelle.actor.actorgroup.sources"
+            icon="icons/scalar.png"
+            id="org.dawb.passerelle.actors.start"
+            name="Start">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.data.DataImportSource"
+            group="com.isencia.passerelle.actor.actorgroup.sources"
+            icon="icons/file_import.png"
+            id="org.dawb.passerelle.actors.fileDataHandler"
+            name="File Import">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.data.DataListSource"
+            group="com.isencia.passerelle.actor.actorgroup.sources"
+            icon="icons/files_import.png"
+            id="org.dawb.passerelle.actors.fileDataList"
+            name="Files Import">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.data.FolderImportSource"
+            group="com.isencia.passerelle.actor.actorgroup.sources"
+            icon="icons/folder_import.png"
+            id="org.dawb.passerelle.actors.folderDataHandler"
+            name="Folder Import">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.data.FolderMonitorSource"
+            group="com.isencia.passerelle.actor.actorgroup.sources"
+            icon="icons/folder_monitor.gif"
+            id="org.dawb.passerelle.actors.folderMonitorSource"
+            name="Folder Monitor">
+      </actor>
+      <actor
+            class="org.dawb.passerelle.actors.data.SystemPropertySource"
+            group="com.isencia.passerelle.actor.actorgroup.sources"
+            icon="icons/system_properties.png"
+            id="org.dawb.passerelle.actors.systemProperties"
+            name="System Properties">
+      </actor>
       <actor
             class="org.dawb.passerelle.actors.flow.TimerSource"
-            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            group="com.isencia.passerelle.actor.actorgroup.sources"
             icon="icons/clock_red.png"
             id="org.dawb.passerelle.actors.timerSource"
             name="Timed Source">
       </actor>
       <actor
-            class="org.dawb.passerelle.actors.data.SystemPropertySource"
-            group="com.isencia.passerelle.actor.actorgroup.utilities"
-            icon="icons/system_properties.png"
-            id="org.dawb.passerelle.actors.systemProperties"
-            name="System Properties">
+            class="org.dawb.passerelle.actors.data.Scalar"
+            figureCustomizer="org.dawb.passerelle.actors.data.MathCustomizer"
+            group="com.isencia.passerelle.actor.actorgroup.sources"
+            icon="icons/scalar.png"
+            id="org.dawb.passerelle.actors.scalar"
+            name="Scalar">
       </actor>
    </extension>
    <extension
@@ -255,14 +281,6 @@
             icon="icons/median.gif"
             id="org.dawb.passerelle.actors.mathsMedian"
             name="Median">
-      </actor>
-      <actor
-            class="org.dawb.passerelle.actors.data.Scalar"
-            figureCustomizer="org.dawb.passerelle.actors.data.MathCustomizer"
-            group="org.dawb.passerelle.actors.actorgroup.maths"
-            icon="icons/scalar.png"
-            id="org.dawb.passerelle.actors.scalar"
-            name="Scalar">
       </actor>
       <actor
             class="org.dawb.passerelle.actors.scripts.PythonScript"
@@ -367,7 +385,7 @@
             group="org.dawb.passerelle.actors.actorgroup.ui"
             icon="icons/user_input.gif"
             id="org.dawb.passerelle.actors.userinput"
-            name="Input">
+            name="User Input">
       </actor>
       <actor
             class="org.dawb.passerelle.actors.roi.ROISource"

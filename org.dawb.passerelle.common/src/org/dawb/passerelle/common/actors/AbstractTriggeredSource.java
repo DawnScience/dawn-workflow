@@ -38,7 +38,8 @@ import com.isencia.passerelle.message.MessageHelper;
  * @author dirk
  */
 public abstract class AbstractTriggeredSource extends AbstractSource {
-  private static final long serialVersionUID = 1L;
+  private static final long serialVersionUID = 9021057866243307461L;
+
   private static Logger LOGGER = LoggerFactory.getLogger(AbstractTriggeredSource.class);
 
   public final static String TRIGGER_PORT = "trigger";

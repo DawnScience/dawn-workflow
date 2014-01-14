@@ -40,7 +40,8 @@ import com.isencia.passerelle.message.ManagedMessage;
  */
 public abstract class AbstractSource extends Actor {
 
-  private static final long serialVersionUID = 1L;
+
+  private static final long serialVersionUID = 7015362310836683912L;
 
   private static Logger LOGGER = LoggerFactory.getLogger(AbstractSource.class);
 

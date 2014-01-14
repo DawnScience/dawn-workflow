@@ -106,16 +106,21 @@ public class MessageSink extends AbstractDataMessageSink {
 
 	@Override
 	protected void sendCachedData(final List<DataMessageComponent> cache) throws ProcessingException {
+		String message;
 		
 		try {
 			if (cache==null)     return;
 			if (cache.isEmpty()) return;
 			
 			final DataMessageComponent despatch = MessageUtils.mergeAll(cache);
-			if (despatch.getScalar()==null || despatch.getScalar().isEmpty()) return;
 			
 			final String title   = ParameterUtils.getSubstituedValue(messageTitle, cache);
-			final String message = ParameterUtils.getSubstituedValue(messageParam, cache);
+			try {
+				message = ParameterUtils.getSubstituedValue(messageParam, cache);
+			}
+			catch (IllegalArgumentException illegalArgEx) {
+				message = messageParam.getExpression();
+			}
 			final int    type    = Integer.parseInt(messageType.getExpression());
 			
 			try {
