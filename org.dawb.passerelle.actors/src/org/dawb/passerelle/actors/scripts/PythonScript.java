@@ -20,6 +20,8 @@ import java.util.Map;
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.list.ListUtils;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
+import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
+import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.IVariable;
@@ -75,7 +77,6 @@ public class PythonScript extends AbstractScriptTransformer {
 	private List<String>                outputs;
 
 	private StringParameter             pythonCommand;
-	private StringParameter             pythonLink;
 	private StringParameter             pythonDebug;
 	/**
 	 * 
@@ -83,14 +84,18 @@ public class PythonScript extends AbstractScriptTransformer {
 	private static final long serialVersionUID = 5076235276519285512L;
 
 	@SuppressWarnings("serial")
-	public PythonScript(CompositeEntity container, String name) throws Exception {
-		super(container, name);
+	public PythonScript(CompositeEntity container, String name) throws Exception {	
 		
-		createNewParameter = new Parameter(this,"Create Separate Interpreter",new BooleanToken(false));
+		super(container, name);
+		setDescription(scriptFileParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The path to the script to run. The script is run globally and global values are read for the return values.");
+		
+		createNewParameter = new Parameter(this,"Create Separate Interpreter", new BooleanToken(false));
 		registerConfigurableParameter(createNewParameter);
+		setDescription(createNewParameter, Requirement.OPTIONAL, VariableHandling.NONE, "Used to set if a separate interpreter should be used for running each pipeline slug (each message coming through the pipeline).");
 		
 		passInputsParameter = new Parameter(this,"Pass Inputs On",new BooleanToken(true));
 		registerConfigurableParameter(passInputsParameter);
+		setDescription(passInputsParameter, Requirement.OPTIONAL, VariableHandling.NONE, "All inputs may be added to the message to pass on. Where inputs clash with outputs of the script, the outputs override.");
 
 		interpreterTypeParam = new StringParameter(this,"Interpreter Type") {
 
@@ -100,24 +105,18 @@ public class PythonScript extends AbstractScriptTransformer {
 		};
 		interpreterTypeParam.setExpression(INTERPRETER_CHOICES[1]);
 		registerConfigurableParameter(interpreterTypeParam);
+		setDescription(interpreterTypeParam, Requirement.ESSENTIAL, VariableHandling.NONE, "Either python or jython. Jython is experimental at the moment.");
 		
 		outputsParam = new StringParameter(this,"Dataset Outputs");
 		registerConfigurableParameter(outputsParam);
+		setDescription(outputsParam, Requirement.OPTIONAL, VariableHandling.NONE, "Please declare the names of the global variables which contain the data you would like to send down the pipeline here.");
 		
 		pythonCommand = new StringParameter(this, "Python Interpreter Command");
 		registerConfigurableParameter(pythonCommand);
 		pythonCommand.setExpression(PythonUtils.getPythonInterpreterCommand());
+		setDescription(pythonCommand, Requirement.ESSENTIAL, VariableHandling.NONE, "The system command to start the python to be used, for instance 'python' or '/user/bin/python'. This makes it hard to add external dependencies into your python, however you may use the python pydev actor to do this.");
 		
-		// Expert param for changing between Jep and RPC
-		pythonLink = new StringParameter(this,"Python Link") {
-
-			public String[] getChoices() {
-				return PYLINK_CHOICES;
-			}
-		};
-		registerExpertParameter(pythonLink);
-		pythonLink.setExpression(PYLINK_CHOICES[0]);
-		
+	
 		// Expert param for turning on debug python server
 		pythonDebug = new StringParameter(this,"Python Debug") {
 
@@ -127,7 +126,9 @@ public class PythonScript extends AbstractScriptTransformer {
 		};
 		registerExpertParameter(pythonDebug);
 		pythonDebug.setExpression(PYDEBUG_CHOICES[0]);
+		setDescription(pythonDebug, Requirement.OPTIONAL, VariableHandling.NONE, "When using debug, you may provide an rpc server on the port or start one automatically.");
 
+		setDescription("Run a python script by passing data over from the workflow. numpy arrays will be created for list data and scalar data will create python variables. The script is run with global variables representing the workflow variable values.");
     }
 
 

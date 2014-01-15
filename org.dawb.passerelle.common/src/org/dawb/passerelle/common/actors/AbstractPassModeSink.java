@@ -10,8 +10,12 @@
 package org.dawb.passerelle.common.actors;
 
 import java.util.ArrayList;
+import java.util.IdentityHashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
+import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariableProvider;
 import org.eclipse.core.resources.IProject;
@@ -231,8 +235,10 @@ public abstract class AbstractPassModeSink extends AbstractSink implements IVari
 	}
 
 	private String description;
+	private Map<Object, String>      descriptions;
+	private Map<Object, Requirement> requirements;
+	private Map<Object, VariableHandling> variableHandling;
 
-	
 	public String getDescription() {
 		return description;
 	}
@@ -241,4 +247,39 @@ public abstract class AbstractPassModeSink extends AbstractSink implements IVari
 		this.description = description;
 	}
 
+	public String getDescription(Object key) {
+		if (descriptions==null) return null;
+		return descriptions.get(key);
+	}
+	/**
+	 * 
+	 * @param description
+	 * @return
+	 */
+	public Requirement getRequirement(Object key) {
+		if (requirements==null || !requirements.containsKey(key)) return Requirement.OPTIONAL;
+		return requirements.get(key);
+	}
+	/**
+	 * 
+	 * @param key
+	 * @param description
+	 * @return
+	 */
+	public VariableHandling getVariableHandling(Object key) {
+		if (variableHandling==null || !variableHandling.containsKey(key)) return VariableHandling.NONE;
+		return variableHandling.get(key);
+	}
+
+	public void setDescription(Object key, Requirement requirement, VariableHandling var, String description) {
+		
+        if (descriptions==null) descriptions = new IdentityHashMap<Object, String>();
+		descriptions.put(key, description);
+		
+		if (requirements==null) requirements = new IdentityHashMap<Object, Requirement>();
+		requirements.put(key, requirement);
+		
+		if (variableHandling==null) variableHandling = new IdentityHashMap<Object, VariableHandling>();
+		variableHandling.put(key, var);
+	}
 }

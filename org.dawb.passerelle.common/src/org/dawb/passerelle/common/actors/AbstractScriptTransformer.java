@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dawb.common.util.io.IFileUtils;
+import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
+import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;

@@ -23,6 +23,8 @@ import org.dawb.common.python.PyDevUtils.AvailableInterpreter;
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.list.ListUtils;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
+import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
+import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.IVariable;
@@ -75,7 +77,9 @@ public class PythonPydevScript extends AbstractScriptTransformer {
 
 	public PythonPydevScript(CompositeEntity container, String name)
 			throws Exception {
+		
 		super(container, name);
+		setDescription(scriptFileParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The path to the script to run. The script must contain a run(..) method which takes the workflow variables required along with **kwargs and returns a dictionary of output values to pass on to the rest of the workflow.");
 
 		interpreterParam = new StringParameter(this, "Interpreter") {
 			private static final long serialVersionUID = -1140080995799869524L;
@@ -85,26 +89,34 @@ public class PythonPydevScript extends AbstractScriptTransformer {
 						PythonPydevScript.this.getProject());
 			}
 		};
+
 		interpreterParam.setExpression(PyDevUtils.getChoices(true,
 				this.getProject())[0]);
 		registerConfigurableParameter(interpreterParam);
+		setDescription(interpreterParam, Requirement.ESSENTIAL, VariableHandling.NONE, "The python pydev interpreter to use.");
 
 		passInputsParameter = new Parameter(this, "Pass Inputs On",
 				new BooleanToken(true));
 		registerConfigurableParameter(passInputsParameter);
+		setDescription(passInputsParameter, Requirement.OPTIONAL, VariableHandling.NONE, "All inputs may be added to the message to pass on. Where inputs clash with outputs of the script, the outputs override.");
+
 		outputsParam = new StringParameter(this, "Dataset Outputs");
 		registerConfigurableParameter(outputsParam);
+		setDescription(outputsParam, Requirement.OPTIONAL, VariableHandling.NONE, "Please declare the names of the variables contained in the dictionary returned from the run method that should enter the workflow here.");
 
-		createNewParameter = new Parameter(this, "Create Separate Interpreter",
-				new BooleanToken(false));
+		createNewParameter = new Parameter(this, "Create Separate Interpreter", new BooleanToken(true));
 		registerConfigurableParameter(createNewParameter);
+		setDescription(createNewParameter, Requirement.OPTIONAL, VariableHandling.NONE, "Used to set if a separate interpreter should be used for running each pipeline slug.");
 
 		debugParameter = new Parameter(
 				this,
 				"Run Script in Debug Mode (requires running PyDev Debug server)",
 				new BooleanToken(false));
 		registerConfigurableParameter(debugParameter);
+		setDescription(debugParameter, Requirement.OPTIONAL, VariableHandling.NONE, "Click on if you want to run the workflow in debug mode. You will also need to start the python debug server in the 'Debug' perpsective.");
 
+
+		setDescription("Run a python script using the pydev configuration for the project. You can also use pydev debug when the workflow is run. The python script must contain a run(...) method. The variables of each required workflow variable must be declared as arguments and terminated with '**kwargs'.");
 	}
 
 	@Override

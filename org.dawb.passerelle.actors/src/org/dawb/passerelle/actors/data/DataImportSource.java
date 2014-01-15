@@ -155,17 +155,21 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		
 		relativePathParam = new Parameter(this, "Relative Path", new BooleanToken(true));
 		registerConfigurableParameter(relativePathParam);
+		setDescription(relativePathParam, Requirement.ESSENTIAL, VariableHandling.NONE, "Tick to set wether you will provide a path to the data as absolute or relative to the workspace (recommended).");
 
 		folderParam = new Parameter(this, "Folder", new BooleanToken(isFolder));
 		folderParam.setVisibility(Settable.NONE);
 		
 		metaParam = new Parameter(this, "Include Metadata", new BooleanToken(false));
 		registerConfigurableParameter(metaParam);
+		setDescription(metaParam, Requirement.OPTIONAL, VariableHandling.NONE, "Tick to send any meta data that the loader service can extract into the pipeline data message.");
 		
 		filterParam  = new RegularExpressionParameter(this, "File Filter", true);
 		registerConfigurableParameter(filterParam);
+		setDescription(filterParam, Requirement.OPTIONAL, VariableHandling.EXPAND, "A comma separated list of filters of the form '*.<extension>'. Regular expressions are not supported.");
 
 		path = new ResourceParameter(this, "Path", "Data files", LoaderFactory.getSupportedExtensions().toArray(new String[0]));
+		setDescription(path, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The path to the data to read. May be an external file (full path to file) or a file in the workspace ('relative' file) or a folder which will iterate over all contained files and use the filter.");
 		try {
 			URI baseURI = new File(StringConvertor.convertPathDelimiters(EnvironmentUtils.getApplicationRootFolder())).toURI();
 			path.setBaseDirectory(baseURI);
@@ -186,6 +190,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			    return delegate.getChoppedNames();
 			}
 		}, SWT.MULTI);
+		setDescription(names, Requirement.OPTIONAL, VariableHandling.NONE, "A list of data names to pass on from the file. If not set, all the data will be read. Please set the path before setting the dataset names. If the path is an expand, use a temperary (but typical) file so that the name list can be determined in the builder.");
 
 		registerConfigurableParameter(names);
 		
@@ -204,13 +209,14 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				return ds!=null ? Arrays.asList(ds) : null;
 			}
 		});
+		setDescription(rename, Requirement.OPTIONAL, VariableHandling.NONE, "A map of dataset name to variable name. The variable name may be entered and for instance be a legal python variable name to make the use of python actors easy.");
 		
 		registerConfigurableParameter(rename);
 		
 		slicing = new SliceParameter(this, "Data Set Slice");
 		registerConfigurableParameter(slicing);
+		setDescription(slicing, Requirement.OPTIONAL, VariableHandling.NONE, "Slicing can only be done if one dataset is being exctracted from the data at a time. Set the '"+names.getDisplayName()+"' attribute first. You can use expands inside the slicing dialog.");
 
-		
 		dataType = new StringParameter(this,"Data Type") {
 			public String[] getChoices() {
 				return DATA_TYPES;
@@ -218,6 +224,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		};
 		dataType.setExpression(DATA_TYPES[0]);
 		registerConfigurableParameter(dataType);
+		setDescription(dataType, Requirement.ESSENTIAL, VariableHandling.NONE, "Either import the paths to the data files or the actual data from the data files.");
 	
 		sliceNameType = new StringParameter(this,"Slice Name Type") {
 			public String[] getChoices() {
@@ -226,12 +233,13 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		};
 		sliceNameType.setExpression(SLICE_TYPES[0]);
 		registerConfigurableParameter(sliceNameType);
+		setDescription(sliceNameType, Requirement.OPTIONAL, VariableHandling.NONE, "The slice name is either fixed the same at the data set name (or mapped value). Or can be unique for each slice. In the unique case, the name will be '<fixed_name>_slice_<index>', where index is the slice index.");
 
 		
 		delegate = new DataImportDelegate(path, names, relativePathParam, rename);
 
 		
-		setDescription("This source imports datasets using the loader service produced by Diamond Light Source. This loader service allows datasets in many formats to be imported and used in the workflow like numpy arrays. HDF5 files are supported, in this case you will need the path to the dataset in HDF5.");
+		setDescription("This source imports datasets using the loader service produced by Diamond Light Source. This loader service allows datasets in many formats to be imported and used in the workflow like numpy arrays. HDF5 files are supported, in this case you will need the path to the dataset in HDF5. When importing directories every file in the folder will be imported.");
 	}
 	
 	/**
