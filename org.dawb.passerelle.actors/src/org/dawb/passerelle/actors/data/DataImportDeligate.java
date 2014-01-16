@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.io.FileUtils;
+import org.dawb.hdf5.HierarchicalDataFactory;
+import org.dawb.hdf5.IHierarchicalDataFile;
 import org.dawb.passerelle.common.message.AbstractDatasetProvider;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.IVariable;
@@ -132,6 +134,7 @@ class DataImportDelegate {
 
 
 	private Collection<String>  cachedDatasets = null;	
+	private Collection<String>  cachedScalars  = null;	
 	private Map<String,int[]>   cachedShapes   = null;	
 	
     protected Collection<String> getAllDatasetsInFile() {
@@ -180,6 +183,36 @@ class DataImportDelegate {
 		}
 		return null;
 	}
+    
+    protected Collection<String> getScalarDataNamesInFile() {
+    	
+		if (cachedScalars==null && getSourcePath()!=null) {
+
+	    	IHierarchicalDataFile file = null;
+	    	try {
+	    		file = HierarchicalDataFactory.getReader(getSourcePath());
+	    		cachedScalars = file.getDatasetNames(IHierarchicalDataFile.SCALAR);
+	    		
+	    	}  catch (Exception e) {
+				logger.error("Cannot get scalar names from "+getSourcePath(), e);
+				cachedScalars = Collections.emptyList();
+			} finally {
+	    		if (file!=null) {
+	    			try {
+	    				file.close();
+	    			} catch (Exception ne) {
+	    				ne.printStackTrace();
+	    			}
+	    		}
+	    	}
+	    	 
+	    	cachedScalars = null;
+		} 
+		if (cachedScalars!=null&&!cachedScalars.isEmpty()) {
+			return cachedScalars;
+		}
+		return cachedScalars;
+    }
     
 	public Map<String,String> getChoppedNames() {
 		getAllDatasetsInFile();
@@ -244,6 +277,7 @@ class DataImportDelegate {
 
 	public void clear() {
 		cachedDatasets = null;
+		cachedScalars  = null;
 		cachedShapes   = null;
 	}
 
