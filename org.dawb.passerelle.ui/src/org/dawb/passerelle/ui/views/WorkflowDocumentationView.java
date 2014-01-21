@@ -100,7 +100,9 @@ public class WorkflowDocumentationView extends ViewPart implements ISelectionLis
 	}
 	
 	public void dispose() {
-		EclipseUtils.getPage().removeSelectionListener(this);
+		if (EclipseUtils.getPage()!=null) {
+			EclipseUtils.getPage().removeSelectionListener(this);
+		}
 	}
 
 	@Override
