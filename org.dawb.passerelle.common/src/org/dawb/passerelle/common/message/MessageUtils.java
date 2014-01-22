@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -398,19 +399,41 @@ public class MessageUtils {
 	 * @throws Exception 
 	 */
 	public static Map<String, String> getValues(final DataMessageComponent comp,
-			                                          Collection           vars,
+			                                          Collection<String>   vars,
 			                                    final NamedObj             actor) throws Exception {
 		
 		final Map<String,String> ret = new HashMap<String,String>(7);
-		if (vars==null) vars = comp!=null ? comp.getScalar().keySet() : Collections.EMPTY_SET;
+		
+		if (vars==null) {
+			if (comp!=null) {
+				vars = new HashSet<String>(comp.getList().keySet());
+				vars.addAll(comp.getScalar().keySet());
+			} else {
+				vars = Collections.emptySet();
+			}
+		}
+		
 		if (comp!=null) for (Object seq : vars) {
 			final String name = seq.toString();
+			
 			String value = comp.getScalar(name);
+			
 			if (value==null) {
 				final Object o = comp.getList(name);
-				if (o!=null && o.getClass().isArray()) value = ArrayUtil.toString(o);
+				if (o instanceof IDataset) {
+					IDataset iDataset = (IDataset) o;
+					if (iDataset.getSize() == 1) {
+						Double data = iDataset.getDouble(0);
+						if (data != null) {
+							value = data.toString();
+						}
+					}
+				} else {
+					if (o!=null && o.getClass().isArray()) value = ArrayUtil.toString(o);
+				}
 				if (value==null&&o!=null) value = o.toString();
 			}
+
 			if (value!=null) ret.put(name, value);
 		}
 		
@@ -424,7 +447,7 @@ public class MessageUtils {
 		
 		return ret;
 	}
-	
+
 	public static Map<String, String> getValues(final List<DataMessageComponent> cache,
 			                                    final NamedObj                   actor) throws Exception {
 
@@ -470,7 +493,7 @@ public class MessageUtils {
 		
 		return ret;
 	}
-	
+
 
 	public static DataMessageComponent copy(List<DataMessageComponent> cache) {
 		final DataMessageComponent ret = new DataMessageComponent();
