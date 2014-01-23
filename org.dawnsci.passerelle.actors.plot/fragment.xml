@@ -99,6 +99,13 @@
             id="org.dawb.passerelle.actors.dawn.function_to_dataset"
             name="FunctionToDataset">
       </actor>
+      <actor
+            class="org.dawb.passerelle.actors.dawn.PrepareFermiFittingFunctionsActor"
+            group="org.dawb.passerelle.actors.actorgroup.maths"
+            icon="icons/fx16x16.png"
+            id="org.dawb.passerelle.actors.dawn.fermifunctionsetup"
+            name="Fermi Function Setup">
+      </actor>
    </extension>
 
 </fragment>
