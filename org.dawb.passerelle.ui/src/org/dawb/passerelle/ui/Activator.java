@@ -1,8 +1,10 @@
 package org.dawb.passerelle.ui;
 
+import org.dawnsci.plotting.api.region.IRegionService;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
 
 /**
  * The activator class controls the plug-in life cycle
@@ -14,6 +16,8 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
+
+	private BundleContext context;
 	
 	/**
 	 * The constructor
@@ -27,6 +31,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
+		this.context = context;
 		plugin = this;
 	}
 
@@ -36,6 +41,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
+		this.context = null;
 		super.stop(context);
 	}
 
@@ -60,6 +66,19 @@ public class Activator extends AbstractUIPlugin {
 	}
 	public static ImageDescriptor getImageDescriptor(String plugin,String path) {
 		return imageDescriptorFromPlugin(plugin, path);
+	}
+
+	/**
+	 * Looks for OSGI service, used by ServiceManager
+	 * 
+	 * @param clazz
+	 * @return
+	 */
+	public static Object getService(Class<?> clazz) {
+		if (plugin.context==null) return null;
+		ServiceReference<?> ref = plugin.context.getServiceReference(clazz);
+		if (ref==null) return null;
+		return plugin.context.getService(ref);
 	}
 
 
