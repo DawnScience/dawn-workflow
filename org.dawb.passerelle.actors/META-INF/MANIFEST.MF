@@ -47,7 +47,7 @@ Import-Package: com.isencia.passerelle.actor.forkjoin,
  org.eclipse.gmf.runtime.common.core.util,
  org.python.core,
  org.python.util,
- org.slf4j,
+ org.slf4j;version="[1.7.5,1.7.6)",
  uk.ac.diamond.scisoft.analysis.rpc,
  uk.ac.diamond.scisoft.python
 Export-Package: org.dawb.passerelle.actors,
