@@ -17,6 +17,6 @@ Export-Package: org.dawnsci.passerelle.tools,
 Import-Package: javax.vecmath,
  org.eclipse.jface.preference,
  org.eclipse.ui.preferences,
- org.slf4j;version="[1.7.5,1.7.6)",
+ org.slf4j;version="[1.7.6,1.7.7)",
  ptolemy.actor;version="7.0.1",
  ptolemy.kernel.util;version="7.0.1"
