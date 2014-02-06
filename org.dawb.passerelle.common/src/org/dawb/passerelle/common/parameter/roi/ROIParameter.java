@@ -102,9 +102,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 		
 		if (getExpression()==null || "".equals(getExpression())) return new RectangularROI();
 
-		IROI roi = getROIFromValue(getExpression());
-		if (roi==null)  return new RectangularROI();
-		return roi;
+		return getROIFromValue(getExpression());
 	}
 
 	private IROI getROIFromValue(String expression) throws Exception {
