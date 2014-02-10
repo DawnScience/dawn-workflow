@@ -57,8 +57,10 @@ class WorkflowServiceImpl implements IWorkflowService {
 		
 		// Start an agent which the workflow can rely on to do user
 		// interface and other actions.
-		this.agent = new RemoteWorkbenchAgent(prov);
-		agent.start();
+		if (prov.getRemoteWorkbench()!=null) { // If null there is no workbench or the default one should be used.
+			this.agent = new RemoteWorkbenchAgent(prov);
+			agent.start();
+		}
 		
 		final String line = createExecutionLine(prov);
 		logger.debug("Execution line: "+line);
@@ -66,7 +68,7 @@ class WorkflowServiceImpl implements IWorkflowService {
 		if (isLinuxOS()) {
 			command = new String[]{"/bin/sh", "-c", line};
 		} else {
-			command = new String[]{line};
+			command = new String[]{"cmd", "/C", line};
 		}
 		 
 		final Map<String,String> env = System.getenv();
@@ -93,6 +95,15 @@ class WorkflowServiceImpl implements IWorkflowService {
 		return ret;
 	}
 
+	/*
+	 * Example:
+	 * 
+	 * C:\Users\fcp94556\Desktop\DawnMaster/dawn.exe -noSplash 
+	 * -application com.isencia.passerelle.workbench.model.launch 
+	 * -data C:/Work/runtime-uk.ac.diamond.dawn.product -consolelog -vmargs 
+	 * -Dorg.dawb.workbench.jmx.headless=true -Dcom.isencia.jmx.service.terminate=true 
+	 * -Dmodel=C:/Work/runtime-uk.ac.diamond.dawn.product/trace/trace_workflow.moml
+	 */
 	private String createExecutionLine(IRemoteServiceProvider prov) {
 		
 		final StringBuilder buf = new StringBuilder();
@@ -101,8 +112,8 @@ class WorkflowServiceImpl implements IWorkflowService {
 		final String install   = prov.getInstallationPath();
 		final String workspace = prov.getWorkspacePath();
 		final String model     = prov.getModelPath();
-		final int    port      = agent.getCurrentPort();
-		final boolean isServiceTerminate = prov.getServiceTerminate();
+		final int port         = agent!=null ? agent.getCurrentPort() : -1;
+		final boolean isServiceTerminate  = prov.getServiceTerminate();
 		final boolean isTangoSpecMockMode = prov.getTangoSpecMockMode();
 		
 		buf.append(install);
@@ -114,10 +125,11 @@ class WorkflowServiceImpl implements IWorkflowService {
 		buf.append(model);
 		buf.append(" -Dcom.isencia.jmx.service.workspace=");
 		buf.append(workspace);
-		buf.append(" -Dcom.isencia.jmx.service.port=");
-		buf.append(port);
-		if (isServiceTerminate)
-			buf.append(" -Dcom.isencia.jmx.service.terminate=true");
+		if (port>0) {
+			buf.append(" -Dcom.isencia.jmx.service.port=");
+			buf.append(port);
+		}
+		if (isServiceTerminate) buf.append(" -Dcom.isencia.jmx.service.terminate=true");
 		if (isTangoSpecMockMode) 
 			buf.append(" -Dorg.dawb.test.session=true");
 		else
