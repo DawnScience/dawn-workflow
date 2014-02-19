@@ -80,7 +80,8 @@ public class ImageARPESRemapBatchTool extends AbstractBatchTool {
 		AbstractDataset dataRegion = map.value(correctedData).get(0);
 		
 		// prepare the results
-		AbstractDataset remappedRegion = InterpolatorUtils.remapAxis(dataRegion, 0, kParallel, kParaAxis);
+		//AbstractDataset remappedRegion = InterpolatorUtils.remapAxis(dataRegion, 0, kParallel, kParaAxis);
+		AbstractDataset remappedRegion = dataRegion;
 		
 		// We set the same trace data and regions as would
 		// be there if the fitting had run in the ui.
