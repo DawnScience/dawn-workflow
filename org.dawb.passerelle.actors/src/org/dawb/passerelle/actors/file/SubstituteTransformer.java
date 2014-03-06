@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.List;
 
-import org.dawb.common.util.SubstituteUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.IFileUtils;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
@@ -26,6 +25,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.SubstitutionParticipant;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
+import org.dawb.passerelle.common.utils.SubstituteUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;

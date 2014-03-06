@@ -14,13 +14,13 @@ import java.util.Map;
 
 import javax.management.MBeanServerConnection;
 
-import org.dawb.common.util.SubstituteUtils;
 import org.dawb.common.util.io.Grep;
 import org.dawb.passerelle.common.actors.AbstractDataMessageSink;
 import org.dawb.passerelle.common.actors.ActorUtils;
 import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
+import org.dawb.passerelle.common.utils.SubstituteUtils;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;

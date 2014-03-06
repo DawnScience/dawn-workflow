@@ -15,11 +15,11 @@ import java.util.Map;
 
 import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.ui.util.GridUtils;
-import org.dawb.common.util.SubstituteUtils;
 import org.dawb.passerelle.common.message.ISubstitutionEditor;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.SubstitutionParticipant;
 import org.dawb.passerelle.common.utils.ModelUtils;
+import org.dawb.passerelle.common.utils.SubstituteUtils;
 import org.dawb.passerelle.ui.Activator;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
