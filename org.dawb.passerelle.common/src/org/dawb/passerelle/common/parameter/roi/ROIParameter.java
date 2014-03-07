@@ -17,8 +17,6 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.persistence.bean.roi.ROIBean;
-import uk.ac.diamond.scisoft.analysis.persistence.bean.roi.ROIBeanConverter;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
 import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
 
@@ -108,8 +106,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	private IROI getROIFromValue(String expression) throws Exception {
 		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
 		try {
-			ROIBean rbean = (ROIBean)service.unmarshal(expression);
-			return ROIBeanConverter.getROI(rbean);
+			return (IROI)service.unmarshal(expression);
 		} catch (Exception e) {
 			// if not a JSon value try to retrieve the value from a base64 encoded value
 			String exception = e.getClass().toString();
@@ -140,11 +137,9 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	private String getValueFromROI(final IROI roi) throws IOException {
 		if (roi==null)
 			return "";
-		// Convert IROI to ROIBean
-		ROIBean rbean = ROIBeanConverter.getROIBean(roi.getName(), roi);
 		try {
 			IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
-			return service.marshal(rbean);
+			return service.marshal(roi);
 		} catch (Exception e) {
 			logger.error("Error marshalling IROI to JSON:"+ e);
 			return "";
