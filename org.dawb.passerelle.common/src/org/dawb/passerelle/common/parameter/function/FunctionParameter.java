@@ -30,8 +30,6 @@ import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.Fermi;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.IFunction;
-import uk.ac.diamond.scisoft.analysis.persistence.bean.function.FunctionBean;
-import uk.ac.diamond.scisoft.analysis.persistence.bean.function.FunctionBeanConverter;
 
 import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
 
@@ -118,8 +116,8 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 	private AFunction getFunctionFromValue(String expression) throws Exception {
 		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
 		try {
-			FunctionBean fbean = (FunctionBean) service.unmarshal(expression);
-			return (AFunction) FunctionBeanConverter.functionBeanToIFunction(fbean);
+			//unmarshal json to function
+			return (AFunction) service.unmarshal(expression);
 		} catch (Exception e) {
 			// if not a JSon value try to retrieve the value from a base64 encoded value
 			String exception = e.getClass().toString();
@@ -150,13 +148,11 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 	private String getValueFromFunction(final IFunction function) throws IOException {
 		if (function == null)
 			return "";
-		// Convert IFunction to FunctionBean
-		FunctionBean fbean = FunctionBeanConverter.iFunctionToFunctionBean(function.getName(), function);
 		try {
 			IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
-			return service.marshal(fbean);
+			return service.marshal(function);
 		} catch (Exception e) {
-			logger.error("Error marshalling to IFunction to JSON:"+ e);
+			logger.error("Error marshalling IFunction to JSON: "+ e);
 			return "";
 		}
 	}
