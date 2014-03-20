@@ -59,7 +59,7 @@ public class Expression extends AbstractDataMessageTransformer {
 		try {
 			this.expressionService = (IExpressionService)ServiceManager.getService(IExpressionService.class);
 		} catch (Exception e) {
-			logger.error("Cannot get expression service - required for queary search in ISPyB client!", e);
+			logger.error("Cannot get expression service", e);
 		}
 	}
 
