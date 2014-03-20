@@ -155,14 +155,9 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 		final String boxTypeROI = boxROITypeParam.getExpression();
 //		final List<IDataset>  data = MessageUtils.getDatasets(cache);
 		final Map<String, Serializable>  data = MessageUtils.getList(cache);
-		final DataMessageComponent mc = new DataMessageComponent();
+		
+		final DataMessageComponent mc = MessageUtils.copy(cache);
 
-		//add datasets to mc
-		Set<String> dataKeys = data.keySet();
-		for (String key : dataKeys) {
-			AbstractDataset myData = ((AbstractDataset)data.get(key));
-			mc.addList(myData.getName(), myData);
-		}
 		try {
 			AbstractDataset aData = ((AbstractDataset)data.get(dataName));
 			aData.setName(dataName);
