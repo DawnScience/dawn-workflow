@@ -75,6 +75,7 @@ public class Expression extends AbstractDataMessageTransformer {
 		
 		// Get the Expression Engine
 		final IExpressionEngine engine = expressionService.getExpressionEngine();
+		engine.getFunctions().put("math", Math.class);
 		final ExpressionContainer cont = (ExpressionContainer)expressions.getBeanFromValue(ExpressionContainer.class);
 
 		try {
@@ -103,6 +104,7 @@ public class Expression extends AbstractDataMessageTransformer {
 				} else {
 					ret.putScalar(eb.getVariableName(), result.toString());
 				}
+				engine.addLoadedVariable(eb.getVariableName(), result);
 			}
 			
 			return ret;
