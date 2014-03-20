@@ -269,6 +269,9 @@ AbstractDataMessageTransformer {
 			anglesAxisDS = DoubleDataset.arange(shape[Math.abs(fitDim-1)], 0, -1);
 		}
 
+		anglesAxisDS.setName("Angles");
+		result.addList(anglesAxis, anglesAxisDS);
+		
 		ArrayList<Slice> slices = new ArrayList<Slice>();
 		for (int i = 0; i < shape.length; i++) {
 			if (i == fitDim) {
@@ -376,7 +379,7 @@ AbstractDataMessageTransformer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 		result.addList("fit_image", functionsDS);
 		result.addList("fit_residuals", residualDS);
 		for (int i = 0; i < fitFunction.getNoOfParameters(); i++) {

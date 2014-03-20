@@ -62,10 +62,7 @@ public class PrepareFermiFittingFunctionsActor extends
 		final Map<String, Serializable> data = MessageUtils.getList(cache);
 
 		// prepare the output message
-		DataMessageComponent result = new DataMessageComponent();
-		for (DataMessageComponent dataMessageComponent : cache) {
-			result.add(dataMessageComponent);
-		}
+		DataMessageComponent result = MessageUtils.copy(cache);
 
 		// get the required datasets
 		String dataset = datasetName.getExpression();
@@ -123,7 +120,15 @@ public class PrepareFermiFittingFunctionsActor extends
 		fg.getParameter(5).setUpperLimit(0.1);
 		
 		
+		
 		result.addFunction("fermi", fg);
+
+		// Update the names of the axis so that plotting works more nicely later on
+		xAxisDS.setName("Energy");
+		dataDS.setName("Intensity");
+		result.addList(dataset, dataDS);
+		result.addList(xAxis, xAxisDS);
+		
 		return result;
 	}
 
