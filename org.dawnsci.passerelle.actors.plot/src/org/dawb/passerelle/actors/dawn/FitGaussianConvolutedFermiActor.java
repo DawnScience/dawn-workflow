@@ -61,6 +61,8 @@ AbstractDataMessageTransformer {
 	// TODO can be removed
 	public StringParameter quickConvolutionWidth;
 
+	private AFunction lastFunction;
+
 	public FitGaussianConvolutedFermiActor(CompositeEntity container,
 			String name) throws NameDuplicationException,
 			IllegalActionException {
@@ -123,10 +125,22 @@ AbstractDataMessageTransformer {
 
 		//FermiGauss initialFit = fitFermiNoFWHM(xAxis, values, new FermiGauss(fitFunction.getParameters()));
 		
-		FermiGauss fittedFunction = new FermiGauss(fitFunction.getParameters()); // "mu", "temperature", "BG_slope", "FE_step_height", "Constant", "FWHM"
+		FermiGauss fittedFunction = null;
+		if (lastFunction != null) { 
+			fittedFunction = new FermiGauss(lastFunction.getParameters()); // "mu", "temperature", "BG_slope", "FE_step_height", "Constant", "FWHM"
+		} else {
+			fittedFunction = new FermiGauss(fitFunction.getParameters()); // "mu", "temperature", "BG_slope", "FE_step_height", "Constant", "FWHM"
+		}
+		double lowerLimitForFWHM = fittedFunction.getParameter(5).getLowerLimit();
+		fittedFunction.getParameter(5).setLowerLimit(0.0);
 		fittedFunction.getParameter(5).setValue(0.0);
-		fittedFunction.getParameter(5).setFixed(true);
+		fittedFunction.getParameter(0).setFixed(false);
 		fittedFunction.getParameter(1).setFixed(false);
+		fittedFunction.getParameter(2).setFixed(false);
+		fittedFunction.getParameter(3).setFixed(false);
+		fittedFunction.getParameter(4).setFixed(false);
+		fittedFunction.getParameter(5).setFixed(true);
+
 		
 		// fit with a fixed fwhm letting the temperature vary
 		try {			
@@ -146,7 +160,7 @@ AbstractDataMessageTransformer {
 				
 				Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);
 			} catch (Exception e) {
-				plotFunction(fittedFunction, xAxis, values);
+				//plotFunction(fittedFunction, xAxis, values);
 				System.out.println(e);
 			}
 			
@@ -156,20 +170,23 @@ AbstractDataMessageTransformer {
 			logger.debug("Fitting Failed");
 		}
 		
-		plotFunction(fittedFunction, xAxis, values);
+		//plotFunction(fittedFunction, xAxis, values);
 		
-		
+		// now reset the minimum value for the FWHM
 		fittedFunction.approximateFWHM(temperature);
 		
 		// return if that is all we need to do
 		if (fitConvolutionValue.contains("Off")) {
 			plotFunction(fittedFunction, xAxis, values);
+			lastFunction = fittedFunction;
 			return fittedFunction;
 		}
 
-		plotFunction(fittedFunction, xAxis, values);
+		//plotFunction(fittedFunction, xAxis, values);
 		
 		// Now fit the system quickly using several assumptions
+
+		fittedFunction.getParameter(5).setLowerLimit(lowerLimitForFWHM);
 		fittedFunction.getParameters()[0].setFixed(false);
 		fittedFunction.getParameters()[1].setFixed(true);
 		fittedFunction.getParameters()[2].setFixed(true);
@@ -182,13 +199,14 @@ AbstractDataMessageTransformer {
 			Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);
 			
 		} catch (Exception e) {
-			plotFunction(fittedFunction, xAxis, values);
+			//plotFunction(fittedFunction, xAxis, values);
 			System.out.println(e);
 		}
 		
 		// if this is all that is required return the new fitted value
 		if(fitConvolutionValue.contains("Quick")) {
 			plotFunction(fittedFunction, xAxis, values);
+			lastFunction = fittedFunction;
 			return fittedFunction;
 		}
 
@@ -202,11 +220,12 @@ AbstractDataMessageTransformer {
 		try {
 			Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);			
 		} catch (Exception e) {
-			plotFunction(fittedFunction, xAxis, values);
+			//plotFunction(fittedFunction, xAxis, values);
 			System.out.println(e);
 		}
 
 		plotFunction(fittedFunction, xAxis, values);
+		lastFunction = fittedFunction;
 		return fittedFunction;
 	}
 
