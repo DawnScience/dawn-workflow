@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
@@ -28,6 +27,7 @@ import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.FermiGauss;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 public class PrepareFermiFittingFunctionsActor extends
 		AbstractDataMessageTransformer {

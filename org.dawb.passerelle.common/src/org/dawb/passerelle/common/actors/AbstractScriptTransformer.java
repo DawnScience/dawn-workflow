@@ -17,7 +17,6 @@ import java.util.List;
 import org.dawb.common.util.io.IFileUtils;
 import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
 import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
@@ -37,6 +36,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.Settable;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.actor.ProcessingException;

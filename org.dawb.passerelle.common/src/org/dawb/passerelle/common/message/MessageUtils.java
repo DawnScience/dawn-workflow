@@ -21,7 +21,6 @@ import java.util.Map;
 
 import org.dawb.common.util.ExpressionUtils;
 import org.dawb.passerelle.common.DatasetConstants;
-import org.dawb.passerelle.common.message.DataMessageComponent.VALUE_TYPE;
 import org.eclipse.core.resources.IProject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +31,8 @@ import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.MetaDataAdapter;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent.VALUE_TYPE;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
 import com.isencia.passerelle.message.ManagedMessage;

@@ -20,7 +20,6 @@ import org.dawb.passerelle.actors.flow.ExpressionBean;
 import org.dawb.passerelle.actors.flow.ExpressionContainer;
 import org.dawb.passerelle.actors.flow.ExpressionParameter;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,7 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 

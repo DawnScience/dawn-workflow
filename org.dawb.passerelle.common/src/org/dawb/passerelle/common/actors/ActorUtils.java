@@ -15,7 +15,6 @@ import javax.management.MBeanServerConnection;
 
 import org.dawb.common.services.IClassLoaderService;
 import org.dawb.passerelle.common.Activator;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserDebugBean;
@@ -29,6 +28,7 @@ import ptolemy.data.BooleanToken;
 import ptolemy.data.Token;
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.util.Attribute;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 public class ActorUtils {
 

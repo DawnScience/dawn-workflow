@@ -16,7 +16,6 @@ import java.util.Map;
 import org.apache.commons.digester.substitution.MultiVariableExpander;
 import org.apache.commons.digester.substitution.VariableSubstitutor;
 import org.dawb.common.util.io.Grep;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.utils.SubstituteUtils;
 import org.eclipse.core.runtime.CoreException;
@@ -27,6 +26,7 @@ import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.util.NamedObj;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 public class ParameterUtils {
 

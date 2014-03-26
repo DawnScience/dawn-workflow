@@ -17,7 +17,6 @@ import javax.management.MBeanServerConnection;
 import org.dawb.common.util.io.Grep;
 import org.dawb.passerelle.common.actors.AbstractDataMessageSink;
 import org.dawb.passerelle.common.actors.ActorUtils;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawb.passerelle.common.utils.SubstituteUtils;
@@ -32,6 +31,7 @@ import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 

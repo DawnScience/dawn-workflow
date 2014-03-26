@@ -21,7 +21,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
@@ -43,6 +42,7 @@ import uk.ac.diamond.scisoft.analysis.fitting.Fitter;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.FermiGauss;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.IParameter;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 public class FitGaussianConvolutedFermiActor extends
 AbstractDataMessageTransformer {

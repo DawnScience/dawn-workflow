@@ -19,7 +19,6 @@ import javax.management.MBeanServerConnection;
 import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
 import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
 import org.dawb.passerelle.common.message.AbstractDatasetProvider;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.IVariableProvider;
@@ -43,6 +42,7 @@ import ptolemy.kernel.util.NamedObj;
 import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.v5.Actor;

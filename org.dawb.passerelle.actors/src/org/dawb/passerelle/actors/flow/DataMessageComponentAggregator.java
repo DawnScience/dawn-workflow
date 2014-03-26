@@ -3,8 +3,9 @@ package org.dawb.passerelle.actors.flow;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
+
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.forkjoin.AggregationStrategy;
 import com.isencia.passerelle.core.ErrorCode;
