@@ -80,7 +80,7 @@ public class PolySmoothActor extends AbstractDataMessageTransformer {
 		try {
 			smoothed = ApachePolynomial.getPolynomialSmoothed(xAxisDS, dataDS, windowSize, polyOrder);
 		} catch (Exception e) {
-			throw new DataMessageException("FAiled to get smoothed polynomial",null,e);
+			throw new DataMessageException("Failed to get smoothed polynomial",null,e);
 		}
 		smoothed.setName(dataset+"_smoothed");
 		
