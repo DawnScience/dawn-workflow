@@ -20,12 +20,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.commons.math3.analysis.MultivariateFunction;
-import org.apache.commons.math3.optimization.GoalType;
-import org.apache.commons.math3.optimization.PointValuePair;
-import org.apache.commons.math3.optimization.direct.CMAESOptimizer;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
@@ -43,12 +38,12 @@ import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IndexIterator;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.dataset.Slice;
+import uk.ac.diamond.scisoft.analysis.fitting.Fitter;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.FermiGauss;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.IParameter;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
-@SuppressWarnings("deprecation")
-//TODO there are lots of things in apache commons maths which are depricated
 public class FitGaussianConvolutedFermiActor extends
 AbstractDataMessageTransformer {
 
@@ -62,8 +57,11 @@ AbstractDataMessageTransformer {
 	public StringParameter fitDirection;
 	public StringParameter fitConvolution;
 	public StringParameter updatePlotName;
+	
 	// TODO can be removed
 	public StringParameter quickConvolutionWidth;
+
+	private AFunction lastFunction;
 
 	public FitGaussianConvolutedFermiActor(CompositeEntity container,
 			String name) throws NameDuplicationException,
@@ -94,169 +92,6 @@ AbstractDataMessageTransformer {
 	}
 
 
-	private FermiGauss fitFermiNoFWHM(final AbstractDataset xAxis, final AbstractDataset observed, final FermiGauss fitFunction) {
-
-		MultivariateFunction f = new MultivariateFunction() {
-			@Override
-			public double value(double[] p) {
-				double p0 = deNormalizeParameter(p[0],
-						fitFunction.getParameter(0));
-				double p1 = deNormalizeParameter(p[1],
-						fitFunction.getParameter(1));
-				double p2 = deNormalizeParameter(p[2],
-						fitFunction.getParameter(2));
-				double p3 = deNormalizeParameter(p[3],
-						fitFunction.getParameter(3));
-				double p4 = deNormalizeParameter(p[4],
-						fitFunction.getParameter(4));
-
-				FermiGauss fg = new FermiGauss(p0, p1, p2, p3, p4, 0.0);
-
-				AbstractDataset fermiDS = fg.getFermiDS(xAxis);
-
-				AbstractDataset residual = Maths.subtract(fermiDS, observed);
-				residual.ipower(2);
-
-				return (Double) residual.sum();
-			}
-		};
-
-		// perform the optimisation
-		double[] start = new double[] {
-				normalizeParameter(fitFunction.getParameterValue(0),fitFunction.getParameter(0)),
-				normalizeParameter(fitFunction.getParameterValue(1),fitFunction.getParameter(1)),
-				normalizeParameter(fitFunction.getParameterValue(2),fitFunction.getParameter(2)),
-				normalizeParameter(fitFunction.getParameterValue(3),fitFunction.getParameter(3)),
-				normalizeParameter(fitFunction.getParameterValue(4),fitFunction.getParameter(4)) };
-
-		CMAESOptimizer cOpt = new CMAESOptimizer(5);
-		PointValuePair result = cOpt
-				.optimize(2000, f, GoalType.MINIMIZE, start);
-
-		// set the input functions parameters to be the result before finishing.
-		double[] r = result.getPoint();
-
-		double r0 = deNormalizeParameter(r[0], fitFunction.getParameter(0));
-		double r1 = deNormalizeParameter(r[1], fitFunction.getParameter(1));
-		double r2 = deNormalizeParameter(r[2], fitFunction.getParameter(2));
-		double r3 = deNormalizeParameter(r[3], fitFunction.getParameter(3));
-		double r4 = deNormalizeParameter(r[4], fitFunction.getParameter(4));
-		double r5 = 0.0;
-
-		FermiGauss returnFunction = new FermiGauss(fitFunction.getParameters());
-		returnFunction.setParameterValues(r0,r1,r2,r3,r4,r5);
-		return returnFunction;
-	}
-
-
-	private FermiGauss fitFermiOnlyFWHM(final AbstractDataset xAxis, final AbstractDataset observed, final FermiGauss fitFunction) {
-
-		final double f0 = fitFunction.getParameterValue(0);
-		final double f1 = fitFunction.getParameterValue(1);
-		final double f2 = fitFunction.getParameterValue(2);
-		final double f3 = fitFunction.getParameterValue(3);
-		final double f4 = fitFunction.getParameterValue(4);
-
-		MultivariateFunction f = new MultivariateFunction() {
-
-			@Override
-			public double value(double[] p) {
-
-				double p0 = deNormalizeParameter(p[0],
-						fitFunction.getParameter(5));
-
-				FermiGauss fg = new FermiGauss(f0, f1, f2, f3, f4, p0);
-
-				return fg.residual(true, observed, null, new IDataset[] {xAxis});
-//				AbstractDataset fermiDS = fg.calculateValues(xAxis);
-//
-//				AbstractDataset residual = Maths.subtract(fermiDS,
-//						observed);
-//
-//				residual.ipower(2);
-//
-//				return (Double) residual.sum();
-			}
-		};
-
-		// perform the optimisation
-		double[] start = new double[] { 
-				normalizeParameter(fitFunction.getParameterValue(5),fitFunction.getParameter(5)) };
-
-		CMAESOptimizer cOpt = new CMAESOptimizer(5);
-		PointValuePair result = cOpt.optimize(1000, f, GoalType.MINIMIZE, start);
-
-		// set the input functions parameters to be the result before
-		// finishing.
-		double[] r = result.getPoint();
-
-		double r5 = deNormalizeParameter(Math.abs(r[0]),
-				fitFunction.getParameter(5));
-
-		FermiGauss returnFunction = new FermiGauss(fitFunction.getParameters());
-		returnFunction.setParameterValues(f0,f1,f2,f3,f4,r5);
-		return returnFunction;
-	}
-
-	private FermiGauss fitFermiFixedTemp(final AbstractDataset xAxis, final AbstractDataset observed, final FermiGauss fitFunction) {
-
-		final double f1 = fitFunction.getParameterValue(1);
-
-		MultivariateFunction f = new MultivariateFunction() {
-			@Override
-			public double value(double[] p) {
-				double p0 = deNormalizeParameter(p[0],
-						fitFunction.getParameter(0));
-				// Missing the temperature (parameter 1)  as this is fixed
-				double p2 = deNormalizeParameter(p[1],
-						fitFunction.getParameter(2));
-				double p3 = deNormalizeParameter(p[2],
-						fitFunction.getParameter(3));
-				double p4 = deNormalizeParameter(p[3],
-						fitFunction.getParameter(4));
-				double p5 = deNormalizeParameter(p[4],
-						fitFunction.getParameter(5));
-
-				FermiGauss fg = new FermiGauss(p0, f1, p2, p3, p4, p5);
-
-				AbstractDataset fermiDS = fg.calculateValues(xAxis);
-
-				AbstractDataset residual = Maths.subtract(fermiDS, observed);
-				residual.ipower(2);
-
-				return (Double) residual.sum();
-			}
-		};
-
-		// perform the optimisation
-		double[] start = new double[] {
-				normalizeParameter(fitFunction.getParameterValue(0),fitFunction.getParameter(0)),
-				// Missing the temperature (parameter 1)  as this is fixed
-				normalizeParameter(fitFunction.getParameterValue(2),fitFunction.getParameter(2)),
-				normalizeParameter(fitFunction.getParameterValue(3),fitFunction.getParameter(3)),
-				normalizeParameter(fitFunction.getParameterValue(4),fitFunction.getParameter(4)),
-				normalizeParameter(fitFunction.getParameterValue(5),fitFunction.getParameter(5)) };
-
-		CMAESOptimizer cOpt = new CMAESOptimizer(5);
-		PointValuePair result = cOpt
-				.optimize(2000, f, GoalType.MINIMIZE, start);
-
-		// set the input functions parameters to be the result before finishing.
-		double[] r = result.getPoint();
-
-		double r0 = deNormalizeParameter(r[0], fitFunction.getParameter(0));
-		// Missing the temperature (parameter 1)  as this is fixed
-		double r2 = deNormalizeParameter(r[1], fitFunction.getParameter(2));
-		double r3 = deNormalizeParameter(r[2], fitFunction.getParameter(3));
-		double r4 = deNormalizeParameter(r[3], fitFunction.getParameter(4));
-		double r5 = deNormalizeParameter(r[4], fitFunction.getParameter(5));;
-
-		FermiGauss returnFunction = new FermiGauss(fitFunction.getParameters());
-		returnFunction.setParameterValues(r0,f1,r2,r3,r4,r5);
-		return returnFunction;
-
-	}
-
 	private void plotFunction(AFunction fitFunction, IDataset xAxis, IDataset values) {
 		String plotName = updatePlotName.getExpression();
 		if (!plotName.isEmpty()) {
@@ -272,7 +107,7 @@ AbstractDataMessageTransformer {
 	}
 	
 	private AFunction FitGaussianConvFermi(final AbstractDataset xAxis,
-			final AbstractDataset values, final AFunction fitFunction) {
+			final AbstractDataset values, final AFunction fitFunction) throws Exception {
 
 		if (!(fitFunction instanceof FermiGauss)) {
 			throw new IllegalArgumentException(
@@ -283,54 +118,115 @@ AbstractDataMessageTransformer {
 		try {
 			fitConvolutionValue = ParameterUtils.getSubstituedValue(fitConvolution, dataMsgComp);
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 
 		final double temperature = fitFunction.getParameterValue(1);
 
-		FermiGauss initialFit = fitFermiNoFWHM(xAxis, values, new FermiGauss(fitFunction.getParameters()));
+		//FermiGauss initialFit = fitFermiNoFWHM(xAxis, values, new FermiGauss(fitFunction.getParameters()));
+		
+		FermiGauss fittedFunction = null;
+		if (lastFunction != null) { 
+			fittedFunction = new FermiGauss(lastFunction.getParameters()); // "mu", "temperature", "BG_slope", "FE_step_height", "Constant", "FWHM"
+		} else {
+			fittedFunction = new FermiGauss(fitFunction.getParameters()); // "mu", "temperature", "BG_slope", "FE_step_height", "Constant", "FWHM"
+		}
+		double lowerLimitForFWHM = fittedFunction.getParameter(5).getLowerLimit();
+		fittedFunction.getParameter(5).setLowerLimit(0.0);
+		fittedFunction.getParameter(5).setValue(0.0);
+		fittedFunction.getParameter(0).setFixed(false);
+		fittedFunction.getParameter(1).setFixed(false);
+		fittedFunction.getParameter(2).setFixed(false);
+		fittedFunction.getParameter(3).setFixed(false);
+		fittedFunction.getParameter(4).setFixed(false);
+		fittedFunction.getParameter(5).setFixed(true);
 
+		
+		// fit with a fixed fwhm letting the temperature vary
+		try {			
+			Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);
+		} catch (Exception e) {
+			plotFunction(fittedFunction, xAxis, values);
+			System.out.println(e);
+		}
+
+		
 		int count = 0;
-		while (functionsSimilarIgnoreFWHM(initialFit,(FermiGauss)fitFunction, 0.0) && count < 5) {
+		while (functionsSimilarIgnoreFWHM(fittedFunction,(FermiGauss)fitFunction, 0.0) && count < 5) {
 			logger.debug("Function not fitted, trying again :" + count);
 			count++;
 			
-			initialFit = fitFermiNoFWHM(xAxis, values, new FermiGauss(fitFunction.getParameters()));
+			try {
+				
+				Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);
+			} catch (Exception e) {
+				//plotFunction(fittedFunction, xAxis, values);
+				System.out.println(e);
+			}
+			
 		}
 		
 		if (count >= 5) {
 			logger.debug("Fitting Failed");
 		}
 		
+		//plotFunction(fittedFunction, xAxis, values);
+		
+		// now reset the minimum value for the FWHM
+		fittedFunction.approximateFWHM(temperature);
 		
 		// return if that is all we need to do
 		if (fitConvolutionValue.contains("Off")) {
-			plotFunction(initialFit, xAxis, values);
-			return initialFit;
+			plotFunction(fittedFunction, xAxis, values);
+			lastFunction = fittedFunction;
+			return fittedFunction;
 		}
 
+		//plotFunction(fittedFunction, xAxis, values);
+		
 		// Now fit the system quickly using several assumptions
 
-		final AbstractDataset trimmedXAxis = xAxis;
-		final AbstractDataset trimmedValues = values;
+		fittedFunction.getParameter(5).setLowerLimit(lowerLimitForFWHM);
+		fittedFunction.getParameters()[0].setFixed(false);
+		fittedFunction.getParameters()[1].setFixed(true);
+		fittedFunction.getParameters()[2].setFixed(true);
+		fittedFunction.getParameters()[3].setFixed(true);
+		fittedFunction.getParameters()[4].setFixed(true);
+		fittedFunction.getParameters()[5].setFixed(false);
 		
-		// set up the temperature and approximate FWHM correctly
-		//initialFit.getParameter(1).setValue(temperature);
-		//initialFit.getParameter(5).setValue(approximateFWHM);
-		FermiGauss fwhmQuickFit = fitFermiOnlyFWHM(trimmedXAxis, trimmedValues, initialFit);
-
+		try {
+			
+			Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);
+			
+		} catch (Exception e) {
+			//plotFunction(fittedFunction, xAxis, values);
+			System.out.println(e);
+		}
+		
 		// if this is all that is required return the new fitted value
 		if(fitConvolutionValue.contains("Quick")) {
-			plotFunction(fwhmQuickFit, trimmedXAxis, trimmedValues);
-			return fwhmQuickFit;
+			plotFunction(fittedFunction, xAxis, values);
+			lastFunction = fittedFunction;
+			return fittedFunction;
 		}
 
 		// Now fit the system properly with the Full function
-		FermiGauss fullFit = fitFermiFixedTemp(xAxis, values, fwhmQuickFit);
+		fittedFunction.getParameters()[0].setFixed(false);
+		fittedFunction.getParameters()[1].setFixed(false);
+		fittedFunction.getParameters()[2].setFixed(false);
+		fittedFunction.getParameters()[3].setFixed(false);
+		fittedFunction.getParameters()[4].setFixed(false);
+		fittedFunction.getParameters()[5].setFixed(false);
+		try {
+			Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);			
+		} catch (Exception e) {
+			//plotFunction(fittedFunction, xAxis, values);
+			System.out.println(e);
+		}
 
-		plotFunction(fullFit, xAxis, values);
-		return fullFit;
+		plotFunction(fittedFunction, xAxis, values);
+		lastFunction = fittedFunction;
+		return fittedFunction;
 	}
 
 	private boolean functionsSimilarIgnoreFWHM(FermiGauss initialFit,
@@ -392,6 +288,9 @@ AbstractDataMessageTransformer {
 			anglesAxisDS = DoubleDataset.arange(shape[Math.abs(fitDim-1)], 0, -1);
 		}
 
+		anglesAxisDS.setName("Angles");
+		result.addList(anglesAxis, anglesAxisDS);
+		
 		ArrayList<Slice> slices = new ArrayList<Slice>();
 		for (int i = 0; i < shape.length; i++) {
 			if (i == fitDim) {
@@ -499,7 +398,7 @@ AbstractDataMessageTransformer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
 		result.addList("fit_image", functionsDS);
 		result.addList("fit_residuals", residualDS);
 		for (int i = 0; i < fitFunction.getNoOfParameters(); i++) {
@@ -578,7 +477,11 @@ AbstractDataMessageTransformer {
 		@Override
 		public void run() {
 			AFunction fitResult = null;
-			fitResult = FitGaussianConvFermi(xAxisDS, slice, fitFunction);
+			try {
+				fitResult = FitGaussianConvFermi(xAxisDS, slice, fitFunction);
+			} catch (Exception e) {
+				System.out.println(e);
+			}
 			int[] position = new int[DSlength - 1];
 			int count = 0;
 			for (int i = 0; i < DSlength; i++) {

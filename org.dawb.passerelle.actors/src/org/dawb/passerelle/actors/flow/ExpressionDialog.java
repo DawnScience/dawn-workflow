@@ -57,10 +57,10 @@ public class ExpressionDialog extends BeanDialog {
 		expressions.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 		expressions.setMinItems(0);
 		expressions.setMaxItems(25);
-		expressions.setDefaultName(getActorName());
+		expressions.setDefaultName(getVariableName());
 		expressions.setEditorClass(ExpressionBean.class);
 		expressions.setEditorUI(createExpressionComposite());
-		expressions.setNameField("actorName");
+		expressions.setNameField("variableName");
 		expressions.setAdditionalFields(new String[]{"expression"});
 		expressions.setColumnWidths(new int[]{100, 300});
 		expressions.setListHeight(150);
@@ -95,10 +95,10 @@ public class ExpressionDialog extends BeanDialog {
 	}
 
 
-	private String getActorName() {
-		final List connections = parent.output.connectedPortList();
+	private String getVariableName() {
+		final List<?> connections = parent.output.connectedPortList();
 		if (connections!=null&&!connections.isEmpty()) return ((NamedObj)connections.get(0)).getContainer().getName();
-		return "actor_name";
+		return "variable_name";
 	}
 
 	public VerticalListEditor getExpressions() {
@@ -115,12 +115,12 @@ public class ExpressionDialog extends BeanDialog {
 	public void setBean(final Object bean) {
 		
 		final ExpressionContainer eBean = (ExpressionContainer)bean;
-		final List connections = parent.output.connectedPortList();
+		final List<?> connections = parent.output.connectedPortList();
 
 		if (connections!=null && !connections.isEmpty()) {
-	        for (NamedObj obj : (List<NamedObj>)connections) {
-	        	final String name = obj.getContainer().getName();
-				if (!eBean.containsActor(name)) {
+			for (NamedObj obj : (List<NamedObj>)connections) {
+				final String name = obj.getContainer().getName();
+				if (!eBean.containsVariable(name)) {
 					eBean.addExpression(new ExpressionBean(name, "true"));
 				}
 			}

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.dawb.common.util.xml.XMLUtils;
+import org.dawb.passerelle.common.utils.XMLUtils;
 
 public class XPathVariable extends Variable implements IVariable {
 

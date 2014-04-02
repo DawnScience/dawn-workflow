@@ -17,12 +17,12 @@ import org.dawb.passerelle.common.Activator;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 
 import ptolemy.kernel.util.NamedObj;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.core.ErrorCode;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageException;
-
 import com.isencia.passerelle.actor.v5.Actor;
 
 /**

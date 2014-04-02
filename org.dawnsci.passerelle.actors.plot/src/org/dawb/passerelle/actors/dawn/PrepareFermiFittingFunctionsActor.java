@@ -15,12 +15,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
@@ -28,14 +25,13 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.FermiGauss;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 public class PrepareFermiFittingFunctionsActor extends
 		AbstractDataMessageTransformer {
-
-	private static final Logger logger = LoggerFactory
-			.getLogger(PrepareFermiFittingFunctionsActor.class);
-
+	
 	private static final long serialVersionUID = 813882139346261410L;
 	public StringParameter datasetName;
 	public StringParameter xAxisName;
@@ -62,10 +58,7 @@ public class PrepareFermiFittingFunctionsActor extends
 		final Map<String, Serializable> data = MessageUtils.getList(cache);
 
 		// prepare the output message
-		DataMessageComponent result = new DataMessageComponent();
-		for (DataMessageComponent dataMessageComponent : cache) {
-			result.add(dataMessageComponent);
-		}
+		DataMessageComponent result = MessageUtils.copy(cache);
 
 		// get the required datasets
 		String dataset = datasetName.getExpression();
@@ -90,8 +83,13 @@ public class PrepareFermiFittingFunctionsActor extends
 		}
 		
 		FermiGauss fg = new FermiGauss();
+		
 		// Mu
-		fg.getParameter(0).setValue((Double)xAxisDS.mean());
+		double min = (Double)dataDS.min(true);
+		double height = (Double)dataDS.max(true) - (Double)dataDS.min(true);
+		int crossing = Maths.abs(Maths.subtract(dataDS, (min+(height/2.0)))).minPos()[0];
+
+		fg.getParameter(0).setValue(xAxisDS.getDouble(crossing));
 		fg.getParameter(0).setLowerLimit((Double)xAxisDS.min(true));
 		fg.getParameter(0).setUpperLimit((Double)xAxisDS.max(true));
 		
@@ -107,23 +105,30 @@ public class PrepareFermiFittingFunctionsActor extends
 		fg.getParameter(2).setUpperLimit(10000.0);
 		
 		// Step Height
-		double height = (Double)dataDS.max(true) - (Double)dataDS.min(true);
 		fg.getParameter(3).setValue(height);
 		fg.getParameter(3).setLowerLimit(0.0);
 		fg.getParameter(3).setUpperLimit(height*2);
 		
 		// Constant
-		fg.getParameter(4).setValue((Double)dataDS.min(true));
+		fg.getParameter(4).setValue(min);
 		fg.getParameter(4).setLowerLimit(0.0);
 		fg.getParameter(4).setUpperLimit((Double)dataDS.min(true)*2);
 		
 		// FWHM
-		fg.getParameter(5).setValue(0.0);
-		fg.getParameter(5).setLowerLimit(0.0);
+		fg.getParameter(5).setValue(0.001);
+		fg.getParameter(5).setLowerLimit(0.001);
 		fg.getParameter(5).setUpperLimit(0.1);
 		
 		
+		
 		result.addFunction("fermi", fg);
+
+		// Update the names of the axis so that plotting works more nicely later on
+		xAxisDS.setName("Energy");
+		dataDS.setName("Intensity");
+		result.addList(dataset, dataDS);
+		result.addList(xAxis, xAxisDS);
+		
 		return result;
 	}
 

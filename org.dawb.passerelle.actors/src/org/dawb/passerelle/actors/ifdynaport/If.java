@@ -15,7 +15,6 @@ import org.dawb.passerelle.actors.ifdynaport.ExpressionBean;
 import org.dawb.passerelle.actors.ifdynaport.ExpressionContainer;
 import org.dawb.passerelle.actors.ifdynaport.ExpressionParameter;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +23,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.dynaport.OutputPortSetterBuilder;

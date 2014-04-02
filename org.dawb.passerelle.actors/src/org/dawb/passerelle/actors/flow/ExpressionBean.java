@@ -11,19 +11,19 @@ package org.dawb.passerelle.actors.flow;
 
 public class ExpressionBean {
 
-	private String actorName;
+	private String variableName;
 	private String expression;
 	
 	public ExpressionBean() {}
 	public ExpressionBean(String name, String expr) {
-		setActorName(name);
+		setVariableName(name);
 		setExpression(expr);
 	}
-	public String getActorName() {
-		return actorName;
+	public String getVariableName() {
+		return variableName;
 	}
-	public void setActorName(String actorName) {
-		this.actorName = actorName;
+	public void setVariableName(String variableName) {
+		this.variableName = variableName;
 	}
 	public String getExpression() {
 		return expression;
@@ -36,7 +36,7 @@ public class ExpressionBean {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((actorName == null) ? 0 : actorName.hashCode());
+				+ ((variableName == null) ? 0 : variableName.hashCode());
 		result = prime * result
 				+ ((expression == null) ? 0 : expression.hashCode());
 		return result;
@@ -50,10 +50,10 @@ public class ExpressionBean {
 		if (getClass() != obj.getClass())
 			return false;
 		ExpressionBean other = (ExpressionBean) obj;
-		if (actorName == null) {
-			if (other.actorName != null)
+		if (variableName == null) {
+			if (other.variableName != null)
 				return false;
-		} else if (!actorName.equals(other.actorName))
+		} else if (!variableName.equals(other.variableName))
 			return false;
 		if (expression == null) {
 			if (other.expression != null)
@@ -62,4 +62,5 @@ public class ExpressionBean {
 			return false;
 		return true;
 	}
+	
 }

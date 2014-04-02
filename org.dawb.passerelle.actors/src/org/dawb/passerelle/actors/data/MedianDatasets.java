@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer2Port;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 
 import ptolemy.kernel.CompositeEntity;
@@ -22,6 +21,7 @@ import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.CollectionStats;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 

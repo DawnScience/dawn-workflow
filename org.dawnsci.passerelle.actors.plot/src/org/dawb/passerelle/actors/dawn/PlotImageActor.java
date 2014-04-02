@@ -20,7 +20,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawnsci.plotting.api.IPlottingSystem;
 import org.dawnsci.plotting.api.PlottingFactory;
@@ -39,6 +38,7 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.SDAPlotter;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.rcp.plotting.PlottingMode;
 import uk.ac.diamond.scisoft.analysis.roi.EllipticalFitROI;
 import uk.ac.diamond.scisoft.analysis.roi.EllipticalROI;
@@ -155,14 +155,9 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 		final String boxTypeROI = boxROITypeParam.getExpression();
 //		final List<IDataset>  data = MessageUtils.getDatasets(cache);
 		final Map<String, Serializable>  data = MessageUtils.getList(cache);
-		final DataMessageComponent mc = new DataMessageComponent();
+		
+		final DataMessageComponent mc = MessageUtils.copy(cache);
 
-		//add datasets to mc
-		Set<String> dataKeys = data.keySet();
-		for (String key : dataKeys) {
-			AbstractDataset myData = ((AbstractDataset)data.get(key));
-			mc.addList(myData.getName(), myData);
-		}
 		try {
 			AbstractDataset aData = ((AbstractDataset)data.get(dataName));
 			aData.setName(dataName);

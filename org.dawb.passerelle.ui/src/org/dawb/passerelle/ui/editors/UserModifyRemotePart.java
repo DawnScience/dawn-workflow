@@ -20,10 +20,10 @@ import java.util.TreeMap;
 
 import org.dawb.common.ui.util.GridUtils;
 import org.dawb.common.ui.viewers.AppliableTableViewer;
-import org.dawb.common.util.SubstituteUtils;
 import org.dawb.common.util.text.NumberUtils;
 import org.dawb.passerelle.actors.ui.config.FieldBean;
 import org.dawb.passerelle.actors.ui.config.FieldContainer;
+import org.dawb.passerelle.common.utils.SubstituteUtils;
 import org.dawb.passerelle.ui.Activator;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
 import org.dawnsci.common.richbeans.beans.BeanUI;

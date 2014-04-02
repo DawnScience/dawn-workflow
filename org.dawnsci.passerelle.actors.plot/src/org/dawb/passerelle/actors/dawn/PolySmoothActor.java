@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 
@@ -24,6 +23,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.optimize.ApachePolynomial;
 
 public class PolySmoothActor extends AbstractDataMessageTransformer {
@@ -80,7 +80,7 @@ public class PolySmoothActor extends AbstractDataMessageTransformer {
 		try {
 			smoothed = ApachePolynomial.getPolynomialSmoothed(xAxisDS, dataDS, windowSize, polyOrder);
 		} catch (Exception e) {
-			throw new DataMessageException("FAiled to get smoothed polynomial",null,e);
+			throw new DataMessageException("Failed to get smoothed polynomial",null,e);
 		}
 		smoothed.setName(dataset+"_smoothed");
 		

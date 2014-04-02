@@ -21,8 +21,8 @@ import org.eclipse.swt.widgets.Label;
 
 public class ExpressionComposite extends Composite {
 
-	private TextWrapper actorName,expression;
-	private Label actorLabel;
+	private TextWrapper variableName,expression;
+	private Label variableLabel;
 
 	public ExpressionComposite(Composite parent, int style) {
 		
@@ -31,12 +31,12 @@ public class ExpressionComposite extends Composite {
 		
 		setLayout(new GridLayout(2, false));
 		
-		this.actorLabel = new Label(this, SWT.NONE);
-		actorLabel.setText("Actor Name");
+		this.variableLabel = new Label(this, SWT.NONE);
+		variableLabel.setText("Variable Name");
 		
-		this.actorName = new TextWrapper(this, SWT.NONE);
-		actorName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
-		actorName.setTextLimit(64);
+		this.variableName = new TextWrapper(this, SWT.NONE);
+		variableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
+		variableName.setTextLimit(64);
 
 		final Label expressionLabel = new Label(this, SWT.NONE);
 		expressionLabel.setText("Expression");
@@ -47,8 +47,8 @@ public class ExpressionComposite extends Composite {
 		
 	}
 
-	public TextWrapper getActorName() {
-		return actorName;
+	public TextWrapper getVariableName() {
+		return variableName;
 	}
 
 	public TextWrapper getExpression() {
@@ -60,7 +60,7 @@ public class ExpressionComposite extends Composite {
 	}
 
 	public void setNameLabel(String label) {
-		actorLabel.setText(label);
-		layout(new Control[]{actorLabel});
+		variableLabel.setText(label);
+		layout(new Control[]{variableLabel});
 	}
 }

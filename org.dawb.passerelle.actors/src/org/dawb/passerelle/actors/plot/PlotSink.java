@@ -12,7 +12,6 @@ package org.dawb.passerelle.actors.plot;
 import java.util.List;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageSink;
-import org.dawb.passerelle.common.message.DataMessageComponent;
 import org.dawb.passerelle.common.message.MessageUtils;
 
 import ptolemy.data.BooleanToken;
@@ -25,6 +24,7 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 
