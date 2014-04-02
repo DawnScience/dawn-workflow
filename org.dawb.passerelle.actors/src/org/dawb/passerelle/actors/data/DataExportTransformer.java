@@ -60,6 +60,7 @@ import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.JavaImageSaver;
 
+import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.TerminationException;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
@@ -479,7 +480,8 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		}
 	}
 
-	public void doPreInitialize() {
+	public void doPreInitialize() throws InitializationException {
+	  super.doPreInitialize();
 		fileWritingTo=null;
 	}
 
