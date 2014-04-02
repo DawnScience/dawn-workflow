@@ -61,7 +61,7 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 	 */
 	private static Logger logger = LoggerFactory.getLogger(AbstractScriptTransformer.class);
 	
-	protected ResourceParameter   scriptFileParam;
+	public ResourceParameter   scriptFileParam;
 	protected String              scriptFilePath;
 	
 	private final List<DataMessageComponent> cache;
@@ -138,8 +138,8 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 			
 			final DataMessageComponent despatch = getTransformedMessageInternal(cache);
 			if (despatch==null) return;
-	        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
-			
+	    
+			response.addOutputMessage(output, MessageUtils.getDataMessage(despatch, message));
 		} catch (DataMessageException dme) {
 			throw dme;
 		} catch (ProcessingException pe) {
@@ -151,7 +151,7 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 
 	protected IResource getResource() throws Exception {
 		
-		String path = scriptFileParam.getExpression();
+		String path = scriptFileParam.stringValue();
 		IFile  file = null;
 		if (path==null || "".equals(path)) {
 			// Resource doesn't exist - create new file
