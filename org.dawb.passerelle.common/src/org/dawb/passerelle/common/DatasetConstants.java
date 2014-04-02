@@ -9,9 +9,10 @@
  */ 
 package org.dawb.passerelle.common;
 
-public class DatasetConstants {
+public interface DatasetConstants {
 	
-	public static String CONTENT_TYPE_DATA  = "application/x-data-message";
+	String CONTENT_TYPE_DATA  = "application/x-data-message";
 	
+	String SLICE_STACK_NAME = "__DAWN_SLICECONTEXT";
 
 }
