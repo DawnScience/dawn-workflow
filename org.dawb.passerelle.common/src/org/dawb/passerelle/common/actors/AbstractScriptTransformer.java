@@ -151,7 +151,7 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 
 	protected IResource getResource() throws Exception {
 		
-		String path = scriptFileParam.stringValue();
+		String path = scriptFileParam.getExpression();
 		IFile  file = null;
 		if (path==null || "".equals(path)) {
 			// Resource doesn't exist - create new file
