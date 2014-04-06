@@ -97,14 +97,19 @@ public class Expression extends AbstractDataMessageTransformer {
 			
 			final List<ExpressionBean> beans = cont.getExpressions();
 			for (ExpressionBean eb : beans) {
-				engine.createExpression(eb.getExpression());
-				Object result = engine.evaluate();
-				if (result instanceof IDataset) {
-					ret.addList(eb.getVariableName(), (IDataset) result);
-				} else {
-					ret.putScalar(eb.getVariableName(), result.toString());
+				try {
+					engine.createExpression(eb.getExpression());
+					Object result = engine.evaluate();
+					if (result instanceof IDataset) {
+						ret.addList(eb.getVariableName(), (IDataset) result);
+					} else {
+						ret.putScalar(eb.getVariableName(), result.toString());
+					}
+					engine.addLoadedVariable(eb.getVariableName(), result);
+				} catch (Exception e) {
+					// Record in the log that this expression has failed, but carry on, as this may not matter
+					logger.warn("Failed to process the expression {}", eb.getExpression(), e);
 				}
-				engine.addLoadedVariable(eb.getVariableName(), result);
 			}
 			
 			return ret;
