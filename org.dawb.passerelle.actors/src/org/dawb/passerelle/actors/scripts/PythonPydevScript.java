@@ -23,8 +23,6 @@ import org.dawb.common.python.PyDevUtils.AvailableInterpreter;
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.list.ListUtils;
 import org.dawb.passerelle.common.actors.AbstractScriptTransformer;
-import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
-import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;

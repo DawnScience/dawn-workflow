@@ -74,7 +74,7 @@ public abstract class AbstractDataMessageTransformer extends AbstractPassModeTra
 				final DataMessageComponent despatch = getDespatch(dataMsgComp);
 				if (despatch==null) return;
 				
-		        sendOutputMsg(output, MessageUtils.getDataMessage(despatch, message));
+        response.addOutputMessage(output, MessageUtils.getDataMessage(despatch, message));
 			}
 		} catch (ProcessingException pe) {
 			throw new ProcessingException(pe.getErrorCode(), pe.getMessage(), pe.getModelElement(), message, pe.getCause());

@@ -52,6 +52,7 @@ Import-Package: com.isencia.passerelle.actor.forkjoin,
  uk.ac.diamond.scisoft.python
 Export-Package: org.dawb.passerelle.actors,
  org.dawb.passerelle.actors.data,
+ org.dawb.passerelle.actors.data.config,
  org.dawb.passerelle.actors.file,
  org.dawb.passerelle.actors.flow,
  org.dawb.passerelle.actors.process,

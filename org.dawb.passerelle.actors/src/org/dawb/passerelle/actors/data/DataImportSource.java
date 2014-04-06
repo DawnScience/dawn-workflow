@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import ncsa.hdf.object.Dataset;
 
@@ -67,6 +68,7 @@ import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.TerminationException;
+import com.isencia.passerelle.core.ErrorCode;
 import com.isencia.passerelle.core.PasserelleException;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageException;
@@ -86,6 +88,11 @@ import com.isencia.util.StringConvertor;
 /**
  * Reads a file or directory using LoaderFactory and makes the data available to subsequent nodes
  * which can request certain data sets for use.
+ * <p>
+ * When an individual file is selected as data source, the actor can be configured with a slicing definition to generate a sequence of messages, 
+ * each one representing an individual slice.
+ * When a folder is selected as data source, the actor will generate a sequence of messages where each one represents an individual file.
+ * </p>
  * 
  * @author gerring
  *
@@ -98,24 +105,29 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	private static final String[] SLICE_TYPES = new String[] {"Unique name for each slice", "Same name for each slice"};
 	
 	// Read internally
-	protected Parameter           folderParam;
+	public Parameter           folderParam;
 
-	protected Parameter           relativePathParam;
-	protected boolean             isPathRelative = true;
+	public Parameter           relativePathParam;
+	protected boolean          isPathRelative = true;
 	
-	protected Parameter           metaParam;
-	protected boolean             isMetaRequired = false;
+	public Parameter           metaParam;
+	protected boolean          isMetaRequired = false;
 	
-	private final RegularExpressionParameter filterParam;
+	public final RegularExpressionParameter filterParam;
 
-	private final ResourceParameter       path;
-	private final StringChoiceParameter   names;
-	private final StringMapParameter      rename;
-	private final StringParameter         dataType;
-	private final StringParameter         sliceNameType;
-	private final SliceParameter          slicing;
+	public final ResourceParameter       path;
+	public final StringChoiceParameter   names;
+	public final StringMapParameter      rename;
+	public final StringParameter         dataType;
+	public final StringParameter         sliceNameType;
+	public final SliceParameter          slicing;
 	
 	private List<TriggerObject> fileQueue;
+	
+	// a counter for indexing each generated message in the complete sequence that this source generates
+	private long msgCounter;
+	// a unique sequence identifier for each execution of this actor within a single parent workflow execution
+	private long msgSequenceID;
 
 	private final DataImportDelegate delegate;
 
@@ -241,14 +253,19 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		
 		setDescription("This source imports datasets using the loader service produced by Diamond Light Source. This loader service allows datasets in many formats to be imported and used in the workflow like numpy arrays. HDF5 files are supported, in this case you will need the path to the dataset in HDF5. When importing directories every file in the folder will be imported.");
 	}
-	
+
+  @Override
+  protected Logger getLogger() {
+    return logger;
+  }
+
 	/**
 	 *  @param attribute The attribute that changed.
 	 *  @exception IllegalActionException   */
 	public void attributeChanged(Attribute attribute) throws IllegalActionException {
+	  getLogger().trace("{} : {}",getFullName(), attribute);
 
-		if(logger.isTraceEnabled()) logger.trace(getInfo()+" :"+attribute);
-		if (attribute == path) {
+	  if (attribute == path) {
 			delegate.clear();
 		} else if (attribute == relativePathParam) {
 			isPathRelative = ((BooleanToken)relativePathParam.getToken()).booleanValue();
@@ -257,8 +274,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		} else if (attribute == folderParam) {
 			// You cannot change this, it is set in the constuctor and is fixed.
 		} else if (attribute == names) {
-			logger.trace("Data set names changed to : " + names.getExpression());
-			
+		  getLogger().trace("Data set names changed to : {}", names.getExpression());
 		}
 		
 		super.attributeChanged(attribute);
@@ -266,15 +282,15 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	
 	@Override
 	public void doPreInitialize() {
-		fileQueue      = null;
+		fileQueue = null;
 		delegate.clear();
 	}
 
 	@Override
 	protected void doInitialize() throws InitializationException {
-	
 		super.doInitialize();
-		
+    msgCounter = 0;
+    msgSequenceID = MessageFactory.getInstance().createSequenceID();
 		fileQueue = new ArrayList<TriggerObject>(89);
 		if (!isTriggerConnected()) {
 		    appendQueue(null); // Otherwise the trigger will call create on the iterator.
@@ -324,7 +340,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 
 					} catch (Exception ne) {
 						// This is the end!
-						logger.error("Problem reading slices in data import.", ne);
+						getLogger().error("Problem reading slices in data import.", ne);
 						requestFinish();
 					}
 				} else {
@@ -336,23 +352,22 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			}
 			
 			if (fileQueue!=null && fileQueue.isEmpty()) {
-				logger.info("No files found in '"+file.getAbsolutePath()+"'. Filter is set to: "+filterParam.getExpression());
+				getLogger().info("No files found in '{}'. Filter is set to: {}",file.getAbsolutePath(),filterParam.getExpression());
 			}
 		}
 	}
 
 	private ISliceRangeSubstituter createSliceRangeSubstituter(ManagedMessage triggerMsg) {
-		
 		try {
-            final DataMessageComponent cmp = MessageUtils.coerceMessage(triggerMsg);
-            return new ISliceRangeSubstituter() {
+        final DataMessageComponent cmp = MessageUtils.coerceMessage(triggerMsg);
+        return new ISliceRangeSubstituter() {
 				
 				@Override
 				public String substitute(final String value) {
 					try {
 						return ParameterUtils.getSubstituedValue(value, DataImportSource.this, Arrays.asList(cmp));
 					} catch (Exception e) {
-						logger.error("Cannot expand '"+value+"'!");
+						getLogger().error("Cannot expand '{}'!", value);
 						return value;
 					}
 				}
@@ -363,7 +378,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	}
 
 	private boolean isFileLegal(File file, final ManagedMessage triggerMsg) {
-		
 		if (file.isDirectory())                  return false;
 		if (file.isHidden())                     return false;
 		if (file.getName().startsWith("."))      return false;
@@ -373,8 +387,8 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 
 	public boolean hasNoMoreMessages() {
 	    if (fileQueue == null)   return true;
-        return fileQueue.isEmpty() && super.hasNoMoreMessages();
-    }
+      return fileQueue.isEmpty() && super.hasNoMoreMessages();
+  }
 	
 	protected ManagedMessage getDataMessage() throws ProcessingException {
 		
@@ -389,16 +403,14 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		// Stops data being loaded while a modal dialog is being shown to user.
 		ActorUtils.waitWhileLocked();
 		
-		ManagedMessage msg = MessageFactory.getInstance().createMessage();
 		final TriggerObject file = fileQueue.remove(0);
+    ManagedMessage msg = MessageFactory.getInstance().createMessageInSequence(msgSequenceID, msgCounter++, hasNoMoreMessages(), getStandardMessageHeaders());
 		try {
 			msg.setBodyContent(getData(file), DatasetConstants.CONTENT_TYPE_DATA);
-	
 		} catch (MessageException e) {
 			logger.error("Cannot set map of data in message body!", e);
-			msg = MessageFactory.getInstance().createErrorMessage(new PasserelleException("Cannot set map of data in message body!", "application/x-data", e));
+			msg = MessageFactory.getInstance().createErrorMessage(new PasserelleException(ErrorCode.MSG_CONSTRUCTION_ERROR, "Cannot set map of data in message body!", this, e));
 			fileQueue.clear();
-
 		} catch (Exception ne) {
 			fileQueue.clear();
 			throw new DataMessageException("Cannot read data from '"+delegate.getSourcePath(msg)+"'", this, ne);
@@ -407,7 +419,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		try {
 			msg.setBodyHeader("TITLE", file.getFile().getName());
 		} catch (MessageException e) {
-			msg = MessageFactory.getInstance().createErrorMessage(new PasserelleException("Cannot set header in message!", "application/x-data", e));
+			msg = MessageFactory.getInstance().createErrorMessage(new PasserelleException(ErrorCode.MSG_CONSTRUCTION_ERROR, "Cannot set header in message!", this, e));
 		}
 
 		return msg;
@@ -421,28 +433,25 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		}
 	}
 	
-    private boolean isRequiredFileName(String fileName, final ManagedMessage triggerMsg) {
-    	
-    	String fileFilter;
-    	try {
-    		fileFilter = ParameterUtils.getSubstituedValue(filterParam, MessageUtils.coerceMessage(triggerMsg));
-    	} catch (Throwable ne) {
-    		fileFilter = filterParam.getExpression();
-    	}
-    	if (fileFilter==null || "".equals(fileFilter)) return true;
-		if (filterParam.isJustWildCard()) {
-			final StringMatcher matcher = new StringMatcher(fileFilter, true, false);
-		    return matcher.match(fileName);
-		} else {
-			return fileName.matches(fileFilter);
-		}
-	}
+  private boolean isRequiredFileName(String fileName, final ManagedMessage triggerMsg) {
 
-
+    String fileFilter;
+    try {
+      fileFilter = ParameterUtils.getSubstituedValue(filterParam, MessageUtils.coerceMessage(triggerMsg));
+    } catch (Throwable ne) {
+      fileFilter = filterParam.getExpression();
+    }
+    if (fileFilter == null || "".equals(fileFilter))
+      return true;
+    if (filterParam.isJustWildCard()) {
+      final StringMatcher matcher = new StringMatcher(fileFilter, true, false);
+      return matcher.match(fileName);
+    } else {
+      return fileName.matches(fileFilter);
+    }
+  }
 	
 	protected DataMessageComponent getData(final TriggerObject trigOb) throws Exception {
-		
-		
 		// Add everything non-data from upstream that we can, then decide on the details
 		// like data slicing.
 		final DataMessageComponent comp = new DataMessageComponent();
@@ -457,7 +466,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				// triggers to not have to be DataMessageComponent
 			}
 		}
-
 		
 		final File                 file      = trigOb.getFile();
 		final ManagedMessage       triggerMsg= trigOb.getTrigger();
@@ -486,15 +494,16 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			datasets = new HashMap<String,Serializable>(1);
 			datasets.put(pyName, set);
 			
+			pushSlice(comp, slice);
 		} else {
 			datasets = (DATA_TYPES[2].equals(dataType.getExpression())) ? null : delegate.getDatasets(filePath, trigOb);
 		}
 		
-		// Add messages from upsteam, if any.
+		// Add messages from upstream, if any.
 		if (triggerMsg!=null) {
 			try {
 				final DataMessageComponent c = MessageUtils.coerceMessage(triggerMsg);
-			    comp.addScalar(c.getScalar());
+			  comp.addScalar(c.getScalar());
 			} catch (Exception ignored) {
 				logger.debug("Trigger for "+getName()+" is not DataMessageComponent, no data added.");
 			}
@@ -511,7 +520,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		
 		// Process any scalars in the HDF5 file if there are any
 		if (DATA_TYPES[1].equals(dataType.getExpression()) && H5Loader.isH5(filePath)) {
-			
 			IHierarchicalDataFile hFile = null;
 			try {
 				hFile = HierarchicalDataFactory.getReader(filePath);
@@ -537,22 +545,37 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			        }
 			        if (scalar!=null) comp.putScalar(set.getName(), scalar);
 				}
-				
 			} catch (Exception ne) {
-				logger.error("Cannot read file "+filePath, ne);
-				
+				getLogger().error("Cannot read file "+filePath, ne);
 			} finally {
 				if (file!=null) hFile.close();
 			}
 		}
 		
 		return comp;
-
 	}
+
+  /**
+   * TODO : check where this creation of a slice stack would best be located?
+   * Should we make slice context explicit on the DataMessageComponent interface?
+   * 
+   * @param comp
+   * @param slice
+   */
+  private void pushSlice(final DataMessageComponent comp, final SliceObject slice) {
+    Stack<SliceObject> slices = null;
+    try {
+      slices = (Stack<SliceObject>) comp.getUserObject(DatasetConstants.SLICE_STACK_NAME);
+    } catch (ClassCastException e) {
+      getLogger().error("Invalid user object stored with reserved name '"+DatasetConstants.SLICE_STACK_NAME+"'", e);
+    }
+    if(slices==null) {
+      slices = new Stack<SliceObject>();
+      comp.addUserObject(DatasetConstants.SLICE_STACK_NAME, slices);
+    }
+    slices.push(slice);
+  }
 	
-	/**
-	 * 
-	 */
 	public String[] getDataSetNames() {
 		return names.getValue();
 	}
@@ -567,7 +590,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	}
 
 	private Object getResource() {
-		
 		if (isPathRelative) {
 			String sourcePath = this.path.getExpression();
 			try {
@@ -576,7 +598,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 				logger.error("Cannot ret resource "+sourcePath, e);
 				return null;
 			}
-
 			return ResourcesPlugin.getWorkspace().getRoot().findMember(sourcePath, true);
 		} else {
 			return new File(delegate.getSourcePath());
@@ -611,7 +632,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	
 	@Override
 	public List<IVariable> getOutputVariables() {
-		
 		boolean isFullData = DATA_TYPES[0].equals(dataType.getExpression()) || DATA_TYPES[1].equals(dataType.getExpression());
 		return delegate.getOutputVariables(isFullData);
 	}
@@ -635,6 +655,4 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		triggeredOnce = true;
 		appendQueue(triggerMsg);
 	}
-
-
 }
