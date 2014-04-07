@@ -58,7 +58,6 @@ import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
-import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
@@ -289,8 +288,8 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	@Override
 	protected void doInitialize() throws InitializationException {
 		super.doInitialize();
-    msgCounter = 0;
-    msgSequenceID = MessageFactory.getInstance().createSequenceID();
+		msgCounter = 0;
+		msgSequenceID = MessageFactory.getInstance().createSequenceID();
 		fileQueue = new ArrayList<TriggerObject>(89);
 		if (!isTriggerConnected()) {
 		    appendQueue(null); // Otherwise the trigger will call create on the iterator.
@@ -386,9 +385,9 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	}
 
 	public boolean hasNoMoreMessages() {
-	    if (fileQueue == null)   return true;
-      return fileQueue.isEmpty() && super.hasNoMoreMessages();
-  }
+		if (fileQueue == null)   return true;
+		return fileQueue.isEmpty() && super.hasNoMoreMessages();
+	}
 	
 	protected ManagedMessage getDataMessage() throws ProcessingException {
 		
@@ -404,7 +403,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		ActorUtils.waitWhileLocked();
 		
 		final TriggerObject file = fileQueue.remove(0);
-    ManagedMessage msg = MessageFactory.getInstance().createMessageInSequence(msgSequenceID, msgCounter++, hasNoMoreMessages(), getStandardMessageHeaders());
+        ManagedMessage msg = MessageFactory.getInstance().createMessageInSequence(msgSequenceID, msgCounter++, hasNoMoreMessages(), getStandardMessageHeaders());
 		try {
 			msg.setBodyContent(getData(file), DatasetConstants.CONTENT_TYPE_DATA);
 		} catch (MessageException e) {
@@ -433,23 +432,23 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		}
 	}
 	
-  private boolean isRequiredFileName(String fileName, final ManagedMessage triggerMsg) {
+	private boolean isRequiredFileName(String fileName, final ManagedMessage triggerMsg) {
 
-    String fileFilter;
-    try {
-      fileFilter = ParameterUtils.getSubstituedValue(filterParam, MessageUtils.coerceMessage(triggerMsg));
-    } catch (Throwable ne) {
-      fileFilter = filterParam.getExpression();
-    }
-    if (fileFilter == null || "".equals(fileFilter))
-      return true;
-    if (filterParam.isJustWildCard()) {
-      final StringMatcher matcher = new StringMatcher(fileFilter, true, false);
-      return matcher.match(fileName);
-    } else {
-      return fileName.matches(fileFilter);
-    }
-  }
+		String fileFilter;
+		try {
+			fileFilter = ParameterUtils.getSubstituedValue(filterParam, MessageUtils.coerceMessage(triggerMsg));
+		} catch (Throwable ne) {
+			fileFilter = filterParam.getExpression();
+		}
+		if (fileFilter == null || "".equals(fileFilter))
+			return true;
+		if (filterParam.isJustWildCard()) {
+			final StringMatcher matcher = new StringMatcher(fileFilter, true, false);
+			return matcher.match(fileName);
+		} else {
+			return fileName.matches(fileFilter);
+		}
+	}
 	
 	protected DataMessageComponent getData(final TriggerObject trigOb) throws Exception {
 		// Add everything non-data from upstream that we can, then decide on the details
@@ -486,7 +485,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			
 			final String pyName    = PythonUtils.getLegalVarName(sliceName, null);
 				
-			final DataHolder      dh  = LoaderFactory.getData(slice.getPath());
+			final IDataHolder      dh  = LoaderFactory.getData(slice.getPath());
 			ILazyDataset    ld  = dh.getLazyDataset(slice.getName());
 			if (ld==null) ld = dh.getLazyDataset(0);
 			final IDataset set = SliceUtils.getSlice(ld, slice, null);

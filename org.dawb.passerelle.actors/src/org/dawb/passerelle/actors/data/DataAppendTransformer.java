@@ -44,10 +44,11 @@ public class DataAppendTransformer extends AbstractDataMessageTransformer {
 	
 	private static final Logger logger = LoggerFactory.getLogger(DataAppendTransformer.class);
 
-	private final ResourceParameter       path;
-	private final StringChoiceParameter   names;
-	private final StringMapParameter      rename;
-	private final Parameter               relativePathParam;
+	public final ResourceParameter       path;
+	public final StringChoiceParameter   names;
+	public final StringMapParameter      rename;
+	public final Parameter               relativePathParam;
+	
 	private final DataImportDelegate      delegate;
 	/**
 	 * 

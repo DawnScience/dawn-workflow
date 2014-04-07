@@ -35,7 +35,6 @@ import ptolemy.data.expr.StringParameter;
 import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
-import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
@@ -47,7 +46,7 @@ import com.isencia.passerelle.util.ptolemy.StringMapParameter;
 import com.isencia.passerelle.workbench.util.MapUtils;
 
 /**
- * Used to delegate
+ * Used to delegate data importing
  * @author fcp94556
  *
  */
@@ -351,7 +350,7 @@ class DataImportDelegate {
 		}
 		
 		if (data == null) {
-			DataHolder dh = LoaderFactory.getData(filePath, null);
+			IDataHolder dh = LoaderFactory.getData(filePath, null);
 			data = dh.toLazyMap();
 			if (ds!=null&&ds.length>0) {
 				data.keySet().retainAll(Arrays.asList(ds));
