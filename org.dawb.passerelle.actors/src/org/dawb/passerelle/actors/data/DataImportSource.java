@@ -325,7 +325,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 						final SliceSource       data   = new SliceSource(holder, lz, lz.getName(), file.getAbsolutePath(), false);
 						final List<SliceObject> slices = SliceUtils.getExpandedSlices(data, 
 								                                                      (DimsDataList)slicing.getBeanFromValue(DimsDataList.class),
-								                                                      createSliceRangeSubstituter(triggerMsg));
+								                                                      delegate.createSliceRangeSubstituter(triggerMsg));
 						int index = 0;
 						for (SliceObject sliceObject : slices) {
 							final TriggerObject ob = new TriggerObject();
@@ -353,26 +353,6 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 			if (fileQueue!=null && fileQueue.isEmpty()) {
 				getLogger().info("No files found in '{}'. Filter is set to: {}",file.getAbsolutePath(),filterParam.getExpression());
 			}
-		}
-	}
-
-	private ISliceRangeSubstituter createSliceRangeSubstituter(ManagedMessage triggerMsg) {
-		try {
-        final DataMessageComponent cmp = MessageUtils.coerceMessage(triggerMsg);
-        return new ISliceRangeSubstituter() {
-				
-				@Override
-				public String substitute(final String value) {
-					try {
-						return ParameterUtils.getSubstituedValue(value, DataImportSource.this, Arrays.asList(cmp));
-					} catch (Exception e) {
-						getLogger().error("Cannot expand '{}'!", value);
-						return value;
-					}
-				}
-			};
-		} catch (Throwable ne) {
-		    return null;
 		}
 	}
 

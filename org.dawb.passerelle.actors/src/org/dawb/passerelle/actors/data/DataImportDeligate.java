@@ -24,6 +24,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawnsci.io.h5.H5LazyDataset;
+import org.dawnsci.slicing.api.system.ISliceRangeSubstituter;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.slf4j.Logger;
@@ -59,6 +60,13 @@ class DataImportDelegate {
 	private final Parameter               relativePathParam;
 	private final StringMapParameter      rename;
 	
+	/**
+	 * 
+	 * @param path
+	 * @param names
+	 * @param relativePathParam
+	 * @param rename - may be null
+	 */
 	DataImportDelegate(final StringParameter path, StringChoiceParameter   names, final Parameter relativePathParam, StringMapParameter rename) {
 		this.path              = path;
 		this.names             = names;
@@ -220,6 +228,7 @@ class DataImportDelegate {
 
 
 	public Map<String, String> getDataSetNameMap() {
+		if (rename == null) return null;
 		final String map = this.rename.getExpression();
 		if (map == null) return null;
 		final Map<String,String> nameMap = MapUtils.getMap(map);
@@ -301,11 +310,11 @@ class DataImportDelegate {
 			}
 		}
 		
-		if (rename.getExpression()==null) {
+		if (rename==null || rename.getExpression()==null) {
 			return ret;
 		}
 		
-		final Map<String,String> existing = MapUtils.getMap(rename.getExpression());
+		final Map<String,String> existing = rename!=null ? MapUtils.getMap(rename.getExpression()) : null;
 		if (existing!=null) {
 			existing.keySet().retainAll(ret.keySet());
 			ret.putAll(existing);
@@ -455,5 +464,24 @@ class DataImportDelegate {
 		return ret;
 	}
 
+	ISliceRangeSubstituter createSliceRangeSubstituter(ManagedMessage triggerMsg) {
+		try {
+			final DataMessageComponent cmp = MessageUtils.coerceMessage(triggerMsg);
+			return new ISliceRangeSubstituter() {
+
+				@Override
+				public String substitute(final String value) {
+					try {
+						return ParameterUtils.getSubstituedValue(value, path.getContainer(), Arrays.asList(cmp));
+					} catch (Exception e) {
+						logger.error("Cannot expand '{}'!", value);
+						return value;
+					}
+				}
+			};
+		} catch (Throwable ne) {
+			return null;
+		}
+	}
 
 }
