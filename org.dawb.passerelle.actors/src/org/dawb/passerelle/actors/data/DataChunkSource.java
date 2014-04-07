@@ -270,7 +270,7 @@ public class DataChunkSource extends AbstractDataMessageSource implements ISlice
 				// This is the full list of this dimension. However we want to create chunks from this.
 
 				// Rather low level but if it works then we are away
-		        int count     = 0;
+		        int count     = exp.get(0).getSlice();
 		        int chunk     = ((IntToken)chunkSize.getToken()).intValue();
 				if (chunk<1) throw new InitializationException(ErrorCode.FATAL, "The '"+chunkSize.getDisplayName()+"' must be 1 or more but it is "+chunk, this, null);
 				
