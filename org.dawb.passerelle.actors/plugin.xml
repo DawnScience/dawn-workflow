@@ -213,6 +213,13 @@
             name="Files Import">
       </actor>
       <actor
+            class="org.dawb.passerelle.actors.data.DataChunkSource"
+            group="com.isencia.passerelle.actor.actorgroup.sources"
+            icon="icons/file_import.png"
+            id="org.dawb.passerelle.actors.dataChunkSource"
+            name="Slice Chunk">
+      </actor>
+      <actor
             class="org.dawb.passerelle.actors.data.FolderImportSource"
             group="com.isencia.passerelle.actor.actorgroup.sources"
             icon="icons/folder_import.png"

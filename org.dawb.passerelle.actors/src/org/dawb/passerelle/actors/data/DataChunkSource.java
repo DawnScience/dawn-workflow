@@ -7,12 +7,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.dawb.passerelle.actors.data.config.ISliceInformationProvider;
 import org.dawb.passerelle.actors.data.config.SliceParameter;
 import org.dawb.passerelle.common.DatasetConstants;
 import org.dawb.passerelle.common.actors.AbstractDataMessageSource;
 import org.dawb.passerelle.common.actors.ActorUtils;
 import org.dawb.passerelle.common.message.DataMessageException;
+import org.dawb.passerelle.common.message.IVariable;
+import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawnsci.io.h5.H5Loader;
 import org.dawnsci.slicing.api.system.DimsData;
@@ -25,6 +29,7 @@ import ptolemy.data.BooleanToken;
 import ptolemy.data.IntToken;
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.CompositeEntity;
+import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
@@ -56,7 +61,7 @@ import com.isencia.util.StringConvertor;
  * @author fcp94556
  *
  */
-public class DataChunkSource extends AbstractDataMessageSource {
+public class DataChunkSource extends AbstractDataMessageSource implements ISliceInformationProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataChunkSource.class);
 	
@@ -86,8 +91,9 @@ public class DataChunkSource extends AbstractDataMessageSource {
 		
 		relativePathParam = new Parameter(this, "Relative Path", new BooleanToken(true));
 		registerConfigurableParameter(relativePathParam);
+		setDescription(relativePathParam, Requirement.ESSENTIAL, VariableHandling.NONE, "Tick to set wether you will provide a path to the data as absolute or relative to the workspace (recommended).");
 
-		path = new ResourceParameter(this, "Path", "Data files", LoaderFactory.getSupportedExtensions().toArray(new String[0]));
+		path = new ResourceParameter(this, "Path", "Data file", H5Loader.EXT.toArray(new String[H5Loader.EXT.size()]));
 		try {
 			URI baseURI = new File(StringConvertor.convertPathDelimiters(EnvironmentUtils.getApplicationRootFolder())).toURI();
 			path.setBaseDirectory(baseURI);
@@ -96,7 +102,7 @@ public class DataChunkSource extends AbstractDataMessageSource {
 		}
 		registerConfigurableParameter(path);
 
-		datasetName = new StringChoiceParameter(this, "Data Sets", new IAvailableChoices() {		
+		datasetName = new StringChoiceParameter(this, "Dataset Name", new IAvailableChoices() {		
 			@Override
 			public String[] getChoices() {
                 Collection<String> names = delegate.getAllDatasetsInFile();
@@ -130,6 +136,16 @@ public class DataChunkSource extends AbstractDataMessageSource {
 	public void doPreInitialize() {
 		delegate.clear();
 	}
+	
+	public void attributeChanged(Attribute attribute) throws IllegalActionException {
+		getLogger().trace("{} : {}",getFullName(), attribute);
+
+		if (attribute == path) {
+			delegate.clear();
+		}
+		super.attributeChanged(attribute);
+	}
+
 
 	@Override
 	protected void doInitialize() throws InitializationException {
@@ -157,6 +173,7 @@ public class DataChunkSource extends AbstractDataMessageSource {
 		ActorUtils.waitWhileLocked();	
 		
 		final SliceBean sliceBean = sliceQueue.remove(0);
+System.out.println(sliceBean);
         ManagedMessage msg = MessageFactory.getInstance().createMessageInSequence(msgSequenceID, msgCounter++, hasNoMoreMessages(), getStandardMessageHeaders());
 		
         try {
@@ -186,6 +203,30 @@ public class DataChunkSource extends AbstractDataMessageSource {
 		return msg;
 	}
 
+	@Override
+	public List<IVariable> getOutputVariables() {
+		
+		final List<IVariable> ret = super.getOutputVariables();
+		if (delegate.getSourcePath()==null)  {
+			final String msg = "Invalid Path '"+path.getExpression()+"'";
+			ret.add(new Variable("file_path", VARIABLE_TYPE.PATH,   msg, String.class));
+			ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, msg, String.class));
+			ret.add(new Variable("slice",  VARIABLE_TYPE.SCALAR,   msg, String.class));
+			ret.add(new Variable("shape",  VARIABLE_TYPE.SCALAR,   msg, String.class));
+			return ret;
+		}
+		
+		ret.add(new Variable("file_path", VARIABLE_TYPE.PATH, delegate.getSourcePath(), String.class));
+		ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, new File(delegate.getSourcePath()).getName(), String.class));
+		try {
+			ret.add(new Variable("slice",     VARIABLE_TYPE.SCALAR, "0:"+((IntToken)chunkSize.getToken()).intValue()+" ...", String.class));
+		} catch (Throwable e) {
+			ret.add(new Variable("slice",     VARIABLE_TYPE.SCALAR, "0:8 ...", String.class));
+		}
+		ret.add(new Variable("shape",     VARIABLE_TYPE.SCALAR,  "Example: \"[0:8, Y, X]\"", String.class));
+		
+		return ret;
+	}
 
 	/**
 	 * triggerMsg may be null
@@ -203,7 +244,8 @@ public class DataChunkSource extends AbstractDataMessageSource {
 
 			try {
 				final IDataHolder holder  = LoaderFactory.getData(file.getAbsolutePath(), null);
-				final String      dsPath  = ParameterUtils.getSubstituedValue(datasetName, MessageUtils.coerceMessage(triggerMsg));
+				DataMessageComponent msg  = triggerMsg==null ? null : MessageUtils.coerceMessage(triggerMsg);
+				final String      dsPath  = ParameterUtils.getSubstituedValue(datasetName, msg);
 				final ILazyDataset lz     = holder.getLazyDataset(dsPath);
 				
 				if (lz == null) {
@@ -337,6 +379,11 @@ public class DataChunkSource extends AbstractDataMessageSource {
 			return result;
 		}
 		@Override
+		public String toString() {
+			return "SliceBean [slice=" + slice + ", shape=" + shape + ", file="
+					+ file + "]";
+		}
+		@Override
 		public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
@@ -367,5 +414,22 @@ public class DataChunkSource extends AbstractDataMessageSource {
 		private DataChunkSource getOuterType() {
 			return DataChunkSource.this;
 		}
+	}
+
+
+	@Override
+	public String[] getDataSetNames() {
+		try {
+			String dsPath = ParameterUtils.getSubstituedValue(datasetName.getExpression(), this, null);
+			return new String[]{dsPath};
+		} catch (Exception e) {
+			return new String[]{datasetName.getExpression()};
+
+		}
+	}
+
+	@Override
+	public String getSourcePath() {
+		return delegate.getSourcePath();
 	}
 }

@@ -27,6 +27,7 @@ import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.SortingUtils;
 import org.dawb.hdf5.HierarchicalDataFactory;
 import org.dawb.hdf5.IHierarchicalDataFile;
+import org.dawb.passerelle.actors.data.config.ISliceInformationProvider;
 import org.dawb.passerelle.actors.data.config.SliceParameter;
 import org.dawb.passerelle.common.DatasetConstants;
 import org.dawb.passerelle.common.actors.AbstractDataMessageSource;
@@ -38,7 +39,6 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawnsci.io.h5.H5Loader;
 import org.dawnsci.slicing.api.system.DimsDataList;
-import org.dawnsci.slicing.api.system.ISliceRangeSubstituter;
 import org.dawnsci.slicing.api.system.SliceSource;
 import org.dawnsci.slicing.api.util.SliceUtils;
 import org.eclipse.core.resources.IResource;
@@ -96,7 +96,7 @@ import com.isencia.util.StringConvertor;
  * @author gerring
  *
  */
-public class DataImportSource extends AbstractDataMessageSource implements IResourceActor, IVariableProvider {
+public class DataImportSource extends AbstractDataMessageSource implements IResourceActor, IVariableProvider, ISliceInformationProvider {
 
 	private static final Logger logger = LoggerFactory.getLogger(DataImportSource.class);	
 	

@@ -11,9 +11,10 @@ package org.dawb.passerelle.actors.data.config;
 
 import java.io.File;
 
-import org.dawb.passerelle.actors.data.DataImportSource;
 import org.dawb.passerelle.common.parameter.CellEditorParameter;
 import org.dawnsci.slicing.api.SliceDialog;
+import org.dawnsci.slicing.api.system.AxisType;
+import org.dawnsci.slicing.api.system.DimsData;
 import org.dawnsci.slicing.api.system.DimsDataList;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
@@ -30,6 +31,8 @@ import org.slf4j.LoggerFactory;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
+import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
+import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
 import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
 
@@ -55,7 +58,7 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 		
 		// This forces the parent to be this actor which for now is correct.
 		// Fix later if required.
-		final DataImportSource source = (DataImportSource)getContainer();
+		final ISliceInformationProvider source = (ISliceInformationProvider)getContainer();
 		final String[]         names  = source.getDataSetNames();
 		if (names==null|| names.length!=1) {
 			MessageDialog.openError(control.getShell(),
@@ -95,7 +98,36 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 					ErrorDialog.openError(cellEditorWindow.getShell(), "Extraction error", e.getMessage(), new Status(IStatus.ERROR, "org.dawb.passerelle.actors", "", e));
 					return null;
 				}
-				dialog.setDimsDataList((DimsDataList)getBeanFromValue(DimsDataList.class));
+				
+				DimsDataList ddl = (DimsDataList)getBeanFromValue(DimsDataList.class);
+				if (ddl == null) ddl = new DimsDataList();
+				
+				if (ddl.isEmpty()) {
+					try {
+					    final IDataHolder  dh = LoaderFactory.getData(path);
+					    final ILazyDataset lz = dh.getLazyDataset(names[0]);
+					    for (int i = 0; i < lz.getRank(); i++) {
+					    	ddl.add(new DimsData(i));
+					    }
+					    
+					    ddl.getDimsData(0).setSliceRange("all");
+					    if (ddl.size()==2) {
+					    	ddl.getDimsData(1).setPlotAxis(AxisType.X);
+					    	
+					    } else if (ddl.size()>2) {
+					    	ddl.getDimsData(1).setPlotAxis(AxisType.Y);
+					    	ddl.getDimsData(2).setPlotAxis(AxisType.X);
+					    	for (int i = 3; i < ddl.size(); i++) {
+					    		ddl.getDimsData(i).setSlice(0);
+							}
+					    }
+					    
+					} catch (Exception neOther) {
+						logger.error("Cannot set up slice parameter!", neOther);
+					}
+					
+				}
+				dialog.setDimsDataList(ddl);
 				dialog.setRangesAllowed(true);
 				
 		        final int ok = dialog.open();
@@ -126,7 +158,7 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 		
 		int[] shape = null;
 		try {
-			final DataImportSource source = (DataImportSource)getContainer();
+			final ISliceInformationProvider source = (ISliceInformationProvider)getContainer();
 			final IMetaData meta  = LoaderFactory.getMetaData(source.getSourcePath(), null);
 	        shape  = meta.getDataShapes().get(source.getDataSetNames()[0]);
 		} catch (Exception ne) {
