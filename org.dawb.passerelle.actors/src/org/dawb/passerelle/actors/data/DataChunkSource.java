@@ -173,7 +173,6 @@ public class DataChunkSource extends AbstractDataMessageSource implements ISlice
 		ActorUtils.waitWhileLocked();	
 		
 		final SliceBean sliceBean = sliceQueue.remove(0);
-System.out.println(sliceBean);
         ManagedMessage msg = MessageFactory.getInstance().createMessageInSequence(msgSequenceID, msgCounter++, hasNoMoreMessages(), getStandardMessageHeaders());
 		
         try {
@@ -308,7 +307,7 @@ System.out.println(sliceBean);
 			if (i<ddl.size()-1) buf.append(", ");
 		}
 		buf.append("]");
-		return null;
+		return buf.toString();
 	}
 
 	private boolean triggeredOnce = false;
