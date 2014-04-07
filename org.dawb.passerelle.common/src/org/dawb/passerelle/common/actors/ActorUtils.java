@@ -63,6 +63,7 @@ public class ActorUtils {
 	 */
 	public static UserDebugBean create(final IProjectNamedObject actor, final DataMessageComponent... data) throws Exception {
 		
+		if (Boolean.getBoolean("org.dawb.passerelle.common.actors.util.bypassJMX")) return null;
 		if (actor==null || data==null || data.length<1) return null;
 		
 		final boolean breakA = getBooleanValue(actor, BREAKA, false);
@@ -100,6 +101,7 @@ public class ActorUtils {
 	 */
 	public static UserDebugBean debug(IProjectNamedObject actor, UserDebugBean bean) {
 
+		if (Boolean.getBoolean("org.dawb.passerelle.common.actors.util.bypassJMX")) return null;
 		if (bean==null)            return null;
 
 		try {
@@ -189,6 +191,7 @@ public class ActorUtils {
 	 */
 	public static void setActorExecuting(final IProjectNamedObject actor, final boolean isExecuting) {
 		
+		if (Boolean.getBoolean("org.dawb.passerelle.common.actors.util.bypassJMX")) return;
 		if (actor.getManager()== null) return;
 		
 		if (Platform.getBundle("org.dawb.workbench.ui")!=null) {
