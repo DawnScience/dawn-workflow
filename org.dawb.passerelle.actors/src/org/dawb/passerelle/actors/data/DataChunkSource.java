@@ -181,6 +181,7 @@ public class DataChunkSource extends AbstractDataMessageSource implements ISlice
            	comp.putScalar("shape", sliceBean.getShape());
            	comp.putScalar("file_name", sliceBean.getFile().getName());
            	comp.putScalar("file_path", sliceBean.getFile().getAbsolutePath());
+           	logger.debug(sliceBean.toString());
           	
 			msg.setBodyContent(comp, DatasetConstants.CONTENT_TYPE_DATA);
 			
@@ -271,6 +272,8 @@ public class DataChunkSource extends AbstractDataMessageSource implements ISlice
 				// Rather low level but if it works then we are away
 		        int count     = 0;
 		        int chunk     = ((IntToken)chunkSize.getToken()).intValue();
+				if (chunk<1) throw new InitializationException(ErrorCode.FATAL, "The '"+chunkSize.getDisplayName()+"' must be 1 or more but it is "+chunk, this, null);
+				
 		        while(count<exp.size()) {
 		        	int end = count+chunk-1;
 		        	if (end>exp.size()) end = exp.size();
