@@ -61,5 +61,4 @@ Export-Package: org.dawb.passerelle.actors,
  org.dawb.passerelle.actors.ui,
  org.dawb.passerelle.actors.ui.config,
  org.dawb.passerelle.dnd,
- org.dawb.passerelle.extractors,
  org.dawb.passerelle.jython
