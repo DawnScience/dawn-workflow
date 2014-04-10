@@ -7,7 +7,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */ 
-package org.dawb.passerelle.actors.ui.dnd;
+package org.dawb.passerelle.dnd;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ import org.dawb.passerelle.actors.data.FolderImportSource;
 import org.dawb.passerelle.actors.data.SpecImportSource;
 import org.dawb.passerelle.actors.scripts.PythonPydevScript;
 import org.dawb.passerelle.actors.scripts.PythonScript;
-import org.dawnsci.io.h5.H5Loader;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.slf4j.Logger;

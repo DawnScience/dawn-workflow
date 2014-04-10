@@ -81,5 +81,11 @@
             class="org.dawb.passerelle.ui.views.ActorValuePage">
       </value_page>
    </extension>
+      <extension
+         point="com.isencia.passerelle.workbench.model.editor.ui.dropFactory">
+      <dropFactory
+            class="org.dawb.passerelle.dnd.ActorDropFactory">
+      </dropFactory>
+   </extension>
    
 </plugin>
