@@ -18,6 +18,14 @@ Require-Bundle: org.eclipse.ui,
  uk.ac.diamond.scisoft.analysis.api;bundle-version="1.0.0",
  org.dawb.passerelle.common;bundle-version="1.4.1",
  com.isencia.passerelle.engine;bundle-version="8.4.0",
- org.eclipse.gef;bundle-version="3.8.2"
+ org.eclipse.gef;bundle-version="3.8.2",
+ org.apache.commons.beanutils;bundle-version="1.9.1",
+ org.dawb.common.ui;bundle-version="1.3.0",
+ org.dawnsci.common.widgets;bundle-version="1.2.0",
+ org.dawb.workbench.jmx;bundle-version="1.0.0",
+ org.dawnsci.passerelle.tools;bundle-version="1.0.0",
+ org.dawnsci.plotting.api;bundle-version="1.2.0"
 Bundle-ActivationPolicy: lazy
 Import-Package: org.slf4j;version="1.7.6"
+Export-Package: org.dawb.passerelle.actors.ui,
+ org.dawb.passerelle.actors.ui.config

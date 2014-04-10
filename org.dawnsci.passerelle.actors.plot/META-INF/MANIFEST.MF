@@ -7,5 +7,6 @@ Bundle-Vendor: Diamond Light Source
 Fragment-Host: org.dawb.passerelle.actors;bundle-version="1.0.0"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.apache.commons.math3;bundle-version="[3.2.0,3.3.0)",
- uk.ac.diamond.scisoft.analysis.plotserver;bundle-version="1.0.0"
+ uk.ac.diamond.scisoft.analysis.plotserver;bundle-version="1.0.0",
+ org.dawnsci.plotting.api;bundle-version="1.2.0"
 Import-Package: uk.ac.diamond.scisoft.analysis.rcp.plotting
