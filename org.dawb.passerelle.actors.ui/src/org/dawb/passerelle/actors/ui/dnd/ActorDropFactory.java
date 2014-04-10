@@ -7,11 +7,14 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */ 
-package org.dawb.passerelle.dnd;
+package org.dawb.passerelle.actors.ui.dnd;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.dawb.common.services.ServiceManager;
@@ -71,7 +74,7 @@ public class ActorDropFactory implements IDropClassFactory {
 	@Override
 	public void setConfigurableParameters(CreateComponentCommand cmd, String filePath) {
 
-		if (H5Loader.isH5(filePath)) {
+		if (isH5(filePath)) {
 
 			IMetaData data;
 			try {
@@ -86,6 +89,25 @@ public class ActorDropFactory implements IDropClassFactory {
 			}
 		}
 
+	}
+
+	private final static List<String> EXT;
+	static {
+		List<String> tmp = new ArrayList<String>(7);
+		tmp.add("h5");
+		tmp.add("nxs");
+		tmp.add("hd5");
+		tmp.add("hdf5");
+		tmp.add("hdf");
+		tmp.add("nexus");
+		EXT = Collections.unmodifiableList(tmp);
+	}	
+
+	private static boolean isH5(final String filePath) {
+		if (filePath == null) { return false; }
+		final String ext = FileUtils.getFileExtension(filePath);
+		if (ext == null) { return false; }
+		return EXT.contains(ext.toLowerCase());
 	}
 
 }

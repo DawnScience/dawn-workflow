@@ -501,12 +501,6 @@
             name="Error handler by code range">
       </actor>
    </extension>
-   <extension
-         point="com.isencia.passerelle.workbench.model.editor.ui.dropFactory">
-      <dropFactory
-            class="org.dawb.passerelle.dnd.ActorDropFactory">
-      </dropFactory>
-   </extension>
     <extension
          point="org.eclipse.ui.cheatsheets.cheatSheetContent">
       <category
