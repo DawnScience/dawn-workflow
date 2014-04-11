@@ -16,6 +16,6 @@ import javax.management.NotificationBroadcaster;
  * The interface which is deployed 
  * for managing the workflow.
  */
-interface RemoteWorkbenchMBean extends IRemoteWorkbench, NotificationBroadcaster {
+public interface RemoteWorkbenchMBean extends IRemoteWorkbench, NotificationBroadcaster {
 	
 }
