@@ -10,14 +10,12 @@
 package org.dawb.passerelle.actors;
 
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.osgi.framework.ServiceRegistration;
+
 import ptolemy.kernel.util.NamedObj;
 
 import com.isencia.constants.IPropertyNames;
@@ -29,7 +27,7 @@ import com.isencia.passerelle.validation.version.VersionSpecification;
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class Activator implements BundleActivator {
 
 	private static final Logger logger = LoggerFactory.getLogger(Activator.class);
 
@@ -52,7 +50,6 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
 		System.setProperty(IPropertyNames.APP_HOME, ResourcesPlugin.getWorkspace().getRoot().getLocation().toOSString());
 		logger.debug("Registring service for org.dawb.passerelle.actors");
 		apSvcReg = context.registerService(ModelElementClassProvider.class.getName(), new ModelElementClassProvider() {
@@ -70,7 +67,6 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		super.stop(context);
 	}
 
 	/**
@@ -80,20 +76,6 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static Activator getDefault() {
 		return plugin;
-	}
-
-	/**
-	 * Returns an image descriptor for the image file at the given
-	 * plug-in relative path
-	 *
-	 * @param path the path
-	 * @return the image descriptor
-	 */
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return getImageDescriptor(PLUGIN_ID, path);
-	}
-	public static ImageDescriptor getImageDescriptor(String plugin,String path) {
-		return imageDescriptorFromPlugin(plugin, path);
 	}
 
 }

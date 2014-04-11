@@ -23,7 +23,6 @@ import org.dawb.passerelle.common.utils.SubstituteUtils;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.ui.internal.WorkbenchPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

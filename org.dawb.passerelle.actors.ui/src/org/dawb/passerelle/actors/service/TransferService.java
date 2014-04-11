@@ -1,4 +1,4 @@
-package org.dawb.passerelle.service;
+package org.dawb.passerelle.actors.service;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,31 +1,48 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: UI Actors
+Bundle-Name: UI Actors Fragment
 Bundle-SymbolicName: org.dawb.passerelle.actors.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: org.dawb.passerelle.actors.ui.Activator
 Bundle-Vendor: Diamond Light Source
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Export-Package: org.dawb.passerelle.actors.data,
+ org.dawb.passerelle.actors.data.config,
+ org.dawb.passerelle.actors.flow,
+ org.dawb.passerelle.actors.ifdynaport,
+ org.dawb.passerelle.actors.net,
+ org.dawb.passerelle.actors.service,
+ org.dawb.passerelle.actors.ui,
+ org.dawb.passerelle.actors.ui.config,
+ org.dawb.passerelle.actors.ui.file
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
+ org.dawnsci.common.widgets;bundle-version="1.2.0",
  com.isencia.passerelle.workbench.model.editor.ui;bundle-version="8.4.0",
- com.isencia.passerelle.workbench.model.ui;bundle-version="8.4.0",
+ org.dawnsci.slicing.api;bundle-version="1.0.0",
  org.dawb.common.services;bundle-version="1.2.0",
- org.dawb.common.util;bundle-version="1.2.0",
- org.dawb.passerelle.actors;bundle-version="1.0.0",
- org.dawnsci.io;bundle-version="1.2.0",
- org.eclipse.core.resources;bundle-version="3.8.1",
- ptolemy.core;bundle-version="7.0.1",
- uk.ac.diamond.scisoft.analysis.api;bundle-version="1.0.0",
- org.dawb.passerelle.common;bundle-version="1.4.1",
- com.isencia.passerelle.engine;bundle-version="8.4.0",
- org.eclipse.gef;bundle-version="3.8.2",
  org.apache.commons.beanutils;bundle-version="1.9.1",
  org.dawb.common.ui;bundle-version="1.3.0",
- org.dawnsci.common.widgets;bundle-version="1.2.0",
- org.dawb.workbench.jmx;bundle-version="1.0.0",
+ com.isencia.passerelle.workbench.model;bundle-version="8.4.0",
+ com.isencia.passerelle.workbench.model.ui;bundle-version="8.4.0",
  org.dawnsci.passerelle.tools;bundle-version="1.0.0",
- org.dawnsci.plotting.api;bundle-version="1.2.0"
-Bundle-ActivationPolicy: lazy
-Import-Package: org.slf4j;version="1.7.6"
-Export-Package: org.dawb.passerelle.actors.ui,
- org.dawb.passerelle.actors.ui.config
+ org.dawnsci.plotting.api;bundle-version="1.2.0",
+ org.eclipse.draw2d;bundle-version="3.8.1",
+ org.dawnsci.doe;bundle-version="1.2.0",
+ com.isencia.passerelle.resources;bundle-version="1.0.0",
+ org.dawb.passerelle.common;bundle-version="1.4.1",
+ org.dawb.common.util;bundle-version="1.2.0",
+ org.eclipse.core.resources;bundle-version="3.8.1",
+ com.isencia.passerelle.actor;bundle-version="8.4.0",
+ org.eclipse.core.runtime;bundle-version="3.8.0",
+ ptolemy.core;bundle-version="7.0.1",
+ uk.ac.diamond.scisoft.analysis;bundle-version="1.3.0",
+ com.isencia.passerelle.engine;bundle-version="8.4.0",
+ org.dawb.workbench.jmx;bundle-version="1.0.0",
+ ncsa.hdf;bundle-version="2.8.0",
+ org.dawb.common.python;bundle-version="1.2.0",
+ org.dawb.hdf5;bundle-version="1.2.0",
+ org.dawnsci.io;bundle-version="1.2.0",
+ com.isencia.passerelle.commons;bundle-version="8.3.0",
+ com.isencia.sherpa.commons.reduced;bundle-version="6.2.5",
+ org.dawb.passerelle.actors;bundle-version="1.0.0"
+Import-Package: com.isencia.passerelle.actor.dynaport,
+ org.slf4j;version="1.7.6"

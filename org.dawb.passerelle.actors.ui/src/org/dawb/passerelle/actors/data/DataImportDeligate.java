@@ -44,7 +44,6 @@ import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.util.ptolemy.StringMapParameter;
-import com.isencia.passerelle.workbench.util.MapUtils;
 
 /**
  * Used to delegate data importing
@@ -231,7 +230,7 @@ class DataImportDelegate {
 		if (rename == null) return null;
 		final String map = this.rename.getExpression();
 		if (map == null) return null;
-		final Map<String,String> nameMap = MapUtils.getMap(map);
+		final Map<String,String> nameMap = getMap(map);
 		if (nameMap==null || nameMap.isEmpty()) return null;
 		return nameMap;
 	}
@@ -242,6 +241,36 @@ class DataImportDelegate {
         if (!nameMap.containsKey(hdfName)) return hdfName;
         return nameMap.get(hdfName);
 	}
+	public static Map<String,String> getMap(final String value) {
+		
+		if (value == null)           return null;
+		if ("".equals(value.trim())) return null;
+		final List<String> lines = getList(value);
+		if (lines==null)     return null;
+		if (lines.isEmpty()) return Collections.emptyMap();
+		
+		final Map<String,String> ret = new LinkedHashMap<String, String>(lines.size());
+		for (String line : lines) {
+			final String[] kv = line.split("=");
+			if (kv==null||kv.length!=2) continue;
+			ret.put(kv[0].trim(), kv[1].trim());
+		}
+		return ret;
+	}
+	/**
+	 * 
+	 * @param value
+	 * @return v
+	 */
+	public static List<String> getList(final String value) {
+		if (value == null)           return null;
+		if ("".equals(value.trim())) return null;
+		final String[]    vals = value.split(",");
+		final List<String> ret = new ArrayList<String>(vals.length);
+		for (int i = 0; i < vals.length; i++) ret.add(vals[i].trim());
+		return ret;
+	}
+	
 
 	/**
 	 * 
@@ -314,7 +343,7 @@ class DataImportDelegate {
 			return ret;
 		}
 		
-		final Map<String,String> existing = rename!=null ? MapUtils.getMap(rename.getExpression()) : null;
+		final Map<String,String> existing = rename!=null ? getMap(rename.getExpression()) : null;
 		if (existing!=null) {
 			existing.keySet().retainAll(ret.keySet());
 			ret.putAll(existing);

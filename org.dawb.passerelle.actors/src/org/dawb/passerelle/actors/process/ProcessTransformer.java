@@ -35,7 +35,7 @@ import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 import com.isencia.util.commandline.ManagedCommandline;
 
 /**
@@ -130,7 +130,7 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 				final File     runDir    = new File(workspace+"/"+dir);
 				if (!runDir.exists()) {
 					runDir.mkdirs();
-					AbstractPassModeTransformer.refreshResource(ModelUtils.getProject(this));
+					AbstractPassModeTransformer.refreshResource(ResourceUtils.getProject(this));
 				}
 				
 	            command.setWorkingDir(runDir);
@@ -143,7 +143,7 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 				logger.debug("Process '"+cmd+"' exited with code "+retCode);
 			}
 			
-			AbstractPassModeTransformer.refreshResource(ModelUtils.getProject(this));
+			AbstractPassModeTransformer.refreshResource(ResourceUtils.getProject(this));
 			
 			if (outputExpressionName!=null) {
 				ret.putScalar(outputExpressionName, command.getStdoutAsString()!=null ? command.getStdoutAsString().trim() : "");

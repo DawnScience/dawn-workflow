@@ -20,7 +20,6 @@ import ncsa.hdf.object.Datatype;
 import ncsa.hdf.object.Group;
 
 import org.dawb.common.python.PythonUtils;
-import org.dawb.common.ui.util.CalibrationUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.IFileUtils;
 import org.dawb.hdf5.HierarchicalDataFactory;
@@ -43,10 +42,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.NullProgressMonitor;
-import org.eclipse.swt.SWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ptolemy.actor.lib.SetVariable;
 import ptolemy.data.expr.Parameter;
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
@@ -99,7 +98,6 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 	static {
 		CALIBRATION_TYPES = new ArrayList<String>(3);
 		CALIBRATION_TYPES.add("None");
-		CALIBRATION_TYPES.add("Use user defined calibration for ascii files");
 	}
 	
 	private Parameter         fileFormatParam;
@@ -126,7 +124,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		registerConfigurableParameter(fileFormatParam);
 		fileFormatParam.setExpression(FILE_TYPES.get(0));
 
-		fileWriteParam = new StringChoiceParameter(this, "Writing Type", WRITING_CHOICES, SWT.SINGLE);
+		fileWriteParam = new StringChoiceParameter(this, "Writing Type", WRITING_CHOICES, 1 << 2 /*SWT.SINGLE*/);
 		registerConfigurableParameter(fileWriteParam);
 		fileWriteParam.setExpression(WRITING_CHOICES.get(3));
 		
@@ -141,7 +139,8 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				return CALIBRATION_TYPES.toArray(new String[CALIBRATION_TYPES.size()]);
 			}
 		};
-		registerConfigurableParameter(calibParam);
+		registerExpertParameter(calibParam);
+        calibParam.setVisibility(Settable.NONE);
 		calibParam.setExpression(CALIBRATION_TYPES.get(0));
 		
 		datasetName = new StringParameter(this, "Dataset Name");
@@ -224,11 +223,6 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		writer.setWriteIndex(false);
 
 		final boolean isMultipleFiles = FILE_TYPES.get(2).equals(fileFormat);
-		if (CALIBRATION_TYPES.get(1).equals(calibParam.getExpression())) {
-			if (!isMultipleFiles) {
-				writer.addData(CalibrationUtils.getCalibrated(sets.get(0), scal, false));
-			}
-		}
 		
 		int i = 1;
 		for (IDataset set : sets) {
@@ -239,9 +233,6 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				final File   file = new File(dir, name);
 				writer.setFile(file);
 				
-				if (CALIBRATION_TYPES.get(1).equals(calibParam.getExpression())) {
-					writer.addData(CalibrationUtils.getCalibrated(set, scal, false));
-				}
 			}
 			
 			writer.addData(set);

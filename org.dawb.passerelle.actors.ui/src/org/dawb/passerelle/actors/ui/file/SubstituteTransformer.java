@@ -7,7 +7,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */ 
-package org.dawb.passerelle.actors.file;
+package org.dawb.passerelle.actors.ui.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -43,11 +43,11 @@ import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
+import com.isencia.passerelle.resources.actor.IResourceActor;
+import com.isencia.passerelle.resources.actor.ResourceObject;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
 import com.isencia.passerelle.workbench.model.actor.IPartListenerActor;
-import com.isencia.passerelle.workbench.model.actor.IResourceActor;
-import com.isencia.passerelle.workbench.model.actor.ResourceObject;
-import com.isencia.passerelle.workbench.util.ResourceUtils;
 
 /**
  * A actor for replacing variables in a file and writing it somewhere.

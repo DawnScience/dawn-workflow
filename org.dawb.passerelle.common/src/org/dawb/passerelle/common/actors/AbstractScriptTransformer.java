@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.dawb.common.util.io.IFileUtils;
-import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
-import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
@@ -38,15 +36,15 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
-import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.actor.ProcessingException;
+import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.actor.v5.ActorContext;
 import com.isencia.passerelle.actor.v5.ProcessRequest;
 import com.isencia.passerelle.actor.v5.ProcessResponse;
 import com.isencia.passerelle.message.ManagedMessage;
+import com.isencia.passerelle.resources.actor.IResourceActor;
+import com.isencia.passerelle.resources.actor.ResourceObject;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
-import com.isencia.passerelle.workbench.model.actor.IResourceActor;
-import com.isencia.passerelle.workbench.model.actor.ResourceObject;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 public abstract class AbstractScriptTransformer extends AbstractPassModeTransformer implements IResourceActor {

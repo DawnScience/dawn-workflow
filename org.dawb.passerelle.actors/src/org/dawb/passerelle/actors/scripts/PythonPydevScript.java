@@ -59,7 +59,7 @@ import com.isencia.passerelle.util.ptolemy.ResourceParameter;
 public class PythonPydevScript extends AbstractScriptTransformer {
 	private static final long serialVersionUID = 7006402070293405245L;
 	private static final Logger logger = LoggerFactory
-			.getLogger(PythonScript.class);
+			.getLogger(PythonPydevScript.class);
 
 	/** The possible interpreter to use */
 	private final StringParameter interpreterParam;

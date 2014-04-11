@@ -13,6 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.List;
 
 import org.dawb.common.util.eclipse.BundleUtils;
 import org.dawb.common.util.io.FileUtils;
@@ -33,6 +34,7 @@ import org.python.pydev.core.IPythonNature;
 
 import ptolemy.actor.CompositeActor;
 import ptolemy.kernel.ComponentEntity;
+import ptolemy.kernel.CompositeEntity;
 
 /**
  *   ModelUtils
@@ -42,7 +44,6 @@ import ptolemy.kernel.ComponentEntity;
  *   @project org.edna.passerelle.common
  **/
 public class ModelUtils {
-
 
 	/**
 	 * 

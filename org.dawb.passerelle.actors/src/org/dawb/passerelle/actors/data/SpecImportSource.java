@@ -51,11 +51,11 @@ import com.isencia.passerelle.core.PasserelleException;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageException;
 import com.isencia.passerelle.message.MessageFactory;
+import com.isencia.passerelle.resources.actor.IResourceActor;
+import com.isencia.passerelle.resources.actor.ResourceObject;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 import com.isencia.passerelle.util.EnvironmentUtils;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
-import com.isencia.passerelle.workbench.model.actor.IResourceActor;
-import com.isencia.passerelle.workbench.model.actor.ResourceObject;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 import com.isencia.util.StringConvertor;
 
 /**
@@ -95,7 +95,7 @@ public class SpecImportSource extends AbstractDataMessageSource implements IReso
 	 */
 	protected SpecImportSource(CompositeEntity container, String name, boolean isFolder) throws IllegalActionException, NameDuplicationException {
 		
-		super(container, ModelUtils.findUniqueActorName(container, name));
+		super(container, ResourceUtils.findUniqueActorName(container, name));
 		
 		relativePathParam = new Parameter(this, "Relative Path", new BooleanToken(true));
 		registerConfigurableParameter(relativePathParam);

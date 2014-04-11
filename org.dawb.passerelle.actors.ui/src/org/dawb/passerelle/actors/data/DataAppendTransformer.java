@@ -12,7 +12,6 @@ import org.dawb.common.util.io.FileUtils;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.MessageUtils;
-import org.eclipse.swt.SWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +81,7 @@ public class DataAppendTransformer extends AbstractDataMessageTransformer {
 			public Map<String,String> getVisibleChoices() {
 			    return delegate.getChoppedNames();
 			}
-		}, SWT.MULTI);
+		}, 1 << 1 /*SWT.MULTI*/);
 		
 		registerConfigurableParameter(names);
 

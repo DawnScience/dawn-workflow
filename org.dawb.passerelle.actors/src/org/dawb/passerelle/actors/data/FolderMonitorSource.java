@@ -30,7 +30,6 @@ import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.gmf.runtime.common.core.util.StringMatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

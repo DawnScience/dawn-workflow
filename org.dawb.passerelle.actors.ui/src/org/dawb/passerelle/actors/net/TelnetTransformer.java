@@ -23,7 +23,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.List;
 
-import org.dawb.passerelle.actors.file.SubstituteTransformer;
+import org.dawb.passerelle.actors.ui.file.SubstituteTransformer;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
@@ -38,8 +38,8 @@ import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
+import com.isencia.passerelle.resources.actor.IResourceActor;
 import com.isencia.passerelle.workbench.model.actor.IPartListenerActor;
-import com.isencia.passerelle.workbench.model.actor.IResourceActor;
 
 /**
  * A actor for replacing variables in a file and writing it to a socket.
