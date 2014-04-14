@@ -12,7 +12,7 @@ package org.dawb.passerelle.actors.test;
 import java.io.FileInputStream;
 
 import org.dawb.common.util.test.TestUtils;
-import org.dawb.passerelle.common.utils.ModelUtils;
+import org.dawb.passerelle.common.project.PasserelleProjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -35,7 +35,7 @@ public class MomlTestNoJMXService {
 		
 //    	InterpreterUtils.createJythonInterpreter("jython", new NullProgressMonitor());
 //    	InterpreterUtils.createPythonInterpreter("python", new NullProgressMonitor());
-		ModelUtils.createWorkflowProject("workflows", ResourcesPlugin.getWorkspace().getRoot(), true, null);
+		PasserelleProjectUtils.createWorkflowProject("workflows", ResourcesPlugin.getWorkspace().getRoot(), true, null);
 		ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 	}
 	/**

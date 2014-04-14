@@ -12,7 +12,7 @@ package org.dawb.passerelle.ui.editors;
 import java.util.Properties;
 
 import org.dawb.common.ui.util.EclipseUtils;
-import org.dawb.passerelle.common.message.ISubstitutionEditor;
+import org.dawb.passerelle.common.editor.ISubstitutionEditor;
 import org.dawb.passerelle.ui.Activator;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;

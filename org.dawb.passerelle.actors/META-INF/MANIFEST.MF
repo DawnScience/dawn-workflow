@@ -40,6 +40,5 @@ Export-Package: org.dawb.passerelle.actors,
  org.dawb.passerelle.actors.override,
  org.dawb.passerelle.actors.plot,
  org.dawb.passerelle.actors.process,
- org.dawb.passerelle.actors.roi,
  org.dawb.passerelle.actors.scripts,
  org.dawb.passerelle.jython

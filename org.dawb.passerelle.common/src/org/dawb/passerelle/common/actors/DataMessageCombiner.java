@@ -23,7 +23,7 @@ import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.TerminationException;
 import com.isencia.passerelle.actor.Transformer;
 import com.isencia.passerelle.message.ManagedMessage;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 
 /**
  * TODO check about deleting this actor completely, it breaks normal message flow handling
@@ -120,7 +120,7 @@ public class DataMessageCombiner extends Transformer implements IProjectNamedObj
 
 	public IProject getProject() {
 		try {
-			return ModelUtils.getProject(this);
+			return ResourceUtils.getProject(this);
 		} catch (Exception e) {
 			logger.error("Cannot get the project for actor "+getName(), e);
 			return null;

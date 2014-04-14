@@ -9,7 +9,7 @@
  */ 
 package org.dawb.passerelle.common.preferences;
 
-import org.dawb.passerelle.common.Activator;
+import org.dawb.passerelle.common.ui.Activator;
 import org.dawnsci.common.richbeans.components.scalebox.RangeBox;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;

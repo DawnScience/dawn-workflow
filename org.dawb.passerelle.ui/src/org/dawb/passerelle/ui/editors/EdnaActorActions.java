@@ -11,7 +11,7 @@ package org.dawb.passerelle.ui.editors;
 
 import org.dawb.common.ui.menu.CheckableActionGroup;
 import org.dawb.common.ui.util.EclipseUtils;
-import org.dawb.passerelle.common.message.ISubstitutionEditor;
+import org.dawb.passerelle.common.editor.ISubstitutionEditor;
 import org.dawb.passerelle.ui.Activator;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;

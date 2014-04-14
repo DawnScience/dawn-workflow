@@ -16,8 +16,6 @@ import java.util.Map;
 
 import javax.management.MBeanServerConnection;
 
-import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
-import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
 import org.dawb.passerelle.common.message.AbstractDatasetProvider;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
@@ -28,7 +26,6 @@ import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.swt.SWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +46,8 @@ import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.core.PortFactory;
 import com.isencia.passerelle.message.ManagedMessage;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 public abstract class AbstractPassModeTransformer extends Actor implements IVariableProvider, IProjectNamedObject, IDescriptionProvider {
 
@@ -93,17 +90,17 @@ public abstract class AbstractPassModeTransformer extends Actor implements IVari
     
 	public AbstractPassModeTransformer(final CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		
-		super(container, ModelUtils.findUniqueActorName(container, name));
+		super(container, ResourceUtils.findUniqueActorName(container, name));
 		
 		input = PortFactory.getInstance().createInputPort(this, null);
 		output = PortFactory.getInstance().createOutputPort(this);
 		
-		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), SWT.SINGLE);
+		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), 1 << 2);
 		memoryManagementParam.setExpression(MEMORY_MODE.get(0));
 		registerConfigurableParameter(memoryManagementParam);
 		memoryMode = MEMORY_MODE.get(0);
 		
-		dataSetNaming = new StringChoiceParameter(this, "Name Mode", getNameModes(), SWT.SINGLE);
+		dataSetNaming = new StringChoiceParameter(this, "Name Mode", getNameModes(), 1 << 2);
 		dataSetNaming.setExpression(NAME_MODE.get(0));
 		registerConfigurableParameter(dataSetNaming);
 		namingMode = NAME_MODE.get(0);
@@ -248,7 +245,7 @@ public abstract class AbstractPassModeTransformer extends Actor implements IVari
 
 	public IProject getProject() {
 		try {
-			return ModelUtils.getProject(this);
+			return ResourceUtils.getProject(this);
 		} catch (Exception e) {
 			logger.error("Cannot get the project for actor "+getName(), e);
 			return null;

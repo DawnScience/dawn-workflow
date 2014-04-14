@@ -6,22 +6,12 @@ Bundle-Version: 1.4.1.qualifier
 Bundle-Activator: org.dawb.passerelle.common.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.core.resources;bundle-version="3.5.2",
- org.eclipse.ui,
- org.eclipse.ui.ide,
  com.isencia.passerelle.engine,
- org.dawb.common.ui,
  org.dawb.common.util,
- org.dawnsci.common.widgets.gda;bundle-version="1.2.0",
  org.dawb.workbench.jmx;bundle-version="0.8.2",
- org.dawnsci.plotting.api;bundle-version="1.0.0",
  uk.ac.diamond.scisoft.analysis,
  uk.ac.diamond.scisoft.analysis.api;bundle-version="1.0.0",
- com.isencia.passerelle.workbench.model;bundle-version="1.1.0",
- com.isencia.passerelle.workbench.model.editor.ui;bundle-version="1.0.0",
- com.isencia.passerelle.workbench.model.ui;bundle-version="1.0.0",
- com.isencia.passerelle.editor.common;bundle-version="8.3.0",
  ptolemy.core;bundle-version="7.0.1",
- org.dawnsci.common.widgets;bundle-version="1.2.0",
  com.isencia.passerelle.resources;bundle-version="1.0.0"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
@@ -30,14 +20,9 @@ Export-Package: org.dawb.passerelle.common,
  org.dawb.passerelle.common.io,
  org.dawb.passerelle.common.message,
  org.dawb.passerelle.common.parameter,
- org.dawb.passerelle.common.parameter.function,
- org.dawb.passerelle.common.parameter.roi,
- org.dawb.passerelle.common.project,
- org.dawb.passerelle.common.remote,
  org.dawb.passerelle.common.utils
 Bundle-Vendor: ESRF
-Bundle-ClassPath: .,
- lib/castor-1.3.2-core.jar
+Bundle-ClassPath: .
 Import-Package: com.isencia.sherpa.commons,
  com.isencia.util,
  com.python.pydev.debug.remote.client_api;bundle-version="[3.3.3,3.4.0)",

@@ -7,17 +7,15 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */ 
-package org.dawb.passerelle.common.utils;
+package org.dawb.passerelle.common.project;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.List;
 
 import org.dawb.common.util.eclipse.BundleUtils;
 import org.dawb.common.util.io.FileUtils;
-import org.dawb.passerelle.common.project.PasserelleNature;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -28,13 +26,9 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.ui.PlatformUI;
-import org.edna.pydev.extensions.utils.PydevProjectUtils;
-import org.python.pydev.core.IPythonNature;
 
 import ptolemy.actor.CompositeActor;
 import ptolemy.kernel.ComponentEntity;
-import ptolemy.kernel.CompositeEntity;
 
 /**
  *   ModelUtils
@@ -43,7 +37,7 @@ import ptolemy.kernel.CompositeEntity;
  *   @date Jul 19, 2010
  *   @project org.edna.passerelle.common
  **/
-public class ModelUtils {
+public class PasserelleProjectUtils {
 
 	/**
 	 * 
@@ -55,7 +49,7 @@ public class ModelUtils {
 		
 		if (root.getProject(projectName).exists()) return root.getProject(projectName);
 		
-		final IProject workflows = ModelUtils.createPasserelleProject(projectName, root, examples, mon);
+		final IProject workflows = PasserelleProjectUtils.createPasserelleProject(projectName, root, examples, mon);
 		
 		// We add a nature which will use the 'jython' interpreter created automatically.
 		// This allows jython scripting to run in workflow nodes.
@@ -239,7 +233,7 @@ public class ModelUtils {
 		workflows.create(mon);
 		workflows.open(mon);
 			
-		ModelUtils.createEmptyWorkflow(workflows, "empty_workflow.moml", mon);
+		PasserelleProjectUtils.createEmptyWorkflow(workflows, "empty_workflow.moml", mon);
 		
 		if (createExamples) {
 			final IFolder examplesInProject = workflows.getFolder("examples");
@@ -277,7 +271,7 @@ public class ModelUtils {
 	        }
 		}
 
-		ModelUtils.addPasserelleNature(workflows, mon);
+		PasserelleProjectUtils.addPasserelleNature(workflows, mon);
 		
 		return workflows;
 	}

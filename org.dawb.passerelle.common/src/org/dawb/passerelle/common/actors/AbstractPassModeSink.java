@@ -14,12 +14,9 @@ import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.dawb.passerelle.common.actors.IDescriptionProvider.Requirement;
-import org.dawb.passerelle.common.actors.IDescriptionProvider.VariableHandling;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariableProvider;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.swt.SWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +35,8 @@ import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.core.PasserelleException;
 import com.isencia.passerelle.message.MessageHelper;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 public abstract class AbstractPassModeSink extends AbstractSink implements IVariableProvider, IProjectNamedObject, IDescriptionProvider {
 
@@ -82,16 +79,16 @@ public abstract class AbstractPassModeSink extends AbstractSink implements IVari
 
     public AbstractPassModeSink(final CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		
-		super(container, ModelUtils.findUniqueActorName(container, name));
+		super(container, ResourceUtils.findUniqueActorName(container, name));
 		
-		passModeParameter = new StringChoiceParameter(this, "Expression Mode", EXPRESSION_MODE, SWT.SINGLE);
+		passModeParameter = new StringChoiceParameter(this, "Expression Mode", EXPRESSION_MODE, 1<<2 /*SWT.SINGLE*/);
 		passModeParameter.setExpression(EXPRESSION_MODE.get(0));
 		registerExpertParameter(passModeParameter);
 		passModeParameter.setVisibility(Settable.NONE);
 		passMode = EXPRESSION_MODE.get(0);
 		
 		
-		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), SWT.SINGLE);
+		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), 1<<2 /*SWT.SINGLE*/);
 		memoryManagementParam.setExpression(MEMORY_MODE.get(0));
 		registerConfigurableParameter(memoryManagementParam);
 		memoryMode = MEMORY_MODE.get(0);
@@ -223,7 +220,7 @@ public abstract class AbstractPassModeSink extends AbstractSink implements IVari
 
 	public IProject getProject() {
 		try {
-			return ModelUtils.getProject(this);
+			return ResourceUtils.getProject(this);
 		} catch (Exception e) {
 			logger.error("Cannot get the project for actor "+getName(), e);
 			return null;

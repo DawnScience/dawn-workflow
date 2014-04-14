@@ -9,7 +9,7 @@
  */ 
 package org.dawb.passerelle.common.preferences;
 
-import org.dawb.passerelle.common.Activator;
+import org.dawb.passerelle.common.ui.Activator;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
 

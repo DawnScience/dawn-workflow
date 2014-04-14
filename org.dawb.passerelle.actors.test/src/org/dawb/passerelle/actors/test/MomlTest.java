@@ -19,8 +19,8 @@ import org.dawb.common.util.io.IFileUtils;
 import org.dawb.common.util.test.TestUtils;
 import org.dawb.hdf5.HierarchicalDataFactory;
 import org.dawb.hdf5.IHierarchicalDataFile;
-import org.dawb.passerelle.common.WorkbenchServiceManager;
-import org.dawb.passerelle.common.utils.ModelUtils;
+import org.dawb.passerelle.common.project.PasserelleProjectUtils;
+import org.dawb.passerelle.common.remote.WorkbenchServiceManager;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -55,7 +55,7 @@ public class MomlTest {
 		
 //    	InterpreterUtils.createJythonInterpreter("jython", new NullProgressMonitor());
 //    	InterpreterUtils.createPythonInterpreter("python", new NullProgressMonitor());
-		ModelUtils.createWorkflowProject("workflows", ResourcesPlugin.getWorkspace().getRoot(), true, null);
+		PasserelleProjectUtils.createWorkflowProject("workflows", ResourcesPlugin.getWorkspace().getRoot(), true, null);
 		ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 		WorkbenchServiceManager.startTestingWorkbenchService();
 

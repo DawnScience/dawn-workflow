@@ -87,7 +87,7 @@ public class DataMessageException extends ProcessingException {
 			// view.
 			final MBeanServerConnection client = RemoteWorkbenchAgent.getServerConnection(1000);
 			client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "logStatus",
-						  new Object[] {Activator.getDefault().getBundle().getSymbolicName(), message, rootException },
+						  new Object[] {Activator.PLUGIN_ID, message, rootException },
 						  new String[] { String.class.getName(), String.class.getName(), Throwable.class.getName() });
 			
 		} catch (Throwable ignored) {

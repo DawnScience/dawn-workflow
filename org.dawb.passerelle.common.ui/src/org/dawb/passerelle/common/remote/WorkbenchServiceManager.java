@@ -7,11 +7,10 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */ 
-package org.dawb.passerelle.common;
+package org.dawb.passerelle.common.remote;
 
 import org.dawb.common.services.IClassLoaderService;
 import org.dawb.common.services.ServiceManager;
-import org.dawb.passerelle.common.remote.RemoteServiceProviderImpl;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;

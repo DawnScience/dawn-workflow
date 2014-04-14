@@ -22,11 +22,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.variables.IValueVariable;
 import org.eclipse.core.variables.VariablesPlugin;
 
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
-
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
+
+import com.isencia.passerelle.resources.util.ResourceUtils;
 
 public class ParameterUtils {
 
@@ -92,8 +92,8 @@ public class ParameterUtils {
 
 		final Map<String, Object> variables = new HashMap<String, Object>(3);
 		if (actor != null) {
-			if (ModelUtils.getProject(actor) != null) {
-				variables.put("project_name", ModelUtils.getProject(actor).getName());				
+			if (ResourceUtils.getProject(actor) != null) {
+				variables.put("project_name", ResourceUtils.getProject(actor).getName());				
 			}
 			variables.put("actor_name", actor.getName());
 		}

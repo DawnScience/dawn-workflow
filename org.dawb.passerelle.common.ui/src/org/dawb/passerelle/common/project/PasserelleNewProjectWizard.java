@@ -13,7 +13,6 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 
-import org.dawb.passerelle.common.utils.ModelUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -108,7 +107,7 @@ public class PasserelleNewProjectWizard extends Wizard implements INewWizard {
 		if (root==null) return;
 
 		try {
-			this.projectCreated = ModelUtils.createWorkflowProject(projectName, root, isExamples, monitor);
+			this.projectCreated = PasserelleProjectUtils.createWorkflowProject(projectName, root, isExamples, monitor);
 		} catch (Exception e) {
 			throw new CoreException(Status.CANCEL_STATUS);
 		}

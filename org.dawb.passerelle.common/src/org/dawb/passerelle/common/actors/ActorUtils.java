@@ -19,8 +19,9 @@ import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
-import org.eclipse.ui.preferences.ScopedPreferenceStore;
+import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -195,8 +196,9 @@ public class ActorUtils {
 		if (actor.getManager()== null) return;
 		
 		if (Platform.getBundle("org.dawb.workbench.ui")!=null) {
-			final ScopedPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE,"org.dawb.workbench.ui");
-			final boolean isSel = store.getBoolean("org.dawb.actor.highlight.choice");
+			IPreferencesService service = Platform.getPreferencesService();
+			Preferences store = service.getRootNode().node(InstanceScope.SCOPE).node("org.dawb.workbench.ui");
+			final boolean isSel = store.getBoolean("org.dawb.actor.highlight.choice", true);
 			if (!isSel) return;
 		}
 

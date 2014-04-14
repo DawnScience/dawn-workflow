@@ -9,7 +9,7 @@
  */ 
 package org.dawb.passerelle.common.startup;
 
-import org.dawb.passerelle.common.utils.ModelUtils;
+import org.dawb.passerelle.common.project.PasserelleProjectUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -50,7 +50,7 @@ public class ModelsProjectCreator implements IStartup{
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
-					ModelUtils.createWorkflowProject("workflows", root, true, monitor);
+					PasserelleProjectUtils.createWorkflowProject("workflows", root, true, monitor);
 					
 					IWorkspace ws = ResourcesPlugin.getWorkspace();
 					ws.save(false, monitor);

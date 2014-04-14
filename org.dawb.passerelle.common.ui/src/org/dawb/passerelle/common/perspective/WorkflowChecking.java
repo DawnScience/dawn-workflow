@@ -10,7 +10,6 @@
 package org.dawb.passerelle.common.perspective;
 
 import org.dawb.common.ui.util.EclipseUtils;
-import org.dawb.passerelle.common.Activator;
 import org.dawb.passerelle.common.preferences.PreferenceConstants;
 import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -22,6 +21,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.dawb.passerelle.common.ui.Activator;
 
 import com.isencia.passerelle.workbench.model.ui.IPasserelleMultiPageEditor;
 

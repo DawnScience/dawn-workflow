@@ -26,7 +26,7 @@ public class RemoteServiceProviderImpl implements IRemoteServiceProvider {
 	
 	@Override 
 	public int getStartPort(){
-		final IPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, "org.dawb.passerelle.common");
+		final IPreferenceStore store = new ScopedPreferenceStore(InstanceScope.INSTANCE, "org.dawb.passerelle.common.ui");
 		return store.getInt("org.dawb.workbench.application.preferences.workbench.port");
 	}
 

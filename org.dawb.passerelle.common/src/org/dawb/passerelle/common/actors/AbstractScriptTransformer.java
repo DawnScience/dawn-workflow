@@ -44,8 +44,8 @@ import com.isencia.passerelle.actor.v5.ProcessResponse;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.resources.actor.IResourceActor;
 import com.isencia.passerelle.resources.actor.ResourceObject;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 
 public abstract class AbstractScriptTransformer extends AbstractPassModeTransformer implements IResourceActor {
 
@@ -66,7 +66,7 @@ public abstract class AbstractScriptTransformer extends AbstractPassModeTransfor
 
 	public AbstractScriptTransformer(CompositeEntity container, String name) throws Exception {
 		
-		super(container, ModelUtils.findUniqueActorName(container, name));
+		super(container, ResourceUtils.findUniqueActorName(container, name));
 		cache = new ArrayList<DataMessageComponent>(7);
 		
 		scriptFileParam = getScriptParameter((Actor)this);

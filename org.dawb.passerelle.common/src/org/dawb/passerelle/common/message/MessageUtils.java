@@ -39,7 +39,7 @@ import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageException;
 import com.isencia.passerelle.message.MessageFactory;
 import com.isencia.passerelle.message.internal.ErrorMessageContainer;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 import com.isencia.util.ArrayUtil;
 /**
  * Class to encapsulate messages and data methods sent around the network.
@@ -439,7 +439,7 @@ public class MessageUtils {
 		}
 		
 		if (actor!=null) {
-			IProject project = ModelUtils.getProject(actor);
+			IProject project = ResourceUtils.getProject(actor);
 			if (project != null) {
 				ret.put("project_name", project.getName());
 			}
@@ -486,8 +486,8 @@ public class MessageUtils {
 		}
 		
 		if (actor!=null) {		
-			if (ModelUtils.getProject(actor) != null) {
-				ret.put("project_name", ModelUtils.getProject(actor).getName());
+			if (ResourceUtils.getProject(actor) != null) {
+				ret.put("project_name", ResourceUtils.getProject(actor).getName());
 			}
 			ret.put("actor_name",   actor.getName());
 		}

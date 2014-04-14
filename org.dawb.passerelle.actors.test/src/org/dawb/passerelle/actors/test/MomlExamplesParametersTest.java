@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.dawb.passerelle.common.WorkbenchServiceManager;
-import org.dawb.passerelle.common.utils.ModelUtils;
+import org.dawb.passerelle.common.project.PasserelleProjectUtils;
+import org.dawb.passerelle.common.remote.WorkbenchServiceManager;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -93,7 +93,7 @@ public class MomlExamplesParametersTest {
 	@BeforeClass
 	public static void before() throws Exception {
 
-		ModelUtils.createWorkflowProject("workflows", ResourcesPlugin
+		PasserelleProjectUtils.createWorkflowProject("workflows", ResourcesPlugin
 				.getWorkspace().getRoot(), true, null);
 		ResourcesPlugin
 				.getWorkspace()

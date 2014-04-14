@@ -24,7 +24,7 @@ import org.dawb.common.util.io.PropUtils;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.VariableUtils;
 import org.dawb.passerelle.common.message.XPathVariable;
-import org.dawb.passerelle.common.utils.ModelUtils;
+import org.dawb.passerelle.common.project.PasserelleProjectUtils;
 import org.dawb.passerelle.ui.Activator;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
@@ -252,7 +252,7 @@ public class XPathEditor extends EditorPart {
 			CompositeActor toplevel = (CompositeActor) parser.parse(null, new File(moml.getLocation().toString()).toURL());
 			toplevel.workspace().setName(moml.getProject().getName());
 			
-			ComponentEntity entity  = ModelUtils.findEntityByName(toplevel, actorName);
+			ComponentEntity entity  = PasserelleProjectUtils.findEntityByName(toplevel, actorName);
 
 			if (entity!=null && entity.getName().equals(actorName)) {
 				

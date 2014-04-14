@@ -15,7 +15,7 @@ import java.io.FileInputStream;
 import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.util.test.TestUtils;
 import org.dawb.passerelle.actors.test.Activator;
-import org.dawb.passerelle.common.utils.ModelUtils;
+import org.dawb.passerelle.common.project.PasserelleProjectUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -42,7 +42,7 @@ public class MomlUITest {
 	public static void before() throws Exception {
 		
 		InterpreterUtils.createPythonInterpreter("python", "python", new NullProgressMonitor());
-		ModelUtils.createWorkflowProject("workflows", ResourcesPlugin.getWorkspace().getRoot(), true, null);
+		PasserelleProjectUtils.createWorkflowProject("workflows", ResourcesPlugin.getWorkspace().getRoot(), true, null);
 		ResourcesPlugin.getWorkspace().getRoot().refreshLocal(IResource.DEPTH_INFINITE, new NullProgressMonitor());
 	}
 

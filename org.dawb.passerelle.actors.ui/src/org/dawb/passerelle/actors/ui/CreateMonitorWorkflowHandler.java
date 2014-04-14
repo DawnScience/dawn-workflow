@@ -22,7 +22,7 @@ import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.IFileSelector;
 import org.dawb.passerelle.common.project.PasserelleNewProjectWizard;
-import org.dawb.passerelle.common.utils.ModelUtils;
+import org.dawb.passerelle.common.project.PasserelleProjectUtils;
 import org.eclipse.core.commands.AbstractHandler;
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
@@ -52,7 +52,7 @@ public class CreateMonitorWorkflowHandler extends AbstractHandler {
 			// Create workflow (moml) file
 			final String name    = "Monitor_"+selected.getName();
 			final File   toWrite = FileUtils.getUnique(selected, name, "moml");
-			final IFile  file    = ModelUtils.createFolderMonitorWorkflow(project, toWrite.getName(), selected, null);
+			final IFile  file    = PasserelleProjectUtils.createFolderMonitorWorkflow(project, toWrite.getName(), selected, null);
 			
 			// Refresh project
 			project.refreshLocal(IResource.DEPTH_ONE, null);

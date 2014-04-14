@@ -9,8 +9,6 @@
  */ 
 package org.dawb.passerelle.common.parameter;
 
-import org.castor.core.util.Base64Decoder;
-import org.castor.core.util.Base64Encoder;
 import org.dawnsci.common.richbeans.beans.BeanUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +17,9 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
+
+import org.castor.util.Base64Decoder;
+import org.castor.util.Base64Encoder;
 
 import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
 

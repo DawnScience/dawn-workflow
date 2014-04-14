@@ -38,7 +38,7 @@ import ptolemy.kernel.util.NamedObj;
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.message.ManagedMessage;
-import com.isencia.passerelle.workbench.model.utils.ModelUtils;
+import com.isencia.passerelle.resources.util.ResourceUtils;
 
 public abstract class AbstractDataMessageSource extends AbstractTriggeredSource implements IVariableProvider, IProjectNamedObject, IDescriptionProvider {
 
@@ -123,7 +123,7 @@ public abstract class AbstractDataMessageSource extends AbstractTriggeredSource 
 			}
 		}
 		try {
-			ret.add(new Variable("project_name", VARIABLE_TYPE.SCALAR, ModelUtils.getProject(this).getName()));
+			ret.add(new Variable("project_name", VARIABLE_TYPE.SCALAR, ResourceUtils.getProject(this).getName()));
 		} catch (Exception e) {
 			logger.error("Cannot find project!", e);
 		}
@@ -201,7 +201,7 @@ public abstract class AbstractDataMessageSource extends AbstractTriggeredSource 
 
 	public IProject getProject() {
 		try {
-			return ModelUtils.getProject(this);
+			return ResourceUtils.getProject(this);
 		} catch (Exception e) {
 			logger.error("Cannot get the project for actor "+getName(), e);
 			return null;

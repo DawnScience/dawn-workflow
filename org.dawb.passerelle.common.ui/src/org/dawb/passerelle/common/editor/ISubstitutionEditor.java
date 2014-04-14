@@ -7,8 +7,9 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */ 
-package org.dawb.passerelle.common.message;
+package org.dawb.passerelle.common.editor;
 
+import org.dawb.passerelle.common.message.SubstitutionParticipant;
 import org.eclipse.ui.IEditorPart;
 
 public interface ISubstitutionEditor extends IEditorPart {

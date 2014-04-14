@@ -12,14 +12,17 @@ package org.dawb.passerelle.common;
 import org.eclipse.core.runtime.IBundleGroup;
 import org.eclipse.core.runtime.IBundleGroupProvider;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.core.runtime.preferences.IPreferencesService;
+import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.prefs.Preferences;
 
 /**
  * The activator class controls the plug-in life cycle
  */
-public class Activator extends AbstractUIPlugin {
+public class Activator implements BundleActivator {
 
 	
 	// The plug-in ID
@@ -40,7 +43,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @see org.eclipse.core.runtime.Plugins#start(org.osgi.framework.BundleContext)
 	 */
 	public void start(BundleContext context) throws Exception {
-		super.start(context);
+		//super.start(context);
 		plugin       = this;
 		this.context = context;
 		
@@ -63,7 +66,7 @@ public class Activator extends AbstractUIPlugin {
 				// Intentionally ignore any error
 				version = null;
 			}
-			if (version==null) version = getBundle().getVersion().toString();
+			if (version==null) version = context.getBundle().getVersion().toString();
 			System.setProperty("dawn.workbench.version", version);
 		}
 	}
@@ -74,8 +77,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
-		super.stop(context);
-		WorkbenchServiceManager.stopWorkbenchService();
+		//super.stop(context);
 	}
 
 	/**
@@ -92,6 +94,13 @@ public class Activator extends AbstractUIPlugin {
 		ServiceReference<?> ref = context.getServiceReference(clazz);
 		if (ref==null) return null;
 		return context.getService(ref);
+	}
+	
+
+	public static Preferences getPreferences() {
+		IPreferencesService service = Platform.getPreferencesService();
+		Preferences store = service.getRootNode().node(InstanceScope.SCOPE).node(PLUGIN_ID);
+		return store;
 	}
 
 }
