@@ -5,7 +5,7 @@
 		style="style.css" name="Workflow Project Wizard" path="samples/@">
 		<group style-id="content-group" id="samples-group">
 			<link label="Create a new workflow project"
-				url="http://org.eclipse.ui.intro/runAction?pluginId=org.dawb.passerelle.common&amp;class=org.dawb.passerelle.common.project.PasserelleNewProjectWizardAction"
+				url="http://org.eclipse.ui.intro/runAction?pluginId=org.dawb.passerelle.common.ui&amp;class=org.dawb.passerelle.common.project.PasserelleNewProjectWizardAction"
 				id="workflowitem" style-id="content-link">
 				<text>The Workflow Project Wizard creates a new workflow project with/without workflow example data.</text>
 			</link>

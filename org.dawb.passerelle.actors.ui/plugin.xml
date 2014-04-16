@@ -525,13 +525,6 @@
       </toc>
    </extension>
    <extension
-         point="org.eclipse.ui.intro.configExtension">
-      <configExtension
-            configId="org.dawnsci.intro.universalConfig"
-            content="intro/introContribution.xml">
-      </configExtension>
-   </extension>
-   <extension
          point="org.eclipse.ui.services">
        <serviceFactory
             factoryClass="org.dawb.passerelle.service.TransferService">
