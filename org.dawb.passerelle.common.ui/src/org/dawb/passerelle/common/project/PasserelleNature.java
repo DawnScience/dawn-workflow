@@ -22,7 +22,7 @@ public class PasserelleNature implements IProjectNature {
 	/**
 	 * 
 	 */
-	public static String ID = "org.dawb.passerelle.common.PasserelleNature";
+	public static String ID = "org.dawb.passerelle.common.ui.PasserelleNature";
 
 	@Override
 	public void configure() throws CoreException {
