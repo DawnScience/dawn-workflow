@@ -130,6 +130,10 @@ This Agreement is governed by the laws of the State of New York and the intellec
          id="uk.ac.diamond.scisoft.icat.actors.feature"
          version="0.0.0"/>
 
+   <includes
+         id="org.dawnsci.hpc.client.feature"
+         version="0.0.0"/>
+
    <plugin
          id="org.dawb.common.python"
          download-size="0"
