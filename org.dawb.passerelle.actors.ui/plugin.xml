@@ -352,7 +352,7 @@
             name="Process">
       </actor>
       <actor
-            class="org.dawb.passerelle.actors.file.SubstituteTransformer"
+            class="org.dawb.passerelle.actors.ui.file.SubstituteTransformer"
             group="org.dawb.passerelle.actors.actorgroup.process"
             icon="icons/substitute.gif"
             id="org.dawb.passerelle.actors.substitution"
