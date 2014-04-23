@@ -70,7 +70,9 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 	protected StringParameter   encoding;
 
 	public SubstituteTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
+		
 		super(container, name);
+		setDescription("A transformer which substitutes scalar values into a text file. The variables should be of the form '${variable.name}'. Right click on the actor to open a substitution editor which helps with this process.");
 		
 		this.templateParam = new ResourceParameter(this, "Template Source");
 		setDescription(templateParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The location of the template file which should have variables processed on it and write to the output location.");
@@ -79,7 +81,7 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 		this.outputParam = new ResourceParameter(this, "Output");
 		outputParam.setResourceType(IResource.FOLDER);
 		outputParam.setExpression("/${project_name}/output/");
-		setDescription(outputParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The output parameter, which should be a folder. If the value of the parameter resolves to a project location, actor will use that creating it if required. Otherwise a standard file will be created to the location - in order for a standard file outside the workspace to work, it must exist already.");
+		setDescription(outputParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The output parameter, which should be a folder. If the value of the parameter resolves to a project location, actor will use that creating it if required. Otherwise a standard file will be created to the location. In order for a standard file outside the workspace to work, it must exist already.");
 		registerConfigurableParameter(outputParam);
 		
 		this.encoding = new StringParameter(this, "Encoding") {
