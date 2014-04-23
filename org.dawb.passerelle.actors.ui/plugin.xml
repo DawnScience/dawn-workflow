@@ -19,6 +19,11 @@
             priority="12">
       </actorgroup>
       <actorgroup
+            id="com.isencia.passerelle.actor.actorgroup.cluster"
+            name="Clustering"
+            open="false">
+      </actorgroup>
+      <actorgroup
             icon="icons/folder.gif"
             id="com.isencia.passerelle.actor.actorgroup.sources"
             name="Sources"
@@ -108,6 +113,13 @@
             icon="icons/vertex.png"
             id="Vertex"
             name="Vertex">
+      </actor>
+      <actor
+            class="ptolemy.data.expr.StringParameter"
+            group="com.isencia.passerelle.actor.actorgroup.utilities"
+            icon="icons/input_field.gif"
+            id="ptolemy.data.expr.StringParameter"
+            name="String Parameter">
       </actor>
       <actor
             class="ptolemy.vergil.kernel.attributes.TextAttribute"
@@ -457,6 +469,28 @@
             icon="icons/filter.gif"
             id="org.dawb.passerelle.actors.dmFilter"
             name="Filter">
+      </actor>
+   </extension>
+   <extension
+         name="Clustering"
+         point="com.isencia.passerelle.engine.actors">
+      <actor
+            class="org.dawnsci.passerelle.cluster.actor.ClusterNodeTransformer"
+            group="com.isencia.passerelle.actor.actorgroup.cluster"
+            id="org.dawnsci.passerelle.cluster.actor.ClusterNodeTransformer"
+            name="ClusterNodeTransformer">
+      </actor>
+      <actor
+            class="org.dawnsci.passerelle.cluster.actor.JobSliceSource"
+            group="com.isencia.passerelle.actor.actorgroup.cluster"
+            id="org.dawnsci.passerelle.cluster.actor.JobSliceSource"
+            name="JobSliceSource">
+      </actor>
+      <actor
+            class="org.dawnsci.passerelle.cluster.actor.JobSliceSink"
+            group="com.isencia.passerelle.actor.actorgroup.cluster"
+            id="org.dawnsci.passerelle.cluster.actor.JobSliceSink"
+            name="JobSliceSink">
       </actor>
    </extension>
    <extension
