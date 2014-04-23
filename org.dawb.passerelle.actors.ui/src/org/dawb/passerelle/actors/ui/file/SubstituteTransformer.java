@@ -79,7 +79,7 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 		this.outputParam = new ResourceParameter(this, "Output");
 		outputParam.setResourceType(IResource.FOLDER);
 		outputParam.setExpression("/${project_name}/output/");
-		setDescription(outputParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The output parameter. If the value of the parameter resolves to a project location, will use that, otherwise a standard file will be created to the expanded location. The value should be a folder choice.");
+		setDescription(outputParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The output parameter, which should be a folder. If the value of the parameter resolves to a project location, actor will use that creating it if required. Otherwise a standard file will be created to the location - in order for a standard file outside the workspace to work, it must exist already.");
 		registerConfigurableParameter(outputParam);
 		
 		this.encoding = new StringParameter(this, "Encoding") {
