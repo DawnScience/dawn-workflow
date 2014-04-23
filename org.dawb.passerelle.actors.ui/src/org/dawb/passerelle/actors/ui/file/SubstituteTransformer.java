@@ -11,6 +11,8 @@ package org.dawb.passerelle.actors.ui.file;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -71,11 +73,13 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 		super(container, name);
 		
 		this.templateParam = new ResourceParameter(this, "Template Source");
+		setDescription(templateParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The location of the template file which should have variables processed on it and write to the output location.");
 		registerConfigurableParameter(templateParam);
 		
 		this.outputParam = new ResourceParameter(this, "Output");
 		outputParam.setResourceType(IResource.FOLDER);
 		outputParam.setExpression("/${project_name}/output/");
+		setDescription(outputParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "The output parameter. If the value of the parameter resolves to a project location, will use that, otherwise a standard file will be created to the expanded location. The value should be a folder choice.");
 		registerConfigurableParameter(outputParam);
 		
 		this.encoding = new StringParameter(this, "Encoding") {
@@ -94,7 +98,6 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 	@Override
 	protected DataMessageComponent getTransformedMessage(final List<DataMessageComponent> cache) throws ProcessingException {
 		
-
 		String fromPath   = null;
 		String outputPath = null;
 		try {
@@ -107,14 +110,56 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 		// Copy file to new location
 		final IFile    input = (IFile)ResourceUtils.getResource(fromPath);
 		IResource  res = ResourceUtils.getResource(outputPath);
-		if (res==null) { // This call 
+		RESOURCE_TEST: if (res==null) { // This call 
 			try {
+				// If the path resolves to an io.File, use that
+				final File existingDir = new File(outputPath);
+				if (existingDir.exists()) break RESOURCE_TEST; // We will use that
+				
 				res = IFileUtils.getContainer(outputPath, getProject().getName(), "output");
+				
 			} catch (Exception e) {
 				logger.error("Cannot obtain output path as expected!", e);
 			}
 		}	
 		
+		DataMessageComponent comp = null;
+		if (res!=null) {
+			comp = writeResource(input, res, cache);
+		} else {
+			// Assume output path is a java.io.File.
+			comp = writeFile(input, outputPath, cache);
+		}
+				
+		return comp;
+	}
+
+	private DataMessageComponent writeFile(final IFile input , String outputPath, List<DataMessageComponent> cache) throws ProcessingException {
+		
+		final File fileOutput = new File(outputPath+input.getName()); // You need to put a / on the end yourself, or exception
+		final File fileInput  = input.getLocation().toFile();
+		try {
+			
+			// Make copy of file
+			FileUtils.copy(fileInput, fileOutput);
+			
+			// Substitute to a string
+			final String rep = SubstituteUtils.substitute(new FileInputStream(fileOutput), MessageUtils.getScalar(cache));
+        
+			// Overwrite the file.
+			FileUtils.write(new ByteArrayInputStream(rep.getBytes(encoding.getExpression())), new FileOutputStream(fileOutput));
+		
+			final DataMessageComponent comp = MessageUtils.mergeAll(cache);
+			comp.putScalar("substitute_output", fileOutput.getAbsolutePath());
+	 
+			return comp;
+
+		} catch (Exception e) {
+			throw createDataMessageException("Cannot read file "+input.getLocation().toOSString()+" and/or write file "+fileInput.getAbsolutePath(), e);
+		}
+	}
+
+	private DataMessageComponent writeResource(final IFile input, final IResource res, final List<DataMessageComponent> cache) throws ProcessingException {
 		
 		IFile output = null;
 		if (res instanceof IContainer) {
@@ -123,7 +168,7 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 			} else if (res instanceof IFolder) {
 				output = ((IFolder)res).getFile(input.getName());
 			}
-		} else if (output instanceof IFile) {
+		} else if (res instanceof IFile) {
 			output = (IFile)res;
 		}
 		
@@ -134,7 +179,7 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 				output.setContents(input.getContents(), true, false, new NullProgressMonitor());
 			}
 		} catch (Exception e) {
-			throw createDataMessageException("Cannot read file "+fromPath+" and/or write file "+outputPath, e);
+			throw createDataMessageException("Cannot read file "+input.getLocation().toOSString()+" and/or write file "+output.getLocation().toOSString(), e);
 		}
 		
 		try {
@@ -146,9 +191,10 @@ public class SubstituteTransformer extends AbstractDataMessageTransformer implem
 			throw createDataMessageException("Cannot substitute "+output, e);
 		}
 		
+		
 		final DataMessageComponent comp = MessageUtils.mergeAll(cache);
 		comp.putScalar("substitute_output", output.getLocation().toOSString());
-		
+ 
 		return comp;
 	}
 
