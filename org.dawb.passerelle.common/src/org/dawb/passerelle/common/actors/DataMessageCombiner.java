@@ -6,13 +6,20 @@ import java.util.Date;
 import java.util.List;
 
 import org.dawb.passerelle.common.message.DataMessageException;
+import org.dawb.passerelle.common.message.IVariable;
+import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
+import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.dawb.passerelle.common.message.Variable;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.resources.IProject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ptolemy.actor.IOPort;
 import ptolemy.kernel.CompositeEntity;
+import ptolemy.kernel.util.ChangeListener;
+import ptolemy.kernel.util.ChangeRequest;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
@@ -34,7 +41,7 @@ import com.isencia.passerelle.resources.util.ResourceUtils;
  * @author fcp94556
  *
  */
-public class DataMessageCombiner extends Transformer implements IProjectNamedObject {
+public class DataMessageCombiner extends Transformer implements IProjectNamedObject, IVariableProvider{
 	
 	private static final Logger logger = LoggerFactory.getLogger(DataMessageCombiner.class);
 
@@ -44,12 +51,32 @@ public class DataMessageCombiner extends Transformer implements IProjectNamedObj
 	private static final long serialVersionUID = 4497761553258309813L;
 	  
 	protected final List<DataMessageComponent> cache;
-
-	public DataMessageCombiner(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
+	/**
+	 * Cached variables
+	 */
+	private ArrayList<IVariable> cachedUpstreamVariables;
+ 
+	public DataMessageCombiner(final CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		super(container, name);
 		cache = new ArrayList<DataMessageComponent>(7);
-		ActorUtils.createDebugAttribute(this);
-	}
+		
+		this.cachedUpstreamVariables = new ArrayList<IVariable>(7);
+
+		// Any change upsteam means they are invalid.
+		container.addChangeListener(new ChangeListener() {		
+			@Override
+			public void changeFailed(ChangeRequest change, Exception exception) { }
+			@Override
+			public void changeExecuted(ChangeRequest change) {
+				cachedUpstreamVariables.clear();
+				if (!container.deepContains(DataMessageCombiner.this)) {
+					container.removeChangeListener(this);
+				}
+			}
+		});
+		
+		
+		ActorUtils.createDebugAttribute(this);	}
 
 	public void doPreInitialize() throws InitializationException{
 		cache.clear();
@@ -101,6 +128,13 @@ public class DataMessageCombiner extends Transformer implements IProjectNamedObj
 			
 			despatch.putScalar("operation.time."+getName(), DateFormat.getDateTimeInstance().format(new Date()));
 			despatch.putScalar("operation.type."+getName(), "Combine");
+			
+			try {
+			    despatch.putScalar("project_name", getProject().getName());
+			} catch (Exception ignored) { // we can still combine.
+				// do nothing
+			}
+			
 			return despatch;
 			
 		} finally {
@@ -126,4 +160,68 @@ public class DataMessageCombiner extends Transformer implements IProjectNamedObj
 			return null;
 		}
 	}
+
+	
+    /**
+     * Adds the scalar and the 
+     */
+	@Override
+	public List<IVariable> getOutputVariables() {
+		
+        final List<IVariable> ret = getScalarOutputVariables();
+     
+        return ret;
+	}
+	
+    /**
+     * By default just passes the upstream string and path variables as 
+     * these are normally preserved
+     */
+	protected List<IVariable> getScalarOutputVariables() {
+
+		final List<IVariable> ret = new ArrayList<IVariable>(7);
+		final List<IVariable> all = getInputVariables();
+		for (IVariable iVariable : all) {
+			if (iVariable.getVariableType()==VARIABLE_TYPE.PATH || 
+				iVariable.getVariableType()==VARIABLE_TYPE.SCALAR|| 
+				iVariable.getVariableType()==VARIABLE_TYPE.XML) {
+				ret.add(iVariable);
+			}
+		}
+		ret.add(new Variable("project_name", VARIABLE_TYPE.SCALAR, getProject().getName()));
+
+		return ret;
+	}
+
+    /**
+     * These are cached and cleared when the model is.
+     * @return
+     */
+	public List<IVariable> getInputVariables() {
+
+		synchronized (cachedUpstreamVariables) {
+			
+			if (cachedUpstreamVariables.isEmpty()) {
+				@SuppressWarnings("rawtypes")
+				final List connections = input.connectedPortList();
+				for (Object object : connections) {
+					final IOPort  port      = (IOPort)object;
+					final Object connection =  port.getContainer();
+					if (connection instanceof IVariableProvider) {
+						final List<IVariable> vars = ((IVariableProvider)connection).getOutputVariables();
+						if (vars!=null) cachedUpstreamVariables.addAll(vars);
+					}
+				}
+			}
+		}
+		return cachedUpstreamVariables;
+	}
+	
+	public boolean isUpstreamVariable(final String name) {
+		final List<IVariable> up = getInputVariables();
+		for (IVariable iVariable : up) {
+			if (iVariable.getVariableName().equals(name)) return true;
+		}
+		return false;
+	}	
 }

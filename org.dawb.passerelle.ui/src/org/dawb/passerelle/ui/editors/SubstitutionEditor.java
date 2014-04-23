@@ -286,7 +286,7 @@ public class SubstitutionEditor extends TextEditor implements ISubstitutionEdito
 
         TableViewerColumn var   = new TableViewerColumn(viewer, SWT.LEFT, 0);
 		var.getColumn().setText("Name");
-		var.getColumn().setWidth(80);
+		var.getColumn().setWidth(200);
 		var.setLabelProvider(new VariableLabelProvider(0));
 	}
 	
