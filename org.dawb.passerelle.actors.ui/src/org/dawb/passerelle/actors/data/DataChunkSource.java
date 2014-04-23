@@ -61,401 +61,425 @@ import com.isencia.util.StringConvertor;
  */
 public class DataChunkSource extends AbstractDataMessageSource implements ISliceInformationProvider {
 
-  private static final Logger logger = LoggerFactory.getLogger(DataChunkSource.class);
+	private static final Logger logger = LoggerFactory.getLogger(DataChunkSource.class);
 
-  public final ResourceParameter path;
-  public final StringChoiceParameter datasetName;
-  public final Parameter relativePathParam;
-  public final SliceParameter slicing;
-  public final Parameter chunkSize;
+	public final ResourceParameter path;
+	public final StringChoiceParameter datasetName;
+	public final Parameter relativePathParam;
+	public final SliceParameter slicing;
+	public final Parameter chunkSize;
 
-  private final DataImportDelegate delegate;
+	private final DataImportDelegate delegate;
 
-  private List<SliceBean> sliceQueue;
+	private List<SliceBean> sliceQueue;
 
-  // a counter for indexing each generated message in the complete sequence that this source generates
-  private long msgCounter;
-  // a unique sequence identifier for each execution of this actor within a single parent workflow execution
-  private long msgSequenceID;
+	// a counter for indexing each generated message in the complete sequence that this source generates
+	private long msgCounter;
+	// a unique sequence identifier for each execution of this actor within a single parent workflow execution
+	private long msgSequenceID;
 
-  /**
+	/**
 	 * 
 	 */
-  private static final long serialVersionUID = -5057873158019792804L;
+	private static final long serialVersionUID = -5057873158019792804L;
 
-  public DataChunkSource(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
+	public DataChunkSource(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 
-    super(container, name);
+		super(container, name);
 
-    relativePathParam = new Parameter(this, "Relative Path", new BooleanToken(true));
-    registerConfigurableParameter(relativePathParam);
-    setDescription(relativePathParam, Requirement.ESSENTIAL, VariableHandling.NONE,
-        "Tick to set wether you will provide a path to the data as absolute or relative to the workspace (recommended).");
+		relativePathParam = new Parameter(this, "Relative Path", new BooleanToken(true));
+		registerConfigurableParameter(relativePathParam);
+		setDescription(relativePathParam, Requirement.ESSENTIAL, VariableHandling.NONE,
+				"Tick to set wether you will provide a path to the data as absolute or relative to the workspace (recommended).");
 
-    path = new ResourceParameter(this, "Path", "Data file", H5Loader.EXT.toArray(new String[H5Loader.EXT.size()]));
-    try {
-      URI baseURI = new File(StringConvertor.convertPathDelimiters(EnvironmentUtils.getApplicationRootFolder())).toURI();
-      path.setBaseDirectory(baseURI);
-    } catch (Exception e) {
-      logger.error("Cannot set base directory for " + getClass().getName(), e);
-    }
-    registerConfigurableParameter(path);
+		path = new ResourceParameter(this, "Path", "Data file", H5Loader.EXT.toArray(new String[H5Loader.EXT.size()]));
+		try {
+			URI baseURI = new File(StringConvertor.convertPathDelimiters(EnvironmentUtils.getApplicationRootFolder())).toURI();
+			path.setBaseDirectory(baseURI);
+		} catch (Exception e) {
+			logger.error("Cannot set base directory for " + getClass().getName(), e);
+		}
+		registerConfigurableParameter(path);
 
-    datasetName = new StringChoiceParameter(this, "Dataset Name", new IAvailableChoices() {
-      @Override
-      public String[] getChoices() {
-        Collection<String> names = delegate.getAllDatasetsInFile();
-        if (names == null || names.isEmpty())
-          return null;
-        return names.toArray(new String[names.size()]);
-      }
+		datasetName = new StringChoiceParameter(this, "Dataset Name", new IAvailableChoices() {
+			@Override
+			public String[] getChoices() {
+				Collection<String> names = delegate.getAllDatasetsInFile();
+				if (names == null || names.isEmpty())
+					return null;
+				return names.toArray(new String[names.size()]);
+			}
 
-      @Override
-      public Map<String, String> getVisibleChoices() {
-        return delegate.getChoppedNames();
-      }
-    }, SWT.SINGLE);
+			@Override
+			public Map<String, String> getVisibleChoices() {
+				return delegate.getChoppedNames();
+			}
+		}, SWT.SINGLE);
 
-    registerConfigurableParameter(datasetName);
+		registerConfigurableParameter(datasetName);
 
-    // Now the delegate
-    delegate = new DataImportDelegate(path, datasetName, relativePathParam, null);
+		// Now the delegate
+		delegate = new DataImportDelegate(path, datasetName, relativePathParam, null);
 
-    slicing = new SliceParameter(this, "Data Set Slice");
-    registerConfigurableParameter(slicing);
-    setDescription(slicing, Requirement.OPTIONAL, VariableHandling.NONE,
-        "Slicing can only be done if one dataset is being exctracted from the data at a time. Set the '" + datasetName.getDisplayName()
-            + "' attribute first. You can use expands inside the slicing dialog.");
+		slicing = new SliceParameter(this, "Data Set Slice");
+		registerConfigurableParameter(slicing);
+		setDescription(slicing, Requirement.OPTIONAL, VariableHandling.NONE,
+				"Slicing can only be done if one dataset is being exctracted from the data at a time. Set the '" + datasetName.getDisplayName()
+				+ "' attribute first. You can use expands inside the slicing dialog.");
 
-    chunkSize = new Parameter(this, "Chunk Size");
-    chunkSize.setToken(new IntToken(8));
-    registerConfigurableParameter(chunkSize);
+		chunkSize = new Parameter(this, "Chunk Size");
+		chunkSize.setToken(new IntToken(8));
+		registerConfigurableParameter(chunkSize);
 
-  }
+	}
 
-  @Override
-  public void doPreInitialize() {
-    delegate.clear();
-  }
+	@Override
+	public void doPreInitialize() {
+		delegate.clear();
+	}
 
-  public void attributeChanged(Attribute attribute) throws IllegalActionException {
-    getLogger().trace("{} : {}", getFullName(), attribute);
+	public void attributeChanged(Attribute attribute) throws IllegalActionException {
+		getLogger().trace("{} : {}", getFullName(), attribute);
 
-    if (attribute == path) {
-      delegate.clear();
-    }
-    super.attributeChanged(attribute);
-  }
+		if (attribute == path) {
+			delegate.clear();
+		}
+		super.attributeChanged(attribute);
+	}
 
-  @Override
-  protected void doInitialize() throws InitializationException {
-    super.doInitialize();
-    msgCounter = 0;
-    msgSequenceID = MessageFactory.getInstance().createSequenceID();
-    sliceQueue = new ArrayList<SliceBean>(89);
-    if (!isTriggerConnected()) {
-      appendQueue(null); // Otherwise the trigger will call create on the iterator.
-    }
-  }
+	@Override
+	protected void doInitialize() throws InitializationException {
+		super.doInitialize();
+		msgCounter = 0;
+		msgSequenceID = MessageFactory.getInstance().createSequenceID();
+		sliceQueue = new ArrayList<SliceBean>(89);
+		if (!isTriggerConnected()) {
+			appendQueue(null); // Otherwise the trigger will call create on the iterator.
+		}
+	}
 
-  @Override
-  protected ManagedMessage getDataMessage() throws ProcessingException {
+	@Override
+	protected ManagedMessage getDataMessage() throws ProcessingException {
 
-    if (sliceQueue == null)
-      return null;
-    if (sliceQueue.isEmpty())
-      return null;
+		if (sliceQueue == null)
+			return null;
+		if (sliceQueue.isEmpty())
+			return null;
 
-    if (isFinishRequested()) {
-      sliceQueue.clear();
-      return null;
-    }
+		if (isFinishRequested()) {
+			sliceQueue.clear();
+			return null;
+		}
 
-    // Stops data being loaded while a modal dialog is being shown to user.
-    ActorUtils.waitWhileLocked();
+		// Stops data being loaded while a modal dialog is being shown to user.
+		ActorUtils.waitWhileLocked();
 
-    final SliceBean sliceBean = sliceQueue.remove(0);
-    ManagedMessage msg = MessageFactory.getInstance().createMessageInSequence(msgSequenceID, msgCounter++, hasNoMoreMessages(), getStandardMessageHeaders());
+		final SliceBean sliceBean = sliceQueue.remove(0);
+		ManagedMessage msg = MessageFactory.getInstance().createMessageInSequence(msgSequenceID, msgCounter++, hasNoMoreMessages(), getStandardMessageHeaders());
 
-    try {
-      final DataMessageComponent comp = new DataMessageComponent();
-      comp.putScalar("dataSet", sliceBean.getDataSet());
-      comp.putScalar("slice", sliceBean.getSlice());
-      comp.putScalar("shape", sliceBean.getShape());
-      comp.putScalar("file_name", sliceBean.getFile().getName());
-      comp.putScalar("file_path", sliceBean.getFile().getAbsolutePath());
-      logger.debug(sliceBean.toString());
+		try {
+			final DataMessageComponent comp = new DataMessageComponent();
+			comp.putScalar("datasetName",   sliceBean.getDataSet());
+			comp.putScalar("slice",         sliceBean.getSlice());
+			comp.putScalar("shape",         sliceBean.getShape());
+			comp.putScalar("file_name",     sliceBean.getFile().getName());
+			comp.putScalar("file_path",     sliceBean.getFile().getAbsolutePath());
+			logger.debug(sliceBean.toString());
 
-      msg.setBodyContent(comp, DatasetConstants.CONTENT_TYPE_DATA);
+			msg.setBodyContent(comp, DatasetConstants.CONTENT_TYPE_DATA);
 
-    } catch (MessageException e) {
-      logger.error("Cannot set map of data in message body!", e);
-      msg = MessageFactory.getInstance().createErrorMessage(
-          new PasserelleException(ErrorCode.MSG_CONSTRUCTION_ERROR, "Cannot set map of data in message body!", this, e));
-      sliceQueue.clear();
-    } catch (Exception ne) {
-      sliceQueue.clear();
-      throw new DataMessageException("Cannot read data from '" + delegate.getSourcePath(msg) + "'", this, ne);
-    }
+		} catch (MessageException e) {
+			logger.error("Cannot set map of data in message body!", e);
+			msg = MessageFactory.getInstance().createErrorMessage(
+					new PasserelleException(ErrorCode.MSG_CONSTRUCTION_ERROR, "Cannot set map of data in message body!", this, e));
+			sliceQueue.clear();
+		} catch (Exception ne) {
+			sliceQueue.clear();
+			throw new DataMessageException("Cannot read data from '" + delegate.getSourcePath(msg) + "'", this, ne);
+		}
 
-    try {
-      msg.setBodyHeader("TITLE", sliceBean.getFile().getName());
-    } catch (MessageException e) {
-      msg = MessageFactory.getInstance()
-          .createErrorMessage(new PasserelleException(ErrorCode.MSG_CONSTRUCTION_ERROR, "Cannot set header in message!", this, e));
-    }
+		try {
+			msg.setBodyHeader("TITLE", sliceBean.getFile().getName());
+		} catch (MessageException e) {
+			msg = MessageFactory.getInstance()
+					.createErrorMessage(new PasserelleException(ErrorCode.MSG_CONSTRUCTION_ERROR, "Cannot set header in message!", this, e));
+		}
 
-    return msg;
-  }
+		return msg;
+	}
 
-  @Override
-  public List<IVariable> getOutputVariables() {
+	@Override
+	public List<IVariable> getOutputVariables() {
 
-    final List<IVariable> ret = super.getOutputVariables();
-    if (delegate.getSourcePath() == null) {
-      final String msg = "Invalid Path '" + path.getExpression() + "'";
-      ret.add(new Variable("file_path", VARIABLE_TYPE.PATH, msg, String.class));
-      ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, msg, String.class));
-      ret.add(new Variable("dataSet", VARIABLE_TYPE.SCALAR, msg, String.class));
-      ret.add(new Variable("slice", VARIABLE_TYPE.SCALAR, msg, String.class));
-      ret.add(new Variable("shape", VARIABLE_TYPE.SCALAR, msg, String.class));
-      return ret;
-    }
+		final List<IVariable> ret = super.getOutputVariables();
+		if (delegate.getSourcePath() == null) {
+			final String msg = "Invalid Path '" + path.getExpression() + "'";
+			ret.add(new Variable("file_path", VARIABLE_TYPE.PATH, msg, String.class));
+			ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, msg, String.class));
+			ret.add(new Variable("dataSet", VARIABLE_TYPE.SCALAR, msg, String.class));
+			ret.add(new Variable("slice", VARIABLE_TYPE.SCALAR, msg, String.class));
+			ret.add(new Variable("shape", VARIABLE_TYPE.SCALAR, msg, String.class));
+			return ret;
+		}
 
-    ret.add(new Variable("file_path", VARIABLE_TYPE.PATH, delegate.getSourcePath(), String.class));
-    ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, new File(delegate.getSourcePath()).getName(), String.class));
-    ret.add(new Variable("dataSet", VARIABLE_TYPE.SCALAR, getDataSetNames()[0], String.class));
-    try {
-      ret.add(new Variable("slice", VARIABLE_TYPE.SCALAR, "0:" + ((IntToken) chunkSize.getToken()).intValue() + " ...", String.class));
-    } catch (Throwable e) {
-      ret.add(new Variable("slice", VARIABLE_TYPE.SCALAR, "0:8 ...", String.class));
-    }
-    ret.add(new Variable("shape", VARIABLE_TYPE.SCALAR, "Example: \"[0:8, Y, X]\"", String.class));
+		ret.add(new Variable("file_path", VARIABLE_TYPE.PATH, delegate.getSourcePath(), String.class));
+		ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, new File(delegate.getSourcePath()).getName(), String.class));
+		ret.add(new Variable("dataSet", VARIABLE_TYPE.SCALAR, getDataSetNames()[0], String.class));
+		try {
+			ret.add(new Variable("slice", VARIABLE_TYPE.SCALAR, "0:" + ((IntToken) chunkSize.getToken()).intValue() + " ...", String.class));
+		} catch (Throwable e) {
+			ret.add(new Variable("slice", VARIABLE_TYPE.SCALAR, "0:8 ...", String.class));
+		}
+		ret.add(new Variable("shape", VARIABLE_TYPE.SCALAR, "Example: \"[0:8, Y, X]\"", String.class));
 
-    return ret;
-  }
+		return ret;
+	}
 
-  /**
-   * triggerMsg may be null
-   * 
-   * @param triggerMsg
-   */
-  private void appendQueue(final ManagedMessage triggerMsg) throws InitializationException {
+	/**
+	 * triggerMsg may be null
+	 * 
+	 * @param triggerMsg
+	 */
+	private void appendQueue(final ManagedMessage triggerMsg) throws InitializationException {
 
-    if ((getManager() != null) && (delegate.getSourcePath(triggerMsg) != null)) {
+		if ((getManager() != null) && (delegate.getSourcePath(triggerMsg) != null)) {
 
-      final File file = new File(delegate.getSourcePath(triggerMsg));
+			final File file = new File(delegate.getSourcePath(triggerMsg));
 
-      if (!isFileLegal(file, triggerMsg)) {
-        throw new InitializationException(ErrorCode.FATAL, "Cannot slice directories at the moment!", this, null);
-      }
+			if (!isFileLegal(file, triggerMsg)) {
+				throw new InitializationException(ErrorCode.FATAL, "Cannot slice directories at the moment!", this, null);
+			}
 
-      try {
-        final IDataHolder holder = LoaderFactory.getData(file.getAbsolutePath(), null);
-        DataMessageComponent msg = triggerMsg == null ? null : MessageUtils.coerceMessage(triggerMsg);
-        final String dsPath = ParameterUtils.getSubstituedValue(datasetName, msg);
-        final ILazyDataset lz = holder.getLazyDataset(dsPath);
+			try {
+				final IDataHolder holder = LoaderFactory.getData(file.getAbsolutePath(), null);
+				DataMessageComponent msg = triggerMsg == null ? null : MessageUtils.coerceMessage(triggerMsg);
+				final String dsPath = ParameterUtils.getSubstituedValue(datasetName, msg);
+				final ILazyDataset lz = holder.getLazyDataset(dsPath);
 
-        if (lz == null) {
-          throw new InitializationException(ErrorCode.FATAL, "Cannot get lazy dataset from " + datasetName.getExpression(), this, null);
-        }
+				if (lz == null) {
+					throw new InitializationException(ErrorCode.FATAL, "Cannot get lazy dataset from " + datasetName.getExpression(), this, null);
+				}
 
-        DimsDataList ddl = (DimsDataList) slicing.getBeanFromValue(DimsDataList.class);
-        // Check that only one range is defined
-        DimsData range = null;
-        for (DimsData dd : ddl.iterable()) {
-          if (dd.getPlotAxis().isAdvanced())
-            throw new InitializationException(ErrorCode.FATAL, "Advanced dimensions are not supported!", this, null);
-          if (dd.isTextRange()) {
-            if (range != null)
-              throw new InitializationException(ErrorCode.FATAL, "Only one axis may be set as a range!", this, null);
-            range = dd;
-          }
-        }
+				DimsDataList ddl = (DimsDataList) slicing.getBeanFromValue(DimsDataList.class);
+				// Check that only one range is defined
+				DimsData range = null;
+				for (DimsData dd : ddl.iterable()) {
+					if (dd.getPlotAxis().isAdvanced())
+						throw new InitializationException(ErrorCode.FATAL, "Advanced dimensions are not supported!", this, null);
+					if (dd.isTextRange()) {
+						if (range != null)
+							throw new InitializationException(ErrorCode.FATAL, "Only one axis may be set as a range!", this, null);
+						range = dd;
+					}
+				}
 
-        if (range == null)
-          throw new InitializationException(ErrorCode.FATAL, "One axis must be a range!", this, null);
+				if (range == null)
+					throw new InitializationException(ErrorCode.FATAL, "One axis must be a range!", this, null);
 
-        final List<DimsData> exp = range.expand(lz.getShape()[range.getDimension()], delegate.createSliceRangeSubstituter(triggerMsg));
-        // This is the full list of this dimension. However we want to create chunks from this.
+				final List<DimsData> exp = range.expand(lz.getShape()[range.getDimension()], delegate.createSliceRangeSubstituter(triggerMsg));
+				// This is the full list of this dimension. However we want to create chunks from this.
 
-        // Rather low level but if it works then we are away
-        int count = exp.get(0).getSlice();
-        int chunk = ((IntToken) chunkSize.getToken()).intValue();
-        if (chunk < 1)
-          throw new InitializationException(ErrorCode.FATAL, "The '" + chunkSize.getDisplayName() + "' must be 1 or more but it is " + chunk, this, null);
+				// Rather low level but if it works then we are away
+				int count = exp.get(0).getSlice();
+				int chunk = ((IntToken) chunkSize.getToken()).intValue();
+				if (chunk < 1)
+					throw new InitializationException(ErrorCode.FATAL, "The '" + chunkSize.getDisplayName() + "' must be 1 or more but it is " + chunk, this, null);
 
-        while (count < exp.size()) {
-          int end = count + chunk - 1;
-          if (end > exp.size())
-            end = exp.size();
-          String slice = count + ":" + end;
-          String shape = getShape(ddl, slice);
+				while (count < exp.size()) {
+					int end = count + chunk - 1;
+					if (end > exp.size()) end = exp.size();
+					String slice = count + "-" + end;
+					slice = createSliceString(slice, exp.get(count), ddl);
+					String shape = getShape(ddl, slice);
+System.out.println(slice);
+					sliceQueue.add(new SliceBean(getDataSetNames()[0], slice, shape, file));
 
-          sliceQueue.add(new SliceBean(getDataSetNames()[0], slice, shape, file));
+					count += chunk;
+				}
 
-          count += chunk;
-        }
+			} catch (Exception ne) {
+				// This is the end!
+				getLogger().error("Problem reading slices in data import.", ne);
+				requestFinish();
+			}
 
-      } catch (Exception ne) {
-        // This is the end!
-        getLogger().error("Problem reading slices in data import.", ne);
-        requestFinish();
-      }
+			if (sliceQueue != null && sliceQueue.isEmpty()) {
+				getLogger().info("No files found in '{}'. Filter is set to: {}", file.getAbsolutePath());
+			}
+		}
+	}
 
-      if (sliceQueue != null && sliceQueue.isEmpty()) {
-        getLogger().info("No files found in '{}'. Filter is set to: {}", file.getAbsolutePath());
-      }
-    }
-  }
+	/**
+	 * Creates a slice String based on the syntax of slices as defined here:
+	 * http://confluence.diamond.ac.uk/display/SCATTERWEB/Advanced+Slicing+and+Averaging+Techniques
+	 * 
+	 * @param slice
+	 * @param dimsData
+	 * @param ddl
+	 * @return
+	 */
+	private String createSliceString(String slice, DimsData rangeDim, DimsDataList ddl) {
 
-  private String getShape(DimsDataList ddl, String slice) {
-    final StringBuilder buf = new StringBuilder();
-    buf.append("[");
-    for (int i = 0; i < ddl.size(); i++) {
-      DimsData dd = ddl.getDimsData(i);
-      if (dd.isTextRange()) {
-        buf.append(slice);
-      } else {
-        buf.append(dd.getShapeLabel());
-      }
-      if (i < ddl.size() - 1)
-        buf.append(", ");
-    }
-    buf.append("]");
-    return buf.toString();
-  }
+		final StringBuilder buf = new StringBuilder();
+		for (DimsData dim : ddl.iterable()) {
+			if (rangeDim.getDimension()==dim.getDimension()) {
+				buf.append(slice);	
+			} else if (dim.isSlice()) {
+				buf.append(dim.getSlice());	
+			}
+			if (dim.getDimension()>=(ddl.size()-1)) break;
+			buf.append(";");
+		}
+		return buf.toString();
+	}
 
-  private boolean triggeredOnce = false;
+	private String getShape(DimsDataList ddl, String slice) {
+		final StringBuilder buf = new StringBuilder();
+		buf.append("[");
+		for (int i = 0; i < ddl.size(); i++) {
+			DimsData dd = ddl.getDimsData(i);
+			if (dd.isTextRange()) {
+				buf.append(slice);
+			} else {
+				buf.append(dd.getShapeLabel());
+			}
+			if (i < ddl.size() - 1)
+				buf.append(", ");
+		}
+		buf.append("]");
+		return buf.toString();
+	}
 
-  @Override
-  protected boolean mustWaitForTrigger() {
-    if (!isTriggerConnected())
-      return false;
-    if (!triggeredOnce)
-      return true;
-    return false;
-  }
+	private boolean triggeredOnce = false;
 
-  protected void acceptTriggerMessage(ManagedMessage triggerMsg) {
-    triggeredOnce = true;
-    try {
-      appendQueue(triggerMsg);
-    } catch (InitializationException e) {
-      logger.error("Cannot add slices to queue!", e);
-      requestFinish();
-    }
-  }
+	@Override
+	protected boolean mustWaitForTrigger() {
+		if (!isTriggerConnected())
+			return false;
+		if (!triggeredOnce)
+			return true;
+		return false;
+	}
 
-  private boolean isFileLegal(File file, final ManagedMessage triggerMsg) {
-    if (file.isDirectory())
-      return false;
-    if (file.isHidden())
-      return false;
-    if (file.getName().startsWith("."))
-      return false;
-    if (H5Loader.isH5(file.getPath()))
-      return true;
-    return false;
-  }
+	protected void acceptTriggerMessage(ManagedMessage triggerMsg) {
+		triggeredOnce = true;
+		try {
+			appendQueue(triggerMsg);
+		} catch (InitializationException e) {
+			logger.error("Cannot add slices to queue!", e);
+			requestFinish();
+		}
+	}
 
-  private class SliceBean {
-    private String dataSet;
-    private String slice;
-    private String shape;
-    private File file;
+	private boolean isFileLegal(File file, final ManagedMessage triggerMsg) {
+		if (file.isDirectory())
+			return false;
+		if (file.isHidden())
+			return false;
+		if (file.getName().startsWith("."))
+			return false;
+		if (H5Loader.isH5(file.getPath()))
+			return true;
+		return false;
+	}
 
-    public SliceBean(String dataSet, String slice, String shape, File file) {
-      this.dataSet = dataSet;
-      this.slice = slice;
-      this.shape = shape;
-      this.file = file;
-    }
+	private class SliceBean {
+		private String dataSet;
+		private String slice;
+		private String shape;
+		private File file;
 
-    public String getDataSet() {
-      return dataSet;
-    }
+		public SliceBean(String dataSet, String slice, String shape, File file) {
+			this.dataSet = dataSet;
+			this.slice = slice;
+			this.shape = shape;
+			this.file = file;
+		}
 
-    public File getFile() {
-      return file;
-    }
+		public String getDataSet() {
+			return dataSet;
+		}
 
-    public String getSlice() {
-      return slice;
-    }
+		public File getFile() {
+			return file;
+		}
 
-    public String getShape() {
-      return shape;
-    }
+		public String getSlice() {
+			return slice;
+		}
 
-    @Override
-    public int hashCode() {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + getOuterType().hashCode();
-      result = prime * result + ((dataSet == null) ? 0 : dataSet.hashCode());
-      result = prime * result + ((file == null) ? 0 : file.hashCode());
-      result = prime * result + ((shape == null) ? 0 : shape.hashCode());
-      result = prime * result + ((slice == null) ? 0 : slice.hashCode());
-      return result;
-    }
+		public String getShape() {
+			return shape;
+		}
 
-    @Override
-    public String toString() {
-      return "SliceBean [dataSet=" + dataSet + "slice=" + slice + ", shape=" + shape + ", file=" + file + "]";
-    }
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + ((dataSet == null) ? 0 : dataSet.hashCode());
+			result = prime * result + ((file == null) ? 0 : file.hashCode());
+			result = prime * result + ((shape == null) ? 0 : shape.hashCode());
+			result = prime * result + ((slice == null) ? 0 : slice.hashCode());
+			return result;
+		}
 
-    @Override
-    public boolean equals(Object obj) {
-      if (this == obj)
-        return true;
-      if (obj == null)
-        return false;
-      if (getClass() != obj.getClass())
-        return false;
-      SliceBean other = (SliceBean) obj;
-      if (!getOuterType().equals(other.getOuterType()))
-        return false;
-      if (dataSet == null) {
-        if (other.dataSet != null)
-          return false;
-      } else if (!dataSet.equals(other.dataSet))
-        return false;
-      if (file == null) {
-        if (other.file != null)
-          return false;
-      } else if (!file.equals(other.file))
-        return false;
-      if (shape == null) {
-        if (other.shape != null)
-          return false;
-      } else if (!shape.equals(other.shape))
-        return false;
-      if (slice == null) {
-        if (other.slice != null)
-          return false;
-      } else if (!slice.equals(other.slice))
-        return false;
-      return true;
-    }
+		@Override
+		public String toString() {
+			return "SliceBean [dataSet=" + dataSet + ", slice=" + slice + ", shape=" + shape + ", file=" + file + "]";
+		}
 
-    private DataChunkSource getOuterType() {
-      return DataChunkSource.this;
-    }
-  }
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj)
+				return true;
+			if (obj == null)
+				return false;
+			if (getClass() != obj.getClass())
+				return false;
+			SliceBean other = (SliceBean) obj;
+			if (!getOuterType().equals(other.getOuterType()))
+				return false;
+			if (dataSet == null) {
+				if (other.dataSet != null)
+					return false;
+			} else if (!dataSet.equals(other.dataSet))
+				return false;
+			if (file == null) {
+				if (other.file != null)
+					return false;
+			} else if (!file.equals(other.file))
+				return false;
+			if (shape == null) {
+				if (other.shape != null)
+					return false;
+			} else if (!shape.equals(other.shape))
+				return false;
+			if (slice == null) {
+				if (other.slice != null)
+					return false;
+			} else if (!slice.equals(other.slice))
+				return false;
+			return true;
+		}
 
-  @Override
-  public String[] getDataSetNames() {
-    try {
-      String dsPath = ParameterUtils.getSubstituedValue(datasetName.getExpression(), this, null);
-      return new String[] { dsPath };
-    } catch (Exception e) {
-      return new String[] { datasetName.getExpression() };
-    }
-  }
+		private DataChunkSource getOuterType() {
+			return DataChunkSource.this;
+		}
+	}
 
-  @Override
-  public String getSourcePath() {
-    return delegate.getSourcePath();
-  }
+	@Override
+	public String[] getDataSetNames() {
+		try {
+			String dsPath = ParameterUtils.getSubstituedValue(datasetName.getExpression(), this, null);
+			return new String[] { dsPath };
+		} catch (Exception e) {
+			return new String[] { datasetName.getExpression() };
+		}
+	}
+
+	@Override
+	public String getSourcePath() {
+		return delegate.getSourcePath();
+	}
 }
