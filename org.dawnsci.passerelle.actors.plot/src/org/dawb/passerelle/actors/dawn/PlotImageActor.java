@@ -277,8 +277,8 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					region.setROI(lroi);
 				}else {
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.LINE);
-					newRegion.setROI(lroi);
 					plottingSystem.addRegion(newRegion);
+					newRegion.setROI(lroi);
 					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
@@ -292,18 +292,18 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 				}else {
 					if(boxType.equals(BOX_ROI_TYPE.get(0))){
 						IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.BOX);
-						newRegion.setROI(rroi);
 						plottingSystem.addRegion(newRegion);
+						newRegion.setROI(rroi);
 					}
 					if(boxType.equals(BOX_ROI_TYPE.get(1))){
 						IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.XAXIS);
-						newRegion.setROI(rroi);
 						plottingSystem.addRegion(newRegion);
+						newRegion.setROI(rroi);
 					}
 					if(boxType.equals(BOX_ROI_TYPE.get(2))){
 						IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.YAXIS);
-						newRegion.setROI(rroi);
 						plottingSystem.addRegion(newRegion);
+						newRegion.setROI(rroi);
 					}
 					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
@@ -315,8 +315,8 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					region.setROI(sroi);
 				}else {
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.SECTOR);
-					newRegion.setROI(sroi);
 					plottingSystem.addRegion(newRegion);
+					newRegion.setROI(sroi);
 					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
@@ -327,8 +327,8 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					region.setROI(eroi);
 				}else {
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.ELLIPSE);
-					newRegion.setROI(eroi);
 					plottingSystem.addRegion(newRegion);
+					newRegion.setROI(eroi);
 					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
@@ -339,8 +339,8 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					region.setROI(efroi);
 				}else {
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.ELLIPSEFIT);
-					newRegion.setROI(efroi);
 					plottingSystem.addRegion(newRegion);
+					newRegion.setROI(efroi);
 					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
@@ -351,8 +351,8 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					region.setROI(proi);
 				}else {
 					IRegion newRegion = plottingSystem.createRegion(roiName, RegionType.POINT);
-					newRegion.setROI(proi);
 					plottingSystem.addRegion(newRegion);
+					newRegion.setROI(proi);
 					system.setToolVisible("org.dawb.workbench.plotting.tools.boxProfileTool",
 							ToolPageRole.ROLE_2D, "org.dawb.workbench.plotting.views.toolPageView.2D");
 				}
