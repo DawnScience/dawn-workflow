@@ -72,5 +72,10 @@ public class StringValueBean implements Serializable {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return textValue;
+	}
 	
 }
