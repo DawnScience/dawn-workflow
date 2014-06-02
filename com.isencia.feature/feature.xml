@@ -451,13 +451,6 @@ org.apache.commons.math.random:
          unpack="false"/>
 
    <plugin
-         id="mail"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="com.microstar"
          download-size="0"
          install-size="0"
@@ -543,13 +536,6 @@ org.apache.commons.math.random:
 
    <plugin
          id="com.springsource.net.sf.cglib"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
-         id="com.springsource.javax.mail"
          download-size="0"
          install-size="0"
          version="0.0.0"
@@ -670,6 +656,13 @@ org.apache.commons.math.random:
 
    <plugin
          id="com.isencia.passerelle.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.sun.mail.javax.mail"
          download-size="0"
          install-size="0"
          version="0.0.0"
