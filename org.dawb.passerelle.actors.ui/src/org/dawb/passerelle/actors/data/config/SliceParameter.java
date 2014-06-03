@@ -16,6 +16,7 @@ import org.dawnsci.slicing.api.SliceDialog;
 import org.dawnsci.slicing.api.system.AxisType;
 import org.dawnsci.slicing.api.system.DimsData;
 import org.dawnsci.slicing.api.system.DimsDataList;
+import org.dawnsci.slicing.api.system.RangeMode;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.Dialog;
@@ -128,7 +129,7 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 					
 				}
 				dialog.setDimsDataList(ddl);
-				dialog.setRangesAllowed(true);
+				dialog.setRangeMode(RangeMode.SINGLE_RANGE);
 				
 		        final int ok = dialog.open();
 		        if (ok == Dialog.OK) {
