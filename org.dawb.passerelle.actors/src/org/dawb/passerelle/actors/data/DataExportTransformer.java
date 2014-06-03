@@ -185,7 +185,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 			final DataMessageComponent comp = new DataMessageComponent();
 			comp.addScalar(MessageUtils.getScalar(cache));
 			comp.putScalar("file_path", filePath);
-			comp.putScalar("file_dir",  FileUtils.getDirectory(filePath));
+			comp.putScalar("file_dir",  FileUtils.getDirectoryAbsolutePath(filePath));
 			
 			final File targetFile = new File(filePath);
 			comp.putScalar("file_name", targetFile.getName());
@@ -622,7 +622,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 			
 			ret.add(new Variable("file_path", VARIABLE_TYPE.PATH, getOutputPath(), String.class));
 			ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, new File(getOutputPath()).getName(), String.class));
-			ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH, FileUtils.getDirectory(getOutputPath()), String.class));
+			ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH, FileUtils.getDirectoryAbsolutePath(getOutputPath()), String.class));
 			ret.add(new Variable("file_basename",  VARIABLE_TYPE.PATH, FileUtils.getFileNameNoExtension(new File(getOutputPath())), String.class));
 			return ret;
 			

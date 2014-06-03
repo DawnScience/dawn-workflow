@@ -118,7 +118,7 @@ public class DataAppendTransformer extends AbstractDataMessageTransformer {
 		    
 			despatch.putScalar("file_path", filePath);
 			despatch.putScalar("file_name", new File(filePath).getName());
-			despatch.putScalar("file_dir",  FileUtils.getDirectory(filePath));
+			despatch.putScalar("file_dir",  FileUtils.getDirectoryAbsolutePath(filePath));
 
 		    return despatch;
 		    

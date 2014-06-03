@@ -459,7 +459,7 @@ class DataImportDelegate {
 		
 		ret.add(new Variable("file_path", VARIABLE_TYPE.PATH, getSourcePath(), String.class));
 		ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, new File(getSourcePath()).getName(), String.class));
-		ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH, FileUtils.getDirectory(getSourcePath()), String.class));
+		ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH, FileUtils.getDirectoryAbsolutePath(getSourcePath()), String.class));
 		
 		if (isFullData) {
 			
