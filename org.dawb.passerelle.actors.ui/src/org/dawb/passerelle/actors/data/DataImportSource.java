@@ -494,7 +494,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		}
 		comp.putScalar("file_path", filePath);
 		comp.putScalar("file_name", new File(filePath).getName());
-		comp.putScalar("file_dir",  FileUtils.getDirectory(filePath));
+		comp.putScalar("file_dir",  FileUtils.getDirectoryAbsolutePath(filePath));
 		
 		// Process any scalars in the HDF5 file if there are any
 		if (DATA_TYPES[1].equals(dataType.getExpression()) && H5Loader.isH5(filePath)) {

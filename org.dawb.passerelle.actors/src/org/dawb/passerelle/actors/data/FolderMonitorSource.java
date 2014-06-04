@@ -361,7 +361,7 @@ public class FolderMonitorSource extends AbstractDataMessageSource {
 		    String sourcePath = getSourcePath(null);
 			ret.add(new Variable("file_path", VARIABLE_TYPE.PATH,   sourcePath, String.class));
 			ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, sourcePath != null ? new File(sourcePath).getName()+"/*" : "Monitored file...", String.class));
-			ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH, sourcePath != null ? FileUtils.getDirectory(getSourcePath(null)) : "Monitored directory", String.class));
+			ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH, sourcePath != null ? FileUtils.getDirectoryAbsolutePath(getSourcePath(null)) : "Monitored directory", String.class));
 		
 			return ret;
 			
