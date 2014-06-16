@@ -2,7 +2,7 @@
 <feature
       id="org.dawb.workflow.feature"
       label="DAWN Workflows"
-      version="1.4.0.qualifier"
+      version="1.6.0.qualifier"
       provider-name="Diamond Light Source">
 
    <description>
