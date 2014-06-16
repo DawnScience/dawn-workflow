@@ -223,14 +223,6 @@ This Agreement is governed by the laws of the State of New York and the intellec
          unpack="false"/>
 
    <plugin
-         id="org.dawb.passerelle.actors.tango"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-
-   <plugin
          id="org.dawnsci.passerelle.actors.plot"
          download-size="0"
          install-size="0"
