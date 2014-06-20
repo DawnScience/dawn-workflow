@@ -86,7 +86,9 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 	public PlotImageActor(CompositeEntity container, String name)
 			throws NameDuplicationException, IllegalActionException {
 		super(container, name);
-
+		setDescription("This actor won't work unless it is used in the same runtime environment as DAWN. " +
+				"To do so an Algorithm Process Page must be implemented to run the workflow." +
+				"See the ExampleRunPage class for an example of how to implement it in DAWN.");
 		// Plot View name parameter
 		plotViewName = new StringParameter(this, "Name");
 		plotViewName.setExpression("Plot 1");
