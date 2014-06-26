@@ -17,7 +17,6 @@ import java.util.Map;
 
 import ncsa.hdf.object.Dataset;
 import ncsa.hdf.object.Datatype;
-import ncsa.hdf.object.Group;
 
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.io.FileUtils;
@@ -424,9 +423,9 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 			String fullEntry = ret.getScalar(DATA_SAVEPATH);
 			String[] entries = fullEntry.split("/");
 			entries = cleanArray(entries);
-			Group parent = null;
+			String parent = null;
 			for (int i = 0; i < entries.length; i++) {
-				Group entry = null;
+				String entry = null;
 				if(i == 0){
 					entry = file.group(entries[i]);
 					file.setNexusAttribute(entry, Nexus.ENTRY);
@@ -462,7 +461,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				final long[]         shape = new long[myData.getShape().length];
 				for (int i = 0; i < shape.length; i++) shape[i] = myData.getShape()[i];
 				final Dataset dataset = file.appendDataset(dataSaveName,  datatype, shape, myData.getBuffer(), parent);
-				file.setNexusAttribute(dataset, Nexus.SDS);
+				file.setNexusAttribute(dataset.getFullName(), Nexus.SDS);
 			}
 
 			if(xAxisData != null){
@@ -470,7 +469,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				final long[]         xShape = new long[xAxisData.getShape().length];
 				for (int i = 0; i < xShape.length; i++) xShape[i] = xAxisData.getShape()[i];
 				final Dataset xDataset = file.replaceDataset(axis1SaveName,  xDatatype, xShape, xAxisData.getBuffer(), parent);
-				file.setNexusAttribute(xDataset, Nexus.SDS);
+				file.setNexusAttribute(xDataset.getFullName(), Nexus.SDS);
 			}
 
 			if(yAxisData != null){
@@ -478,7 +477,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				final long[]         yShape = new long[yAxisData.getShape().length];
 				for (int i = 0; i < yShape.length; i++) yShape[i] = yAxisData.getShape()[i];
 				final Dataset yDataset = file.replaceDataset(axis2SaveName,  yDatatype, yShape, yAxisData.getBuffer(), parent);
-				file.setNexusAttribute(yDataset, Nexus.SDS);
+				file.setNexusAttribute(yDataset.getFullName(), Nexus.SDS);
 			}
 
 			if(zAxisData != null){
@@ -486,7 +485,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				final long[]         zShape = new long[zAxisData.getShape().length];
 				for (int i = 0; i < zShape.length; i++) zShape[i] = zAxisData.getShape()[i];
 				final Dataset zDataset = file.replaceDataset(axis3SaveName,  zDatatype, zShape, zAxisData.getBuffer(), parent);
-				file.setNexusAttribute(zDataset, Nexus.SDS);
+				file.setNexusAttribute(zDataset.getFullName(), Nexus.SDS);
 			}
 
 			//			if (scal!=null) for (String name : scal.keySet()) {

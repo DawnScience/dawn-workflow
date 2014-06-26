@@ -326,17 +326,17 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 			final List<IDataset>           sets = MessageUtils.getDatasets(cache);
 			final Map<String,Serializable> rois = MessageUtils.getRois(cache);
 			
-			final Group entry = file.group("entry");
+			final String entry = file.group("entry");
 			file.setNexusAttribute(entry, Nexus.ENTRY);
 
 			if (scal!=null) {
-				final Group dict = file.group("dictionary", entry);
+				final String dict = file.group("dictionary", entry);
 				file.setNexusAttribute(dict, Nexus.DATA);
 				createStringEntries(file, dict, scal);
 			}
 			
 			if (rois!=null && !rois.isEmpty()) {
-				final Group roiGroup = file.group("regions", entry);
+				final String roiGroup = file.group("regions", entry);
 				file.setNexusAttribute(roiGroup, Nexus.DATA);
 				createStringEntries(file, roiGroup, rois);
 			}
@@ -345,7 +345,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 			final String datasetNameStr = getDatasetName(cache);
 			boolean separateSets = (datasetNameStr==null || datasetNameStr.endsWith("/"));
 			if (separateSets) {
-				Group group=entry;
+				String group=entry;
 				if (datasetNameStr!=null && datasetNameStr.endsWith("/")) {
 					final String[]  paths = datasetNameStr.split("/");
 					if (paths.length>0) {
@@ -366,7 +366,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 				createDatasets(null, file, group, sets, true);
 				
 			} else {
-				Group group=entry;
+				String group=entry;
 				final String[]  path = datasetNameStr.split("/");
 				if (path.length>2) {
 					for (int i = 0; i < (path.length-2); i++) {
@@ -407,18 +407,18 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 	 * @param rois
 	 * @throws Exception 
 	 */
-	private void createStringEntries(IHierarchicalDataFile file, Group parent, Map<String, ? extends Serializable> entries) throws Exception {
+	private void createStringEntries(IHierarchicalDataFile file, String parent, Map<String, ? extends Serializable> entries) throws Exception {
 		
 		if (entries==null || entries.isEmpty()) return;
 		for (String name : entries.keySet()) {
 			final Dataset s = file.createDataset(name, entries.get(name).toString(), parent);
-			file.setNexusAttribute(s, Nexus.SDS);
+			file.setNexusAttribute(s.getFullName(), Nexus.SDS);
 		}
 	}
 
 	private void createDatasets(final String         name,
 			                    final IHierarchicalDataFile file, 
-			                    final Group          group,
+			                    final String          group,
 			                    final List<IDataset> sets, 
 			                    boolean              isCreate) throws Exception {
 		
@@ -435,7 +435,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 			} else {
 				s = file.appendDataset(name,  d, shape, a.getBuffer(), group);
 			}
-			file.setNexusAttribute(s, Nexus.SDS);
+			file.setNexusAttribute(s.getFullName(), Nexus.SDS);
 		}			
 	}
 
