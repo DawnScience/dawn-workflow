@@ -71,7 +71,7 @@ public class PrepareFermiFittingFunctionsActor extends
 		if (data.containsKey(xAxis)) {
 			xAxisDS = ((AbstractDataset) data.get(xAxis)).clone();
 		} else {
-			xAxisDS = DoubleDataset.arange(shape[0], 0, -1);
+			xAxisDS = DoubleDataset.createRange(shape[0], 0, -1);
 		}
 		
 		Double temperatureValue = 10.0;
