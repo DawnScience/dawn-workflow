@@ -278,14 +278,14 @@ AbstractDataMessageTransformer {
 		if (data.containsKey(xAxis)) {
 			xAxisDS = ((AbstractDataset) data.get(xAxis)).clone();
 		} else {
-			xAxisDS = DoubleDataset.arange(shape[fitDim], 0, -1);
+			xAxisDS = DoubleDataset.createRange(shape[fitDim], 0, -1);
 		}
 		
 		AbstractDataset anglesAxisDS = null;
 		if (data.containsKey(anglesAxis)) {
 			anglesAxisDS = ((AbstractDataset) data.get(anglesAxis)).clone();
 		} else {
-			anglesAxisDS = DoubleDataset.arange(shape[Math.abs(fitDim-1)], 0, -1);
+			anglesAxisDS = DoubleDataset.createRange(shape[Math.abs(fitDim-1)], 0, -1);
 		}
 
 		anglesAxisDS.setName("Angles");

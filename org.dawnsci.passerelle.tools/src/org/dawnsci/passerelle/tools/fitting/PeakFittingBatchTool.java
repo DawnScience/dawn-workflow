@@ -56,7 +56,7 @@ public class PeakFittingBatchTool extends AbstractBatchTool {
 		final List<IDataset> axes = getAxes(bean);
 		AbstractDataset x  = axes!=null && !axes.isEmpty()
 				           ? (AbstractDataset)axes.get(0)
-				           : IntegerDataset.arange(data.getSize(), AbstractDataset.INT32);
+				           : IntegerDataset.createRange(data.getSize());
 
 		AbstractDataset[] a= Generic1DFitter.xintersection(x,data,p1[0],p2[0]);
 		x = a[0]; AbstractDataset y=a[1];

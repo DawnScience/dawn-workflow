@@ -99,7 +99,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		if (data.containsKey(xAxis)) {
 			xAxisDS = ((AbstractDataset)data.get(xAxis)).clone();
 		} else {
-			xAxisDS = DoubleDataset.arange(shape[fitDim],0,-1);
+			xAxisDS = DoubleDataset.createRange(shape[fitDim],0,-1);
 		}
 		
 		// get the general parameters from the first fit.
