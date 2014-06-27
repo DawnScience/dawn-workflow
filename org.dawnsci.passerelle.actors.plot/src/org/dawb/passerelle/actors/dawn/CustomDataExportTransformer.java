@@ -15,9 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ncsa.hdf.object.Dataset;
-import ncsa.hdf.object.Datatype;
-
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.IFileUtils;
@@ -32,7 +29,6 @@ import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
-import org.dawnsci.io.h5.H5Utils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -457,35 +453,24 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 			AbstractDataset myData = (AbstractDataset)data.get(dataName);
 
 			if(myData != null){
-				final Datatype      datatype = H5Utils.getDatatype(myData);
-				final long[]         shape = new long[myData.getShape().length];
-				for (int i = 0; i < shape.length; i++) shape[i] = myData.getShape()[i];
-				final Dataset dataset = file.appendDataset(dataSaveName,  datatype, shape, myData.getBuffer(), parent);
-				file.setNexusAttribute(dataset.getFullName(), Nexus.SDS);
+				final String dataset = file.appendDataset(dataSaveName,  myData, parent);
+				file.setNexusAttribute(dataset, Nexus.SDS);
 			}
 
 			if(xAxisData != null){
-				final Datatype      xDatatype = H5Utils.getDatatype(xAxisData);
-				final long[]         xShape = new long[xAxisData.getShape().length];
-				for (int i = 0; i < xShape.length; i++) xShape[i] = xAxisData.getShape()[i];
-				final Dataset xDataset = file.replaceDataset(axis1SaveName,  xDatatype, xShape, xAxisData.getBuffer(), parent);
-				file.setNexusAttribute(xDataset.getFullName(), Nexus.SDS);
+				final String xDataset = file.replaceDataset(axis1SaveName,  xAxisData, parent);
+				file.setNexusAttribute(xDataset, Nexus.SDS);
 			}
 
 			if(yAxisData != null){
-				final Datatype      yDatatype = H5Utils.getDatatype(yAxisData);
-				final long[]         yShape = new long[yAxisData.getShape().length];
-				for (int i = 0; i < yShape.length; i++) yShape[i] = yAxisData.getShape()[i];
-				final Dataset yDataset = file.replaceDataset(axis2SaveName,  yDatatype, yShape, yAxisData.getBuffer(), parent);
-				file.setNexusAttribute(yDataset.getFullName(), Nexus.SDS);
+				final String yDataset = file.replaceDataset(axis2SaveName, yAxisData, parent);
+				file.setNexusAttribute(yDataset, Nexus.SDS);
 			}
 
 			if(zAxisData != null){
-				final Datatype      zDatatype = H5Utils.getDatatype(zAxisData);
-				final long[]         zShape = new long[zAxisData.getShape().length];
-				for (int i = 0; i < zShape.length; i++) zShape[i] = zAxisData.getShape()[i];
-				final Dataset zDataset = file.replaceDataset(axis3SaveName,  zDatatype, zShape, zAxisData.getBuffer(), parent);
-				file.setNexusAttribute(zDataset.getFullName(), Nexus.SDS);
+
+				final String zDataset = file.replaceDataset(axis3SaveName,  zAxisData, parent);
+				file.setNexusAttribute(zDataset, Nexus.SDS);
 			}
 
 			//			if (scal!=null) for (String name : scal.keySet()) {

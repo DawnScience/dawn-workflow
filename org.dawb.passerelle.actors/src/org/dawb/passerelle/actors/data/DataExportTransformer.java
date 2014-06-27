@@ -15,10 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import ncsa.hdf.object.Dataset;
-import ncsa.hdf.object.Datatype;
-import ncsa.hdf.object.Group;
-
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.IFileUtils;
@@ -34,7 +30,6 @@ import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
-import org.dawnsci.io.h5.H5Utils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -45,7 +40,6 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ptolemy.actor.lib.SetVariable;
 import ptolemy.data.expr.Parameter;
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
@@ -411,8 +405,8 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		
 		if (entries==null || entries.isEmpty()) return;
 		for (String name : entries.keySet()) {
-			final Dataset s = file.createDataset(name, entries.get(name).toString(), parent);
-			file.setNexusAttribute(s.getFullName(), Nexus.SDS);
+			final String s = file.createStringDataset(name, entries.get(name).toString(), parent);
+			file.setNexusAttribute(s, Nexus.SDS);
 		}
 	}
 
@@ -425,17 +419,14 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		if (sets!=null) for (IDataset set : sets) {
 			if (set == null) continue;
 			final AbstractDataset a = (AbstractDataset)set;
-			final Datatype        d = H5Utils.getDatatype(a);
-			final long[]      shape = new long[a.getShape().length];
-			for (int i = 0; i < shape.length; i++) shape[i] = a.getShape()[i];
 			
-			final Dataset s;
+			final String s;
 			if (isCreate) {
-			    s = file.createDataset(a.getName(),  d, shape, a.getBuffer(), group);
+			    s = file.createDataset(a.getName(),  a, group);
 			} else {
-				s = file.appendDataset(name,  d, shape, a.getBuffer(), group);
+				s = file.appendDataset(name,  a, group);
 			}
-			file.setNexusAttribute(s.getFullName(), Nexus.SDS);
+			file.setNexusAttribute(s, Nexus.SDS);
 		}			
 	}
 
