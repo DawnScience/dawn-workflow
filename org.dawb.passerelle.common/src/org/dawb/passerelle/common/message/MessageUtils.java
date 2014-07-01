@@ -453,7 +453,6 @@ public class MessageUtils {
 		final Collection<String> tmp = new ArrayList<String>(vars);
 		tmp.removeAll(ret.keySet());
 		if (tmp.size()>0) {
-			@SuppressWarnings("unused")
 			final NamedObj container = actor.getContainer();
 			if (container instanceof CompositeActor) {
 				CompositeActor cactor = (CompositeActor)container;
