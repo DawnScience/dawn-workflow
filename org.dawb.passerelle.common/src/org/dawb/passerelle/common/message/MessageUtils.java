@@ -25,6 +25,9 @@ import org.eclipse.core.resources.IProject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ptolemy.actor.CompositeActor;
+import ptolemy.data.expr.StringParameter;
+import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
@@ -437,13 +440,30 @@ public class MessageUtils {
 
 			if (value!=null) ret.put(name, value);
 		}
-		
+				
 		if (actor!=null) {
 			IProject project = ResourceUtils.getProject(actor);
 			if (project != null) {
 				ret.put("project_name", project.getName());
 			}
 			ret.put("actor_name",   actor.getName());
+		}
+		
+		// If we are missing some parameters, ask the model
+		final Collection<String> tmp = new ArrayList<String>(vars);
+		tmp.removeAll(ret.keySet());
+		if (tmp.size()>0) {
+			@SuppressWarnings("unused")
+			final NamedObj container = actor.getContainer();
+			if (container instanceof CompositeActor) {
+				CompositeActor cactor = (CompositeActor)container;
+				for (String name : tmp) {
+					Attribute att = cactor.getAttribute(name);
+					if (att!=null && att instanceof StringParameter) {
+						ret.put(name,   ((StringParameter)att).getExpression());
+					}
+				}
+			}
 		}
 		
 		return ret;
