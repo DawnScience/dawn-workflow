@@ -82,7 +82,7 @@ public class Expression extends AbstractDataMessageTransformer {
 			
 			final Map<String, Object> values = new HashMap<String, Object>(9);
 			
-			values.putAll(ret.getList());
+			if (ret.getList()!=null) values.putAll(ret.getList());
 			for (String key : ret.getScalar().keySet()) {
 				String value = ret.getScalar().get(key);
 				try {
