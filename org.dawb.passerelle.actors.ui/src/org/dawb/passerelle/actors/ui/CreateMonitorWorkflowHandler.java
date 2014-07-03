@@ -17,6 +17,8 @@
 package org.dawb.passerelle.actors.ui;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.util.io.FileUtils;
@@ -38,9 +40,9 @@ public class CreateMonitorWorkflowHandler extends AbstractHandler {
 	@Override
 	public Object execute(ExecutionEvent event) throws ExecutionException {
         try {
-			final IFileSelector fileView   = (IFileSelector)EclipseUtils.getActivePage().getActivePart();	
-			File     selected   = fileView.getSelectedFile();
-			if (!selected.isDirectory()) selected = selected.getParentFile();
+			final IFileSelector fileView   = (IFileSelector)EclipseUtils.getActivePage().getActivePart();
+			Path     selected   = fileView.getSelectedPath();
+			if (!Files.isDirectory(selected)) selected = selected.getParent();
 			
 			// Get any workflow project or create one called 'workflows'
 			IProject project = EclipseUtils.getExistingProject("org.dawb.passerelle.common.PasserelleNature");
@@ -50,9 +52,9 @@ public class CreateMonitorWorkflowHandler extends AbstractHandler {
 			}
 			
 			// Create workflow (moml) file
-			final String name    = "Monitor_"+selected.getName();
-			final File   toWrite = FileUtils.getUnique(selected, name, "moml");
-			final IFile  file    = PasserelleProjectUtils.createFolderMonitorWorkflow(project, toWrite.getName(), selected, null);
+			final String name    = "Monitor_"+selected.getFileName().toString();
+			final Path   toWrite = FileUtils.getUnique(selected, name, "moml");
+			final IFile  file    = PasserelleProjectUtils.createFolderMonitorWorkflow(project, toWrite.getFileName().toString(), selected.toFile(), null);
 			
 			// Refresh project
 			project.refreshLocal(IResource.DEPTH_ONE, null);
