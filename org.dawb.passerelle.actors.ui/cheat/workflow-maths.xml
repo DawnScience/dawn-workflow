@@ -61,7 +61,7 @@
             label="2. Click and drag the file 'data/ref-testscale_1_001.img' and 'data/ref-testscale_1_002.img' to the workflow diagram from the 'data' folder visible in the 'Project Explorer'.">
       </subitem>
        <subitem
-            label="3. In the 'Pallette' view, under the maths actors click and drag over 'Add' 'Substract' 'Multiply' 'Divide' and 'Median'.">
+            label="3. In the 'Palette' view, under the maths actors click and drag over 'Add' 'Substract' 'Multiply' 'Divide' and 'Median'.">
       </subitem>
        <subitem
             label="4. Click and drag in a 'Data Export' actor. (NOTE there is a search box above the tree of actors to find things.)">

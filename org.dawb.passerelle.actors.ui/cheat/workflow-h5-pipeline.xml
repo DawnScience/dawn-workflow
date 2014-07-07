@@ -46,7 +46,7 @@
             label="4. Before closing the slice form, press the 'Open data set in a gallery' button. This shows thumbnails of all the slices that will run through the pipeline. Press ok on the form and slicing will be set up. Notice that the attribute shows the slice as '0;3;1', you can also set ranges using this syntax, for instance every second dataset from 200 images would be '0;199;2'">
       </subitem>
       <subitem
-            label="5. Add a data export actor (use the 'Pallette' and search for 'Data') and change the 'File Format' to be 'tiff (16-bit)' (you may need to scroll down the drop down box). Now change the 'Output' attribute to '/${project_name}/output/tiff' and connect 'output' port of 'export' to the 'input' port of 'Data Export'.">
+            label="5. Add a data export actor (use the 'Palette' and search for 'Data') and change the 'File Format' to be 'tiff (16-bit)' (you may need to scroll down the drop down box). Now change the 'Output' attribute to '/${project_name}/output/tiff' and connect 'output' port of 'export' to the 'input' port of 'Data Export'.">
       </subitem>
       <subitem
             label="6. Add a 'Combiner' actor and connect 'output' of 'Data Export' to 'input' of your new 'Combiner'. The 'Combiner' actor is necessary for synchronising all upstream actions, i.e. this actor will not fire until all messages have been received. If the 'Combiner' actor is omitted the output file may be opened before all data have been written to it.">
