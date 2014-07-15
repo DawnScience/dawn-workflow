@@ -20,7 +20,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawnsci.common.richbeans.components.cell.FieldComponentCellEditor;
 import org.dawnsci.common.richbeans.components.scalebox.RangeBox;
-import org.dawnsci.doe.DOEUtils;
+import org.eclipse.dawnsci.doe.DOEUtils;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;

@@ -17,8 +17,6 @@ import java.util.List;
 
 import org.dawb.common.util.io.IFileUtils;
 import org.dawb.common.util.test.TestUtils;
-import org.dawb.hdf5.HierarchicalDataFactory;
-import org.dawb.hdf5.IHierarchicalDataFile;
 import org.dawb.passerelle.common.project.PasserelleProjectUtils;
 import org.dawb.passerelle.common.remote.WorkbenchServiceManager;
 import org.eclipse.core.resources.IFile;
@@ -29,6 +27,8 @@ import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.dawnsci.hdf5.HierarchicalDataFactory;
+import org.eclipse.dawnsci.hdf5.IHierarchicalDataFile;
 import org.edna.pydev.extensions.utils.InterpreterUtils;
 import org.junit.After;
 import org.junit.AfterClass;

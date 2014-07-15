@@ -8,7 +8,7 @@ Bundle-Vendor: ESRF
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.junit,
- org.dawb.hdf5;bundle-version="0.8.2",
+ org.eclipse.dawnsci.hdf5;bundle-version="0.8.2",
  org.dawb.passerelle.actors;bundle-version="0.8.2",
  com.isencia.passerelle.workbench.model.editor.ui;bundle-version="1.0.0",
  com.isencia.passerelle.workbench.model.ui;bundle-version="1.0.0",

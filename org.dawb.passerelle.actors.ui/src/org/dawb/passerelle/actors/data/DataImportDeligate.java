@@ -15,8 +15,6 @@ import java.util.regex.Pattern;
 
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.io.FileUtils;
-import org.dawb.hdf5.HierarchicalDataFactory;
-import org.dawb.hdf5.IHierarchicalDataFile;
 import org.dawb.passerelle.common.message.AbstractDatasetProvider;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
@@ -24,9 +22,11 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.dawnsci.io.h5.H5LazyDataset;
-import org.dawnsci.slicing.api.system.ISliceRangeSubstituter;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.dawnsci.hdf5.HierarchicalDataFactory;
+import org.eclipse.dawnsci.hdf5.IHierarchicalDataFile;
+import org.eclipse.dawnsci.slicing.api.system.ISliceRangeSubstituter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

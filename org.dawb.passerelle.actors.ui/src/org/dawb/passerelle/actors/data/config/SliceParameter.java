@@ -12,13 +12,13 @@ package org.dawb.passerelle.actors.data.config;
 import java.io.File;
 
 import org.dawb.passerelle.common.parameter.CellEditorParameter;
-import org.dawnsci.slicing.api.SliceDialog;
-import org.dawnsci.slicing.api.system.AxisType;
-import org.dawnsci.slicing.api.system.DimsData;
-import org.dawnsci.slicing.api.system.DimsDataList;
-import org.dawnsci.slicing.api.system.RangeMode;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.dawnsci.slicing.api.SliceDialog;
+import org.eclipse.dawnsci.slicing.api.system.AxisType;
+import org.eclipse.dawnsci.slicing.api.system.DimsData;
+import org.eclipse.dawnsci.slicing.api.system.DimsDataList;
+import org.eclipse.dawnsci.slicing.api.system.RangeMode;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.ErrorDialog;
 import org.eclipse.jface.dialogs.MessageDialog;
