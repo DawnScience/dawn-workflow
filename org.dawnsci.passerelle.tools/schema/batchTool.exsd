@@ -65,7 +65,7 @@
                   the id
                </documentation>
                <appinfo>
-                  <meta.attribute kind="identifier" basedOn="org.dawnsci.plotting.api.toolPage/plotting_tool_page/@id"/>
+                  <meta.attribute kind="identifier" basedOn="org.eclipse.dawnsci.plotting.api.toolPage/plotting_tool_page/@id"/>
                </appinfo>
             </annotation>
          </attribute>
