@@ -4,10 +4,9 @@ import java.io.IOException;
 
 import org.dawb.common.services.IPersistenceService;
 import org.dawb.common.services.ServiceManager;
-import org.dawnsci.common.widgets.gda.roi.ROIDialog;
-import org.eclipse.jface.dialogs.Dialog;
+import org.dawnsci.plotting.roi.IRegionTransformer;
+import org.dawnsci.plotting.roi.RegionCellEditor;
 import org.eclipse.jface.viewers.CellEditor;
-import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAtt
  * @author fcp94556
  *
  */
-public class ROIParameter extends StringParameter  implements CellEditorAttribute{
+public class ROIParameter extends StringParameter  implements CellEditorAttribute, IRegionTransformer {
 
 	/**
 	 * 
@@ -47,38 +46,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	@Override
 	public CellEditor createCellEditor(Control control) {
 		
-		final DialogCellEditor editor = new DialogCellEditor((Composite)control) {
-			@Override
-			protected Object openDialogBox(Control cellEditorWindow) {
-								
-				final ROIDialog dialog = new ROIDialog(cellEditorWindow.getShell()); // extends BeanDialog
-				dialog.create();
-				dialog.getShell().setSize(550,450); // As needed
-				dialog.getShell().setText("Edit Region of Interest");
-			
-				try {
-					dialog.setROI(getROIFromValue());
-			        final int ok = dialog.open();
-			        if (ok == Dialog.OK) {
-			            return getValueFromROI(dialog.getROI());
-			        }
-				} catch (Exception ne) {
-					logger.error("Problem decoding and/or encoding bean!", ne);
-				}
-		        
-		        return null;
-			}
-		    protected void updateContents(Object value) {
-		        if ( getDefaultLabel() == null) {
-					return;
-				}
-		        getDefaultLabel().setText(getRendererText());
-		    }
-
-		};
-		
-		
-		return editor;
+		return new RegionCellEditor((Composite)control, this);
 	}
 
 	@Override
@@ -135,8 +103,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	 * @return
 	 */
 	private String getValueFromROI(final IROI roi) throws IOException {
-		if (roi==null)
-			return "";
+		if (roi==null) return "";
 		try {
 			IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
 			return service.marshal(roi);
@@ -152,6 +119,18 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 		} catch (IOException e) {
 			setExpression("");
 		}
+	}
+
+
+	@Override
+	public IROI getROI() throws Exception {
+		return getROIFromValue();
+	}
+
+
+	@Override
+	public Object getValue(IROI value) throws IOException {
+		return getValueFromROI(value);
 	}
 
 }
