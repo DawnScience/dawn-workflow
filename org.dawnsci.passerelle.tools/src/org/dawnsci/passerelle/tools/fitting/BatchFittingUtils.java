@@ -9,7 +9,8 @@ import org.eclipse.ui.preferences.ScopedPreferenceStore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
+import uk.ac.diamond.scisoft.analysis.dataset.DatasetFactory;
 import uk.ac.diamond.scisoft.analysis.fitting.FittingConstants;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.APeak;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.CompositeFunction;
@@ -50,12 +51,12 @@ public class BatchFittingUtils {
 	 * @param peak
 	 * @return
 	 */
-	public static final AbstractDataset[] getPeakFunction(AbstractDataset x, final AbstractDataset y, CompositeFunction peak) {
+	public static final Dataset[] getPeakFunction(Dataset x, final Dataset y, CompositeFunction peak) {
 
 //		double min = peak.getPosition() - (peak.getFWHM()); // Quite wide
 //		double max = peak.getPosition() + (peak.getFWHM());
 //
-//		final AbstractDataset[] a = xintersection(x,y,min,max);
+//		final Dataset[] a = xintersection(x,y,min,max);
 //		x=a[0];
 //		y=a[1];
 		
@@ -70,9 +71,9 @@ public class BatchFittingUtils {
 		final double xmin = x.min().doubleValue();
 		final double xmax = x.max().doubleValue();
 		final double step = (xmax-xmin)/(x.getSize()*factor);
-		x = AbstractDataset.arange(xmin, xmax, step, AbstractDataset.FLOAT64);
+		x = DatasetFactory.createRange(xmin, xmax, step, Dataset.FLOAT64);
 
-		return new AbstractDataset[]{x,peak.calculateValues(x)};
+		return new Dataset[]{x,peak.calculateValues(x)};
 		
 	}
 

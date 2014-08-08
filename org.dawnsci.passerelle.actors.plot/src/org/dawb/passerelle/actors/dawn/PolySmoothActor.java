@@ -22,7 +22,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.optimize.ApachePolynomial;
 
@@ -62,7 +62,7 @@ public class PolySmoothActor extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (AbstractDataset) data.get(key));
+			result.addList(key, (Dataset) data.get(key));
 		}
 		
 		// get the required datasets
@@ -72,11 +72,11 @@ public class PolySmoothActor extends AbstractDataMessageTransformer {
 		int polyOrder = Integer.parseInt(polyOrderParam.getExpression());
 
 		
-		AbstractDataset dataDS = ((AbstractDataset)data.get(dataset)).clone();
-		AbstractDataset xAxisDS = ((AbstractDataset)data.get(xAxis)).clone();
+		Dataset dataDS = ((Dataset)data.get(dataset)).clone();
+		Dataset xAxisDS = ((Dataset)data.get(xAxis)).clone();
 		
 		
-		AbstractDataset smoothed;
+		Dataset smoothed;
 		try {
 			smoothed = ApachePolynomial.getPolynomialSmoothed(xAxisDS, dataDS, windowSize, polyOrder);
 		} catch (Exception e) {

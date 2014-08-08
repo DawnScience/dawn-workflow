@@ -7,7 +7,7 @@ import org.dawnsci.passerelle.tools.AbstractBatchTool;
 
 import ptolemy.actor.TypedAtomicActor;
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IntegerDataset;
 import uk.ac.diamond.scisoft.analysis.fitting.Generic1DFitter;
@@ -47,19 +47,19 @@ public class PeakFittingBatchTool extends AbstractBatchTool {
         final List<IDataset> dataList = getPlottableData(bean);
         if (dataList==null || dataList.size()<1) throw new Exception("No data found for tool "+getBatchToolId());
         
-        final AbstractDataset data = (AbstractDataset)dataList.get(0);
+        final Dataset data = (Dataset)dataList.get(0);
         if (data.getRank()!=1) throw new Exception("Can only use "+getBatchToolId()+" with 1D data!");
         
 		final double[] p1 = roi.getPointRef();
 		final double[] p2 = roi.getEndPoint();
 
 		final List<IDataset> axes = getAxes(bean);
-		AbstractDataset x  = axes!=null && !axes.isEmpty()
-				           ? (AbstractDataset)axes.get(0)
+		Dataset x  = axes!=null && !axes.isEmpty()
+				           ? (Dataset)axes.get(0)
 				           : IntegerDataset.createRange(data.getSize());
 
-		AbstractDataset[] a= Generic1DFitter.xintersection(x,data,p1[0],p2[0]);
-		x = a[0]; AbstractDataset y=a[1];
+		Dataset[] a= Generic1DFitter.xintersection(x,data,p1[0],p2[0]);
+		x = a[0]; Dataset y=a[1];
 
 		if (peaks==null)  {
 			peaks = Generic1DFitter.parseDataDerivative(x, y, BatchFittingUtils.getSmoothing());
@@ -87,8 +87,8 @@ public class PeakFittingBatchTool extends AbstractBatchTool {
             ret.addRoi("Peak Area "+ipeak, rb);
 			ret.addRoi("Peak Line "+ipeak, new LinearROI(rb.getMidPoint(), rb.getMidPoint()));
 			
-			final AbstractDataset[] pf = BatchFittingUtils.getPeakFunction(x, y, function);
-			final AbstractDataset yp = pf[0];
+			final Dataset[] pf = BatchFittingUtils.getPeakFunction(x, y, function);
+			final Dataset yp = pf[0];
 			yp.setName("Peak "+ipeak);
 			ret.addList(yp.getName(), yp);
 			
