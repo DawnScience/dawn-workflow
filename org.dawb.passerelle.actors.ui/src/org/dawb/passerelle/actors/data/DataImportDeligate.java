@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 import ptolemy.data.BooleanToken;
 import ptolemy.data.expr.Parameter;
 import ptolemy.data.expr.StringParameter;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
 import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
@@ -360,15 +360,15 @@ class DataImportDelegate {
 	}
 
 
-	private AbstractDataset getLoadedData(ILazyDataset lazy) throws Exception {
+	private Dataset getLoadedData(ILazyDataset lazy) throws Exception {
 		
 		if (lazy instanceof H5LazyDataset) {
 		    return ((H5LazyDataset)lazy).getCompleteData(null);
-		} else if (lazy instanceof AbstractDataset) {
-			return (AbstractDataset) lazy;
+		} else if (lazy instanceof Dataset) {
+			return (Dataset) lazy;
 		}
 
-		return DatasetUtils.convertToAbstractDataset(lazy.getSlice());
+		return DatasetUtils.convertToDataset(lazy.getSlice());
 	}
 
 	
@@ -435,7 +435,7 @@ class DataImportDelegate {
 			/**
 			 * We load the data, this is an import actor
 			 */
-			final AbstractDataset set = getLoadedData(lazy);
+			final Dataset set = getLoadedData(lazy);
 			set.setName(name);
 			
 			ret.put(name, set);
@@ -481,10 +481,10 @@ class DataImportDelegate {
 						                         ? VARIABLE_TYPE.IMAGE
 						                         : VARIABLE_TYPE.ARRAY;
 						final AbstractDatasetProvider example = new AbstractDatasetProvider(shape);
-					    ret.add(new Variable(name, type, example, AbstractDataset.class));
+					    ret.add(new Variable(name, type, example, Dataset.class));
 	
 					} else {
-					    ret.add(new Variable(name, VARIABLE_TYPE.ARRAY, new AbstractDatasetProvider(), AbstractDataset.class));
+					    ret.add(new Variable(name, VARIABLE_TYPE.ARRAY, new AbstractDatasetProvider(), Dataset.class));
 					}
 				}
 			}

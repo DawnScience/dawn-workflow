@@ -40,7 +40,7 @@ import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
@@ -251,8 +251,8 @@ public class SpecImportSource extends AbstractDataMessageSource implements IReso
 			}
 		}
 		
-		final Collection<AbstractDataset> sets = evt.getData();
-		if (sets!=null) for (AbstractDataset a : sets) {
+		final Collection<Dataset> sets = evt.getData();
+		if (sets!=null) for (Dataset a : sets) {
 			comp.addList(a.getName(), a);
 		}
 		
