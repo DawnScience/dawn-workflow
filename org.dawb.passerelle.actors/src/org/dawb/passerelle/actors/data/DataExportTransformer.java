@@ -47,7 +47,7 @@ import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.JavaImageSaver;
@@ -284,7 +284,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
         		dh.addDataset(set.getName(), set);
         		saver.saveFile(dh);
         		
-        		ret.addList("image"+ifound, (AbstractDataset)set);
+        		ret.addList("image"+ifound, (Dataset)set);
         		++ifound;
         		
         		wroteSomething = true;
@@ -418,7 +418,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		
 		if (sets!=null) for (IDataset set : sets) {
 			if (set == null) continue;
-			final AbstractDataset a = (AbstractDataset)set;
+			final Dataset a = (Dataset)set;
 			
 			final String s;
 			if (isCreate) {

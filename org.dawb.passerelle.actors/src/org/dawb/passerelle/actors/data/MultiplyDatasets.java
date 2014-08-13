@@ -19,7 +19,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
@@ -27,8 +27,8 @@ import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import com.isencia.passerelle.actor.ProcessingException;
 
 /**
- * All imputs to this method are summed. When the 
- * Inputs stop firing data, it despatches the data, summed, to the output port.
+ * All inputs to this method are summed. When the 
+ * Inputs stop firing data, it dispatches the data, summed, to the output port.
  * 
  * 
  * @author gerring
@@ -52,7 +52,7 @@ public class MultiplyDatasets extends AbstractDataMessageTransformer2Port {
 		final Collection<IDataset>  sets  = new HashSet<IDataset>(7);
 		if (sets1!=null) sets.addAll(sets1);
 		if (sets2!=null) sets.addAll(sets2);
-		final AbstractDataset prod = Maths.multiply(sets, isCreateClone());
+		final Dataset prod = Maths.multiply(sets, isCreateClone());
 
 		try {
 			final DataMessageComponent ret = new DataMessageComponent();

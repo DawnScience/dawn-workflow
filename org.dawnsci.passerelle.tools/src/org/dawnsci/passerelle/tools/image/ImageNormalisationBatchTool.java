@@ -6,7 +6,7 @@ import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.AbstractBatchTool;
 
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 
@@ -22,12 +22,12 @@ public class ImageNormalisationBatchTool extends AbstractBatchTool {
 	public UserPlotBean process(final UserPlotBean bean, final NamedObj parent) throws Exception {
 
 		final UserPlotBean upb = (UserPlotBean)bean.getToolData();
-		final AbstractDataset norm = (AbstractDataset) upb.getData().get("norm_correction");
+		final Dataset norm = (Dataset) upb.getData().get("norm_correction");
 		
 		final List<IDataset> dataList = getPlottableData(bean);
 		if (dataList==null || dataList.size()<1) throw new Exception("No data found for tool "+getBatchToolId());
 
-		final AbstractDataset data = (AbstractDataset)dataList.get(0);
+		final Dataset data = (Dataset)dataList.get(0);
 		if (data.getRank()!=2) throw new Exception("Can only use "+getBatchToolId()+" with 2D data!");
 
 

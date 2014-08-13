@@ -22,7 +22,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
@@ -83,18 +83,18 @@ public class RegionNormaliseActor extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (AbstractDataset) data.get(key));
+			result.addList(key, (Dataset) data.get(key));
 		}
 
 		// Normalise the specified dataset
 		String name = datasetName.getExpression();
 		if (data.containsKey(name)) {
-			AbstractDataset ds = ((AbstractDataset)data.get(name)).clone();
-			AbstractDataset[] profiles = ROIProfile.box(ds, roi);
-			AbstractDataset tile = profiles[1].reshape(profiles[1].getShape()[0],1);
+			Dataset ds = ((Dataset)data.get(name)).clone();
+			Dataset[] profiles = ROIProfile.box(ds, roi);
+			Dataset tile = profiles[1].reshape(profiles[1].getShape()[0],1);
 			double width = roi.getLengths()[0];
 			tile.idivide(width);
-			AbstractDataset correction = DatasetUtils.tile(tile, ds.getShape()[1]);
+			Dataset correction = DatasetUtils.tile(tile, ds.getShape()[1]);
 			
 			result.addList(ds.getName()+"_norm", ds.idivide(correction));
 			result.addList(ds.getName()+"_correction_map", correction);

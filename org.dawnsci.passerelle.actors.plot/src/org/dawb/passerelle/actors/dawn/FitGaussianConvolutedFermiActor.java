@@ -32,7 +32,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.SDAPlotter;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IndexIterator;
@@ -96,7 +96,7 @@ AbstractDataMessageTransformer {
 		String plotName = updatePlotName.getExpression();
 		if (!plotName.isEmpty()) {
 			try {
-				AbstractDataset fermiDS = fitFunction.calculateValues(xAxis);
+				Dataset fermiDS = fitFunction.calculateValues(xAxis);
 				SDAPlotter.plot(plotName, xAxis, new IDataset[] { fermiDS,
 						values });
 			} catch (Exception e) {
@@ -106,8 +106,8 @@ AbstractDataMessageTransformer {
 		}
 	}
 	
-	private AFunction FitGaussianConvFermi(final AbstractDataset xAxis,
-			final AbstractDataset values, final AFunction fitFunction) throws Exception {
+	private AFunction FitGaussianConvFermi(final Dataset xAxis,
+			final Dataset values, final AFunction fitFunction) throws Exception {
 
 		if (!(fitFunction instanceof FermiGauss)) {
 			throw new IllegalArgumentException(
@@ -144,7 +144,7 @@ AbstractDataMessageTransformer {
 		
 		// fit with a fixed fwhm letting the temperature vary
 		try {			
-			Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);
+			Fitter.ApacheNelderMeadFit(new Dataset[] {xAxis}, values, fittedFunction);
 		} catch (Exception e) {
 			plotFunction(fittedFunction, xAxis, values);
 			System.out.println(e);
@@ -158,7 +158,7 @@ AbstractDataMessageTransformer {
 			
 			try {
 				
-				Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);
+				Fitter.ApacheNelderMeadFit(new Dataset[] {xAxis}, values, fittedFunction);
 			} catch (Exception e) {
 				//plotFunction(fittedFunction, xAxis, values);
 				System.out.println(e);
@@ -196,7 +196,7 @@ AbstractDataMessageTransformer {
 		
 		try {
 			
-			Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);
+			Fitter.ApacheNelderMeadFit(new Dataset[] {xAxis}, values, fittedFunction);
 			
 		} catch (Exception e) {
 			//plotFunction(fittedFunction, xAxis, values);
@@ -218,7 +218,7 @@ AbstractDataMessageTransformer {
 		fittedFunction.getParameters()[4].setFixed(false);
 		fittedFunction.getParameters()[5].setFixed(false);
 		try {
-			Fitter.ApacheNelderMeadFit(new AbstractDataset[] {xAxis}, values, fittedFunction);			
+			Fitter.ApacheNelderMeadFit(new Dataset[] {xAxis}, values, fittedFunction);			
 		} catch (Exception e) {
 			//plotFunction(fittedFunction, xAxis, values);
 			System.out.println(e);
@@ -252,7 +252,7 @@ AbstractDataMessageTransformer {
 
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (AbstractDataset) data.get(key));
+			result.addList(key, (Dataset) data.get(key));
 		}
 
 		Map<String, AFunction> functions = null;
@@ -271,19 +271,19 @@ AbstractDataMessageTransformer {
 		String anglesAxis = anglesAxisName.getExpression();
 		Integer fitDim = Integer.parseInt(fitDirection.getExpression());
 
-		AbstractDataset dataDS = ((AbstractDataset) data.get(dataset)).clone();
+		Dataset dataDS = ((Dataset) data.get(dataset)).clone();
 		int[] shape = dataDS.getShape();
 		AFunction fitFunction = functions.get(function);
-		AbstractDataset xAxisDS = null;
+		Dataset xAxisDS = null;
 		if (data.containsKey(xAxis)) {
-			xAxisDS = ((AbstractDataset) data.get(xAxis)).clone();
+			xAxisDS = ((Dataset) data.get(xAxis)).clone();
 		} else {
 			xAxisDS = DoubleDataset.createRange(shape[fitDim], 0, -1);
 		}
 		
-		AbstractDataset anglesAxisDS = null;
+		Dataset anglesAxisDS = null;
 		if (data.containsKey(anglesAxis)) {
-			anglesAxisDS = ((AbstractDataset) data.get(anglesAxis)).clone();
+			anglesAxisDS = ((Dataset) data.get(anglesAxis)).clone();
 		} else {
 			anglesAxisDS = DoubleDataset.createRange(shape[Math.abs(fitDim-1)], 0, -1);
 		}
@@ -300,7 +300,7 @@ AbstractDataMessageTransformer {
 			}
 		}
 
-		ArrayList<AbstractDataset> parametersDS = new ArrayList<AbstractDataset>(
+		ArrayList<Dataset> parametersDS = new ArrayList<Dataset>(
 				fitFunction.getNoOfParameters());
 		
 		int[] lshape = shape.clone();
@@ -312,8 +312,8 @@ AbstractDataMessageTransformer {
 			parametersDS.add(parameterDS);
 		}
 
-		AbstractDataset functionsDS = new DoubleDataset(shape);
-		AbstractDataset residualDS = new DoubleDataset(lshape);
+		Dataset functionsDS = new DoubleDataset(shape);
+		Dataset residualDS = new DoubleDataset(lshape);
 		residualDS.squeeze();
 
 		int[] starts = shape.clone();
@@ -337,7 +337,7 @@ AbstractDataMessageTransformer {
 				stop[i] = stop[i] + 1;
 			}
 			stop[fitDim] = shape[fitDim];
-			AbstractDataset slice = dataDS.getSlice(start, stop, null);
+			Dataset slice = dataDS.getSlice(start, stop, null);
 			slice.squeeze();
 
 			FermiGauss localFitFunction = new FermiGauss(functions
@@ -378,7 +378,7 @@ AbstractDataMessageTransformer {
 					stop[i] = stop[i] + 1;
 				}
 				stop[fitDim] = shape[fitDim];
-				AbstractDataset slice = dataDS.getSlice(start, stop, null);
+				Dataset slice = dataDS.getSlice(start, stop, null);
 				slice.squeeze();
 
 				FermiGauss localFitFunction = new FermiGauss(functions
@@ -445,21 +445,21 @@ AbstractDataMessageTransformer {
 	private class Worker implements Runnable {
 
 		private AFunction fitFunction;
-		private AbstractDataset xAxisDS;
-		private AbstractDataset anglesAxisDS;
-		private AbstractDataset slice;
+		private Dataset xAxisDS;
+		private Dataset anglesAxisDS;
+		private Dataset slice;
 		private int DSlength;
 		private int[] start;
 		private int[] stop;
 		private int fitDim;
-		private ArrayList<AbstractDataset> parametersDS;
-		private AbstractDataset functionsDS;
-		private AbstractDataset residualsDS;
+		private ArrayList<Dataset> parametersDS;
+		private Dataset functionsDS;
+		private Dataset residualsDS;
 
-		public Worker(AFunction fitFunction, AbstractDataset xAxisDS, AbstractDataset anglesAxisDS,
-				AbstractDataset slice, int dSlength, int[] start, int[] stop,
-				int fitDim, ArrayList<AbstractDataset> parametersDS,
-				AbstractDataset functionsDS, AbstractDataset residualsDS) {
+		public Worker(AFunction fitFunction, Dataset xAxisDS, Dataset anglesAxisDS,
+				Dataset slice, int dSlength, int[] start, int[] stop,
+				int fitDim, ArrayList<Dataset> parametersDS,
+				Dataset functionsDS, Dataset residualsDS) {
 			super();
 			this.fitFunction = fitFunction;
 			this.xAxisDS = xAxisDS;
@@ -511,7 +511,7 @@ AbstractDataMessageTransformer {
 			DoubleDataset resultFunctionDS = fitResult.calculateValues(xAxisDS);
 			functionsDS.setSlice(resultFunctionDS, start, stop, null);
 			
-			AbstractDataset residual = Maths.subtract(slice, resultFunctionDS);
+			Dataset residual = Maths.subtract(slice, resultFunctionDS);
 			residual.ipower(2);
 			
 			residualsDS.set(residual.sum(), position);

@@ -24,7 +24,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IndexIterator;
 import uk.ac.diamond.scisoft.analysis.dataset.Slice;
@@ -76,7 +76,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (AbstractDataset) data.get(key));
+			result.addList(key, (Dataset) data.get(key));
 		}
 		
 		Map<String, AFunction> functions = null;
@@ -92,12 +92,12 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		String xAxis = xAxisName.getExpression();
 		Integer fitDim = Integer.parseInt(fitDirection.getExpression());
 		
-		AbstractDataset dataDS = ((AbstractDataset)data.get(dataset)).clone();
+		Dataset dataDS = ((Dataset)data.get(dataset)).clone();
 		AFunction fitFunction = functions.get(function);
-		AbstractDataset xAxisDS = null;
+		Dataset xAxisDS = null;
 		int[] shape = dataDS.getShape();
 		if (data.containsKey(xAxis)) {
-			xAxisDS = ((AbstractDataset)data.get(xAxis)).clone();
+			xAxisDS = ((Dataset)data.get(xAxis)).clone();
 		} else {
 			xAxisDS = DoubleDataset.createRange(shape[fitDim],0,-1);
 		}
@@ -112,7 +112,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 			}
 		}
 			
-		ArrayList<AbstractDataset> parametersDS = new ArrayList<AbstractDataset>(fitFunction.getNoOfParameters()); 
+		ArrayList<Dataset> parametersDS = new ArrayList<Dataset>(fitFunction.getNoOfParameters()); 
 		for(int i = 0; i < fitFunction.getNoOfParameters(); i++) {
 			int[] lshape = shape.clone();
 			lshape[fitDim] = 1;
@@ -121,7 +121,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 			parametersDS.add(parameterDS);
 		}
 		
-		AbstractDataset functionsDS = new DoubleDataset(shape);
+		Dataset functionsDS = new DoubleDataset(shape);
 		
 		int[] starts = shape.clone();
 		starts[fitDim] = 1;
@@ -139,7 +139,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 				stop[i] = stop[i]+1;
 			}
 			stop[fitDim] = shape[fitDim];
-			AbstractDataset slice = dataDS.getSlice(start, stop, null);
+			Dataset slice = dataDS.getSlice(start, stop, null);
 			slice.squeeze();
 			try {
 				CompositeFunction fitResult = null;

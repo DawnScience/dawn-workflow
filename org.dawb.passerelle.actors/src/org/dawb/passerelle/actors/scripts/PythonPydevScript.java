@@ -44,7 +44,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcException;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcRemoteException;
@@ -247,8 +247,8 @@ public class PythonPydevScript extends AbstractScriptTransformer {
 			}
 			for (String varName : result.keySet()) {
 				final Object val = result.get(varName);
-				if (val instanceof AbstractDataset) {
-					final AbstractDataset set = (AbstractDataset) val;
+				if (val instanceof Dataset) {
+					final Dataset set = (Dataset) val;
 					set.setName(varName);
 					ret.addList(varName, set);
 				} else {

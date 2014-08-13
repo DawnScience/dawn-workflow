@@ -17,7 +17,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
@@ -50,9 +50,9 @@ public class DivideDatasets extends AbstractDataMessageTransformer2Port {
 		// At least one of the sets must be floating point 
 		// or we get integer math.
 		final List<IDataset>  sets1 = MessageUtils.getDatasets(port1Cache);
-		AbstractDataset       a     = Maths.add(sets1, isCreateClone());
-		if (a.getDtype()!=AbstractDataset.FLOAT32 && 
-			a.getDtype()!=AbstractDataset.FLOAT64) {
+		Dataset       a     = Maths.add(sets1, isCreateClone());
+		if (a.getDtype()!=Dataset.FLOAT32 && 
+			a.getDtype()!=Dataset.FLOAT64) {
 		    
 			final String name = a.getName();
 			a   = DatasetUtils.cast(a, getFloatType(a));
@@ -60,11 +60,11 @@ public class DivideDatasets extends AbstractDataMessageTransformer2Port {
 		}
 		
 		final List<IDataset>  sets2 = MessageUtils.getDatasets(port2Cache);
-		final AbstractDataset b     = Maths.add(sets2, true);
+		final Dataset b     = Maths.add(sets2, true);
 		
 		// We use an in place divide, it is changing the original
 		// data but more efficient on memory.
-		final AbstractDataset res = isCreateClone()
+		final Dataset res = isCreateClone()
 		                          ? Maths.divide(a, b)
 		                          : a.idivide(b);
 		                          
@@ -80,20 +80,20 @@ public class DivideDatasets extends AbstractDataMessageTransformer2Port {
 		return ret;
 	}
 
-	private int getFloatType(AbstractDataset b) {
+	private int getFloatType(Dataset b) {
 		final int type = b.getDtype();
 		
 		switch (type) {
-		case AbstractDataset.INT8:
-			return AbstractDataset.FLOAT32;
-		case AbstractDataset.INT16:
-			return AbstractDataset.FLOAT32;
-		case AbstractDataset.INT32:
-			return AbstractDataset.FLOAT32;
-		case AbstractDataset.INT64:
-			return AbstractDataset.FLOAT64;
+		case Dataset.INT8:
+			return Dataset.FLOAT32;
+		case Dataset.INT16:
+			return Dataset.FLOAT32;
+		case Dataset.INT32:
+			return Dataset.FLOAT32;
+		case Dataset.INT64:
+			return Dataset.FLOAT64;
 		}
-		return AbstractDataset.FLOAT32;
+		return Dataset.FLOAT32;
 	}
 
 	@Override

@@ -9,12 +9,12 @@ import java.util.Map;
 
 import org.dawb.workbench.jmx.UserPlotBean;
 
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 
 
 /**
- * A class for getting data in the UserPlotBean in a form useable
+ * A class for getting data in the UserPlotBean in a form usable
  * for plotting and/or batch tools. 
  *
  * @author fcp94556
@@ -44,7 +44,7 @@ public class BatchToolUtils {
 		final List<String>    axes  = bean.getAxesNames();
 		if (axes==null) return null;
 		if (!bean.getData().containsKey(axes.get(0))) return null;
-		return (AbstractDataset)bean.getData().get(axes.get(0));
+		return (Dataset)bean.getData().get(axes.get(0));
 	}
 
 	/**
@@ -73,11 +73,11 @@ public class BatchToolUtils {
 		return null;
 	}
 
-	private static AbstractDataset getFirst2DDataset(Map<String, Serializable> data) {
+	private static Dataset getFirst2DDataset(Map<String, Serializable> data) {
 		for (String name : data.keySet()) {
 			Serializable d = data.get(name);
-			if (d instanceof AbstractDataset) {
-				AbstractDataset dd = (AbstractDataset)d;
+			if (d instanceof Dataset) {
+				Dataset dd = (Dataset)d;
 				dd.squeeze();
 				final int rank = dd.getRank();
 				if (rank==2) return dd;
@@ -90,9 +90,9 @@ public class BatchToolUtils {
 		List<IDataset> ret = new ArrayList<IDataset>(7);
 		for (String name : data.keySet()) {
 			Serializable d = data.get(name);
-			if (d instanceof AbstractDataset) {
-				final int rank = ((AbstractDataset)d).getRank();
-				if (rank==1) ret.add( (AbstractDataset)d );
+			if (d instanceof Dataset) {
+				final int rank = ((Dataset)d).getRank();
+				if (rank==1) ret.add( (Dataset)d );
 			}
 		}
 		return ret;

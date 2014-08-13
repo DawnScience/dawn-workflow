@@ -22,11 +22,10 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
-import uk.ac.diamond.scisoft.analysis.optimize.ApachePolynomial;
 
 public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 
@@ -70,7 +69,7 @@ public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 		String functionString = functionName.getExpression();
 
 		// Get the actual objects
-		AbstractDataset xAxisDS = ((AbstractDataset)data.get(xAxis)).clone();
+		Dataset xAxisDS = ((Dataset)data.get(xAxis)).clone();
 		AFunction function = functions.get(functionString);
 		
 		// process the data

@@ -12,7 +12,8 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
+import uk.ac.diamond.scisoft.analysis.dataset.DatasetFactory;
 import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.InterpolatorUtils;
@@ -100,7 +101,7 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (AbstractDataset) data.get(key));
+			result.addList(key, (Dataset) data.get(key));
 		}
 		
 		// Normalise the specified dataset
@@ -117,9 +118,9 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		}
 		
 		// Now get the Dataset and axis
-		AbstractDataset dataDS = ((AbstractDataset)data.get(name)).clone();
-		AbstractDataset anglesDS = ((AbstractDataset)data.get(anglesName)).clone();
-		AbstractDataset energiesDS = ((AbstractDataset)data.get(energiesName)).clone();
+		Dataset dataDS = ((Dataset)data.get(name)).clone();
+		Dataset anglesDS = ((Dataset)data.get(anglesName)).clone();
+		Dataset energiesDS = ((Dataset)data.get(energiesName)).clone();
 		
 		// now check to see what the offsets are before calculating the conversions
 		double angleOffset = 0.0;
@@ -141,8 +142,8 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		final int yInc = roi.getPoint()[1]<roi.getEndPoint()[1] ? 1 : -1;
 		final int xInc = roi.getPoint()[0]<roi.getEndPoint()[0] ? 1 : -1;
 		
-		AbstractDataset dataRegion = dataDS;
-		AbstractDataset energyRegion = energiesDS;
+		Dataset dataRegion = dataDS;
+		Dataset energyRegion = energiesDS;
 		
 		int angleStart = (int) roi.getPoint()[1];
 		int energyStart = (int) roi.getPoint()[0];
@@ -179,24 +180,24 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		bindingEnergy.isubtract(energyRegion);
 		
 		//TODO this is an approximate value, should probably be corrected.
-		AbstractDataset k = Maths.sqrt(bindingEnergy).imultiply(0.51168);
+		Dataset k = Maths.sqrt(bindingEnergy).imultiply(0.51168);
 		
 		// could correct for K now
 		double kStep = k.peakToPeak().doubleValue()/(dataRegion.getShape()[1]-1);
-		AbstractDataset kAxis = AbstractDataset.arange(k.min().doubleValue()-(kStep), k.max().doubleValue()+(kStep), kStep, AbstractDataset.FLOAT32);
+		Dataset kAxis = DatasetFactory.createRange(k.min().doubleValue()-(kStep), k.max().doubleValue()+(kStep), kStep, Dataset.FLOAT32);
 		result.addList("k_axis", kAxis);
 		
-		AbstractDataset regrid = InterpolatorUtils.remapAxis(dataRegion, 1, k, kAxis);
+		Dataset regrid = InterpolatorUtils.remapAxis(dataRegion, 1, k, kAxis);
 		
 		// recreate K axis correctly for the process
 		
-		AbstractDataset newK  = new DoubleDataset(kAxis);
+		Dataset newK  = new DoubleDataset(kAxis);
 		newK = newK.reshape(newK.getShape()[0],1);
 		newK = DatasetUtils.tile(newK, regrid.getShape()[0]);
 		newK = DatasetUtils.transpose(newK);
 		
 		// need to calculate angleRegion here
-		AbstractDataset angleRegion = anglesDS;
+		Dataset angleRegion = anglesDS;
 		angleRegion.isubtract(angleOffset);
 		angleRegion = angleRegion.getSlice(new int[] { angleStart },
 				new int[] { angleStop },
@@ -206,11 +207,11 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		
 		
 		// Finally calculate k parallel
-		AbstractDataset kParallel = Maths.multiply(newK, Maths.sin(Maths.toRadians(angleRegion)));
+		Dataset kParallel = Maths.multiply(newK, Maths.sin(Maths.toRadians(angleRegion)));
 		
 		// make axis correction to regrid here
 		double KPStep = kParallel.peakToPeak().doubleValue()/(dataRegion.getShape()[0]-1);
-		AbstractDataset kParaAxis = AbstractDataset.arange(kParallel.min().doubleValue()-(KPStep), kParallel.max().doubleValue()+(KPStep), KPStep, AbstractDataset.FLOAT32);
+		Dataset kParaAxis = DatasetFactory.createRange(kParallel.min().doubleValue()-(KPStep), kParallel.max().doubleValue()+(KPStep), KPStep, Dataset.FLOAT32);
 		result.addList("k_parallel_axis", kParaAxis);
 		
 		regrid = InterpolatorUtils.remapAxis(regrid, 0, kParallel, kParaAxis);

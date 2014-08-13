@@ -42,7 +42,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcException;
 import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcRemoteException;
@@ -233,8 +233,8 @@ public class PythonScript extends AbstractScriptTransformer {
 			}
             for (String varName : result.keySet()) {
 				final Object val = result.get(varName);
-				if (val instanceof AbstractDataset) {
-					final AbstractDataset set = (AbstractDataset)val;
+				if (val instanceof Dataset) {
+					final Dataset set = (Dataset)val;
 			        set.setName(varName);
 					ret.addList(varName, set);
 				} else {
@@ -276,7 +276,7 @@ public class PythonScript extends AbstractScriptTransformer {
 				
 				final Object ob = dataMessageComponent.getList().get(name);
 				interpreter.set(name, ob);
-				if (ob instanceof AbstractDataset) {
+				if (ob instanceof Dataset) {
 				    interpreter.exec(name+" = dnp.Sciwrap("+name+")");
 					if (isPassInputs) {
 						inputs.add(name);
@@ -298,7 +298,7 @@ public class PythonScript extends AbstractScriptTransformer {
 		for (String name : out) {
 			PyObject ob = interpreter.get(name);
 			
-			AbstractDataset ds = (AbstractDataset)ob.__tojava__(AbstractDataset.class);
+			Dataset ds = (Dataset)ob.__tojava__(Dataset.class);
 			if (ds instanceof PyProxy) ds = ds.getView();
 			
 			ds.setName(name);

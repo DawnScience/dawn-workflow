@@ -18,7 +18,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.CollectionStats;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
@@ -26,9 +26,9 @@ import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import com.isencia.passerelle.actor.ProcessingException;
 
 /**
- * Median taken of data sets pased to this actor.
+ * Median taken of data sets passed to this actor.
  * 
- * Actor blocks until all messages recieved.
+ * Actor blocks until all messages received.
  * 
  * @author gerring
  *
@@ -53,7 +53,7 @@ public class MedianDatasets extends AbstractDataMessageTransformer2Port {
 		if (sets2!=null) sets.addAll(sets2);
 		
         try {
-    		final AbstractDataset   median = CollectionStats.median(sets);
+    		final Dataset   median = CollectionStats.median(sets);
     		
 			final DataMessageComponent ret = new DataMessageComponent();
 			if (median.getName()==null || "".equals(median.getName())) {

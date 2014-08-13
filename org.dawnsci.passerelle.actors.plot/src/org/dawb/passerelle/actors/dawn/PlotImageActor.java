@@ -37,7 +37,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.SDAPlotter;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.rcp.plotting.PlottingMode;
 import uk.ac.diamond.scisoft.analysis.roi.EllipticalFitROI;
@@ -161,14 +161,14 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 		final DataMessageComponent mc = MessageUtils.copy(cache);
 
 		try {
-			AbstractDataset aData = ((AbstractDataset)data.get(dataName));
+			Dataset aData = ((Dataset)data.get(dataName));
 			aData.setName(dataName);
 			if(aData != null){
 				if (plotMode.equals(PlottingMode.ONED.toString())) {
 					if(xaxisName.equals(""))
 						SDAPlotter.plot(plotName, aData);
 					else
-						SDAPlotter.plot(plotName, ((AbstractDataset)data.get(xaxisName)), aData);
+						SDAPlotter.plot(plotName, ((Dataset)data.get(xaxisName)), aData);
 
 				} else if (plotMode.equals(PlottingMode.TWOD.toString())) {
 					// if shape is like [1, 1000, 1000] replace by [1000, 1000]
@@ -189,37 +189,37 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					if(xaxisName.equals("")||(yaxisName.equals("")))
 						SDAPlotter.imagePlot(plotName, aData);
 					else{
-						SDAPlotter.imagePlot(plotName, ((AbstractDataset)data.get(xaxisName)), ((AbstractDataset)data.get(yaxisName)), aData);
+						SDAPlotter.imagePlot(plotName, ((Dataset)data.get(xaxisName)), ((Dataset)data.get(yaxisName)), aData);
 					}
 				} else if (plotMode.equals(PlottingMode.SCATTER2D.toString())) {
 //					if(xaxisName.equals("")||(yaxisName.equals("")))
-//						SDAPlotter.(plotName, (AbstractDataset)data.get(dataName));
+//						SDAPlotter.(plotName, (Dataset)data.get(dataName));
 //					else
-//						SDAPlotter.imagePlot(plotName, ((AbstractDataset)data.get(xaxisName)), ((AbstractDataset)data.get(yaxisName)), ((AbstractDataset)data.get(dataName)));
+//						SDAPlotter.imagePlot(plotName, ((Dataset)data.get(xaxisName)), ((Dataset)data.get(yaxisName)), ((Dataset)data.get(dataName)));
 
 				} else if (plotMode.equals(PlottingMode.SCATTER3D.toString())) {
 //					if(xaxisName.equals("")||(yaxisName.equals("")))
-//						SDAPlotter.imagePlot(plotName, (AbstractDataset)data.get(dataName));
+//						SDAPlotter.imagePlot(plotName, (Dataset)data.get(dataName));
 //					else
-//						SDAPlotter.imagePlot(plotName, ((AbstractDataset)data.get(xaxisName)), ((AbstractDataset)data.get(yaxisName)), ((AbstractDataset)data.get(dataName)));
+//						SDAPlotter.imagePlot(plotName, ((Dataset)data.get(xaxisName)), ((Dataset)data.get(yaxisName)), ((Dataset)data.get(dataName)));
 
 				} else if (plotMode.equals(PlottingMode.ONED_THREED.toString())) {
 //					if(xaxisName.equals("")||(yaxisName.equals("")))
-//						SDAPlotter.imagePlot(plotName, (AbstractDataset)data.get(dataName));
+//						SDAPlotter.imagePlot(plotName, (Dataset)data.get(dataName));
 //					else
-//						SDAPlotter.imagePlot(plotName, ((AbstractDataset)data.get(xaxisName)), ((AbstractDataset)data.get(yaxisName)), ((AbstractDataset)data.get(dataName)));
+//						SDAPlotter.imagePlot(plotName, ((Dataset)data.get(xaxisName)), ((Dataset)data.get(yaxisName)), ((Dataset)data.get(dataName)));
 
 				} else if (plotMode.equals(PlottingMode.SURF2D.toString())) {
 					if(xaxisName.equals("")||(yaxisName.equals("")))
 						SDAPlotter.surfacePlot(plotName, aData);
 					else
-						SDAPlotter.surfacePlot(plotName, ((AbstractDataset)data.get(xaxisName)), ((AbstractDataset)data.get(yaxisName)), aData);
+						SDAPlotter.surfacePlot(plotName, ((Dataset)data.get(xaxisName)), ((Dataset)data.get(yaxisName)), aData);
 
 				} else if (plotMode.equals(PlottingMode.MULTI2D.toString())) {
 //					if(xaxisName.equals("")||(yaxisName.equals("")))
-//						SDAPlotter.imagePlot(plotName, (AbstractDataset)data.get(dataName));
+//						SDAPlotter.imagePlot(plotName, (Dataset)data.get(dataName));
 //					else
-//						SDAPlotter.imagePlot(plotName, ((AbstractDataset)data.get(xaxisName)), ((AbstractDataset)data.get(yaxisName)), ((AbstractDataset)data.get(dataName)));
+//						SDAPlotter.imagePlot(plotName, ((Dataset)data.get(xaxisName)), ((Dataset)data.get(yaxisName)), ((Dataset)data.get(dataName)));
 
 				}
 			}
@@ -234,7 +234,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 				
 				@Override
 				public void run() {
-					int[] maxPos = ((AbstractDataset)data.get(dataName)).maxPos();
+					int[] maxPos = ((Dataset)data.get(dataName)).maxPos();
 					double width = maxPos[0];
 					double height = maxPos[1];
 					myROI = new RectangularROI(width, height/2, 0);

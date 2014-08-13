@@ -48,7 +48,7 @@ import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.JavaImageSaver;
@@ -369,7 +369,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				dh.addDataset(set.getName(), set);
 				saver.saveFile(dh);
 
-				ret.addList("image"+ifound, (AbstractDataset)set);
+				ret.addList("image"+ifound, (Dataset)set);
 				++ifound;
 
 				wroteSomething = true;
@@ -447,10 +447,10 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 			String axis3SaveName = ret.getScalar(AXIS3_SAVENAME);
 			String dataSaveName = ret.getScalar(DATA_SAVENAME);
 
-			AbstractDataset xAxisData = (AbstractDataset)data.get(axis1name);
-			AbstractDataset yAxisData = (AbstractDataset)data.get(axis2name);
-			AbstractDataset zAxisData = (AbstractDataset)data.get(axis3name);
-			AbstractDataset myData = (AbstractDataset)data.get(dataName);
+			Dataset xAxisData = (Dataset)data.get(axis1name);
+			Dataset yAxisData = (Dataset)data.get(axis2name);
+			Dataset zAxisData = (Dataset)data.get(axis3name);
+			Dataset myData = (Dataset)data.get(dataName);
 
 			if(myData != null){
 				final String dataset = file.appendDataset(dataSaveName,  myData, parent);
@@ -500,7 +500,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 			//				
 			//				file.setNexusAttribute(group, Nexus.DATA);
 			//				if (sets!=null) for (IDataset set : sets) {
-			//					final AbstractDataset a = (AbstractDataset)set;
+			//					final Dataset a = (Dataset)set;
 			//					final Datatype        d = H5Utils.getDatatype(a);
 			//					final long[]      shape = new long[a.getShape().length];
 			//					for (int i = 0; i < shape.length; i++) shape[i] = a.getShape()[i];
@@ -527,7 +527,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 			//				
 			//				final String name = path[path.length-1];
 			//				if (sets!=null) for (IDataset set : sets) {
-			//					final AbstractDataset a = (AbstractDataset)set;
+			//					final Dataset a = (Dataset)set;
 			//					final Datatype        d = H5Utils.getDatatype(a);
 			//					final long[]      shape = new long[a.getShape().length];
 			//					for (int i = 0; i < shape.length; i++) shape[i] = a.getShape()[i];

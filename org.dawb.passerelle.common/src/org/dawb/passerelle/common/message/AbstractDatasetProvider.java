@@ -11,7 +11,7 @@ package org.dawb.passerelle.common.message;
 
 import java.util.Arrays;
 
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 
 
 /**
@@ -29,10 +29,10 @@ public class AbstractDatasetProvider {
 	private String cachedValue;
 	
 	public AbstractDatasetProvider() {
-		this(null, AbstractDataset.FLOAT32);
+		this(null, Dataset.FLOAT32);
 	}
 	public AbstractDatasetProvider(final int[] shape) {
-		this(shape, AbstractDataset.FLOAT32);
+		this(shape, Dataset.FLOAT32);
 	}
 	public AbstractDatasetProvider(int[] shape, int dType) {
 		this.shape = shape;
@@ -55,15 +55,15 @@ public class AbstractDatasetProvider {
 	
 	private String getString() {
 		switch(dType) {
-		case AbstractDataset.INT16:
+		case Dataset.INT16:
 			return "1, 2, 3...";
-		case AbstractDataset.INT32:
+		case Dataset.INT32:
 			return "1, 2, 3...";
-		case AbstractDataset.INT64:
+		case Dataset.INT64:
 			return "1, 2, 3...";
-		case AbstractDataset.FLOAT32:
+		case Dataset.FLOAT32:
 			return "1.0, 2.0, 3.0...";
-		case AbstractDataset.FLOAT64:
+		case Dataset.FLOAT64:
 			return "1.0, 2.0, 3.0...";
 		default:
 			return "1.0, 2.0, 3.0...";
@@ -77,19 +77,19 @@ public class AbstractDatasetProvider {
 			
 			final int value = values[i];
 			SWITCH: switch(dType) {
-			case AbstractDataset.INT16:
+			case Dataset.INT16:
 				buf.append(String.valueOf(value));
 				break SWITCH;
-			case AbstractDataset.INT32:
+			case Dataset.INT32:
 				buf.append(String.valueOf(value));
 				break SWITCH;
-			case AbstractDataset.INT64:
+			case Dataset.INT64:
 				buf.append(String.valueOf(value));
 				break SWITCH;
-			case AbstractDataset.FLOAT32:
+			case Dataset.FLOAT32:
 				buf.append(String.valueOf((float)value));
 				break SWITCH;
-			case AbstractDataset.FLOAT64:
+			case Dataset.FLOAT64:
 				buf.append(String.valueOf((double)value));
 				break SWITCH;
 			default:

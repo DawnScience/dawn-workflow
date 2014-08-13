@@ -12,7 +12,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
 import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
@@ -73,12 +73,12 @@ public class RegionSelectActor extends AbstractDataMessageTransformer {
 
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			AbstractDataset dataset = (AbstractDataset) data.get(key);
+			Dataset dataset = (Dataset) data.get(key);
 			result.addList(key, dataset);
 
 			if (dataset.getShape().length == 2) {
 
-				AbstractDataset dataRegion = dataset.clone();
+				Dataset dataRegion = dataset.clone();
 
 				dataRegion = dataRegion.getSlice(new int[] { yStart, xStart },
 						new int[] { yStop, xStop },
@@ -94,8 +94,8 @@ public class RegionSelectActor extends AbstractDataMessageTransformer {
 			// TODO, this is a dumb way of doing it, but is easy to implement, this should be improved somehow
 			if (dataset.getShape().length == 1) {
 
-				AbstractDataset dataRegionX = dataset.clone();
-				AbstractDataset dataRegionY = dataset.clone();
+				Dataset dataRegionX = dataset.clone();
+				Dataset dataRegionY = dataset.clone();
 				
 				try {
 					dataRegionX = dataRegionX.getSlice(new int[] { xStart },

@@ -23,7 +23,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.FermiGauss;
@@ -64,12 +64,12 @@ public class PrepareFermiFittingFunctionsActor extends
 		String dataset = datasetName.getExpression();
 		String xAxis = xAxisName.getExpression();
 		
-		AbstractDataset dataDS = ((AbstractDataset) data.get(dataset)).clone();
+		Dataset dataDS = ((Dataset) data.get(dataset)).clone();
 		int[] shape = dataDS.getShape();
 		
-		AbstractDataset xAxisDS = null;
+		Dataset xAxisDS = null;
 		if (data.containsKey(xAxis)) {
-			xAxisDS = ((AbstractDataset) data.get(xAxis)).clone();
+			xAxisDS = ((Dataset) data.get(xAxis)).clone();
 		} else {
 			xAxisDS = DoubleDataset.createRange(shape[0], 0, -1);
 		}

@@ -35,7 +35,7 @@ public interface IVariable {
 	
 	/**
 	 * the class of the variable for instance String, File
-	 * or AbstractDataset.
+	 * or Dataset.
 	 * 
 	 * @return
 	 */

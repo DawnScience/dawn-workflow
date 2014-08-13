@@ -22,7 +22,8 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
+import uk.ac.diamond.scisoft.analysis.dataset.DatasetFactory;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
@@ -84,7 +85,7 @@ public class PlotSink extends AbstractDataMessageSink {
 			if (yAxes!=null || xAxis.getShape().length==1) {
 				if (yAxes==null) {
 					yAxes = new IDataset[]{xAxis};
-					xAxis = AbstractDataset.arange(xAxis.getSize(), AbstractDataset.INT32);
+					xAxis = DatasetFactory.createRange(xAxis.getSize(), Dataset.INT32);
 				}
 				if (update) {
 					//SDAPlotter.updatePlot(plotPartName, xAxis, yAxes);

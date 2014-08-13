@@ -19,7 +19,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
@@ -27,8 +27,8 @@ import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import com.isencia.passerelle.actor.ProcessingException;
 
 /**
- * All imputs to this method are summed. When the 
- * Inputs stop firing data, it despatches the data, summed, to the output port if
+ * All inputs to this method are summed. When the 
+ * Inputs stop firing data, it dispatches the data, summed, to the output port if
  * the parameter to cache is set. Normally a is piping and b is caching, this
  * allows one or more images going into b to be added to each image going through
  * a. The concept is a little difficult to program but natural to use.
@@ -50,7 +50,7 @@ public class AddDatasets extends AbstractDataMessageTransformer2Port {
 	
 	/**
 	 * This is a two port operation so that maths on pipelines over folders can be done,
-	 * it is not inherently one since a+b = b+a (inlike -, / etc.)
+	 * it is not inherently one since a+b = b+a (i.e. they commute unlike -, / etc.)
 	 */
 	protected DataMessageComponent getTransformedMessage(List<DataMessageComponent> port1Cache, List<DataMessageComponent> port2Cache) throws ProcessingException{
 		
@@ -60,7 +60,7 @@ public class AddDatasets extends AbstractDataMessageTransformer2Port {
 		if (sets1!=null) sets.addAll(sets1);
 		if (sets2!=null) sets.addAll(sets2);
 		
-		final AbstractDataset sum  = Maths.add(sets, isCreateClone());
+		final Dataset sum  = Maths.add(sets, isCreateClone());
         try {
 			final DataMessageComponent ret = new DataMessageComponent();
 			ret.setList(sum);

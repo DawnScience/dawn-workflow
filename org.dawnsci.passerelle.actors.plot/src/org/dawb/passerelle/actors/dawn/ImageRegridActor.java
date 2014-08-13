@@ -21,7 +21,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.Image;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
@@ -67,7 +67,7 @@ public class ImageRegridActor extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (AbstractDataset) data.get(key));
+			result.addList(key, (Dataset) data.get(key));
 		}
 		
 		// get the required datasets
@@ -77,13 +77,13 @@ public class ImageRegridActor extends AbstractDataMessageTransformer {
 		String linearXAxis = linearXAxisName.getExpression();
 		String linearYAxis = linearYAxisName.getExpression();
 
-		AbstractDataset dataDS = ((AbstractDataset)data.get(dataset)).clone();
-		AbstractDataset xAxisGrid = ((AbstractDataset)data.get(xAxisPositions)).clone();
-		AbstractDataset yAxisGrid = ((AbstractDataset)data.get(yAxisPositions)).clone();
-		AbstractDataset xAxisLinear = ((AbstractDataset)data.get(linearXAxis)).clone();
-		AbstractDataset yAxisLinear = ((AbstractDataset)data.get(linearYAxis)).clone();
+		Dataset dataDS = ((Dataset)data.get(dataset)).clone();
+		Dataset xAxisGrid = ((Dataset)data.get(xAxisPositions)).clone();
+		Dataset yAxisGrid = ((Dataset)data.get(yAxisPositions)).clone();
+		Dataset xAxisLinear = ((Dataset)data.get(linearXAxis)).clone();
+		Dataset yAxisLinear = ((Dataset)data.get(linearYAxis)).clone();
 		
-		AbstractDataset regrid = Image.regrid(dataDS, xAxisGrid, yAxisGrid, xAxisLinear, yAxisLinear);
+		Dataset regrid = Image.regrid(dataDS, xAxisGrid, yAxisGrid, xAxisLinear, yAxisLinear);
 		
 		result.addList(dataset+"_regrid", regrid);
 		

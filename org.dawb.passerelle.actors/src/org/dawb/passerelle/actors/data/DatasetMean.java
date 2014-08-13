@@ -11,7 +11,7 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
@@ -47,16 +47,16 @@ public class DatasetMean extends AbstractDataMessageTransformer {
 
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (AbstractDataset) data.get(key));
+			result.addList(key, (Dataset) data.get(key));
 		}
 
 		// get the required datasets
 		String dataset = dataName.getExpression();
 		int axis = Integer.parseInt(meanDirection.getExpression());
 
-		AbstractDataset dataDS = ((AbstractDataset) data.get(dataset)).clone();
+		Dataset dataDS = ((Dataset) data.get(dataset)).clone();
 
-		AbstractDataset mean = dataDS.mean(axis);
+		Dataset mean = dataDS.mean(axis);
 
 		mean.setName(dataDS.getName()+"_mean");
 		

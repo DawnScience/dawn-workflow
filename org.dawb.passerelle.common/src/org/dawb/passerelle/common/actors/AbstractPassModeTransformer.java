@@ -37,7 +37,7 @@ import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
@@ -179,7 +179,7 @@ public abstract class AbstractPassModeTransformer extends Actor implements IVari
 		
 		if (dataSetNaming.getVisibility()!=Settable.NONE) {
 			if (NAME_MODE.get(2).equals(dataSetNaming.getExpression())) {
-				ret.add(new Variable(getName(), VARIABLE_TYPE.ARRAY, new AbstractDatasetProvider(), AbstractDataset.class));
+				ret.add(new Variable(getName(), VARIABLE_TYPE.ARRAY, new AbstractDatasetProvider(), Dataset.class));
 			}
 		}
 		return ret;

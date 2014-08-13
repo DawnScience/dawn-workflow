@@ -17,7 +17,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
@@ -48,9 +48,9 @@ public class SubtractDatasets extends AbstractDataMessageTransformer2Port {
 
 		final List<IDataset>  sets1 = MessageUtils.getDatasets(port1Cache);
 		final List<IDataset>  sets2 = MessageUtils.getDatasets(port2Cache);
-		final AbstractDataset a   = Maths.add(sets1, isCreateClone());
-		final AbstractDataset b   = Maths.add(sets2, true);
-		final AbstractDataset res = isCreateClone()
+		final Dataset a   = Maths.add(sets1, isCreateClone());
+		final Dataset b   = Maths.add(sets2, true);
+		final Dataset res = isCreateClone()
 		                          ? Maths.subtract(a, b)
 		                          : a.isubtract(b);
 		
