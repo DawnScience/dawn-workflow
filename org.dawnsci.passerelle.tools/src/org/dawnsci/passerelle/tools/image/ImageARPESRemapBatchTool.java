@@ -7,10 +7,9 @@ import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.AbstractBatchTool;
 
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.dataset.AbstractDataset;
+import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
-import uk.ac.diamond.scisoft.analysis.dataset.InterpolatorUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.Maths;
 import uk.ac.diamond.scisoft.analysis.dataset.function.MapToRotatedCartesian;
 import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
@@ -29,34 +28,34 @@ public class ImageARPESRemapBatchTool extends AbstractBatchTool {
 
 		final UserPlotBean upb = (UserPlotBean)bean.getToolData();
 		final ROIBase roi = (ROIBase) upb.getRois().get("mapping_roi");
-		final AbstractDataset kParallel = (AbstractDataset) upb.getData().get("kParallel");
-		final AbstractDataset kParaAxis = (AbstractDataset) upb.getData().get("kParaAxis");
-		AbstractDataset auxiliaryData = null;
+		final Dataset kParallel = (Dataset) upb.getData().get("kParallel");
+		final Dataset kParaAxis = (Dataset) upb.getData().get("kParaAxis");
+		Dataset auxiliaryData = null;
 		if (upb.getData().containsKey("auxiliaryData")) {
-			auxiliaryData = (AbstractDataset) upb.getData().get("auxiliaryData");
+			auxiliaryData = (Dataset) upb.getData().get("auxiliaryData");
 		}
-		final AbstractDataset remapped_energy = (AbstractDataset) upb.getData().get("remapped_energy");
+		final Dataset remapped_energy = (Dataset) upb.getData().get("remapped_energy");
 		
 		final List<IDataset> dataList = getPlottableData(bean);
 		if (dataList==null || dataList.size()<1) throw new Exception("No data found for tool "+getBatchToolId());
 
-		final AbstractDataset data = (AbstractDataset)dataList.get(0);
+		final Dataset data = (Dataset)dataList.get(0);
 		if (data.getRank()!=2) throw new Exception("Can only use "+getBatchToolId()+" with 2D data!");
 
 		List<IDataset> originalAxes = getAxes(bean);
 		//TODO put in some checking here.
 
-		AbstractDataset correctedData = data;
+		Dataset correctedData = data;
 		List<IDataset> correctedAxes = originalAxes;
 		
 		// Do the processing here if required
 		if (auxiliaryData != null) {
-			AbstractDataset newEnergyAxis = Maths.subtract(originalAxes.get(0), auxiliaryData.mean());
-			AbstractDataset differences = Maths.subtract(auxiliaryData, auxiliaryData.mean());
+			Dataset newEnergyAxis = Maths.subtract(originalAxes.get(0), auxiliaryData.mean());
+			Dataset differences = Maths.subtract(auxiliaryData, auxiliaryData.mean());
 			
 			double meanSteps = (originalAxes.get(0).max().doubleValue()-originalAxes.get(0).min().doubleValue())/(float)originalAxes.get(0).getShape()[0];
 			
-			AbstractDataset differenceInts = Maths.floor(Maths.divide(differences, meanSteps));
+			Dataset differenceInts = Maths.floor(Maths.divide(differences, meanSteps));
 			
 			correctedData = new DoubleDataset(data.getShape());
 			for(int y = 0; y < correctedData.getShape()[0]; y++) {
@@ -69,7 +68,7 @@ public class ImageARPESRemapBatchTool extends AbstractBatchTool {
 				}
 			}
 			
-			//correctedData = InterpolatorUtils.remapOneAxis((AbstractDataset) data, 1, (AbstractDataset) auxiliaryData, (AbstractDataset) originalAxes.get(0), newEnergyAxis);
+			//correctedData = InterpolatorUtils.remapOneAxis((Dataset) data, 1, (Dataset) auxiliaryData, (Dataset) originalAxes.get(0), newEnergyAxis);
 			correctedAxes = new ArrayList<IDataset>();
 			correctedAxes.add(newEnergyAxis.clone());
 			correctedAxes.add(originalAxes.get(1).clone());
@@ -77,11 +76,11 @@ public class ImageARPESRemapBatchTool extends AbstractBatchTool {
 		
 		// Get the data ROI
 		MapToRotatedCartesian map = new MapToRotatedCartesian((RectangularROI)roi);
-		AbstractDataset dataRegion = map.value(correctedData).get(0);
+		Dataset dataRegion = map.value(correctedData).get(0);
 		
 		// prepare the results
-		//AbstractDataset remappedRegion = InterpolatorUtils.remapAxis(dataRegion, 0, kParallel, kParaAxis);
-		AbstractDataset remappedRegion = dataRegion;
+		//Dataset remappedRegion = InterpolatorUtils.remapAxis(dataRegion, 0, kParallel, kParaAxis);
+		Dataset remappedRegion = dataRegion;
 		
 		// We set the same trace data and regions as would
 		// be there if the fitting had run in the ui.
