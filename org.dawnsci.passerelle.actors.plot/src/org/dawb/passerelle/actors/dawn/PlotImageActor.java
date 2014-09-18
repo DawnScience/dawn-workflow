@@ -21,6 +21,15 @@ import java.util.Set;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
+import org.eclipse.dawnsci.analysis.api.roi.IROI;
+import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.roi.EllipticalFitROI;
+import org.eclipse.dawnsci.analysis.dataset.roi.EllipticalROI;
+import org.eclipse.dawnsci.analysis.dataset.roi.LinearROI;
+import org.eclipse.dawnsci.analysis.dataset.roi.PointROI;
+import org.eclipse.dawnsci.analysis.dataset.roi.RectangularROI;
+import org.eclipse.dawnsci.analysis.dataset.roi.SectorROI;
 import org.eclipse.dawnsci.plotting.api.IPlottingSystem;
 import org.eclipse.dawnsci.plotting.api.PlottingFactory;
 import org.eclipse.dawnsci.plotting.api.region.IRegion;
@@ -37,16 +46,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.SDAPlotter;
-import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.rcp.plotting.PlottingMode;
-import uk.ac.diamond.scisoft.analysis.roi.EllipticalFitROI;
-import uk.ac.diamond.scisoft.analysis.roi.EllipticalROI;
-import uk.ac.diamond.scisoft.analysis.roi.IROI;
-import uk.ac.diamond.scisoft.analysis.roi.LinearROI;
-import uk.ac.diamond.scisoft.analysis.roi.PointROI;
-import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
-import uk.ac.diamond.scisoft.analysis.roi.SectorROI;
 
 import com.isencia.passerelle.actor.ProcessingException;
 

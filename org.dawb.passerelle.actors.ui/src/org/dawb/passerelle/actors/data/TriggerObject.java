@@ -11,7 +11,7 @@ package org.dawb.passerelle.actors.data;
 
 import java.io.File;
 
-import uk.ac.diamond.scisoft.analysis.io.SliceObject;
+import org.eclipse.dawnsci.analysis.api.io.SliceObject;
 
 import com.isencia.passerelle.message.ManagedMessage;
 

@@ -14,6 +14,7 @@ import java.util.List;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,7 +27,6 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 

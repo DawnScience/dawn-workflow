@@ -15,9 +15,9 @@ import javax.management.MBeanServerConnection;
 
 import org.dawb.passerelle.common.Activator;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.actor.v5.Actor;

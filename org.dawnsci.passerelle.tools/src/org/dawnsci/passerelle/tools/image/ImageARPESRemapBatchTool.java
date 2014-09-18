@@ -5,15 +5,15 @@ import java.util.List;
 
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.AbstractBatchTool;
+import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.Maths;
+import org.eclipse.dawnsci.analysis.dataset.impl.function.MapToRotatedCartesian;
+import org.eclipse.dawnsci.analysis.dataset.roi.ROIBase;
+import org.eclipse.dawnsci.analysis.dataset.roi.RectangularROI;
 
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
-import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
-import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
-import uk.ac.diamond.scisoft.analysis.dataset.Maths;
-import uk.ac.diamond.scisoft.analysis.dataset.function.MapToRotatedCartesian;
-import uk.ac.diamond.scisoft.analysis.roi.ROIBase;
-import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
 
 /**
  * This class does image normalisation in the same way that the ImageNormalisationTool does.

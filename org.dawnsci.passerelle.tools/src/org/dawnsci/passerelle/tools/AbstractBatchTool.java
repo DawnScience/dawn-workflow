@@ -4,8 +4,7 @@ import java.util.List;
 
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.util.BatchToolUtils;
-
-import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 
 
 public abstract class AbstractBatchTool implements IBatchTool {

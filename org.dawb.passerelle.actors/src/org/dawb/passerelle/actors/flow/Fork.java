@@ -1,11 +1,11 @@
 package org.dawb.passerelle.actors.flow;
 
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.message.MessageException;
 

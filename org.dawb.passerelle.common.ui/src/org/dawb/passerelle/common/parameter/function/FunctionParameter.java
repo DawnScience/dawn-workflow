@@ -15,6 +15,7 @@ import java.io.IOException;
 import org.dawb.common.services.IPersistenceService;
 import org.dawb.common.services.ServiceManager;
 import org.dawnsci.common.widgets.gda.function.FunctionDialog;
+import org.eclipse.dawnsci.analysis.api.fitting.functions.IFunction;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -29,7 +30,6 @@ import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.Fermi;
-import uk.ac.diamond.scisoft.analysis.fitting.functions.IFunction;
 
 import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
 

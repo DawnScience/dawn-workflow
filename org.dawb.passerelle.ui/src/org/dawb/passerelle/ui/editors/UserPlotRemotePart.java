@@ -22,6 +22,8 @@ import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.BatchToolFactory;
 import org.dawnsci.passerelle.tools.util.BatchToolUtils;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
+import org.eclipse.dawnsci.analysis.api.roi.IROI;
 import org.eclipse.dawnsci.plotting.api.EmptyWorkbenchPart;
 import org.eclipse.dawnsci.plotting.api.IPlottingSystem;
 import org.eclipse.dawnsci.plotting.api.PlotType;
@@ -57,9 +59,6 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPart;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
-import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
 public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 

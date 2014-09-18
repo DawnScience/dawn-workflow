@@ -27,6 +27,7 @@ import org.dawb.passerelle.common.message.Variable;
 import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserInputBean;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.swt.SWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +40,6 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 

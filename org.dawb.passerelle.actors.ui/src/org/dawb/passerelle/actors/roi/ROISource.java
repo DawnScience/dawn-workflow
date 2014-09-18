@@ -18,6 +18,8 @@ import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
 import org.dawb.passerelle.common.parameter.roi.ROIParameter;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
+import org.eclipse.dawnsci.analysis.api.roi.IROI;
 
 import ptolemy.data.StringToken;
 import ptolemy.data.expr.Parameter;
@@ -26,8 +28,6 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
-import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
 import com.isencia.passerelle.actor.ProcessingException;
 import com.isencia.passerelle.message.ManagedMessage;

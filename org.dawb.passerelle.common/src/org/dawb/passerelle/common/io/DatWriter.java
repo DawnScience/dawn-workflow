@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 
 public class DatWriter {
 

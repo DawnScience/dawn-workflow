@@ -5,13 +5,13 @@ import java.util.Map;
 
 import org.dawb.common.util.list.ListUtils;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 

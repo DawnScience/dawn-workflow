@@ -8,9 +8,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.dawb.workbench.jmx.UserPlotBean;
-
-import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
-import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
+import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
 
 
 /**

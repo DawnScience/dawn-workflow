@@ -26,12 +26,12 @@ import org.dawb.passerelle.actors.scripts.PythonPydevScript;
 import org.dawb.passerelle.actors.scripts.PythonScript;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.dawnsci.analysis.api.io.ILoaderService;
+import org.eclipse.dawnsci.analysis.api.metadata.IMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.io.ILoaderService;
-import uk.ac.diamond.scisoft.analysis.metadata.IMetadata;
 
 import com.isencia.passerelle.workbench.model.editor.ui.dnd.IDropClassFactory;
 import com.isencia.passerelle.workbench.model.ui.command.CreateComponentCommand;

@@ -21,10 +21,10 @@ import org.dawb.passerelle.common.utils.SubstituteUtils;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.variables.IValueVariable;
 import org.eclipse.core.variables.VariablesPlugin;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.resources.util.ResourceUtils;
 

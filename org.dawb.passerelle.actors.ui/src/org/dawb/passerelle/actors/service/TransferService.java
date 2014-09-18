@@ -5,10 +5,9 @@ import java.util.List;
 
 import org.dawb.common.services.ITransferService;
 import org.dawb.passerelle.actors.roi.ROISource;
+import org.eclipse.dawnsci.analysis.api.roi.IROI;
 import org.eclipse.ui.services.AbstractServiceFactory;
 import org.eclipse.ui.services.IServiceLocator;
-
-import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
 public class TransferService extends AbstractServiceFactory implements ITransferService {
 

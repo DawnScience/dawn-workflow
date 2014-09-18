@@ -28,6 +28,7 @@ import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.BatchToolFactory;
 import org.dawnsci.passerelle.tools.IBatchTool;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.plotting.api.tool.ToolPageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,7 +41,6 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 import com.isencia.passerelle.actor.ProcessingException;
 

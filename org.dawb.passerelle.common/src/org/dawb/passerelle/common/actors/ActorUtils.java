@@ -21,6 +21,7 @@ import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,6 @@ import ptolemy.data.BooleanToken;
 import ptolemy.data.Token;
 import ptolemy.data.expr.Parameter;
 import ptolemy.kernel.util.Attribute;
-import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 
 public class ActorUtils {
 

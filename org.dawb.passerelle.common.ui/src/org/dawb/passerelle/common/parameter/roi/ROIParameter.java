@@ -6,6 +6,8 @@ import org.dawb.common.services.IPersistenceService;
 import org.dawb.common.services.ServiceManager;
 import org.dawnsci.plotting.roi.IRegionTransformer;
 import org.dawnsci.plotting.roi.RegionCellEditor;
+import org.eclipse.dawnsci.analysis.api.roi.IROI;
+import org.eclipse.dawnsci.analysis.dataset.roi.RectangularROI;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
@@ -16,8 +18,6 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.roi.IROI;
-import uk.ac.diamond.scisoft.analysis.roi.RectangularROI;
 
 import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
 
