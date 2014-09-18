@@ -489,7 +489,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		
 		if (datasets!=null) comp.addList(datasets);
 		if (isMetaRequired) {
-			IMetadata meta =  LoaderFactory.getMetaData(filePath, null);
+			IMetadata meta =  LoaderFactory.getMetadata(filePath, null);
 			comp.setMeta(meta);
 		}
 		comp.putScalar("file_path", filePath);

@@ -161,7 +161,7 @@ class DataImportDelegate {
 					}
 				}
 				
-				final IMetadata meta  = LoaderFactory.getMetaData(file.getAbsolutePath(), null);
+				final IMetadata meta  = LoaderFactory.getMetadata(file.getAbsolutePath(), null);
 				if (meta!=null && meta.getDataNames()!=null) {
 				    Collection<String> names = meta.getDataNames();
 				    Map<String,int[]>  shapes= meta.getDataShapes();

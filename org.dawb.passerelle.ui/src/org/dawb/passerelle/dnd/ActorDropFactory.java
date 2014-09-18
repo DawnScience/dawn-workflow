@@ -78,7 +78,7 @@ public class ActorDropFactory implements IDropClassFactory {
 			IMetadata data;
 			try {
 				final ILoaderService service = (ILoaderService)ServiceManager.getService(ILoaderService.class);
-				data = service.getMetaData(filePath, null);
+				data = service.getMetadata(filePath, null);
 			} catch (Exception e) {
 				logger.error("Cannot get meta data for "+filePath, e);
 				return;

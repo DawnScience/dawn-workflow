@@ -160,7 +160,7 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 		int[] shape = null;
 		try {
 			final ISliceInformationProvider source = (ISliceInformationProvider)getContainer();
-			final IMetadata meta  = LoaderFactory.getMetaData(source.getSourcePath(), null);
+			final IMetadata meta  = LoaderFactory.getMetadata(source.getSourcePath(), null);
 	        shape  = meta.getDataShapes().get(source.getDataSetNames()[0]);
 		} catch (Exception ne) {
 			shape = null;
