@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.dawb.common.ui.util.GridUtils;
-import org.dawb.passerelle.actors.ifdynaport.ExpressionBean;
-import org.dawb.passerelle.actors.ifdynaport.ExpressionContainer;
 import org.dawnsci.common.richbeans.components.selector.VerticalListEditor;
 import org.dawnsci.common.richbeans.dialog.BeanDialog;
 import org.eclipse.swt.SWT;

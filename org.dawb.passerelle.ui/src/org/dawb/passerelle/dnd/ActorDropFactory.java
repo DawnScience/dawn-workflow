@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.io.ILoaderService;
-import uk.ac.diamond.scisoft.analysis.io.IMetaData;
+import uk.ac.diamond.scisoft.analysis.metadata.IMetadata;
 
 import com.isencia.passerelle.workbench.model.editor.ui.dnd.IDropClassFactory;
 import com.isencia.passerelle.workbench.model.ui.command.CreateComponentCommand;
@@ -75,7 +75,7 @@ public class ActorDropFactory implements IDropClassFactory {
 
 		if (isH5(filePath)) {
 
-			IMetaData data;
+			IMetadata data;
 			try {
 				final ILoaderService service = (ILoaderService)ServiceManager.getService(ILoaderService.class);
 				data = service.getMetaData(filePath, null);

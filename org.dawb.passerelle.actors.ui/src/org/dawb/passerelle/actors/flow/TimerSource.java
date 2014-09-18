@@ -1,14 +1,12 @@
 package org.dawb.passerelle.actors.flow;
 
-import java.io.File;
-import java.util.Calendar;
 import java.util.List;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageSource;
 import org.dawb.passerelle.common.message.IVariable;
+import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
-import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

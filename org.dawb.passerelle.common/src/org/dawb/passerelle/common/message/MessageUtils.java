@@ -32,10 +32,10 @@ import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.dataset.DoubleDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
-import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.MetaDataAdapter;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent.VALUE_TYPE;
+import uk.ac.diamond.scisoft.analysis.metadata.IMetadata;
 import uk.ac.diamond.scisoft.analysis.roi.IROI;
 
 import com.isencia.passerelle.message.ManagedMessage;
@@ -83,7 +83,7 @@ public class MessageUtils {
 		
 		} else {
 			final Map<String, Serializable>  hash = MessageUtils.coerceData(message);
-			final IMetaData            meta = MessageUtils.coerceMeta(message);
+			final IMetadata            meta = MessageUtils.coerceMeta(message);
 			final DataMessageComponent comp = new DataMessageComponent();
 			comp.setList(hash);
 			comp.setMeta(meta);
@@ -104,14 +104,14 @@ public class MessageUtils {
 	}
 
 	/**
-	 * Attempts to get the IMetaData from the message if it exists.
+	 * Attempts to get the IMetadata from the message if it exists.
 	 * 
-	 * Otherwise will return an IMetaData based on the message headers.
+	 * Otherwise will return an IMetadata based on the message headers.
 	 * 
 	 * @param message
 	 * @return
 	 */
-	public static IMetaData coerceMeta(final ManagedMessage message) throws Exception {
+	public static IMetadata coerceMeta(final ManagedMessage message) throws Exception {
 		
 		final Object data = message.getBodyContent();
 		
@@ -297,11 +297,11 @@ public class MessageUtils {
      * @param cache
      * @return
      */
-	public static IMetaData getMeta(List<DataMessageComponent> cache) {
-		List<IMetaData> ret = null;
+	public static IMetadata getMeta(List<DataMessageComponent> cache) {
+		List<IMetadata> ret = null;
 		for (DataMessageComponent comp : cache) {
 			if (comp==null||comp.getMeta()==null) continue;
-			if (ret==null) ret = new ArrayList<IMetaData>(3);
+			if (ret==null) ret = new ArrayList<IMetadata>(3);
 			ret.add(comp.getMeta());
 		}
 		if (ret==null) return null;

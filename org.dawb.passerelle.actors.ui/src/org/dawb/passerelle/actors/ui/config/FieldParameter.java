@@ -10,7 +10,6 @@
 package org.dawb.passerelle.actors.ui.config;
 
 import org.dawb.passerelle.common.parameter.CellEditorParameter;
-import org.dawnsci.common.richbeans.beans.BeanUI;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;
@@ -19,12 +18,9 @@ import org.eclipse.swt.widgets.Control;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
-
-import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
 
 public class FieldParameter extends CellEditorParameter {
 	

@@ -23,11 +23,10 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Shell;
-
-import ptolemy.kernel.util.NamedObj;
-
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
+
+import ptolemy.kernel.util.NamedObj;
 
 public class FieldDialog extends BeanDialog {
 

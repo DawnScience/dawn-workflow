@@ -34,8 +34,8 @@ import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
 import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
-import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
+import uk.ac.diamond.scisoft.analysis.metadata.IMetadata;
 
 import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
 
@@ -160,7 +160,7 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 		int[] shape = null;
 		try {
 			final ISliceInformationProvider source = (ISliceInformationProvider)getContainer();
-			final IMetaData meta  = LoaderFactory.getMetaData(source.getSourcePath(), null);
+			final IMetadata meta  = LoaderFactory.getMetaData(source.getSourcePath(), null);
 	        shape  = meta.getDataShapes().get(source.getDataSetNames()[0]);
 		} catch (Exception ne) {
 			shape = null;

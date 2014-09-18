@@ -37,9 +37,9 @@ import uk.ac.diamond.scisoft.analysis.dataset.Dataset;
 import uk.ac.diamond.scisoft.analysis.dataset.DatasetUtils;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
 import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
-import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
+import uk.ac.diamond.scisoft.analysis.metadata.IMetadata;
 
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
@@ -161,7 +161,7 @@ class DataImportDelegate {
 					}
 				}
 				
-				final IMetaData meta  = LoaderFactory.getMetaData(file.getAbsolutePath(), null);
+				final IMetadata meta  = LoaderFactory.getMetaData(file.getAbsolutePath(), null);
 				if (meta!=null && meta.getDataNames()!=null) {
 				    Collection<String> names = meta.getDataNames();
 				    Map<String,int[]>  shapes= meta.getDataShapes();

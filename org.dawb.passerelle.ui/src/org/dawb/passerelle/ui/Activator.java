@@ -1,6 +1,5 @@
 package org.dawb.passerelle.ui;
 
-import org.eclipse.dawnsci.plotting.api.region.IRegionService;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;

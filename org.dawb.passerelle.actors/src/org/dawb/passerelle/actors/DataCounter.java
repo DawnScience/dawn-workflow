@@ -17,7 +17,6 @@ package org.dawb.passerelle.actors;
 
 
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;

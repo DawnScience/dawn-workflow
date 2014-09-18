@@ -58,10 +58,10 @@ import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.dataset.IDataset;
 import uk.ac.diamond.scisoft.analysis.dataset.ILazyDataset;
 import uk.ac.diamond.scisoft.analysis.io.IDataHolder;
-import uk.ac.diamond.scisoft.analysis.io.IMetaData;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
 import uk.ac.diamond.scisoft.analysis.io.SliceObject;
 import uk.ac.diamond.scisoft.analysis.message.DataMessageComponent;
+import uk.ac.diamond.scisoft.analysis.metadata.IMetadata;
 
 import com.isencia.passerelle.actor.InitializationException;
 import com.isencia.passerelle.actor.ProcessingException;
@@ -489,7 +489,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 		
 		if (datasets!=null) comp.addList(datasets);
 		if (isMetaRequired) {
-			IMetaData meta =  LoaderFactory.getMetaData(filePath, null);
+			IMetadata meta =  LoaderFactory.getMetaData(filePath, null);
 			comp.setMeta(meta);
 		}
 		comp.putScalar("file_path", filePath);

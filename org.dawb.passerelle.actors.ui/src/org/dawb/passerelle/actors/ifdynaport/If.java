@@ -11,9 +11,6 @@ package org.dawb.passerelle.actors.ifdynaport;
 
 import java.util.List;
 
-import org.dawb.passerelle.actors.ifdynaport.ExpressionBean;
-import org.dawb.passerelle.actors.ifdynaport.ExpressionContainer;
-import org.dawb.passerelle.actors.ifdynaport.ExpressionParameter;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.slf4j.Logger;

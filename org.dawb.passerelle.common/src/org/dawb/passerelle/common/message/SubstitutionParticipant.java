@@ -12,8 +12,6 @@ package org.dawb.passerelle.common.message;
 import java.util.List;
 import java.util.Map;
 
-import org.dawb.passerelle.common.message.IVariable;
-
 public interface SubstitutionParticipant {
 
 	/**

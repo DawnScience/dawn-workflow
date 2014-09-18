@@ -16,7 +16,6 @@
 
 package org.dawb.passerelle.actors.ui;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
