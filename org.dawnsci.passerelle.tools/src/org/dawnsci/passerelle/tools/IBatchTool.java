@@ -16,7 +16,7 @@ import ptolemy.kernel.util.NamedObj;
  * 
  * A tool, which is like a plotting tool, and can run in batch from workflows.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public interface IBatchTool {

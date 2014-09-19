@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * This is a service manager for the service which runs giving workflow actors
  * the ability to interact with the UI.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class WorkbenchServiceManager implements IStartup {

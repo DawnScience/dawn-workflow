@@ -48,7 +48,7 @@ import com.isencia.util.StringConvertor;
  * It is used for spectroscopy pipelines that want to process files already chosen
  * by the user.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class DataListSource extends AbstractDataMessageSource {

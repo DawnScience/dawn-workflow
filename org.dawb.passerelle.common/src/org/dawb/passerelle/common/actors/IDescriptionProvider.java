@@ -5,7 +5,7 @@ import ptolemy.kernel.util.Nameable;
 /**
  * Provides a description for an actor or similar entity
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public interface IDescriptionProvider extends Nameable {

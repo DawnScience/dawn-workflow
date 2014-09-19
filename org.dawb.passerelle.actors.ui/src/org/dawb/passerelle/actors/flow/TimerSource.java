@@ -27,7 +27,7 @@ import com.isencia.passerelle.message.ManagedMessage;
  * The 'current_time' in milliseconds and the 'total_time' we have monitored
  * are passed down the workflow.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class TimerSource extends AbstractDataMessageSource {

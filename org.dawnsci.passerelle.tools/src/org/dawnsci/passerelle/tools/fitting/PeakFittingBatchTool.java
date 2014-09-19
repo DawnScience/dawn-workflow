@@ -34,7 +34,7 @@ import uk.ac.diamond.scisoft.analysis.optimize.IOptimizer;
  * It does not reference the UI at all so objects which contain peak information
  * are requires in the scisoft.analysis layer.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class PeakFittingBatchTool extends AbstractBatchTool {

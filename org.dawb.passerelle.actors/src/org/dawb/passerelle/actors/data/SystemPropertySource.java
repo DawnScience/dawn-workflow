@@ -22,7 +22,7 @@ import com.isencia.passerelle.message.MessageFactory;
 
 /**
  * A source that reads several comma separated properties and passes these into the pipeline.
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class SystemPropertySource extends AbstractDataMessageSource {

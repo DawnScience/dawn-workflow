@@ -58,7 +58,7 @@ import com.isencia.util.StringConvertor;
  * new file seen. If no new files the source will sit waiting for ever until the workflow
  * is stopped or the Inactive after time is reached.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class FolderMonitorSource extends AbstractDataMessageSource {

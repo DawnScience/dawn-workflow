@@ -26,7 +26,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAtt
  * 
  * It pops up a dialog for the ROI values.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class ROIParameter extends StringParameter  implements CellEditorAttribute, IRegionTransformer {

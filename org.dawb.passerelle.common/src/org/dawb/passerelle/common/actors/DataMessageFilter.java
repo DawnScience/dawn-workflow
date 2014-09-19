@@ -18,7 +18,7 @@ import com.isencia.passerelle.actor.ProcessingException;
 /**
  * Actor to filter data message variables. For instance after a 
  * peak fit, only the peaks may be required.
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class DataMessageFilter extends AbstractDataMessageTransformer {

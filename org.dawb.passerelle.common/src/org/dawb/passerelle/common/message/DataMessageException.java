@@ -32,7 +32,7 @@ import com.isencia.passerelle.message.MessageException;
  * such as the MessageSink can expand values from the message in their error
  * messages.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  * 
  */
 public class DataMessageException extends ProcessingException {

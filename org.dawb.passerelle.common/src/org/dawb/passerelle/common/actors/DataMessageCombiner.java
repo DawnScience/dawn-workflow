@@ -38,7 +38,7 @@ import com.isencia.passerelle.resources.util.ResourceUtils;
  * 
  * Fires once after each input wire has fired once.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class DataMessageCombiner extends Transformer implements IProjectNamedObject, IVariableProvider{

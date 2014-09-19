@@ -47,7 +47,7 @@ import com.isencia.passerelle.util.ptolemy.StringMapParameter;
 
 /**
  * Used to delegate data importing
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 class DataImportDelegate {

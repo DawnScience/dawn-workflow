@@ -24,7 +24,7 @@ import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
  * A class for getting data in the UserPlotBean in a form usable
  * for plotting and/or batch tools. 
  *
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class BatchToolUtils {

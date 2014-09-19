@@ -15,14 +15,14 @@ import java.util.Queue;
  * IRemoteWorkbenchPart provides methods which can be done in the implementation
  * of IRemoteWorkbench to parts opened.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public interface IRemoteWorkbenchPart {
 	
 	/**
 	 * 
-	 * @author fcp94556
+	 * @author Matthew Gerring
 	 *
 	 */
 	public interface Closeable {

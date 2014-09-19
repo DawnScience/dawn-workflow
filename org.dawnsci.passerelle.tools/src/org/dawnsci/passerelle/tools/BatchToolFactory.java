@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.Platform;
  * A factory which can find batch tools registered by
  * plot tool id.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class BatchToolFactory {

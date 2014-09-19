@@ -36,7 +36,7 @@ import com.isencia.util.StringConvertor;
  * Similar to a Data Import Source this adds data to the message without
  * generating new messages.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class DataAppendTransformer extends AbstractDataMessageTransformer {

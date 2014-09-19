@@ -12,7 +12,7 @@ package org.dawb.workbench.jmx;
 /**
  * Part used internally with UserModifyDialog and UserModifyEditor.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public interface IDeligateWorkbenchPart extends IRemoteWorkbenchPart {

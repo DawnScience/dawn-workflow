@@ -56,7 +56,7 @@ import com.isencia.util.StringConvertor;
  * 
  * It outputs a string 'slice' which is the chunk and a string 'file_name' and 'file_path' for the file.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  * 
  */
 public class DataChunkSource extends AbstractDataMessageSource implements ISliceInformationProvider {

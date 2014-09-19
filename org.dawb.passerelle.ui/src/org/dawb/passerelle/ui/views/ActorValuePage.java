@@ -53,7 +53,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.editpart.ActorEditPart;
  * We wire this page between the Passerelle multipage editor and the Value view which is generic
  * using an extension point.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class ActorValuePage extends Page implements ISelectionListener, IPartListener{

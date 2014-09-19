@@ -34,7 +34,7 @@ import uk.ac.diamond.scisoft.analysis.optimize.IOptimizer;
  * 
  * TODO move this class to scisoft analysis and make FittingUtils using this class.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class BatchFittingUtils {

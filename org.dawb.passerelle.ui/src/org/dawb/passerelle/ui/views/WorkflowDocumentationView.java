@@ -30,7 +30,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.palette.PaletteBuilder;
  * Shows any help with attributes that was created 
  * with the attribute in the actor.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class WorkflowDocumentationView extends ViewPart implements ISelectionListener{

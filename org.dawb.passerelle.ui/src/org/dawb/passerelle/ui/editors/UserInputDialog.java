@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Shell;
  * A dialog allowing an implementation of IRemoteWorkbenchPart to run
  * inside it.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRemoteWorkbenchPart.Closeable, IAdaptable {

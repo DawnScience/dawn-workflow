@@ -19,7 +19,7 @@ import java.util.Map;
  * is returned to the actor calling the createPlotInput(...) method of
  * IRemoteWorkbench.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class UserPlotBean extends UserDataBean {

@@ -13,7 +13,7 @@ import ptolemy.kernel.util.NamedObj;
  * be swapped for ptolemy/Kepler if required now that they
  * have an RCP application [not currently planned])
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public interface IProjectNamedObject {

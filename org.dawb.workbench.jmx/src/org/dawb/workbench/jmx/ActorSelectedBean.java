@@ -14,7 +14,7 @@ package org.dawb.workbench.jmx;
  * 
  * Also used for port highlighting when in debug mode.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class ActorSelectedBean extends ActorBean {

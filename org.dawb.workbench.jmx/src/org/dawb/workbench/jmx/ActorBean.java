@@ -13,7 +13,7 @@ import java.io.Serializable;
 /**
  * A bean carrying information about an actor.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class ActorBean implements Serializable {
