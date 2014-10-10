@@ -328,7 +328,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 					}
 					IDataset data =  iTrace.getData();
 					data.setName(image.getName());
-					data.setMetadata(null); // Gives some error with Serialization with Diffraction metadata.
+					data.clearMetadata(null); // Gives some error with Serialization with Diffraction metadata.
 					ret.addList(image.getName(), data);
 
 				} else if (iTrace instanceof ILineTrace) { 
