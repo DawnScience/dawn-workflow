@@ -62,6 +62,8 @@ public class MessageUtils {
 	 */
 	public static DataMessageComponent coerceMessage(final ManagedMessage message) throws Exception {
 		
+		if (message == null) return null;
+		
 		if (message instanceof ErrorMessageContainer) {
 			final ErrorMessageContainer cont = (ErrorMessageContainer)message;
 			final Object ob = cont.getBodyContent();
