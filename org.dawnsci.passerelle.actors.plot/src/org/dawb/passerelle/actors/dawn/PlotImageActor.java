@@ -20,6 +20,7 @@ import java.util.Set;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
@@ -161,14 +162,16 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 
 		try {
 			Dataset aData = ((Dataset)data.get(dataName));
-			aData.setName(dataName);
+			//aData.setName(dataName);
 			if(aData != null){
 				if (plotMode.equals(PlottingMode.ONED.toString())) {
-					if(xaxisName.equals(""))
+					if(xaxisName.equals("")) {
 						SDAPlotter.plot(plotName, aData);
-					else
-						SDAPlotter.plot(plotName, ((Dataset)data.get(xaxisName)), aData);
-
+					} else {						
+						Dataset xAxis = (Dataset)data.get(xaxisName);
+						SDAPlotter.plot(plotName, xAxis, new IDataset[] {aData}, xAxis.getName(), aData.getName() );
+					}
+					
 				} else if (plotMode.equals(PlottingMode.TWOD.toString())) {
 					// if shape is like [1, 1000, 1000] replace by [1000, 1000]
 					int[] shapes = aData.getShape();
@@ -188,7 +191,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					if(xaxisName.equals("")||(yaxisName.equals("")))
 						SDAPlotter.imagePlot(plotName, aData);
 					else{
-						SDAPlotter.imagePlot(plotName, ((Dataset)data.get(xaxisName)), ((Dataset)data.get(yaxisName)), aData);
+						SDAPlotter.imagePlot(plotName, (Dataset)data.get(xaxisName), ((Dataset)data.get(yaxisName)), aData);
 					}
 				} else if (plotMode.equals(PlottingMode.SCATTER2D.toString())) {
 //					if(xaxisName.equals("")||(yaxisName.equals("")))
@@ -212,7 +215,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					if(xaxisName.equals("")||(yaxisName.equals("")))
 						SDAPlotter.surfacePlot(plotName, aData);
 					else
-						SDAPlotter.surfacePlot(plotName, ((Dataset)data.get(xaxisName)), ((Dataset)data.get(yaxisName)), aData);
+						SDAPlotter.surfacePlot(plotName, (Dataset)data.get(xaxisName), ((Dataset)data.get(yaxisName)), aData);
 
 				} else if (plotMode.equals(PlottingMode.MULTI2D.toString())) {
 //					if(xaxisName.equals("")||(yaxisName.equals("")))
