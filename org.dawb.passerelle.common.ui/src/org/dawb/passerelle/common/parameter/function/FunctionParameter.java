@@ -12,10 +12,10 @@ package org.dawb.passerelle.common.parameter.function;
 
 import java.io.IOException;
 
-import org.dawb.common.services.IPersistenceService;
 import org.dawb.common.services.ServiceManager;
 import org.dawnsci.common.widgets.gda.function.FunctionDialog;
 import org.eclipse.dawnsci.analysis.api.fitting.functions.IFunction;
+import org.eclipse.dawnsci.analysis.api.persistence.IPersistenceService;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;

@@ -2,10 +2,10 @@ package org.dawb.passerelle.common.parameter.roi;
 
 import java.io.IOException;
 
-import org.dawb.common.services.IPersistenceService;
 import org.dawb.common.services.ServiceManager;
 import org.dawnsci.plotting.roi.IRegionTransformer;
 import org.dawnsci.plotting.roi.RegionCellEditor;
+import org.eclipse.dawnsci.analysis.api.persistence.IPersistenceService;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
 import org.eclipse.dawnsci.analysis.dataset.roi.RectangularROI;
 import org.eclipse.jface.viewers.CellEditor;
