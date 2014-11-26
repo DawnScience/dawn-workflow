@@ -534,6 +534,8 @@ public class MessageUtils {
 
 	public static List<DataMessageComponent> mergeScalar(List<DataMessageComponent> cache) {
 		
+		if (cache==null) return null;
+
 		final List<DataMessageComponent> lists   = new ArrayList<DataMessageComponent>(3);
 		final List<DataMessageComponent> scalars = new ArrayList<DataMessageComponent>(3);
 		for (DataMessageComponent a : cache) {
@@ -561,6 +563,12 @@ public class MessageUtils {
 	 * @return
 	 */
 	public static DataMessageComponent mergeAll(Collection<DataMessageComponent>... cache) {
+		
+		if (cache==null) return null;
+		
+		// If we have got 1, then return it.
+		if (cache.length==1 && cache[0].size()==1) return cache[0].iterator().next();
+		
 		final DataMessageComponent ret = new DataMessageComponent();
 		for (Collection<DataMessageComponent> c : cache) {
 			for (DataMessageComponent a : c) {
