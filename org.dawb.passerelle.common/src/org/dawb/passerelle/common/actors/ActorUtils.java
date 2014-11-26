@@ -55,6 +55,7 @@ public class ActorUtils {
 
 	}
 	
+	private static volatile boolean canNotify = true;
 	/**
 	 * 
 	 * @param actor
@@ -102,6 +103,7 @@ public class ActorUtils {
 	 */
 	public static UserDebugBean debug(IProjectNamedObject actor, UserDebugBean bean) {
 
+		if (!canNotify) return null;
 		if (Boolean.getBoolean("org.dawb.passerelle.common.actors.util.bypassJMX")) return null;
 		if (bean==null)            return null;
 
@@ -192,6 +194,7 @@ public class ActorUtils {
 	 */
 	public static void setActorExecuting(final IProjectNamedObject actor, final boolean isExecuting) {
 		
+		if (!canNotify) return;
 		if (Boolean.getBoolean("org.dawb.passerelle.common.actors.util.bypassJMX")) return;
 		if (actor.getManager()== null) return;
 		
@@ -269,5 +272,13 @@ public class ActorUtils {
 		} catch (IllegalMonitorStateException ime) {
 			return; // It got locked by another thread on the setPaused but that is ok.
 		}
+	}
+
+	public static boolean isCanNotify() {
+		return canNotify;
+	}
+
+	public static void setCanNotify(boolean canNotify) {
+		ActorUtils.canNotify = canNotify;
 	}
 }
