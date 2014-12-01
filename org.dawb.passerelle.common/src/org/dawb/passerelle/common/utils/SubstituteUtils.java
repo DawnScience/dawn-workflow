@@ -63,7 +63,8 @@ public class SubstituteUtils {
 		// Create a substitutor with the expander
 		VariableSubstitutor substitutor = new VariableSubstitutor(expander);
 		
-		return substitutor.substitute(expand);       		
+		String value = substitutor.substitute(expand);     
+		return value;
 
 	}
 

@@ -48,7 +48,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAtt
  * @author fcp94556
  *
  */
-public class JSONSliceParameter extends JSONCellEditorParameter implements CellEditorAttribute {
+public class JSONSliceParameter extends JSONCellEditorParameter<Map> implements CellEditorAttribute {
 	
 	/**
 	 * 
@@ -110,7 +110,7 @@ public class JSONSliceParameter extends JSONCellEditorParameter implements CellE
 
 				try {	
 					// JSON can return this as a <String,String> map!
-					Map map = (Map)getBeanFromValue(HashMap.class);
+					Map map = getBeanFromValue(HashMap.class);
 					if (map == null) map = Collections.emptyMap();
 					
 					final IDataHolder  dh = LoaderFactory.getData(path);
@@ -126,7 +126,7 @@ public class JSONSliceParameter extends JSONCellEditorParameter implements CellE
 					final int ok = dialog.open();
 					if (ok == Dialog.OK) {
 						final DimsDataList dims = dialog.getDimsDataList();
-						return getValueFromBean(dims.toMap()); // Map<Integer, String> but JSON string saves as  Map<String, String>
+						return getValueFromBean((HashMap)dims.toMap()); // Map<Integer, String> but JSON string saves as  Map<String, String>
 					}
 
 				} catch (Exception neOther) {
@@ -178,13 +178,13 @@ public class JSONSliceParameter extends JSONCellEditorParameter implements CellE
 	}	
 
 	
-	public void setValue(Map<Integer, String> value) {
+	public void setValue(Map value) {
 		String json = getValueFromBean(value);
 		setExpression(json);
 	}
 	
-	public Map<Integer, String> getValue() {
-		final Map<String,String>   map = (Map<String,String>)getBeanFromValue(HashMap.class);
+	public Map<Integer, String> getValue(Class<? extends Map> clazz) {
+		final Map<String,String>   map = (Map<String,String>)getBeanFromValue(clazz);
 		if (map == null) return null;
 		
 		final Map<Integer, String> ret = new HashMap<Integer, String>(map.size());
@@ -193,5 +193,6 @@ public class JSONSliceParameter extends JSONCellEditorParameter implements CellE
 		}
 		return ret;
 	}
+
 
 }
