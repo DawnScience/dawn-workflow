@@ -105,8 +105,8 @@ public abstract class JSONCellEditorParameter<T> extends StringParameter impleme
 	
 	
 	public void setValue(T value) {
-		String json = getValueFromBean(value);
-		setExpression(json);
+		String enc = getValueFromBean(value);
+		setExpression(enc);
 	}
 	
 	public T getValue(Class<? extends T> clazz) {
