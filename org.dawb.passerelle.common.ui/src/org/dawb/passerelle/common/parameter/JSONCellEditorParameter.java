@@ -2,6 +2,8 @@ package org.dawb.passerelle.common.parameter;
 
 import java.io.IOException;
 
+import org.castor.util.Base64Decoder;
+import org.castor.util.Base64Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,13 +64,16 @@ public abstract class JSONCellEditorParameter<T> extends StringParameter impleme
 	public final T getBeanFromValue(final Class<? extends T> clazz) {
 
 		try {
-			if (getExpression()==null || "".equals(getExpression())) return clazz.newInstance();
+			String encoded = getExpression();
+			if (encoded==null || "".equals(encoded)) return clazz.newInstance();
 
 			try { // Unmarshall as JSON 
-				return (T)mapper.unmarshal(getExpression(), clazz);
+				final byte[] bytes = Base64Decoder.decode(encoded);
+				String bean = new String(bytes, "UTF-8");
+				return (T)mapper.unmarshal(bean, clazz);
 
 			} catch (Exception ne) { // Old moml files have Base64 XML, we try that
-				logger.error("Cannot read bean "+super.getExpression(), ne);
+				logger.error("Cannot read bean ", ne);
 				return clazz.newInstance();
 			}
 		} catch (Exception ne) {
@@ -89,7 +94,9 @@ public abstract class JSONCellEditorParameter<T> extends StringParameter impleme
 	public final String getValueFromBean(T bean) {
 		if (bean==null) return null;
 		try {
-			return mapper.marshal(bean);
+			String json = mapper.marshal(bean);
+			final String save = new String(Base64Encoder.encode(json.getBytes("UTF-8")));
+			return save;
 		} catch (Exception e) {
 			logger.error("Cannot write bean "+bean, e);
 			return null;
