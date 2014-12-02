@@ -42,15 +42,21 @@ public class OperationModelMarshaller implements Marshaller<IOperationModel> {
 	@Override
 	public String marshal(IOperationModel model) throws Exception {
 		// Some objects are told not to Json in the model
-		final OperationModelBean bean = new OperationModelBean(getSpecialObjects(model), model);
-		return mapper.writeValueAsString(bean);
+		String a = mapper.writeValueAsString(getSpecialObjects(model));
+		String b = mapper.writeValueAsString(model);
+		return a+"_____"+b;
 	}
 	
 	@Override
 	public IOperationModel unmarshal(String str, Class<? extends IOperationModel> clazz) throws Exception {		
-		OperationModelBean bean = mapper.readValue(str, OperationModelBean.class);
-		IOperationModel   model = bean.getModel();
-		setSpecialObjects(model, bean.getSpecials());
+		
+		String[] sa = str.split("_____");
+		String a = sa[0];
+		String b = sa[1];
+
+		Map<String, String> specialObjects = mapper.readValue(a, HashMap.class);
+		IOperationModel   model = mapper.readValue(b, clazz);
+		setSpecialObjects(model, specialObjects);
 		return model;
 	}
 
