@@ -16,6 +16,8 @@ import java.util.Map;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
+import org.eclipse.dawnsci.analysis.api.fitting.functions.IDataBasedFunction;
+import org.eclipse.dawnsci.analysis.api.fitting.functions.IFunction;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
 import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
@@ -25,6 +27,7 @@ import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
+import uk.ac.diamond.scisoft.analysis.fitting.functions.CompositeFunction;
 
 public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 
@@ -32,6 +35,8 @@ public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 	public StringParameter datasetName;
 	public StringParameter xAxisName;
 	public StringParameter functionName;
+	public StringParameter seedDataName;
+	public StringParameter seedAxisName;
 
 	public FunctionToDatasetActor(CompositeEntity container, String name)
 			throws NameDuplicationException, IllegalActionException {
@@ -43,6 +48,10 @@ public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 		registerConfigurableParameter(xAxisName);
 		functionName = new StringParameter(this, "Name of the function to use to create the dataset");
 		registerConfigurableParameter(functionName);
+		seedDataName = new StringParameter(this, "Name of the Seed dataset for the function");
+		registerConfigurableParameter(seedDataName);
+		seedAxisName = new StringParameter(this, "Name of the seed datasets Axis dataset");
+		registerConfigurableParameter(seedAxisName);
 	}
 	
 
@@ -71,6 +80,8 @@ public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 		Dataset xAxisDS = ((Dataset)data.get(xAxis)).clone();
 		AFunction function = functions.get(functionString);
 		
+		populateDataBasedFunctions(data, function);
+		
 		// process the data
 		// TODO Add Null Protection here.
 		DoubleDataset createdDS = function.calculateValues(xAxisDS);
@@ -80,6 +91,28 @@ public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 		result.addList(createdDS.getName(), createdDS);
 
 		return result;
+	}
+
+
+	private void populateDataBasedFunctions(
+			final Map<String, Serializable> data, IFunction function) {
+		
+		if (function instanceof CompositeFunction) {
+			CompositeFunction compositeFunction = (CompositeFunction) function;
+			for (IFunction func : compositeFunction.getFunctions()) {
+				populateDataBasedFunctions(data, func);
+			}
+		}
+		
+		if (function instanceof IDataBasedFunction) {
+			IDataBasedFunction dbFunction = (IDataBasedFunction) function;
+
+			String sdName = seedDataName.getExpression();
+			String sdAxis = seedAxisName.getExpression();
+			Dataset seedDataset = ((Dataset)data.get(sdName)).clone();
+			Dataset seedAxisDataset = ((Dataset)data.get(sdAxis)).clone();
+			dbFunction.setData(seedAxisDataset, seedDataset);
+		}
 	}
 
 	@Override
