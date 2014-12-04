@@ -4,6 +4,8 @@ import org.dawb.passerelle.common.parameter.JSONCellEditorParameter;
 import org.dawb.passerelle.common.parameter.Marshaller;
 import org.eclipse.dawnsci.analysis.api.processing.model.IOperationModel;
 import org.eclipse.jface.viewers.CellEditor;
+import org.eclipse.jface.viewers.DialogCellEditor;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 
 import ptolemy.kernel.util.IllegalActionException;
@@ -47,8 +49,16 @@ public class OperationModelParameter extends JSONCellEditorParameter<IOperationM
 	 */
 	@Override
 	public CellEditor createCellEditor(Control control) {
-		// TODO Use OperationModelViewer...
-		return null;
+		
+		final DialogCellEditor editor = new DialogCellEditor((Composite)control) {
+			@Override
+			protected Object openDialogBox(Control cellEditorWindow) {
+				
+				//final OperationModelDialog dialog = new OperationModelDialog(cellEditorWindow.getShell());
+				return null;
+			}
+		};
+		return editor;
 	}
 	
 
