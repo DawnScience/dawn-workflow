@@ -90,7 +90,7 @@ public abstract class AbstractPassModeSink extends AbstractSink implements IVari
 		
 		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), 1<<2 /*SWT.SINGLE*/);
 		memoryManagementParam.setExpression(MEMORY_MODE.get(0));
-		registerConfigurableParameter(memoryManagementParam);
+		registerExpertParameter(memoryManagementParam);
 		memoryMode = MEMORY_MODE.get(0);
 		
 		this.cachedUpstreamVariables = new ArrayList<IVariable>(7);
