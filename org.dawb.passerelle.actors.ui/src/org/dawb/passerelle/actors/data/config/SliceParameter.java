@@ -100,34 +100,7 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 					return null;
 				}
 				
-				DimsDataList ddl = (DimsDataList)getBeanFromValue(DimsDataList.class);
-				if (ddl == null) ddl = new DimsDataList();
-				
-				if (ddl.isEmpty()) {
-					try {
-					    final IDataHolder  dh = LoaderFactory.getData(path);
-					    final ILazyDataset lz = dh.getLazyDataset(names[0]);
-					    for (int i = 0; i < lz.getRank(); i++) {
-					    	ddl.add(new DimsData(i));
-					    }
-					    
-					    ddl.getDimsData(0).setSliceRange("all");
-					    if (ddl.size()==2) {
-					    	ddl.getDimsData(1).setPlotAxis(AxisType.X);
-					    	
-					    } else if (ddl.size()>2) {
-					    	ddl.getDimsData(1).setPlotAxis(AxisType.Y);
-					    	ddl.getDimsData(2).setPlotAxis(AxisType.X);
-					    	for (int i = 3; i < ddl.size(); i++) {
-					    		ddl.getDimsData(i).setSlice(0);
-							}
-					    }
-					    
-					} catch (Exception neOther) {
-						logger.error("Cannot set up slice parameter!", neOther);
-					}
-					
-				}
+				DimsDataList ddl = createDimsDataList(path, names[0]);
 				dialog.setDimsDataList(ddl);
 				dialog.setRangeMode(RangeMode.SINGLE_RANGE);
 				
@@ -149,6 +122,39 @@ public class SliceParameter extends CellEditorParameter implements CellEditorAtt
 		
 		
 		return editor;
+	}
+
+	protected DimsDataList createDimsDataList(String path, String name) {
+		
+		DimsDataList ddl = (DimsDataList)getBeanFromValue(DimsDataList.class);
+		if (ddl == null) ddl = new DimsDataList();
+		
+		if (ddl.isEmpty()) {
+			try {
+			    final IDataHolder  dh = LoaderFactory.getData(path);
+			    final ILazyDataset lz = dh.getLazyDataset(name);
+			    for (int i = 0; i < lz.getRank(); i++) {
+			    	ddl.add(new DimsData(i));
+			    }
+			    
+			    ddl.getDimsData(0).setSliceRange("all");
+			    if (ddl.size()==2) {
+			    	ddl.getDimsData(1).setPlotAxis(AxisType.X);
+			    	
+			    } else if (ddl.size()>2) {
+			    	ddl.getDimsData(1).setPlotAxis(AxisType.Y);
+			    	ddl.getDimsData(2).setPlotAxis(AxisType.X);
+			    	for (int i = 3; i < ddl.size(); i++) {
+			    		ddl.getDimsData(i).setSlice(0);
+					}
+			    }
+			    
+			} catch (Exception neOther) {
+				logger.error("Cannot set up slice parameter!", neOther);
+			}
+			
+		}
+		return ddl;
 	}
 
 	/**

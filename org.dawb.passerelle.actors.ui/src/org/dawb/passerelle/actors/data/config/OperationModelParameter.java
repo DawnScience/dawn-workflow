@@ -2,7 +2,9 @@ package org.dawb.passerelle.actors.data.config;
 
 import org.dawb.passerelle.common.parameter.JSONCellEditorParameter;
 import org.dawb.passerelle.common.parameter.Marshaller;
+import org.dawnsci.processing.ui.model.OperationModelDialog;
 import org.eclipse.dawnsci.analysis.api.processing.model.IOperationModel;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.swt.widgets.Composite;
@@ -54,8 +56,27 @@ public class OperationModelParameter extends JSONCellEditorParameter<IOperationM
 			@Override
 			protected Object openDialogBox(Control cellEditorWindow) {
 				
-				//final OperationModelDialog dialog = new OperationModelDialog(cellEditorWindow.getShell());
-				return null;
+				final OperationModelDialog dialog = new OperationModelDialog(cellEditorWindow.getShell());
+				dialog.create();
+				dialog.getShell().setSize(600,450); // As needed
+				dialog.getShell().setText("Edit Model");
+				
+				IOperationModelInstanceProvider prov = (IOperationModelInstanceProvider)getContainer();
+				try {
+					dialog.setModel(OperationModelParameter.this.getValue(prov.getModelClass()));
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+				
+		        final int ok = dialog.open();
+		        if (ok == Dialog.OK) {
+		            Object model = getValueFromBean(dialog.getModel());
+		            return model;
+		        }
+		        
+		        return null;
+
 			}
 		};
 		return editor;
@@ -67,7 +88,15 @@ public class OperationModelParameter extends JSONCellEditorParameter<IOperationM
 	 */
 	@Override
 	public String getRendererText() {
-		return getExpression();
+		try {
+			IOperationModelInstanceProvider prov = (IOperationModelInstanceProvider)getContainer();
+			IOperationModel model = OperationModelParameter.this.getValue(prov.getModelClass());
+			String json = mapper.marshal(model);
+			String[] sa = json.split("_____");
+			return sa[1];
+		} catch (Exception ne) {
+		    return getExpression();
+		}
 	}
 
 

@@ -35,7 +35,7 @@ public abstract class JSONCellEditorParameter<T> extends StringParameter impleme
 
 	private static Logger logger = LoggerFactory.getLogger(JSONCellEditorParameter.class);
 
-	private final Marshaller<T> mapper;
+	protected final Marshaller<T> mapper;
 
 	public JSONCellEditorParameter(NamedObj container, String name) throws IllegalActionException, NameDuplicationException {
 		super(container, name);
