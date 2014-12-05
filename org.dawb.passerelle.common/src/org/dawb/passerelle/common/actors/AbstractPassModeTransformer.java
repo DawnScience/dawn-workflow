@@ -97,12 +97,12 @@ public abstract class AbstractPassModeTransformer extends Actor implements IVari
 		
 		memoryManagementParam = new StringChoiceParameter(this, "Memory Mode", getMemoryModes(), 1 << 2);
 		memoryManagementParam.setExpression(MEMORY_MODE.get(0));
-		registerConfigurableParameter(memoryManagementParam);
+		registerExpertParameter(memoryManagementParam);
 		memoryMode = MEMORY_MODE.get(0);
 		
 		dataSetNaming = new StringChoiceParameter(this, "Name Mode", getNameModes(), 1 << 2);
 		dataSetNaming.setExpression(NAME_MODE.get(0));
-		registerConfigurableParameter(dataSetNaming);
+		registerExpertParameter(dataSetNaming);
 		namingMode = NAME_MODE.get(0);
 		
 		this.cachedUpstreamVariables = new ArrayList<IVariable>(7);
