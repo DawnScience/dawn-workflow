@@ -307,6 +307,7 @@ AbstractDataMessageTransformer {
 		
 		for (int i = 0; i < fitFunction.getNoOfParameters(); i++) {
 			DoubleDataset parameterDS = new DoubleDataset(lshape);
+			parameterDS.fill(Double.NaN);
 			parameterDS.squeeze();
 			parameterDS.setName(fitFunction.getParameter(i).getName());
 			parametersDS.add(parameterDS);
