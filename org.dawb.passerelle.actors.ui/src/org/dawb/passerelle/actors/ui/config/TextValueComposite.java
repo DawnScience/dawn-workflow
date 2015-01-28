@@ -30,7 +30,7 @@ public class TextValueComposite extends Composite {
 		Label lblValue = new Label(this, SWT.NONE);
 		lblValue.setText("Value");
 		
-		textValue = new TextWrapper(this, SWT.NONE) {
+		textValue = new TextWrapper(this, SWT.BORDER) {
 			public void addValueListener(ValueListener l) {
 				// Because we are nested we ignore the super container.
 				if (l.getValueListenerName().equals("Fields Listener")) return;

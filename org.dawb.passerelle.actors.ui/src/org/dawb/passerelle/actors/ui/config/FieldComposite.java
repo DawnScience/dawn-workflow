@@ -80,7 +80,7 @@ public class FieldComposite extends Composite {
 		CLabel label = new CLabel(top, SWT.NONE);
 	    label.setText("Scalar Variable");
 		
-		this.variableName = new TextWrapper(top, SWT.NONE);
+		this.variableName = new TextWrapper(top, SWT.BORDER);
 		variableName.setTextType(TextWrapper.TEXT_TYPE.EXPRESSION);
 		variableName.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		variableName.setToolTipText("The variable name to use in the scalar value entered by the user.");
@@ -88,7 +88,7 @@ public class FieldComposite extends Composite {
 		CLabel labelLabel = new CLabel(top, SWT.NONE);
 		labelLabel.setText("Label");
 
-		this.uiLabel = new TextWrapper(top, SWT.NONE);
+		this.uiLabel = new TextWrapper(top, SWT.BORDER);
 		uiLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		uiLabel.setToolTipText("If left blank, the variable name will be used for the label.");
 
@@ -116,7 +116,7 @@ public class FieldComposite extends Composite {
 		CLabel defValueLabel = new CLabel(top, SWT.NONE);
 		defValueLabel.setText("Default Value");
 		
-		this.defaultValue = new TextWrapper(top, SWT.NONE);
+		this.defaultValue = new TextWrapper(top, SWT.BORDER);
 		defaultValue.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
 		
@@ -160,7 +160,7 @@ public class FieldComposite extends Composite {
 		propControls.add(textLimitLabel);
 		textLimitLabel.setText("Text Limit");
 		
-		this.textLimit    = new SpinnerWrapper(properties, SWT.NONE);
+		this.textLimit    = new SpinnerWrapper(properties, SWT.BORDER);
 		propControls.add(textLimit);
 		textLimit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		textLimit.setMinimum(0);
@@ -180,7 +180,7 @@ public class FieldComposite extends Composite {
 		propControls.add(unitLabel);
 		unitLabel.setText("Unit");
 		
-		this.unit    = new TextWrapper(properties, SWT.NONE);
+		this.unit    = new TextWrapper(properties, SWT.BORDER);
 		propControls.add(unit);
 		unit.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		
@@ -188,7 +188,7 @@ public class FieldComposite extends Composite {
 		propControls.add(lowerBoundLabel);
 		lowerBoundLabel.setText("Lower Limit");
 		
-		this.lowerBound    = new StandardBox(properties, SWT.NONE);
+		this.lowerBound    = new StandardBox(properties, SWT.BORDER);
 		//defaultValueNumber.setMinimum(lowerBound);
 		propControls.add(lowerBound);
 		lowerBound.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -201,7 +201,7 @@ public class FieldComposite extends Composite {
 		propControls.add(upperBoundLabel);
 		upperBoundLabel.setText("Upper Limit");
 		
-		this.upperBound    = new StandardBox(properties, SWT.NONE);
+		this.upperBound    = new StandardBox(properties, SWT.BORDER);
 		//defaultValueNumber.setMaximum(upperBound);
 		propControls.add(upperBound);
 		upperBound.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
@@ -222,7 +222,7 @@ public class FieldComposite extends Composite {
 		propControls.add(extensionsLabel);
 		extensionsLabel.setText("Extensions");
 
-		extensions = new TextWrapper(properties, SWT.NONE);
+		extensions = new TextWrapper(properties, SWT.BORDER);
 		propControls.add(extensions);
 		extensions.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false));
 		extensions.setToolTipText("Comma separated file extension list");
