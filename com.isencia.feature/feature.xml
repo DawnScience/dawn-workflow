@@ -542,6 +542,13 @@ org.apache.commons.math.random:
          unpack="false"/>
 
    <plugin
+         id="com.springsource.javax.activation"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
          id="com.isencia.sherpa.commons.reduced"
          download-size="0"
          install-size="0"
@@ -642,6 +649,13 @@ org.apache.commons.math.random:
 
    <plugin
          id="com.isencia.passerelle.runtime"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.springsource.javax.mail"
          download-size="0"
          install-size="0"
          version="0.0.0"
