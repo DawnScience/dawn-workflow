@@ -9,9 +9,9 @@
  */ 
 package org.dawb.passerelle.common.remote;
 
-import org.dawb.common.services.IClassLoaderService;
 import org.dawb.common.services.ServiceManager;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
+import org.eclipse.dawnsci.analysis.api.IClassLoaderService;
 import org.eclipse.ui.IStartup;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchListener;

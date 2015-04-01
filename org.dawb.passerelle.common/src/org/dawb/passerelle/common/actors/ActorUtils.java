@@ -13,7 +13,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import javax.management.MBeanServerConnection;
 
-import org.dawb.common.services.IClassLoaderService;
 import org.dawb.passerelle.common.Activator;
 import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
@@ -21,6 +20,7 @@ import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dawnsci.analysis.api.IClassLoaderService;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.osgi.service.prefs.Preferences;
 import org.slf4j.Logger;
