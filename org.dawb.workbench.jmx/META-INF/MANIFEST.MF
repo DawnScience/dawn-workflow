@@ -6,7 +6,7 @@ Bundle-Name: Jmx
 Bundle-SymbolicName: org.dawb.workbench.jmx;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: ESRF
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: .
 Export-Package: org.dawb.workbench.jmx,

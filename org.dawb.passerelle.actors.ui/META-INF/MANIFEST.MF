@@ -5,7 +5,7 @@ Bundle-SymbolicName: org.dawb.passerelle.actors.ui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Vendor: Diamond Light Source
 Eclipse-RegisterBuddy: com.isencia.passerelle.engine, ptolemy.core, com.isencia.passerelle.actor
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.dawb.passerelle.actors.data,
  org.dawb.passerelle.actors.data.config,
  org.dawb.passerelle.actors.flow,

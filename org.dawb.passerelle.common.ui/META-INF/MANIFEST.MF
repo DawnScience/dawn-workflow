@@ -51,3 +51,4 @@ Export-Package: org.dawb.passerelle.common.editor,
  org.dawb.passerelle.common.ui
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.dawb.passerelle.common.ui.Activator
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7

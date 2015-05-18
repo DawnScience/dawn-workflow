@@ -24,7 +24,7 @@ Require-Bundle: ptolemy.core,
  com.isencia.passerelle.resources;bundle-version="1.0.0",
  com.isencia.passerelle.actor.forkjoin;bundle-version="8.3.0",
  com.isencia.sherpa.commons.reduced;bundle-version="6.2.5"
-Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ClassPath: .
 Import-Package: org.apache.commons.lang,
  org.eclipse.gmf.runtime.common.core.util,
