@@ -23,7 +23,6 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  org.eclipse.core.variables;bundle-version="3.2.600",
  com.isencia.passerelle.resources;bundle-version="1.0.0",
  org.eclipse.ui.intro;bundle-version="3.4.200",
- org.dawb.common.services;bundle-version="1.2.0",
  org.dawnsci.common.widgets.gda;bundle-version="1.2.0",
  org.dawb.workbench.jmx;bundle-version="1.0.0",
  org.eclipse.dawnsci.plotting.api;bundle-version="1.2.0",
@@ -37,9 +36,12 @@ Require-Bundle: org.eclipse.core.runtime;bundle-version="3.8.0",
  org.dawnsci.plotting;bundle-version="1.2.0",
  com.fasterxml.jackson.core.jackson-annotations;bundle-version="2.2.0",
  com.fasterxml.jackson.core.jackson-core;bundle-version="2.2.0",
- com.fasterxml.jackson.core.jackson-databind;bundle-version="2.2.0"
-Import-Package: org.slf4j;version="1.7.6"
-Export-Package: org.dawb.passerelle.common.editor,
+ com.fasterxml.jackson.core.jackson-databind;bundle-version="2.2.0",
+ org.dawb.common.services;bundle-version="1.2.0"
+Import-Package: org.osgi.service.component;version="1.2.0",
+ org.slf4j;version="1.7.6"
+Export-Package: org.dawb.passerelle.common,
+ org.dawb.passerelle.common.editor,
  org.dawb.passerelle.common.parameter,
  org.dawb.passerelle.common.parameter.function,
  org.dawb.passerelle.common.parameter.roi,
@@ -52,3 +54,4 @@ Export-Package: org.dawb.passerelle.common.editor,
 Bundle-ActivationPolicy: lazy
 Bundle-Activator: org.dawb.passerelle.common.ui.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Service-Component: OSGI-INF/*.xml

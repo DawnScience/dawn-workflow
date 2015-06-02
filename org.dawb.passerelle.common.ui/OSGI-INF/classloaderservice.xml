@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" activate="start" deactivate="stop" immediate="true" name="Class Loader Holder">
+   <implementation class="org.dawb.passerelle.common.ClassLoaderServiceHolder"/>
+   <reference bind="setClassLoaderService" cardinality="1..1" interface="org.eclipse.dawnsci.analysis.api.IClassLoaderService" name="IClassLoaderService" policy="dynamic"/>
+
+</scr:component>

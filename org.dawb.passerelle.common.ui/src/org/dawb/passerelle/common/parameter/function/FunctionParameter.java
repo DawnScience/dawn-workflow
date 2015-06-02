@@ -12,7 +12,7 @@ package org.dawb.passerelle.common.parameter.function;
 
 import java.io.IOException;
 
-import org.dawb.common.services.ServiceManager;
+import org.dawb.passerelle.common.PersistenceServiceHolder;
 import org.dawnsci.common.widgets.gda.function.FunctionDialog;
 import org.eclipse.dawnsci.analysis.api.fitting.functions.IFunction;
 import org.eclipse.dawnsci.analysis.api.persistence.IPersistenceService;
@@ -114,7 +114,7 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 	}
 
 	private AFunction getFunctionFromValue(String expression) throws Exception {
-		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
+		IPersistenceService service = PersistenceServiceHolder.getInstance().getPersistenceService();
 		try {
 			//unmarshal json to function
 			return (AFunction) service.unmarshal(expression);
@@ -149,7 +149,7 @@ public class FunctionParameter extends StringParameter  implements CellEditorAtt
 		if (function == null)
 			return "";
 		try {
-			IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
+			IPersistenceService service = PersistenceServiceHolder.getInstance().getPersistenceService();
 			return service.marshal(function);
 		} catch (Exception e) {
 			logger.error("Error marshalling IFunction to JSON: "+ e);

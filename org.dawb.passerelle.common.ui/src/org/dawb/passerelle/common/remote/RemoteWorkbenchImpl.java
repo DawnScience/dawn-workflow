@@ -19,9 +19,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import org.dawb.common.services.IHardwareService;
 import org.dawb.common.services.IUserInputService;
-import org.dawb.common.services.ServiceManager;
 import org.dawb.common.ui.util.EclipseUtils;
 import org.dawb.common.ui.views.ImageMonitorView;
+import org.dawb.passerelle.common.HardwareServiceHolder;
+import org.dawb.passerelle.common.UserInputServiceHolder;
 import org.dawb.passerelle.common.ui.Activator;
 import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.IRemoteWorkbench;
@@ -335,7 +336,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 			public void run() {
 				try {
 					
-					final IUserInputService service = (IUserInputService)ServiceManager.getService(IUserInputService.class);
+					final IUserInputService service = UserInputServiceHolder.getInstance().getUserInputService();
 					final IRemoteWorkbenchPart part = (IRemoteWorkbenchPart)service.openUserInputPart(bean.getPartName(), bean.isDialog());
 					
 					if (bean.getPartName()!=null) part.setPartName(bean.getPartName());
@@ -392,7 +393,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 			public void run() {
 				try {
 					
-					final IUserInputService service = (IUserInputService)ServiceManager.getService(IUserInputService.class);
+					final IUserInputService service = UserInputServiceHolder.getInstance().getUserInputService();
 					final IRemoteWorkbenchPart part = (IRemoteWorkbenchPart)service.openUserPlotPart(bean.getPartName(), bean.isDialog());
 					
 					if (bean.getPartName()!=null) part.setPartName(bean.getPartName());
@@ -445,7 +446,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 			public void run() {
 				try {
 					
-					final IUserInputService service = (IUserInputService)ServiceManager.getService(IUserInputService.class);
+					final IUserInputService service = UserInputServiceHolder.getInstance().getUserInputService();
 					final IRemoteWorkbenchPart part = (IRemoteWorkbenchPart)service.openDebugPart(bean.getPartName(), bean.isDialog());
 					
 					part.setQueue(queue);
@@ -547,7 +548,8 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 	public Object getMockMotorValue(String motorName) {
 		IHardwareService service;
 		try {
-			service = (IHardwareService)ServiceManager.getService(IHardwareService.class);
+			service = HardwareServiceHolder.getInstance().getHardwareService();
+
 		} catch (Exception e) {
 			logger.error("Cannot get the hardware service!", e);
 			return null;
@@ -559,7 +561,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 	public void setMockMotorValue(String motorName, Object value) {
 		IHardwareService service;
 		try {
-			service = (IHardwareService)ServiceManager.getService(IHardwareService.class);
+			service = HardwareServiceHolder.getInstance().getHardwareService();
 		} catch (Exception e) {
 			logger.error("Cannot get the hardware service!", e);
 			return;
@@ -572,7 +574,7 @@ public class RemoteWorkbenchImpl implements IRemoteWorkbench {
 		
 		IHardwareService service;
 		try {
-			service = (IHardwareService)ServiceManager.getService(IHardwareService.class);
+			service = HardwareServiceHolder.getInstance().getHardwareService();
 		} catch (Exception e) {
 			logger.error("Cannot get the hardware service!", e);
 			return;

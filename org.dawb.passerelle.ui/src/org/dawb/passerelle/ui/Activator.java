@@ -1,5 +1,9 @@
 package org.dawb.passerelle.ui;
 
+import java.util.Hashtable;
+
+import org.dawb.common.services.IUserInputService;
+import org.dawb.passerelle.ui.editors.UserInputService;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
@@ -31,6 +35,10 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		this.context = context;
+		
+		Hashtable<String, String> props = new Hashtable<String, String>(1);
+		props.put("description", "A service used to input tell the workbench to show input data dialog.");
+		context.registerService(IUserInputService.class, new UserInputService(), props);
 		plugin = this;
 	}
 

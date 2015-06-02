@@ -2,7 +2,7 @@ package org.dawb.passerelle.common.parameter.roi;
 
 import java.io.IOException;
 
-import org.dawb.common.services.ServiceManager;
+import org.dawb.passerelle.common.PersistenceServiceHolder;
 import org.dawnsci.plotting.roi.IRegionTransformer;
 import org.dawnsci.plotting.roi.RegionCellEditor;
 import org.eclipse.dawnsci.analysis.api.persistence.IPersistenceService;
@@ -72,7 +72,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	}
 
 	private IROI getROIFromValue(String expression) throws Exception {
-		IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
+		IPersistenceService service = PersistenceServiceHolder.getInstance().getPersistenceService();
 		try {
 			return (IROI)service.unmarshal(expression);
 		} catch (Exception e) {
@@ -105,7 +105,7 @@ public class ROIParameter extends StringParameter  implements CellEditorAttribut
 	private String getValueFromROI(final IROI roi) throws IOException {
 		if (roi==null) return "";
 		try {
-			IPersistenceService service = (IPersistenceService)ServiceManager.getService(IPersistenceService.class);
+			IPersistenceService service = PersistenceServiceHolder.getInstance().getPersistenceService();
 			return service.marshal(roi);
 		} catch (Exception e) {
 			logger.error("Error marshalling IROI to JSON:"+ e);

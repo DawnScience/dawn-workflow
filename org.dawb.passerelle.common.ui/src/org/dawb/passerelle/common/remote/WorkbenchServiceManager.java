@@ -9,7 +9,7 @@
  */ 
 package org.dawb.passerelle.common.remote;
 
-import org.dawb.common.services.ServiceManager;
+import org.dawb.passerelle.common.ClassLoaderServiceHolder;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
 import org.eclipse.dawnsci.analysis.api.IClassLoaderService;
 import org.eclipse.ui.IStartup;
@@ -62,7 +62,7 @@ public class WorkbenchServiceManager implements IStartup {
 		IClassLoaderService service=null;
 		try {
 			
-			service = (IClassLoaderService)ServiceManager.getService(IClassLoaderService.class, false);
+			service = ClassLoaderServiceHolder.getInstance().getClassLoaderService();
 			
 			if (checkUI) {
 				if (!PlatformUI.isWorkbenchRunning())                      return;
