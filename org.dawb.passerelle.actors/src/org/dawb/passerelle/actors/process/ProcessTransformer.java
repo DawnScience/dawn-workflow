@@ -94,7 +94,7 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 
 		try {
 			
-			final String                 cmd;
+			final String cmd;
 			if (isWindowsOS() && winCmdParam.getExpression()!=null && !"".equals(winCmdParam.getExpression())) {
 				cmd = ParameterUtils.getSubstituedValue(winCmdParam, cache);
 			} else {
@@ -140,7 +140,12 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 			
 			if (((BooleanToken)waitParam.getToken()).booleanValue()) {
 				final int retCode = process.waitFor();
-				logger.debug("Process '"+cmd+"' exited with code "+retCode);
+				final String msg = "Process '"+cmd+"' exited with code "+retCode;
+				if (retCode!=0) {
+					throw createDataMessageException(msg, new Exception(msg));
+				} else {
+					logger.debug(msg);
+				}
 			}
 			
 			AbstractPassModeTransformer.refreshResource(ResourceUtils.getProject(this));
