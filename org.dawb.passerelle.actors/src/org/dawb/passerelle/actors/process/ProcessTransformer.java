@@ -63,25 +63,30 @@ public class ProcessTransformer extends AbstractDataMessageTransformer {
 	public ProcessTransformer(CompositeEntity container, String name) throws NameDuplicationException, IllegalActionException {
 		
 		super(container, name);
+		setDescription("Transformer used to run a system process in a local shell (bash or cmd on windows)");
 		
 		this.dateFormat = new SimpleDateFormat("dd_MMM_yyyy[HH'h'_mm'm'_ss's'_SS'ms']");
 		
 		cmdParam = new StringParameter(this, "Command");
 		registerConfigurableParameter(cmdParam);
+		setDescription(cmdParam, Requirement.ESSENTIAL, VariableHandling.EXPAND, "Command executed in a local OS shell.");
 		
 		winCmdParam = new StringParameter(this, "Windows Command");
 		registerConfigurableParameter(winCmdParam);
+		setDescription(winCmdParam, Requirement.OPTIONAL, VariableHandling.EXPAND, "An alternative command to be used if the OS is windows.");
 		
 	    dirParam = new StringParameter(this, "Run Directory");
 		registerConfigurableParameter(dirParam);
+		setDescription(dirParam, Requirement.OPTIONAL, VariableHandling.EXPAND, "Location to run the command in.");
 		//dirParam.setExpression("${project_name}/processes/${execution_date}");
 		
 		waitParam = new Parameter(this,"Wait",new BooleanToken(true));
 		registerConfigurableParameter(waitParam);
+		setDescription(waitParam, Requirement.OPTIONAL, VariableHandling.NONE, "Set if we should wait until the process completes (usually the best option:).");
 		
 	    outputVar = new StringParameter(this, "Output Variable");
 		registerConfigurableParameter(outputVar);
-
+		setDescription(outputVar, Requirement.OPTIONAL, VariableHandling.NONE, "Name of variable to write the output of the process to.");
 
 		// Control parent parameters
 		memoryManagementParam.setVisibility(Settable.NONE);
