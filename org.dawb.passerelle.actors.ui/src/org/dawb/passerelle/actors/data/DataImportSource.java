@@ -611,7 +611,7 @@ public class DataImportSource extends AbstractDataMessageSource implements IReso
 	@Override
 	public List<IVariable> getOutputVariables() {
 		boolean isFullData = DATA_TYPES[0].equals(dataType.getExpression()) || DATA_TYPES[1].equals(dataType.getExpression());
-		return delegate.getOutputVariables(isFullData);
+		return delegate.getOutputVariables(trigger, isFullData);
 	}
 	
 	private boolean triggeredOnce = false;
