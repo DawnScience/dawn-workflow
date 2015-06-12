@@ -134,7 +134,7 @@ public class DataAppendTransformer extends AbstractDataMessageTransformer {
 
 	@Override
 	public List<IVariable> getOutputVariables() {
-		return delegate.getOutputVariables(true);
+		return delegate.getOutputVariables(null, true);
 	}
 
 

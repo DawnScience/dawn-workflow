@@ -17,6 +17,7 @@ import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.passerelle.common.message.AbstractDatasetProvider;
 import org.dawb.passerelle.common.message.IVariable;
+import org.dawb.passerelle.common.message.IVariableProvider;
 import org.dawb.passerelle.common.message.IVariable.VARIABLE_TYPE;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.message.Variable;
@@ -36,11 +37,13 @@ import org.eclipse.dawnsci.slicing.api.system.ISliceRangeSubstituter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ptolemy.actor.Actor;
 import ptolemy.data.BooleanToken;
 import ptolemy.data.expr.Parameter;
 import ptolemy.data.expr.StringParameter;
 import uk.ac.diamond.scisoft.analysis.io.LoaderFactory;
 
+import com.isencia.passerelle.core.Port;
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.util.ptolemy.StringMapParameter;
@@ -446,7 +449,7 @@ class DataImportDelegate {
 	}
 	
 	
-	public List<IVariable> getOutputVariables(boolean isFullData) {
+	public List<IVariable> getOutputVariables(Port trigger, boolean isFullData) {
 		
 		final List<IVariable> ret = new ArrayList<IVariable>(7);
 		if (getSourcePath()==null)  {
@@ -460,6 +463,15 @@ class DataImportDelegate {
 		ret.add(new Variable("file_path", VARIABLE_TYPE.PATH, getSourcePath(), String.class));
 		ret.add(new Variable("file_name", VARIABLE_TYPE.SCALAR, new File(getSourcePath()).getName(), String.class));
 		ret.add(new Variable("file_dir",  VARIABLE_TYPE.PATH, FileUtils.getDirectoryAbsolutePath(getSourcePath()), String.class));
+		
+		if (trigger!=null && trigger.getWidth()>0) {
+			
+			final Actor connection = (Actor)trigger.getContainer();
+			if (connection instanceof IVariableProvider) {
+				final List<IVariable> vars = ((IVariableProvider)connection).getInputVariables();
+				if (vars!=null) ret.addAll(vars);
+			}
+		}
 		
 		if (isFullData) {
 			
