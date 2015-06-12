@@ -12,6 +12,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +34,16 @@ class StreamGobbler extends Thread {
 	// StringBuffer to maintain data from configured input stream.
 	private List<String> streamDataAsList;
 
+	private PrintWriter stream;
+
 	/** Create a StreamGobbler.
 	 *  @param inputStream The stream to read from.
 	 *  @param name The name of this StreamReaderThread,
 	 *  which is useful for debugging.
 	 */
-	StreamGobbler(InputStream inputStream, String name) {
+	StreamGobbler(InputStream inputStream, PrintWriter stream, String name) {
 		super(name);
+		this.stream = stream;
 		inputStreamReader = new InputStreamReader(inputStream);
 		streamDataAsList = new ArrayList<String>();
 	}
@@ -77,6 +81,10 @@ class StreamGobbler extends Thread {
 		try {
 			while ((line=lineByLineReader.readLine())!=null) {
 				if (streamLogsToLogging) {
+					if (stream!=null) {
+						stream.println(getName()+"> "+line);
+						stream.flush();
+					}
 					logger.debug(getName()+"> "+line);
 				} else {
 					streamDataAsList.add(line);
@@ -84,12 +92,23 @@ class StreamGobbler extends Thread {
 			}
 			readRemainder();
 		} catch (IOException e) {
+			if (stream!=null) {
+				stream.println("Error when reading from stream: "+getName());
+				e.printStackTrace(stream);
+				stream.flush();
+			}
 			logger.debug("Error when reading from stream: "+getName()+e);
 		}
 		try {
+			if (stream!=null) stream.close();
 			inputStreamReaderClosed = true;
 			lineByLineReader.close();
 		} catch (IOException e) {
+			if (stream!=null) {
+				stream.println("Error when reading closing stream: "+getName());
+				e.printStackTrace(stream);
+				stream.flush();
+			}
 			logger.debug("Error when reading closing stream: "+getName()+e);
 		}
 		
@@ -114,6 +133,10 @@ class StreamGobbler extends Thread {
 						+ String.valueOf(chars, 0, length) + "'");
 
 			if (streamLogsToLogging) {
+				if (stream!=null) {
+					stream.println(getName()+"> "+new String(chars));
+					stream.flush();
+				}
 				logger.debug(getName()+"> "+new String(chars));
 			} else {
 				streamDataAsList.add(new String(chars));

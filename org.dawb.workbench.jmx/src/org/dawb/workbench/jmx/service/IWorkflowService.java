@@ -8,6 +8,8 @@
  */ 
 package org.dawb.workbench.jmx.service;
 
+import java.io.PrintWriter;
+
 /**
  * NOTE: The service implementation returned is only working fully on linux
  *       at the moment.
@@ -89,5 +91,12 @@ public interface IWorkflowService {
 	 * @param value
 	 */
 	public void setProperty(String key, String value);
+
+	/**
+	 * You can optionally redirect the output of the workflows.
+	 * @param out
+	 * @param err
+	 */
+	public void setLoggingStreams(PrintWriter out, PrintWriter err);
 
 }

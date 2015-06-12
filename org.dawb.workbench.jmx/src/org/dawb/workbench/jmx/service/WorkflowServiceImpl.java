@@ -8,6 +8,7 @@
  */ 
 package org.dawb.workbench.jmx.service;
 
+import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.management.MBeanServerConnection;
@@ -33,6 +34,7 @@ class WorkflowServiceImpl implements IWorkflowService {
 	private static final Logger logger = LoggerFactory.getLogger(WorkflowServiceImpl.class);
 
 	private Process       workflow;
+	private PrintWriter   outw, errw;
 	private StreamGobbler out,err;
 	private IRemoteServiceProvider prov;
 	private boolean       logDirectly=true;
@@ -40,6 +42,8 @@ class WorkflowServiceImpl implements IWorkflowService {
 
 	public WorkflowServiceImpl(IRemoteServiceProvider prov) {
 		this.prov = prov;
+		this.outw = null;
+		this.errw = null;
 	}
 
 	@Override
@@ -50,7 +54,13 @@ class WorkflowServiceImpl implements IWorkflowService {
 		
 		return process.exitValue();
 	}
-	
+
+	@Override
+	public void setLoggingStreams(PrintWriter out, PrintWriter err) {
+		this.outw = out;
+		this.errw = err;
+	}
+
 	@Override
 	public Process start() throws Exception {
 		
@@ -72,11 +82,11 @@ class WorkflowServiceImpl implements IWorkflowService {
 		 
 		final Map<String,String> env = System.getenv();
 		this.workflow     = Runtime.getRuntime().exec(command, getStringArray(env));
-		this.out          = new StreamGobbler(workflow.getInputStream(), "workflow output");
+		this.out          = new StreamGobbler(workflow.getInputStream(), outw, "workflow output");
 		out.setStreamLogsToLogging(logDirectly);
 		out.start();
 		
-		this.err      = new StreamGobbler(workflow.getErrorStream(), "workflow error");
+		this.err      = new StreamGobbler(workflow.getErrorStream(), errw, "workflow error");
 		err.setStreamLogsToLogging(logDirectly);
 		err.start();
 		
@@ -119,7 +129,7 @@ class WorkflowServiceImpl implements IWorkflowService {
 		buf.append(" -noSplash -application com.isencia.passerelle.workbench.model.launch ");
 		buf.append(" -data ");
 		buf.append(workspace);
-		buf.append(" -consolelog -vmargs ");
+		buf.append(" -vmargs ");
 		buf.append(" -Dmodel=");
 		buf.append(model);
 		buf.append(" -Dcom.isencia.jmx.service.workspace=");
@@ -145,7 +155,13 @@ class WorkflowServiceImpl implements IWorkflowService {
 				buf.append(value);
 				if (value.contains(" ")) buf.append("\"");
 			}
+			
+			if (prov.getProperties().containsKey("logLocation")) {
+				buf.append(" >> "+prov.getProperties().get("logLocation"));
+			}
+
 		}
+		
 
 		return buf.toString();
 	}
