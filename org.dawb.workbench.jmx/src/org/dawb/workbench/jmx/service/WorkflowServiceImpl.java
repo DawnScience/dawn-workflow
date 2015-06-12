@@ -132,7 +132,21 @@ class WorkflowServiceImpl implements IWorkflowService {
 		if (isTangoSpecMockMode) 
 			buf.append(" -Dorg.dawb.test.session=true");
 		else
-			buf.append(" -Dorg.dawb.test.session=false");			
+			buf.append(" -Dorg.dawb.test.session=false");
+		
+		if (prov.getProperties()!=null) {
+			for(Object name : prov.getProperties().keySet()) {
+				buf.append(" ");
+				buf.append("-D");
+				buf.append(name);
+				buf.append("=");
+				String value = prov.getProperties().get(name).toString().trim();
+				if (value.contains(" ")) buf.append("\"");
+				buf.append(value);
+				if (value.contains(" ")) buf.append("\"");
+			}
+		}
+
 		return buf.toString();
 	}
 

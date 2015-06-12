@@ -11,6 +11,7 @@ package org.dawb.workbench.jmx.example;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.IRemoteServiceProvider;
@@ -160,6 +161,10 @@ public class WorkflowExample {
 			return true;
 		}
 
+		@Override
+		public Properties getProperties() {
+			return null;
+		}
 	}
 	
 	

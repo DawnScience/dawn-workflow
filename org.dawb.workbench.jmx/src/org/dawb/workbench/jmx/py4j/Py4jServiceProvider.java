@@ -9,6 +9,8 @@
 
 package org.dawb.workbench.jmx.py4j;
 
+import java.util.Properties;
+
 import org.dawb.workbench.jmx.IRemoteServiceProvider;
 import org.dawb.workbench.jmx.IRemoteWorkbench;
 
@@ -59,6 +61,11 @@ public class Py4jServiceProvider implements IRemoteServiceProvider {
 	public boolean getServiceTerminate() {
 		// Set to false to not have Eclipse to open a trace message in a new window
 		return gatewayServerWorkflow.getServiceTerminate();
+	}
+
+	@Override
+	public Properties getProperties() {
+		return null;
 	}
 
 }

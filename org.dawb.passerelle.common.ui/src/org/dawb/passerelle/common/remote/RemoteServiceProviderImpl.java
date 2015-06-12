@@ -9,6 +9,8 @@
  */ 
 package org.dawb.passerelle.common.remote;
 
+import java.util.Properties;
+
 import org.dawb.workbench.jmx.IRemoteServiceProvider;
 import org.dawb.workbench.jmx.IRemoteWorkbench;
 import org.eclipse.core.runtime.preferences.InstanceScope;
@@ -57,6 +59,11 @@ public class RemoteServiceProviderImpl implements IRemoteServiceProvider {
 	@Override
 	public boolean getServiceTerminate() {
 		return false;
+	}
+
+	@Override
+	public Properties getProperties() {
+		return null;
 	}
 
 }

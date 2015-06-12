@@ -8,6 +8,8 @@
  */ 
 package org.dawb.workbench.jmx;
 
+import java.util.Properties;
+
 public interface IRemoteServiceProvider {
 
 	
@@ -71,4 +73,10 @@ public interface IRemoteServiceProvider {
 	 */
 	public boolean getTangoSpecMockMode();
 
+	
+	/**
+	 * Additional command line properties to the workflow
+	 * @return
+	 */
+	public Properties getProperties();
 }
