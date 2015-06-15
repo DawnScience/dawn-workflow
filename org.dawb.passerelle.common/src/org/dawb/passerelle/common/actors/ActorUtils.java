@@ -238,7 +238,7 @@ public class ActorUtils {
 		
 		if (isWorkbenchPresentChecked) return workbenchConnection;
 		
-		workbenchConnection       = RemoteWorkbenchAgent.getServerConnection(timeoutMs);
+		workbenchConnection       = RemoteWorkbenchAgent.getInstance().getServerConnection(timeoutMs);
 		isWorkbenchPresentChecked = true;
 		
 		return workbenchConnection;

@@ -67,7 +67,7 @@ class WorkflowServiceImpl implements IWorkflowService {
 		// Start an agent which the workflow can rely on to do user
 		// interface and other actions.
 		if (prov.getRemoteWorkbench()!=null) { // If null there is no workbench or the default one should be used.
-			this.agent = new RemoteWorkbenchAgent(prov);
+			this.agent = new RemoteWorkbenchAgent(prov, true);
 			agent.start();
 		}
 		

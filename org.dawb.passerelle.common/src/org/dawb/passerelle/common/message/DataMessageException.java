@@ -85,7 +85,7 @@ public class DataMessageException extends ProcessingException {
 		
 		try { // Send this to the workbench log so that it is visible in the log
 			// view.
-			final MBeanServerConnection client = RemoteWorkbenchAgent.getServerConnection(1000);
+			final MBeanServerConnection client = RemoteWorkbenchAgent.getInstance().getServerConnection(1000);
 			client.invoke(RemoteWorkbenchAgent.REMOTE_WORKBENCH, "logStatus",
 						  new Object[] {Activator.PLUGIN_ID, message, rootException },
 						  new String[] { String.class.getName(), String.class.getName(), Throwable.class.getName() });
