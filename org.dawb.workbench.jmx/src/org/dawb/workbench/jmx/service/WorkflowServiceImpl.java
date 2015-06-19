@@ -145,7 +145,7 @@ class WorkflowServiceImpl implements IWorkflowService {
             buf.append(value);
 		}
 
-		buf.append(" -consoleLog -vmargs ");
+		buf.append(" -vmargs ");
 		buf.append(" -Dmodel=");
 		buf.append(model);
 		buf.append(" -Dcom.isencia.jmx.service.workspace=");
