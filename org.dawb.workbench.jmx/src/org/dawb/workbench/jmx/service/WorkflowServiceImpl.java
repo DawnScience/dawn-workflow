@@ -77,7 +77,7 @@ class WorkflowServiceImpl implements IWorkflowService {
 		}
 		
 		final String line = createExecutionLine(prov);
-		logger.debug("Execution line: "+line);
+		logger.debug("Workflow execution line: "+line);
 		final String[]  command;
 		if (isLinuxOS()) {
 			command = new String[]{"/bin/sh", "-c", line};
