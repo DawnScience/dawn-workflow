@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * 
  * Example Command to start workbench which we enumulate here:
  * 
- * ./dawb -noSplash -application com.isencia.passerelle.workbench.model.launch 
+ * ./dawn -noSplash -application com.isencia.passerelle.workbench.model.launch 
  * -data $WORKSPACE -consolelog -os linux -ws gtk -arch $HOSTTYPE -vmargs -Dmodel=$MODEL
  *
  */
@@ -67,7 +67,7 @@ class WorkflowServiceImpl implements IWorkflowService {
 		// Start an agent which the workflow can rely on to do user
 		// interface and other actions.
 		if (prov.getRemoteWorkbench()!=null) { // If null there is no workbench or the default one should be used.
-			this.agent = new RemoteWorkbenchAgent(prov, true);
+			this.agent = new RemoteWorkbenchAgent(prov);
 			agent.start();
 		}
 		
@@ -162,8 +162,9 @@ class WorkflowServiceImpl implements IWorkflowService {
 
 		}
 		
-
-		return buf.toString();
+		String ret = buf.toString();
+		ret = ret.replace('\\', '/');
+		return ret;
 	}
 
 	/**

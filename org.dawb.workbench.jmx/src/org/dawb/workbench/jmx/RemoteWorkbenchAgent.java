@@ -14,10 +14,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import javax.management.MBeanServer;
-import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
@@ -25,6 +22,12 @@ import javax.management.remote.JMXServiceURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Agent for remote workbench
+ * 
+ * @author fcp94556
+ *
+ */
 public class RemoteWorkbenchAgent {
 
 	public static       ObjectName    REMOTE_WORKBENCH;
@@ -36,17 +39,13 @@ public class RemoteWorkbenchAgent {
 
 	private RemoteWorkbenchMBean        remoteManager;
     private static RemoteWorkbenchAgent instance;
-	
+		
 	public RemoteWorkbenchAgent(final IRemoteServiceProvider service) throws Exception {
-         this(service, false);
-	}
-	
-	public RemoteWorkbenchAgent(final IRemoteServiceProvider service, boolean forcePort) throws Exception {
 		
 		IRemoteWorkbench bench = service.getRemoteWorkbench();
 		//if (bench==null) bench = OSGIUtils.getRemoteWorkbench();
 		this.remoteManager = new RemoteWorkbenchManager(bench);
-		createServerUrl(service.getStartPort(), forcePort);
+		createServerUrl(service.getStartPort());
 		instance = this;
 	}
 	
@@ -54,7 +53,7 @@ public class RemoteWorkbenchAgent {
 		return instance;
 	}
 	
-	private final void createServerUrl(final int startPort, boolean forcePort) {
+	private final void createServerUrl(final int startPort) {
 		
 		if (serverUrl!=null) return;
 		try {
@@ -63,7 +62,7 @@ public class RemoteWorkbenchAgent {
 			if (hostName==null) hostName = InetAddress.getLocalHost().getHostAddress();
 			if (hostName==null) hostName = "localhost";
 			
-			currentPort      = getFreePort(startPort, forcePort);
+			currentPort      = getFreePort(startPort);
 			serverUrl        = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://"+hostName+":"+currentPort+"/workbench");
 			REMOTE_WORKBENCH = new ObjectName(RemoteWorkbenchManager.class.getPackage().getName()+":type=RemoteWorkbench");
 		} catch (Exception e) {
@@ -131,46 +130,9 @@ public class RemoteWorkbenchAgent {
 
 	}
 
-	public MBeanServerConnection getServerConnection(final long timeout) throws Exception {
-
-		long                  waited = 0;
-		MBeanServerConnection server = null;
-		
-		createServerUrl(21701, false);
-		while(timeout>waited) {
-			
-			waited+=100;
-			try {
-				
-				JMXConnector  conn = JMXConnectorFactory.connect(serverUrl);
-				server             = conn.getMBeanServerConnection();
-                if (server == null) throw new NullPointerException("MBeanServerConnection is null");
-				break;
-                
-			} catch (Throwable ne) {
-				if (waited>=timeout) {
-					throw new Exception("Cannot get connection", ne);
-				} else {
-					if ("true".equals(System.getProperty("org.dawb.workbench.jmx.headless"))) {
-						logger.error("Cannot find the MBeanServerConnection for the workbench client.\nThe headless property is set so workflow with continue without a client.");
-						return null; 
-					}
-					Thread.sleep(100);
-					continue;
-				}
-			}
-		}
-		return server;
-	}
-
-	private static int getFreePort(final int startPort, boolean forcePort) {
+	private static int getFreePort(final int startPort) {
 		
 		int jmxServicePort = 21701;
-		if (!forcePort && System.getProperty("com.isencia.jmx.service.port")!=null) {
-			jmxServicePort = Integer.parseInt(System.getProperty("com.isencia.jmx.service.port"));
-			logger.debug("Found 'com.isencia.jmx.service.port' set at port "+jmxServicePort);
-			return jmxServicePort;
-		}
 		
 		jmxServicePort =  startPort;
 	    if (NetUtils.isPortFree(jmxServicePort)) {
