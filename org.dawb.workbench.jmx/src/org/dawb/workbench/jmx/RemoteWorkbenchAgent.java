@@ -36,16 +36,27 @@ public class RemoteWorkbenchAgent {
 
 	private RemoteWorkbenchMBean remoteManager;
 
-	
 	public RemoteWorkbenchAgent(final IRemoteServiceProvider service) throws Exception {
+        this(service, false);
+	}
+	
+	/**
+	 * 
+	 * @param service
+	 * @param forceServicePort - true to ignore the port override system property and use the service.getStartPort() exclusively.
+	 * @throws Exception
+	 */
+	public RemoteWorkbenchAgent(final IRemoteServiceProvider service, boolean forceServicePort) throws Exception {
 		
 		IRemoteWorkbench bench = service.getRemoteWorkbench();
 		//if (bench==null) bench = OSGIUtils.getRemoteWorkbench();
 		this.remoteManager = new RemoteWorkbenchManager(bench);
-		createServerUrl(service.getStartPort());
+		serverUrl   = null;
+		currentPort = 0;
+		createServerUrl(service.getStartPort(), forceServicePort);
 	}
 	
-	private final static void createServerUrl(final int startPort) {
+	private final static void createServerUrl(final int startPort, boolean forceServicePort) {
 		
 		if (serverUrl!=null) return;
 		try {
@@ -54,7 +65,7 @@ public class RemoteWorkbenchAgent {
 			if (hostName==null) hostName = InetAddress.getLocalHost().getHostAddress();
 			if (hostName==null) hostName = "localhost";
 			
-			currentPort      = getFreePort(startPort);
+			currentPort      = getFreePort(startPort, forceServicePort);
 			serverUrl        = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://"+hostName+":"+currentPort+"/workbench");
 			REMOTE_WORKBENCH = new ObjectName(RemoteWorkbenchManager.class.getPackage().getName()+":type=RemoteWorkbench");
 		} catch (Exception e) {
@@ -127,7 +138,7 @@ public class RemoteWorkbenchAgent {
 		long                  waited = 0;
 		MBeanServerConnection server = null;
 		
-		createServerUrl(21701);
+		createServerUrl(21701, false);
 		while(timeout>waited) {
 			
 			waited+=100;
@@ -154,10 +165,10 @@ public class RemoteWorkbenchAgent {
 		return server;
 	}
 
-	private static int getFreePort(final int startPort) {
+	private static int getFreePort(final int startPort, boolean forceServicePort) {
 		
 		int jmxServicePort = 21701;
-		if (System.getProperty("com.isencia.jmx.service.port")!=null) {
+		if (!forceServicePort && System.getProperty("com.isencia.jmx.service.port")!=null) {
 			jmxServicePort = Integer.parseInt(System.getProperty("com.isencia.jmx.service.port"));
 			logger.debug("Found 'com.isencia.jmx.service.port' set at port "+jmxServicePort);
 			return jmxServicePort;
