@@ -8,8 +8,13 @@
  */ 
 package org.dawb.workbench.jmx.service;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.management.MBeanServerConnection;
 
@@ -109,11 +114,11 @@ class WorkflowServiceImpl implements IWorkflowService {
 	 * 
 	 * C:\Users\fcp94556\Desktop\DawnMaster/dawn.exe -noSplash 
 	 * -application com.isencia.passerelle.workbench.model.launch 
-	 * -data C:/Work/runtime-uk.ac.diamond.dawn.product -consolelog -vmargs 
+	 * -data C:/Work/runtime-uk.ac.diamond.dawn.product -consolelog -properties <a file path> -vmargs 
 	 * -Dorg.dawb.workbench.jmx.headless=true -Dcom.isencia.jmx.service.terminate=true 
 	 * -Dmodel=C:/Work/runtime-uk.ac.diamond.dawn.product/trace/trace_workflow.moml
 	 */
-	private String createExecutionLine(IRemoteServiceProvider prov) {
+	private String createExecutionLine(IRemoteServiceProvider prov) throws IOException {
 		
 		final StringBuilder buf = new StringBuilder();
 		
@@ -129,6 +134,14 @@ class WorkflowServiceImpl implements IWorkflowService {
 		buf.append(" -noSplash -application com.isencia.passerelle.workbench.model.launch ");
 		buf.append(" -data ");
 		buf.append(workspace);
+		
+		if (prov.getProperties()!=null) {
+			buf.append(" -properties ");
+			final File properties = storeProperties(prov.getProperties());
+			String value = properties.getAbsolutePath();
+            if (value.contains(" ")) value = "\""+value+"\"";
+		}
+
 		buf.append(" -vmargs ");
 		buf.append(" -Dmodel=");
 		buf.append(model);
@@ -145,19 +158,10 @@ class WorkflowServiceImpl implements IWorkflowService {
 			buf.append(" -Dorg.dawb.test.session=false");
 		
 		if (prov.getProperties()!=null) {
-			for(Object name : prov.getProperties().keySet()) {
-				buf.append(" ");
-				buf.append("-D");
-				buf.append(name);
-				buf.append("=");
-				String value = prov.getProperties().get(name).toString().trim();
-				if (value.contains(" ")) buf.append("\"");
-				buf.append(value);
-				if (value.contains(" ")) buf.append("\"");
-			}
-			
+
 			if (prov.getProperties().containsKey("logLocation")) {
-				buf.append(" >> "+prov.getProperties().get("logLocation"));
+				// Two spaces deals with the value of the last property being \
+				buf.append("  > "+prov.getProperties().get("logLocation"));
 			}
 
 		}
@@ -165,6 +169,20 @@ class WorkflowServiceImpl implements IWorkflowService {
 		String ret = buf.toString();
 		ret = ret.replace('\\', '/');
 		return ret;
+	}
+
+	private final static File storeProperties(final Properties props) throws IOException {
+
+		final File ret = File.createTempFile("workflow_", ".properties");
+		ret.deleteOnExit();
+		
+		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(ret));
+		try {			
+			props.store(out, "DAWN Workflow properties file");
+			return ret;
+		} finally {
+			out.close();
+		}
 	}
 
 	/**
