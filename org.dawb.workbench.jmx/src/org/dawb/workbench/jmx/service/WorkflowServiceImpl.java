@@ -145,7 +145,7 @@ class WorkflowServiceImpl implements IWorkflowService {
             buf.append(value);
 		}
 
-		buf.append(" -vmargs ");
+		buf.append(" -consoleLog -vmargs ");
 		buf.append(" -Dmodel=");
 		buf.append(model);
 		buf.append(" -Dcom.isencia.jmx.service.workspace=");
@@ -168,10 +168,7 @@ class WorkflowServiceImpl implements IWorkflowService {
 			}
 
 		}
-		
-		String ret = buf.toString();
-		ret = ret.replace('\\', '/');
-		return ret;
+		return buf.toString();
 	}
 
 	private final static File storeProperties(final Properties props) throws IOException {

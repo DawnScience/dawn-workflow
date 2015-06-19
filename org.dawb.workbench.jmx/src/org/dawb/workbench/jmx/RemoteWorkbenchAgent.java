@@ -51,8 +51,10 @@ public class RemoteWorkbenchAgent {
 		IRemoteWorkbench bench = service.getRemoteWorkbench();
 		//if (bench==null) bench = OSGIUtils.getRemoteWorkbench();
 		this.remoteManager = new RemoteWorkbenchManager(bench);
-		serverUrl   = null;
-		currentPort = 0;
+		if (forceServicePort) {
+			serverUrl   = null;
+			currentPort = 0;
+		}
 		createServerUrl(service.getStartPort(), forceServicePort);
 	}
 	
