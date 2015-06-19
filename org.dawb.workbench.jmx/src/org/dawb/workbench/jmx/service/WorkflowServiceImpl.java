@@ -124,7 +124,9 @@ class WorkflowServiceImpl implements IWorkflowService {
 		
 		// Get the path to the workspace and the model path
 		final String install   = prov.getInstallationPath();
-		final String workspace = prov.getWorkspacePath();
+		String workspace = prov.getWorkspacePath();
+		if (workspace.contains(" ")) workspace = "\""+workspace+"\"";
+		
 		final String model     = prov.getModelPath();
 		final int port         = agent!=null ? agent.getCurrentPort() : -1;
 		final boolean isServiceTerminate  = prov.getServiceTerminate();
@@ -140,6 +142,7 @@ class WorkflowServiceImpl implements IWorkflowService {
 			final File properties = storeProperties(prov.getProperties());
 			String value = properties.getAbsolutePath();
             if (value.contains(" ")) value = "\""+value+"\"";
+            buf.append(value);
 		}
 
 		buf.append(" -vmargs ");
