@@ -16,7 +16,6 @@ import javax.management.MBeanServerConnection;
 import org.dawb.passerelle.common.Activator;
 import org.dawb.workbench.jmx.ActorSelectedBean;
 import org.dawb.workbench.jmx.RemoteWorkbenchAgent;
-import org.dawb.workbench.jmx.RemoteWorkbenchConnection;
 import org.dawb.workbench.jmx.UserDebugBean;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.preferences.IPreferencesService;
@@ -239,7 +238,7 @@ public class ActorUtils {
 		
 		if (isWorkbenchPresentChecked) return workbenchConnection;
 		
-		workbenchConnection       = RemoteWorkbenchConnection.getServerConnection(timeoutMs);
+		workbenchConnection       = RemoteWorkbenchAgent.getServerConnection(timeoutMs);
 		isWorkbenchPresentChecked = true;
 		
 		return workbenchConnection;

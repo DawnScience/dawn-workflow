@@ -14,7 +14,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 
 import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXConnectorServer;
 import javax.management.remote.JMXConnectorServerFactory;
 import javax.management.remote.JMXServiceURL;
@@ -22,38 +25,27 @@ import javax.management.remote.JMXServiceURL;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Agent for remote workbench
- * 
- * @author fcp94556
- *
- */
 public class RemoteWorkbenchAgent {
 
 	public static       ObjectName    REMOTE_WORKBENCH;
 	
 	private static Logger logger = LoggerFactory.getLogger(RemoteWorkbenchAgent.class);
 	
-	private JMXServiceURL serverUrl;
-	private int           currentPort;
+	private static JMXServiceURL serverUrl;
+	private static int           currentPort;
 
-	private RemoteWorkbenchMBean        remoteManager;
-    private static RemoteWorkbenchAgent instance;
-		
+	private RemoteWorkbenchMBean remoteManager;
+
+	
 	public RemoteWorkbenchAgent(final IRemoteServiceProvider service) throws Exception {
 		
 		IRemoteWorkbench bench = service.getRemoteWorkbench();
 		//if (bench==null) bench = OSGIUtils.getRemoteWorkbench();
 		this.remoteManager = new RemoteWorkbenchManager(bench);
 		createServerUrl(service.getStartPort());
-		instance = this;
 	}
 	
-	public static RemoteWorkbenchAgent getInstance() {
-		return instance;
-	}
-	
-	private final void createServerUrl(final int startPort) {
+	private final static void createServerUrl(final int startPort) {
 		
 		if (serverUrl!=null) return;
 		try {
@@ -130,9 +122,46 @@ public class RemoteWorkbenchAgent {
 
 	}
 
+	public static MBeanServerConnection getServerConnection(final long timeout) throws Exception {
+
+		long                  waited = 0;
+		MBeanServerConnection server = null;
+		
+		createServerUrl(21701);
+		while(timeout>waited) {
+			
+			waited+=100;
+			try {
+				
+				JMXConnector  conn = JMXConnectorFactory.connect(serverUrl);
+				server             = conn.getMBeanServerConnection();
+                if (server == null) throw new NullPointerException("MBeanServerConnection is null");
+				break;
+                
+			} catch (Throwable ne) {
+				if (waited>=timeout) {
+					throw new Exception("Cannot get connection", ne);
+				} else {
+					if ("true".equals(System.getProperty("org.dawb.workbench.jmx.headless"))) {
+						logger.error("Cannot find the MBeanServerConnection for the workbench client.\nThe headless property is set so workflow with continue without a client.");
+						return null; 
+					}
+					Thread.sleep(100);
+					continue;
+				}
+			}
+		}
+		return server;
+	}
+
 	private static int getFreePort(final int startPort) {
 		
 		int jmxServicePort = 21701;
+		if (System.getProperty("com.isencia.jmx.service.port")!=null) {
+			jmxServicePort = Integer.parseInt(System.getProperty("com.isencia.jmx.service.port"));
+			logger.debug("Found 'com.isencia.jmx.service.port' set at port "+jmxServicePort);
+			return jmxServicePort;
+		}
 		
 		jmxServicePort =  startPort;
 	    if (NetUtils.isPortFree(jmxServicePort)) {
