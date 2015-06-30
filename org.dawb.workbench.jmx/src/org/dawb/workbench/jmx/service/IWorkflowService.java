@@ -35,7 +35,6 @@ public interface IWorkflowService {
 	 * NOTE: This method is non-blocking and will start the workflow 
 	 * and return.
 	 * 
-	 * @param prov
 	 */
 	public Process start() throws Exception;
 	
