@@ -9,7 +9,15 @@
  */ 
 package org.dawb.passerelle.common.parameter;
 
-import org.dawnsci.common.richbeans.beans.BeanUI;
+import java.beans.XMLDecoder;
+import java.beans.XMLEncoder;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+
+import org.castor.util.Base64Decoder;
+import org.castor.util.Base64Encoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +25,6 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.NamedObj;
-
-import org.castor.util.Base64Decoder;
-import org.castor.util.Base64Encoder;
 
 import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAttribute;
 
@@ -42,7 +47,7 @@ public abstract class CellEditorParameter extends StringParameter implements Cel
 			if (getExpression()==null || "".equals(getExpression())) return clazz.newInstance();
 			try {
 				String xml = getXML();				
-				return BeanUI.getBean(xml, clazz.getClassLoader());
+				return getBean(xml, clazz.getClassLoader());
 				
 			} catch (Exception e) {
 				logger.error("Cannot read bean "+super.getExpression(), e);
@@ -77,12 +82,59 @@ public abstract class CellEditorParameter extends StringParameter implements Cel
 	public final String getValueFromBean(Object bean) {
 		if (bean==null) return null;
 		try {
-			final String xml  = BeanUI.getString(bean);
+			final String xml  = getString(bean);
 			final String save = new String(Base64Encoder.encode(xml.getBytes("UTF-8")));
 			return save;
 		} catch (Exception e) {
 			logger.error("Cannot write bean "+bean, e);
 			return null;
+		}
+	}
+
+	
+
+	/**
+	 * Used externally to the GDA.
+	 * 
+	 * @param bean
+	 * @return the string
+	 */
+	public static String getString(Object bean) throws Exception {
+
+		final ByteArrayOutputStream stream = new ByteArrayOutputStream();
+
+		final ClassLoader original = Thread.currentThread().getContextClassLoader();
+		try {
+			Thread.currentThread().setContextClassLoader(bean.getClass().getClassLoader());
+			XMLEncoder e = new XMLEncoder(new BufferedOutputStream(stream));
+			e.writeObject(bean);
+			e.close();
+			return stream.toString("UTF-8");
+		} finally {
+			Thread.currentThread().setContextClassLoader(original);
+			stream.close();
+		}
+	}
+	/**
+	 * Bean from string using standard java serialization, useful for tables of beans with serialized strings. Used
+	 * externally to the GDA.
+	 * 
+	 * @param xml
+	 * @return the bean
+	 */
+	public static Object getBean(final String xml, final ClassLoader loader) throws Exception {
+
+		final ClassLoader original = Thread.currentThread().getContextClassLoader();
+		final ByteArrayInputStream stream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+		try {
+			Thread.currentThread().setContextClassLoader(loader);
+			XMLDecoder d = new XMLDecoder(new BufferedInputStream(stream));
+			final Object bean = d.readObject();
+			d.close();
+			return bean;
+		} finally {
+			Thread.currentThread().setContextClassLoader(original);
+			stream.close();
 		}
 	}
 

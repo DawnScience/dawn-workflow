@@ -9,6 +9,9 @@
  */ 
 package org.dawb.passerelle.ui.editors;
 
+import java.beans.XMLDecoder;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.util.Collection;
 import java.util.HashMap;
@@ -26,14 +29,6 @@ import org.dawb.passerelle.actors.ui.config.FieldContainer;
 import org.dawb.passerelle.common.utils.SubstituteUtils;
 import org.dawb.passerelle.ui.Activator;
 import org.dawb.workbench.jmx.IDeligateWorkbenchPart;
-import org.dawnsci.common.richbeans.beans.BeanUI;
-import org.dawnsci.common.richbeans.beans.IFieldWidget;
-import org.dawnsci.common.richbeans.components.cell.FieldComponentCellEditor;
-import org.dawnsci.common.richbeans.components.file.FileBox;
-import org.dawnsci.common.richbeans.components.scalebox.NumberBox;
-import org.dawnsci.common.richbeans.components.wrappers.ComboWrapper;
-import org.dawnsci.common.richbeans.components.wrappers.SpinnerWrapper;
-import org.dawnsci.common.richbeans.components.wrappers.TextWrapper;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
@@ -52,6 +47,13 @@ import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.jface.viewers.TextCellEditor;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.ToolTip;
+import org.eclipse.richbeans.api.widget.IFieldWidget;
+import org.eclipse.richbeans.widgets.cell.FieldComponentCellEditor;
+import org.eclipse.richbeans.widgets.file.FileBox;
+import org.eclipse.richbeans.widgets.scalebox.NumberBox;
+import org.eclipse.richbeans.widgets.wrappers.ComboWrapper;
+import org.eclipse.richbeans.widgets.wrappers.SpinnerWrapper;
+import org.eclipse.richbeans.widgets.wrappers.TextWrapper;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CLabel;
 import org.eclipse.swt.dnd.DND;
@@ -399,10 +401,32 @@ public class UserModifyRemotePart implements IDeligateWorkbenchPart {
 			return;
 		}
 		
-		this.configuration =   (FieldContainer)BeanUI.getBean(configurationXML, FieldContainer.class.getClassLoader());
+		this.configuration =   (FieldContainer)getBean(configurationXML, FieldContainer.class.getClassLoader());
 	}
 
-	
+	/**
+	 * Bean from string using standard java serialization, useful for tables of beans with serialized strings. Used
+	 * externally to the GDA.
+	 * 
+	 * @param xml
+	 * @return the bean
+	 */
+	public static Object getBean(final String xml, final ClassLoader loader) throws Exception {
+
+		final ClassLoader original = Thread.currentThread().getContextClassLoader();
+		final ByteArrayInputStream stream = new ByteArrayInputStream(xml.getBytes("UTF-8"));
+		try {
+			Thread.currentThread().setContextClassLoader(loader);
+			XMLDecoder d = new XMLDecoder(new BufferedInputStream(stream));
+			final Object bean = d.readObject();
+			d.close();
+			return bean;
+		} finally {
+			Thread.currentThread().setContextClassLoader(original);
+			stream.close();
+		}
+	}
+
 	public boolean setFocus() {
 		if (!tableViewer.getTable().isDisposed()) {
 			return tableViewer.getTable().setFocus();

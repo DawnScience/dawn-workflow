@@ -10,10 +10,10 @@
 package org.dawb.passerelle.common.preferences;
 
 import org.dawb.passerelle.common.ui.Activator;
-import org.dawnsci.common.richbeans.components.scalebox.RangeBox;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.richbeans.widgets.scalebox.RangeBox;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
