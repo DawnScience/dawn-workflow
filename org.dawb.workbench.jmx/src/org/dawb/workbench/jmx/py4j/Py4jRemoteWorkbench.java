@@ -25,7 +25,6 @@ public class Py4jRemoteWorkbench implements IRemoteWorkbench {
 	Logger logger = LoggerFactory.getLogger(Py4jRemoteWorkbench.class);
 
 	private Map<String, Object> mockValues;
-	private boolean tangoSpecMockMode = true;
 
 	private Py4jWorkflowCallback py4jWorkflowCallback;
 
