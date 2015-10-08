@@ -79,6 +79,7 @@ public class WorkflowExample {
 	/**
 	 * Method to show how to run above in thread.
 	 */
+	@SuppressWarnings("unused")
 	private void exampleRunningInThread() {
 		
 		final Thread workflowThread = new Thread(new Runnable() {
@@ -171,7 +172,6 @@ public class WorkflowExample {
 	public static class ExampleRemoteWorkbench implements IRemoteWorkbench {
 
 		private Map<String, Object> mockValues;
-		private boolean tangoSpecMockMode = true;
 
 		@Override
 		public void executionStarted() {
