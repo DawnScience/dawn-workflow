@@ -51,7 +51,7 @@ public class UserInputDialog extends Dialog implements IRemoteWorkbenchPart, IRe
 		if (viewer instanceof ColumnViewer) {
 			return ((ColumnViewer)viewer).getControl();
 		} else if (viewer instanceof IPlottingSystem) {
-			return ((IPlottingSystem)viewer).getPlotComposite();	
+			return ((IPlottingSystem<Composite>)viewer).getPlotComposite();	
 		} else {
 			return container;
 		}

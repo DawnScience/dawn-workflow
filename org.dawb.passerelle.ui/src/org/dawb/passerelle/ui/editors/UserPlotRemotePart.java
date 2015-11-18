@@ -69,7 +69,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 	private Closeable                  closeable;
 	private Queue<Object>              queue;
 	private UserPlotBean               userPlotBean, originalUserPlotBean;
-	private IPlottingSystem            system;
+	private IPlottingSystem<Composite> system;
 	private ActionBarWrapper           wrapper;
 	
 	private Composite                  plotComposite, toolComposite, main;
