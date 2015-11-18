@@ -36,6 +36,7 @@ import org.eclipse.dawnsci.plotting.api.region.IRegion;
 import org.eclipse.dawnsci.plotting.api.region.IRegion.RegionType;
 import org.eclipse.dawnsci.plotting.api.tool.IToolPage.ToolPageRole;
 import org.eclipse.dawnsci.plotting.api.tool.IToolPageSystem;
+import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +55,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 
 	private static final long serialVersionUID = 4457133165062873343L;
 	
-	private IPlottingSystem plottingSystem;
+	private IPlottingSystem<Composite> plottingSystem;
 
 	protected static final List<String> HAS_ROI;
 	static {
@@ -271,7 +272,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 		return mc;
 	}
 
-	private void createRegion(final IPlottingSystem plottingSystem, final IROI roi, final String roiName, final String boxType){
+	private void createRegion(final IPlottingSystem<Composite> plottingSystem, final IROI roi, final String roiName, final String boxType){
 		try {
 			final IToolPageSystem system = (IToolPageSystem)plottingSystem.getAdapter(IToolPageSystem.class);
 			if(roi instanceof LinearROI){

@@ -38,7 +38,7 @@ public interface IDeligateWorkbenchPart extends IRemoteWorkbenchPart {
 
 	/**
 	 * 
-	 * @return the widget, for instance a ColumnViewer or an IPlottingSystem, which the user part provides.
+	 * @return the widget, for instance a ColumnViewer or an IPlottingSystem<Composite>, which the user part provides.
 	 */
 	public Object getViewer();
 	
