@@ -129,7 +129,7 @@ public class UserPlotRemotePart implements IDeligateWorkbenchPart, IAdaptable  {
 		toolComposite.setLayout(new StackLayout());
 		
 		// Show tools here, not on a page.
-		((IToolPageSystem)system).setToolComposite(toolComposite);
+		((IToolPageSystem)system.getAdapter(IToolPageSystem.class)).setToolComposite(toolComposite);
 		
 		contents.setWeights(new int[]{100,0});
 		
