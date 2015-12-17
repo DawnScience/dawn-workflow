@@ -31,8 +31,9 @@ import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.fitting.Fitter;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.CompositeFunction;
-import uk.ac.diamond.scisoft.analysis.optimize.ApacheNelderMead;
+import uk.ac.diamond.scisoft.analysis.optimize.ApacheOptimizer;
 import uk.ac.diamond.scisoft.analysis.optimize.GeneticAlg;
+import uk.ac.diamond.scisoft.analysis.optimize.ApacheOptimizer.Optimizer;
 
 public class Fitting1DActor extends AbstractDataMessageTransformer {
 
@@ -146,7 +147,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 					fitResult = Fitter.fit(xAxisDS, slice, new GeneticAlg(0.0001), fitFunction);
 					first = false;
 				} else {
-					fitResult = Fitter.fit(xAxisDS, slice, new ApacheNelderMead(), fitFunction);
+					fitResult = Fitter.fit(xAxisDS, slice, new ApacheOptimizer(Optimizer.SIMPLEX_MD), fitFunction);
 				}
 				int[] position = new int[shape.length-1];
 				int count = 0;
