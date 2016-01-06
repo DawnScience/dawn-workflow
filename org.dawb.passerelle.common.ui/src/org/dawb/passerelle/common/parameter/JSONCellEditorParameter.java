@@ -23,7 +23,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAtt
  * To use this attribute the object you wish to serialize must do so with a standard ObjectMapper
  * from jackson.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public abstract class JSONCellEditorParameter<T> extends StringParameter implements CellEditorAttribute {

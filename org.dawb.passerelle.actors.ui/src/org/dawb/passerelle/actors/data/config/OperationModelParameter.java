@@ -18,7 +18,7 @@ import ptolemy.kernel.util.NamedObj;
  * 
  * Parameter to allow one to edit operation models.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class OperationModelParameter extends JSONCellEditorParameter<IOperationModel> {

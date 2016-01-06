@@ -45,7 +45,7 @@ import com.isencia.passerelle.workbench.model.editor.ui.properties.CellEditorAtt
  * 
  * Use the Slicer class to support multi-range slices in your actor.
  * 
- * @author fcp94556
+ * @author Matthew Gerring
  *
  */
 public class JSONSliceParameter extends JSONCellEditorParameter<Map> implements CellEditorAttribute {
