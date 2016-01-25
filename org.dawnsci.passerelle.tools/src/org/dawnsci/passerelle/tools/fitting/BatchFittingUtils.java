@@ -12,6 +12,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.eclipse.core.runtime.preferences.InstanceScope;
+import org.eclipse.dawnsci.analysis.api.fitting.functions.IPeak;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
 import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -20,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import uk.ac.diamond.scisoft.analysis.fitting.FittingConstants;
-import uk.ac.diamond.scisoft.analysis.fitting.functions.APeak;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.CompositeFunction;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.Gaussian;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.Lorentzian;
@@ -105,7 +105,7 @@ public class BatchFittingUtils {
 		return getPlottingPreferenceStore().getDouble(FittingConstants.QUALITY);
 	}
 
-	public static Class<? extends APeak> getPeakClass() {
+	public static Class<? extends IPeak> getPeakClass() {
 		try {
 			
 			final String peakClass = getPlottingPreferenceStore().getString(FittingConstants.PEAK_TYPE);
@@ -122,8 +122,8 @@ public class BatchFittingUtils {
 		}
 	}	
 	
-	public static Map<String, Class <? extends APeak>> getPeakOptions() {
-		final Map<String, Class <? extends APeak>> opts = new LinkedHashMap<String, Class <? extends APeak>>(4);
+	public static Map<String, Class <? extends IPeak>> getPeakOptions() {
+		final Map<String, Class <? extends IPeak>> opts = new LinkedHashMap<String, Class <? extends IPeak>>(4);
 		opts.put(Gaussian.class.getName(),    Gaussian.class);
 		opts.put(Lorentzian.class.getName(),  Lorentzian.class);
 		opts.put(PearsonVII.class.getName(),  PearsonVII.class);
