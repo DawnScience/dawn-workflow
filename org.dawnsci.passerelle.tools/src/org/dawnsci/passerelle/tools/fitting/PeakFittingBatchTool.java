@@ -66,7 +66,7 @@ public class PeakFittingBatchTool extends AbstractBatchTool {
 				           ? (Dataset)axes.get(0)
 				           : IntegerDataset.createRange(data.getSize());
 
-		Dataset[] a= Generic1DFitter.xintersection(x,data,p1[0],p2[0]);
+		Dataset[] a= Generic1DFitter.selectInRange(x,data,p1[0],p2[0]);
 		x = a[0]; Dataset y=a[1];
 
 		if (peaks==null)  {
