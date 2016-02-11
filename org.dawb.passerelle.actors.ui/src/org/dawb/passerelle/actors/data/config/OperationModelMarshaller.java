@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.dawb.passerelle.common.parameter.Marshaller;
-import org.dawnsci.persistence.json.IJSonMarshaller;
 import org.dawnsci.persistence.json.JacksonMarshaller;
 import org.eclipse.dawnsci.analysis.api.fitting.functions.IFunction;
+import org.eclipse.dawnsci.analysis.api.persistence.IJSonMarshaller;
 import org.eclipse.dawnsci.analysis.api.processing.model.IOperationModel;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
 
