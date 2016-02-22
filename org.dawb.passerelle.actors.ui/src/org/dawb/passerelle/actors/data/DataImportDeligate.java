@@ -367,11 +367,9 @@ class DataImportDelegate {
 		
 		if (lazy instanceof H5LazyDataset) {
 		    return ((H5LazyDataset)lazy).getCompleteData(null);
-		} else if (lazy instanceof Dataset) {
-			return (Dataset) lazy;
 		}
 
-		return DatasetUtils.convertToDataset(lazy.getSlice());
+		return DatasetUtils.sliceAndConvertLazyDataset(lazy);
 	}
 
 	
