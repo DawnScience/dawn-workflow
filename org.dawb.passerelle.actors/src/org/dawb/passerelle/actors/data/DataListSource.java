@@ -168,6 +168,9 @@ public class DataListSource extends AbstractDataMessageSource {
 				if (name==null || "".equals(name)) continue;
 				final String pythonName = PythonUtils.getLegalVarName(name, null);
 				final IDataset data     = dh.getDataset(name);
+				if (data == null) {
+					throw new IllegalArgumentException("Could not load " + name + " from " + file.getFilePath());
+				}
 				despatch.addList(pythonName, data);
 			}
 			msg.setBodyContent(despatch, DatasetConstants.CONTENT_TYPE_DATA);
