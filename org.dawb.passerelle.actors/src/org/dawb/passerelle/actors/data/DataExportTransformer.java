@@ -284,7 +284,7 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
         		dh.addDataset(set.getName(), set);
         		saver.saveFile(dh);
         		
-        		ret.addList("image"+ifound, (Dataset)set);
+        		ret.addList("image"+ifound, set);
         		++ifound;
         		
         		wroteSomething = true;
@@ -418,13 +418,11 @@ public class DataExportTransformer extends AbstractDataMessageTransformer implem
 		
 		if (sets!=null) for (IDataset set : sets) {
 			if (set == null) continue;
-			final Dataset a = (Dataset)set;
-			
 			final String s;
 			if (isCreate) {
-			    s = file.createDataset(a.getName(),  a, group);
+			    s = file.createDataset(set.getName(),  set, group);
 			} else {
-				s = file.appendDataset(name,  a, group);
+				s = file.appendDataset(name,  set, group);
 			}
 			file.setNexusAttribute(s, Nexus.SDS);
 		}			

@@ -16,6 +16,7 @@ import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.fitting.functions.IPeak;
 import org.eclipse.dawnsci.analysis.api.monitor.IMonitor;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetUtils;
 import org.eclipse.dawnsci.analysis.dataset.impl.IntegerDataset;
 import org.eclipse.dawnsci.analysis.dataset.roi.LinearROI;
 import org.eclipse.dawnsci.analysis.dataset.roi.RectangularROI;
@@ -55,7 +56,7 @@ public class PeakFittingBatchTool extends AbstractBatchTool {
         final List<IDataset> dataList = getPlottableData(bean);
         if (dataList==null || dataList.size()<1) throw new Exception("No data found for tool "+getBatchToolId());
         
-        final Dataset data = (Dataset)dataList.get(0);
+        final Dataset data = DatasetUtils.convertToDataset(dataList.get(0));
         if (data.getRank()!=1) throw new Exception("Can only use "+getBatchToolId()+" with 1D data!");
         
 		final double[] p1 = roi.getPointRef();
@@ -63,7 +64,7 @@ public class PeakFittingBatchTool extends AbstractBatchTool {
 
 		final List<IDataset> axes = getAxes(bean);
 		Dataset x  = axes!=null && !axes.isEmpty()
-				           ? (Dataset)axes.get(0)
+				           ? DatasetUtils.convertToDataset(axes.get(0))
 				           : IntegerDataset.createRange(data.getSize());
 
 		Dataset[] a= Generic1DFitter.selectInRange(x,data,p1[0],p2[0]);

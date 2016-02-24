@@ -19,6 +19,7 @@ import org.dawb.passerelle.common.parameter.roi.ROIParameter;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.impl.DatasetUtils;
 import org.eclipse.dawnsci.analysis.dataset.roi.RectangularROI;
 
@@ -82,13 +83,13 @@ public class RegionNormaliseActor extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (Dataset) data.get(key));
+			result.addList(key, DatasetFactory.createFromObject(data.get(key)));
 		}
 
 		// Normalise the specified dataset
 		String name = datasetName.getExpression();
 		if (data.containsKey(name)) {
-			Dataset ds = ((Dataset)data.get(name)).clone();
+			Dataset ds = DatasetFactory.createFromObject(data.get(name)).clone();
 			Dataset[] profiles = ROIProfile.box(ds, roi);
 			Dataset tile = profiles[1].reshape(profiles[1].getShape()[0],1);
 			double width = roi.getLengths()[0];

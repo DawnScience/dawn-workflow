@@ -18,6 +18,7 @@ import org.dawb.passerelle.common.parameter.roi.ROIParameter;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.roi.RectangularROI;
 
 import ptolemy.data.expr.StringParameter;
@@ -81,7 +82,7 @@ public class RegionSelectActor extends AbstractDataMessageTransformer {
 
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			Dataset dataset = (Dataset) data.get(key);
+			Dataset dataset = DatasetFactory.createFromObject(data.get(key));
 			result.addList(key, dataset);
 
 			if (dataset.getShape().length == 2) {

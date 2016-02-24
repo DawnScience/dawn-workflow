@@ -109,7 +109,7 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (Dataset) data.get(key));
+			result.addList(key, DatasetFactory.createFromObject(data.get(key)));
 		}
 		
 		// Normalise the specified dataset
@@ -126,9 +126,9 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		}
 		
 		// Now get the Dataset and axis
-		Dataset dataDS = ((Dataset)data.get(name)).clone();
-		Dataset anglesDS = ((Dataset)data.get(anglesName)).clone();
-		Dataset energiesDS = ((Dataset)data.get(energiesName)).clone();
+		Dataset dataDS = DatasetFactory.createFromObject(data.get(name)).clone();
+		Dataset anglesDS = DatasetFactory.createFromObject(data.get(anglesName)).clone();
+		Dataset energiesDS = DatasetFactory.createFromObject(data.get(energiesName)).clone();
 		
 		// now check to see what the offsets are before calculating the conversions
 		double angleOffset = 0.0;
@@ -178,10 +178,10 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		
 		// No calculate the energies
 		// TODO could be optimised
-		DoubleDataset photonEnergyDS = DoubleDataset.ones(energyRegion.getShape()).imultiply(photonEnergy);
-		DoubleDataset workFunctionDS = DoubleDataset.ones(energyRegion.getShape()).imultiply(workFunction);
+		Dataset photonEnergyDS = DatasetFactory.zeros(energyRegion.getShape(), Dataset.FLOAT64).fill(energyRegion.getShape()).imultiply(photonEnergy);
+		Dataset workFunctionDS = DatasetFactory.zeros(energyRegion.getShape(), Dataset.FLOAT64).fill(workFunction);
 		
-		DoubleDataset bindingEnergy = DoubleDataset.ones(energyRegion.getShape()).imultiply(0);
+		Dataset bindingEnergy = DatasetFactory.zeros(energyRegion.getShape(), Dataset.FLOAT64);
 		bindingEnergy.iadd(photonEnergyDS);
 		bindingEnergy.isubtract(workFunctionDS);
 		//TODO add in the functional part of this calculation

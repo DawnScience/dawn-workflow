@@ -28,6 +28,7 @@ import org.eclipse.dawnsci.analysis.api.dataset.Slice;
 import org.eclipse.dawnsci.analysis.api.fitting.functions.IParameter;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
 import org.eclipse.dawnsci.analysis.dataset.impl.IndexIterator;
 import org.eclipse.dawnsci.analysis.dataset.impl.Maths;
@@ -251,7 +252,7 @@ AbstractDataMessageTransformer {
 
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (Dataset) data.get(key));
+			result.addList(key, DatasetFactory.createFromObject(data.get(key)));
 		}
 
 		Map<String, AFunction> functions = null;
@@ -270,19 +271,19 @@ AbstractDataMessageTransformer {
 		String anglesAxis = anglesAxisName.getExpression();
 		Integer fitDim = Integer.parseInt(fitDirection.getExpression());
 
-		Dataset dataDS = ((Dataset) data.get(dataset)).clone();
+		Dataset dataDS = DatasetFactory.createFromObject(data.get(dataset)).clone();
 		int[] shape = dataDS.getShape();
 		AFunction fitFunction = functions.get(function);
 		Dataset xAxisDS = null;
 		if (data.containsKey(xAxis)) {
-			xAxisDS = ((Dataset) data.get(xAxis)).clone();
+			xAxisDS = DatasetFactory.createFromObject(data.get(xAxis)).clone();
 		} else {
 			xAxisDS = DoubleDataset.createRange(shape[fitDim], 0, -1);
 		}
 		
 		Dataset anglesAxisDS = null;
 		if (data.containsKey(anglesAxis)) {
-			anglesAxisDS = ((Dataset) data.get(anglesAxis)).clone();
+			anglesAxisDS = DatasetFactory.createFromObject(data.get(anglesAxis)).clone();
 		} else {
 			anglesAxisDS = DoubleDataset.createRange(shape[Math.abs(fitDim-1)], 0, -1);
 		}

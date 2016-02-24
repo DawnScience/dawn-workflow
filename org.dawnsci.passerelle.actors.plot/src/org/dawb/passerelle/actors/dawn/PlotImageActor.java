@@ -24,6 +24,7 @@ import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.roi.EllipticalFitROI;
 import org.eclipse.dawnsci.analysis.dataset.roi.EllipticalROI;
 import org.eclipse.dawnsci.analysis.dataset.roi.LinearROI;
@@ -162,14 +163,14 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 		final DataMessageComponent mc = MessageUtils.copy(cache);
 
 		try {
-			Dataset aData = ((Dataset)data.get(dataName));
+			Dataset aData = DatasetFactory.createFromObject(data.get(dataName));
 			//aData.setName(dataName);
 			if(aData != null){
 				if (plotMode.equals(PlottingMode.ONED.toString())) {
 					if(xaxisName.equals("")) {
 						SDAPlotter.plot(plotName, aData);
-					} else {						
-						Dataset xAxis = (Dataset)data.get(xaxisName);
+					} else {
+						Dataset xAxis = DatasetFactory.createFromObject(data.get(xaxisName));
 						SDAPlotter.plot(plotName, xAxis, new IDataset[] {aData}, xAxis.getName(), aData.getName() );
 					}
 					
@@ -192,7 +193,8 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					if(xaxisName.equals("")||(yaxisName.equals("")))
 						SDAPlotter.imagePlot(plotName, aData);
 					else{
-						SDAPlotter.imagePlot(plotName, (Dataset)data.get(xaxisName), ((Dataset)data.get(yaxisName)), aData);
+						SDAPlotter.imagePlot(plotName, DatasetFactory.createFromObject(data.get(xaxisName)),
+								DatasetFactory.createFromObject(data.get(yaxisName)), aData);
 					}
 				} else if (plotMode.equals(PlottingMode.SCATTER2D.toString())) {
 //					if(xaxisName.equals("")||(yaxisName.equals("")))
@@ -216,7 +218,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 					if(xaxisName.equals("")||(yaxisName.equals("")))
 						SDAPlotter.surfacePlot(plotName, aData);
 					else
-						SDAPlotter.surfacePlot(plotName, (Dataset)data.get(xaxisName), ((Dataset)data.get(yaxisName)), aData);
+						SDAPlotter.surfacePlot(plotName, DatasetFactory.createFromObject(data.get(xaxisName)), DatasetFactory.createFromObject(data.get(yaxisName)), aData);
 
 				} else if (plotMode.equals(PlottingMode.MULTI2D.toString())) {
 //					if(xaxisName.equals("")||(yaxisName.equals("")))
@@ -237,7 +239,7 @@ public class PlotImageActor	extends AbstractDataMessageTransformer{
 				
 				@Override
 				public void run() {
-					int[] maxPos = ((Dataset)data.get(dataName)).maxPos();
+					int[] maxPos = DatasetFactory.createFromObject(data.get(dataName)).maxPos();
 					double width = maxPos[0];
 					double height = maxPos[1];
 					myROI = new RectangularROI(width, height/2, 0);

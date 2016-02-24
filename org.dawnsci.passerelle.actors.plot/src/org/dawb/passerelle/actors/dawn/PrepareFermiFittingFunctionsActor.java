@@ -19,6 +19,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.ParameterUtils;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
 import org.eclipse.dawnsci.analysis.dataset.impl.Maths;
 
@@ -63,12 +64,12 @@ public class PrepareFermiFittingFunctionsActor extends
 		String dataset = datasetName.getExpression();
 		String xAxis = xAxisName.getExpression();
 		
-		Dataset dataDS = ((Dataset) data.get(dataset)).clone();
+		Dataset dataDS = DatasetFactory.createFromObject(data.get(dataset)).clone();
 		int[] shape = dataDS.getShape();
 		
 		Dataset xAxisDS = null;
 		if (data.containsKey(xAxis)) {
-			xAxisDS = ((Dataset) data.get(xAxis)).clone();
+			xAxisDS = DatasetFactory.createFromObject(data.get(xAxis)).clone();
 		} else {
 			xAxisDS = DoubleDataset.createRange(shape[0], 0, -1);
 		}
@@ -84,13 +85,13 @@ public class PrepareFermiFittingFunctionsActor extends
 		FermiGauss fg = new FermiGauss();
 		
 		// Mu
-		double min = (Double)dataDS.min(true);
-		double height = (Double)dataDS.max(true) - (Double)dataDS.min(true);
+		double min = dataDS.min(true).doubleValue();
+		double height = dataDS.max(true).doubleValue() - min;
 		int crossing = Maths.abs(Maths.subtract(dataDS, (min+(height/2.0)))).minPos()[0];
 
 		fg.getParameter(0).setValue(xAxisDS.getDouble(crossing));
-		fg.getParameter(0).setLowerLimit((Double)xAxisDS.min(true));
-		fg.getParameter(0).setUpperLimit((Double)xAxisDS.max(true));
+		fg.getParameter(0).setLowerLimit(xAxisDS.min(true).doubleValue());
+		fg.getParameter(0).setUpperLimit(xAxisDS.max(true).doubleValue());
 		
 		// Temperature
 		fg.getParameter(1).setValue(temperatureValue);
@@ -111,7 +112,7 @@ public class PrepareFermiFittingFunctionsActor extends
 		// Constant
 		fg.getParameter(4).setValue(min);
 		fg.getParameter(4).setLowerLimit(0.0);
-		fg.getParameter(4).setUpperLimit((Double)dataDS.min(true)*2);
+		fg.getParameter(4).setUpperLimit(min*2);
 		
 		// FWHM
 		fg.getParameter(5).setValue(0.001);

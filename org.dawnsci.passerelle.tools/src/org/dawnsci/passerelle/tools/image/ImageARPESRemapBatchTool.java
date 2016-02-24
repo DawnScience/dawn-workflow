@@ -15,6 +15,7 @@ import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.AbstractBatchTool;
 import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
 import org.eclipse.dawnsci.analysis.dataset.impl.Maths;
 import org.eclipse.dawnsci.analysis.dataset.impl.function.MapToRotatedCartesian;
@@ -36,24 +37,24 @@ public class ImageARPESRemapBatchTool extends AbstractBatchTool {
 
 		final UserPlotBean upb = (UserPlotBean)bean.getToolData();
 		final ROIBase roi = (ROIBase) upb.getRois().get("mapping_roi");
-		final Dataset kParallel = (Dataset) upb.getData().get("kParallel");
-		final Dataset kParaAxis = (Dataset) upb.getData().get("kParaAxis");
+		final Dataset kParallel = DatasetFactory.createFromObject(upb.getData().get("kParallel"));
+		final Dataset kParaAxis = DatasetFactory.createFromObject(upb.getData().get("kParaAxis"));
 		Dataset auxiliaryData = null;
 		if (upb.getData().containsKey("auxiliaryData")) {
-			auxiliaryData = (Dataset) upb.getData().get("auxiliaryData");
+			auxiliaryData = DatasetFactory.createFromObject(upb.getData().get("auxiliaryData"));
 		}
-		final Dataset remapped_energy = (Dataset) upb.getData().get("remapped_energy");
+		final Dataset remapped_energy = DatasetFactory.createFromObject(upb.getData().get("remapped_energy"));
 		
 		final List<IDataset> dataList = getPlottableData(bean);
 		if (dataList==null || dataList.size()<1) throw new Exception("No data found for tool "+getBatchToolId());
 
-		final Dataset data = (Dataset)dataList.get(0);
+		final IDataset data = dataList.get(0);
 		if (data.getRank()!=2) throw new Exception("Can only use "+getBatchToolId()+" with 2D data!");
 
 		List<IDataset> originalAxes = getAxes(bean);
 		//TODO put in some checking here.
 
-		Dataset correctedData = data;
+		IDataset correctedData = data;
 		List<IDataset> correctedAxes = originalAxes;
 		
 		// Do the processing here if required

@@ -20,6 +20,7 @@ import org.eclipse.dawnsci.analysis.api.fitting.functions.IDataBasedFunction;
 import org.eclipse.dawnsci.analysis.api.fitting.functions.IFunction;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
 
 import ptolemy.data.expr.StringParameter;
@@ -77,7 +78,7 @@ public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 		String functionString = functionName.getExpression();
 
 		// Get the actual objects
-		Dataset xAxisDS = ((Dataset)data.get(xAxis)).clone();
+		Dataset xAxisDS = DatasetFactory.createFromObject(data.get(xAxis)).clone();
 		AFunction function = functions.get(functionString);
 		
 		populateDataBasedFunctions(data, function);
@@ -109,8 +110,8 @@ public class FunctionToDatasetActor extends AbstractDataMessageTransformer {
 
 			String sdName = seedDataName.getExpression();
 			String sdAxis = seedAxisName.getExpression();
-			Dataset seedDataset = ((Dataset)data.get(sdName)).clone();
-			Dataset seedAxisDataset = ((Dataset)data.get(sdAxis)).clone();
+			Dataset seedDataset = DatasetFactory.createFromObject(data.get(sdName)).clone();
+			Dataset seedAxisDataset = DatasetFactory.createFromObject(data.get(sdAxis)).clone();
 			dbFunction.setData(seedAxisDataset, seedDataset);
 		}
 	}

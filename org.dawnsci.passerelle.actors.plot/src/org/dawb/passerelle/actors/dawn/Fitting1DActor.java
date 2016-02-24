@@ -21,6 +21,7 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.eclipse.dawnsci.analysis.api.dataset.Slice;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
 import org.eclipse.dawnsci.analysis.dataset.impl.IndexIterator;
 
@@ -76,7 +77,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (Dataset) data.get(key));
+			result.addList(key, DatasetFactory.createFromObject(data.get(key)));
 		}
 		
 		Map<String, AFunction> functions = null;
@@ -92,12 +93,12 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		String xAxis = xAxisName.getExpression();
 		Integer fitDim = Integer.parseInt(fitDirection.getExpression());
 		
-		Dataset dataDS = ((Dataset)data.get(dataset)).clone();
+		Dataset dataDS = DatasetFactory.createFromObject(data.get(dataset)).clone();
 		AFunction fitFunction = functions.get(function);
 		Dataset xAxisDS = null;
 		int[] shape = dataDS.getShape();
 		if (data.containsKey(xAxis)) {
-			xAxisDS = ((Dataset)data.get(xAxis)).clone();
+			xAxisDS = DatasetFactory.createFromObject(data.get(xAxis)).clone();
 		} else {
 			xAxisDS = DoubleDataset.createRange(shape[fitDim],0,-1);
 		}

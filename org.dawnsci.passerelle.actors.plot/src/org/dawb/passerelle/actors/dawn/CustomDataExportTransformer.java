@@ -36,12 +36,18 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.hdf5.HierarchicalDataFactory;
 import org.eclipse.dawnsci.hdf5.IHierarchicalDataFile;
 import org.eclipse.dawnsci.hdf5.Nexus;
 import org.eclipse.swt.SWT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.isencia.passerelle.actor.ProcessingException;
+import com.isencia.passerelle.actor.TerminationException;
+import com.isencia.passerelle.util.ptolemy.ResourceParameter;
+import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 
 import ptolemy.data.expr.Parameter;
 import ptolemy.data.expr.StringParameter;
@@ -52,11 +58,6 @@ import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
 import uk.ac.diamond.scisoft.analysis.io.DataHolder;
 import uk.ac.diamond.scisoft.analysis.io.JavaImageSaver;
-
-import com.isencia.passerelle.actor.ProcessingException;
-import com.isencia.passerelle.actor.TerminationException;
-import com.isencia.passerelle.util.ptolemy.ResourceParameter;
-import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 
 /**
  * NOTE This is not a sink because it does output the file path.
@@ -368,7 +369,7 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 				dh.addDataset(set.getName(), set);
 				saver.saveFile(dh);
 
-				ret.addList("image"+ifound, (Dataset)set);
+				ret.addList("image"+ifound, set);
 				++ifound;
 
 				wroteSomething = true;
@@ -446,10 +447,10 @@ public class CustomDataExportTransformer extends AbstractDataMessageTransformer 
 			String axis3SaveName = ret.getScalar(AXIS3_SAVENAME);
 			String dataSaveName = ret.getScalar(DATA_SAVENAME);
 
-			Dataset xAxisData = (Dataset)data.get(axis1name);
-			Dataset yAxisData = (Dataset)data.get(axis2name);
-			Dataset zAxisData = (Dataset)data.get(axis3name);
-			Dataset myData = (Dataset)data.get(dataName);
+			Dataset xAxisData = DatasetFactory.createFromObject(data.get(axis1name));
+			Dataset yAxisData = DatasetFactory.createFromObject(data.get(axis2name));
+			Dataset zAxisData = DatasetFactory.createFromObject(data.get(axis3name));
+			Dataset myData = DatasetFactory.createFromObject(data.get(dataName));
 
 			if(myData != null){
 				final String dataset = file.appendDataset(dataSaveName,  myData, parent);

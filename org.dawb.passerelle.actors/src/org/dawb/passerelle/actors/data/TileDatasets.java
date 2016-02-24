@@ -114,19 +114,20 @@ public class TileDatasets extends AbstractDataMessageTransformer {
 					final Number num = (Number)NumberUtils.getNumberIfParses(scalar.get(name));
 					// Intentionally throws cast exception if is not number!
 					// Use fill here, as much faster than tile...
+					Dataset data;
 					if (num instanceof Integer) {
-						set = new IntegerDataset(tileSize);
+						data = new IntegerDataset(tileSize);
 					} else {
-						set = new DoubleDataset(tileSize);
+						data = new DoubleDataset(tileSize);
 					}
-				    ((Dataset)set).fill(num);
-					tiled.put(name, set);
+				    data.fill(num);
+					tiled.put(name, data);
                     continue;
 				}
 				
 				if (set==null) createDataMessageException("Cannot tile variable '"+name+"'!", null);
 				
-				final IDataset  tile = DatasetUtils.tile(set, tileSize);
+				final Dataset  tile = DatasetUtils.tile(set, tileSize);
 				tiled.put(name, tile);
 
 			}

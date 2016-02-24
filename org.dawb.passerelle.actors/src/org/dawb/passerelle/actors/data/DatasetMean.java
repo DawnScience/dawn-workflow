@@ -8,13 +8,14 @@ import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
+
+import com.isencia.passerelle.actor.ProcessingException;
 
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
-
-import com.isencia.passerelle.actor.ProcessingException;
 
 public class DatasetMean extends AbstractDataMessageTransformer {
 
@@ -47,14 +48,14 @@ public class DatasetMean extends AbstractDataMessageTransformer {
 
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (Dataset) data.get(key));
+			result.addList(key, DatasetFactory.createFromObject(data.get(key)));
 		}
 
 		// get the required datasets
 		String dataset = dataName.getExpression();
 		int axis = Integer.parseInt(meanDirection.getExpression());
 
-		Dataset dataDS = ((Dataset) data.get(dataset)).clone();
+		Dataset dataDS = DatasetFactory.createFromObject(data.get(dataset)).clone();
 
 		Dataset mean = dataDS.mean(axis);
 

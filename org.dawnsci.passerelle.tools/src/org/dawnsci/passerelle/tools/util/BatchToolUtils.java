@@ -17,7 +17,6 @@ import java.util.Map;
 
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
 
 
 /**
@@ -51,7 +50,7 @@ public class BatchToolUtils {
 		final List<String>    axes  = bean.getAxesNames();
 		if (axes==null) return null;
 		if (!bean.getData().containsKey(axes.get(0))) return null;
-		return (Dataset)bean.getData().get(axes.get(0));
+		return (IDataset)bean.getData().get(axes.get(0));
 	}
 
 	/**
@@ -80,11 +79,11 @@ public class BatchToolUtils {
 		return null;
 	}
 
-	private static Dataset getFirst2DDataset(Map<String, Serializable> data) {
+	private static IDataset getFirst2DDataset(Map<String, Serializable> data) {
 		for (String name : data.keySet()) {
 			Serializable d = data.get(name);
-			if (d instanceof Dataset) {
-				Dataset dd = (Dataset)d;
+			if (d instanceof IDataset) {
+				IDataset dd = (IDataset)d;
 				dd.squeeze();
 				final int rank = dd.getRank();
 				if (rank==2) return dd;
@@ -97,9 +96,9 @@ public class BatchToolUtils {
 		List<IDataset> ret = new ArrayList<IDataset>(7);
 		for (String name : data.keySet()) {
 			Serializable d = data.get(name);
-			if (d instanceof Dataset) {
-				final int rank = ((Dataset)d).getRank();
-				if (rank==1) ret.add( (Dataset)d );
+			if (d instanceof IDataset) {
+				final int rank = ((IDataset)d).getRank();
+				if (rank==1) ret.add( (IDataset)d );
 			}
 		}
 		return ret;

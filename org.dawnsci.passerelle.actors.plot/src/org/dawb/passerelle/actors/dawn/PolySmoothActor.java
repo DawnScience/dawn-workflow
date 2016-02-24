@@ -18,6 +18,7 @@ import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
@@ -61,7 +62,7 @@ public class PolySmoothActor extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (Dataset) data.get(key));
+			result.addList(key, DatasetFactory.createFromObject(data.get(key)));
 		}
 		
 		// get the required datasets
@@ -71,8 +72,8 @@ public class PolySmoothActor extends AbstractDataMessageTransformer {
 		int polyOrder = Integer.parseInt(polyOrderParam.getExpression());
 
 		
-		Dataset dataDS = ((Dataset)data.get(dataset)).clone();
-		Dataset xAxisDS = ((Dataset)data.get(xAxis)).clone();
+		Dataset dataDS = DatasetFactory.createFromObject(data.get(dataset)).clone();
+		Dataset xAxisDS = DatasetFactory.createFromObject(data.get(xAxis)).clone();
 		
 		
 		Dataset smoothed;

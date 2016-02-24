@@ -17,6 +17,7 @@ import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.MessageUtils;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.impl.Image;
 
 import ptolemy.data.expr.StringParameter;
@@ -66,7 +67,7 @@ public class ImageRegridActor extends AbstractDataMessageTransformer {
 		
 		// put all the datasets in for reprocessing
 		for (String key : data.keySet()) {
-			result.addList(key, (Dataset) data.get(key));
+			result.addList(key, DatasetFactory.createFromObject(data.get(key)));
 		}
 		
 		// get the required datasets
@@ -76,11 +77,11 @@ public class ImageRegridActor extends AbstractDataMessageTransformer {
 		String linearXAxis = linearXAxisName.getExpression();
 		String linearYAxis = linearYAxisName.getExpression();
 
-		Dataset dataDS = ((Dataset)data.get(dataset)).clone();
-		Dataset xAxisGrid = ((Dataset)data.get(xAxisPositions)).clone();
-		Dataset yAxisGrid = ((Dataset)data.get(yAxisPositions)).clone();
-		Dataset xAxisLinear = ((Dataset)data.get(linearXAxis)).clone();
-		Dataset yAxisLinear = ((Dataset)data.get(linearYAxis)).clone();
+		Dataset dataDS = DatasetFactory.createFromObject(data.get(dataset)).clone();
+		Dataset xAxisGrid = DatasetFactory.createFromObject(data.get(xAxisPositions)).clone();
+		Dataset yAxisGrid = DatasetFactory.createFromObject(data.get(yAxisPositions)).clone();
+		Dataset xAxisLinear = DatasetFactory.createFromObject(data.get(linearXAxis)).clone();
+		Dataset yAxisLinear = DatasetFactory.createFromObject(data.get(linearYAxis)).clone();
 		
 		Dataset regrid = Image.regrid(dataDS, xAxisGrid, yAxisGrid, xAxisLinear, yAxisLinear);
 		
