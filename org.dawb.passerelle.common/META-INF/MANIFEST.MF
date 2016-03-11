@@ -40,5 +40,5 @@ Import-Package: com.isencia.sherpa.commons,
  org.eclipse.ui.intro.config,
  org.edna.pydev.extensions.utils,
  org.python.pydev.core;bundle-version="[3.6.0,3.6.1)",
- org.slf4j;version="[1.7.6,1.7.7)",
+ org.slf4j;version="[1.7.2,2.0.0)",
  ptolemy.actor.gui.style;version="7.0.1"

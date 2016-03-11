@@ -28,7 +28,7 @@ Import-Package: com.isencia.passerelle.workbench.model.launch,
  org.edna.pydev.extensions.utils,
  org.junit,
  org.junit.runner,
- org.slf4j;version="[1.7.6,1.7.7)",
+ org.slf4j;version="[1.7.2,2.0.0)",
  ptolemy.moml
 Export-Package: org.dawb.passerelle.actors.test,
  org.dawb.passerelle.actors.test.ui
