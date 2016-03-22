@@ -38,7 +38,7 @@ public class WorkflowPerspective implements IPerspectiveFactory {
 				
 		IFolderLayout navigatorFolder = layout.createFolder("navigator-folder", IPageLayout.LEFT, 0.22f, editorArea);
 		navigatorFolder.addView("org.eclipse.ui.navigator.ProjectExplorer");
-		navigatorFolder.addView("uk.ac.diamond.sda.navigator.views.FileView");
+		navigatorFolder.addView("org.dawnsci.fileviewer.FileViewer");
        
         IFolderLayout outlineFolder = layout.createFolder("outline-folder",IPageLayout.BOTTOM,0.6f,"navigator-folder");
         outlineFolder.addView(IPageLayout.ID_OUTLINE);
@@ -68,23 +68,4 @@ public class WorkflowPerspective implements IPerspectiveFactory {
         // Ensure that the run menu is visible
         layout.addActionSet(IDebugUIConstants.LAUNCH_ACTION_SET);
 	}
-
-	/**
-	 * Add fast views to the perspective.
-	 */
-	private void addFastViews(IPageLayout layout) {
-	}
-
-	/**
-	 * Add view shortcuts to the perspective.
-	 */
-	private void addViewShortcuts(IPageLayout layout) {
-	}
-
-	/**
-	 * Add perspective shortcuts to the perspective.
-	 */
-	private void addPerspectiveShortcuts(IPageLayout layout) {
-	}
-
 }
