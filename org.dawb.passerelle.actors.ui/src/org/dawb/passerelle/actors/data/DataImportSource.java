@@ -20,8 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import ncsa.hdf.object.Dataset;
-
 import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.SortingUtils;
@@ -82,6 +80,8 @@ import com.isencia.passerelle.util.ptolemy.StringChoiceParameter;
 import com.isencia.passerelle.util.ptolemy.StringMapParameter;
 import com.isencia.passerelle.workbench.model.utils.ModelUtils;
 import com.isencia.util.StringConvertor;
+
+import hdf.object.Dataset;
 
 /**
  * Reads a file or directory using LoaderFactory and makes the data available to subsequent nodes
