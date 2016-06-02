@@ -85,6 +85,7 @@
             class="org.dawb.passerelle.common.preferences.PreferenceInitializer">
       </initializer>
    </extension>
+   <!--
    <extension
          point="org.eclipse.ui.intro.configExtension">
       <configExtension
@@ -96,6 +97,7 @@
             content="intro/introContribution.xml">
       </configExtension>
    </extension>
+   -->
    <extension
          point="org.dawnsci.introRegister">
       <introPageRegister
