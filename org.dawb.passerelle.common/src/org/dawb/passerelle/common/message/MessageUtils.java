@@ -19,8 +19,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.dawb.common.util.ExpressionUtils;
 import org.dawb.passerelle.common.DatasetConstants;
+import org.dawnsci.jexl.ExpressionUtils;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
