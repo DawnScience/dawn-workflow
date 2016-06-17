@@ -14,7 +14,12 @@ Require-Bundle: org.eclipse.core.runtime,
  ptolemy.core;bundle-version="7.0.1",
  com.isencia.passerelle.resources;bundle-version="1.0.0",
  org.eclipse.gmf.runtime.common.core;bundle-version="1.7.0",
- org.dawnsci.jexl
+ org.dawnsci.jexl,
+ com.isencia.sherpa.commons.reduced;bundle-version="6.2.5",
+ ptolemy.gui;bundle-version="7.0.1",
+ com.isencia.passerelle.commons;bundle-version="8.7.0",
+ com.springsource.org.apache.commons.digester;bundle-version="1.8.1",
+ org.eclipse.core.variables;bundle-version="3.2.800"
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Export-Package: org.dawb.passerelle.common,
@@ -25,20 +30,4 @@ Export-Package: org.dawb.passerelle.common,
  org.dawb.passerelle.common.utils
 Bundle-Vendor: ESRF
 Bundle-ClassPath: .
-Import-Package: com.isencia.sherpa.commons,
- com.isencia.util,
- com.python.pydev.debug.remote.client_api;bundle-version="3.6.0",
- org.apache.commons.digester.substitution,
- org.dawb.common.services,
- org.dawb.common.util,
- org.dawb.common.util.eclipse,
- org.dawb.common.util.io,
- org.dawb.common.util.xml,
- org.eclipse.core.filesystem,
- org.eclipse.core.variables,
- org.eclipse.debug.ui,
- org.eclipse.ui.console,
- org.eclipse.ui.intro.config,
- org.python.pydev.core;bundle-version="3.6.0",
- org.slf4j;version="[1.7.2,2.0.0)",
- ptolemy.actor.gui.style;version="7.0.1"
+Import-Package: org.slf4j;version="[1.7.2,2.0.0)"
