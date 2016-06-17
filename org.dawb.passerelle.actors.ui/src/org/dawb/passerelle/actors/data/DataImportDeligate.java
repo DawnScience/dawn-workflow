@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.io.FileUtils;
+import org.dawb.common.util.python.PythonUtils;
 import org.dawb.passerelle.common.message.AbstractDatasetProvider;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.common.message.IVariableProvider;

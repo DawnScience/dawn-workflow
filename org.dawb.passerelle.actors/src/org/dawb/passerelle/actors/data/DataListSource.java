@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.dawb.common.python.PythonUtils;
+import org.dawb.common.util.python.PythonUtils;
 import org.dawb.passerelle.common.DatasetConstants;
 import org.dawb.passerelle.common.actors.AbstractDataMessageSource;
 import org.dawb.passerelle.common.message.DataMessageException;

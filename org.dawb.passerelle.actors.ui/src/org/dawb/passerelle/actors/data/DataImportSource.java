@@ -20,9 +20,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.dawb.common.python.PythonUtils;
 import org.dawb.common.util.io.FileUtils;
 import org.dawb.common.util.io.SortingUtils;
+import org.dawb.common.util.python.PythonUtils;
 import org.dawb.passerelle.actors.data.config.ISliceInformationProvider;
 import org.dawb.passerelle.actors.data.config.SliceParameter;
 import org.dawb.passerelle.common.DatasetConstants;
