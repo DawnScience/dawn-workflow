@@ -27,16 +27,10 @@ import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent.VALUE_TYPE;
 import org.eclipse.dawnsci.analysis.api.metadata.IMetadata;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
-import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import ptolemy.actor.CompositeActor;
-import ptolemy.data.expr.StringParameter;
-import ptolemy.kernel.util.Attribute;
-import ptolemy.kernel.util.NamedObj;
-import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
-import uk.ac.diamond.scisoft.analysis.io.MetaDataAdapter;
 
 import com.isencia.passerelle.message.ManagedMessage;
 import com.isencia.passerelle.message.MessageException;
@@ -44,6 +38,13 @@ import com.isencia.passerelle.message.MessageFactory;
 import com.isencia.passerelle.message.internal.ErrorMessageContainer;
 import com.isencia.passerelle.resources.util.ResourceUtils;
 import com.isencia.util.ArrayUtil;
+
+import ptolemy.actor.CompositeActor;
+import ptolemy.data.expr.StringParameter;
+import ptolemy.kernel.util.Attribute;
+import ptolemy.kernel.util.NamedObj;
+import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
+import uk.ac.diamond.scisoft.analysis.io.MetaDataAdapter;
 /**
  * Class to encapsulate messages and data methods sent around the network.
  * 
@@ -183,24 +184,8 @@ public class MessageUtils {
 			    dims    = new int[strDims.length];
 				for (int i = 0; i < strDims.length; i++) dims[i] = Integer.parseInt(strDims[i]);
 			}
-			final IDataset set;
-			// We can deal with doubles or Numbers
-			if (data instanceof double[]) {
-				set = new  DoubleDataset((double[])data, dims);
-			} else if (data instanceof Double[]) {
-				final Double[] dD = (Double[])data;
-				final double[] dd = new double[dD.length];
-				for (int i = 0; i < dd.length; i++) dd[i] = dD[i].doubleValue();
-				set = new  DoubleDataset(dd, dims);
-			} else if (data instanceof Number[]) {
-				final Number[] nD = (Number[])data;
-				final double[] dd = new double[nD.length];
-				for (int i = 0; i < dd.length; i++) dd[i] = nD[i].doubleValue();
-				set = new  DoubleDataset(dd, dims);
-			} else {
-				throw new Exception("Cannot process data of type "+data.getClass());
-			}
-			
+			final IDataset set = DatasetFactory.createFromObject(Dataset.FLOAT64, data, dims);
+
 			String name = message.getBodyHeader("name")[0];
 			if (name==null) name = "data";
 			

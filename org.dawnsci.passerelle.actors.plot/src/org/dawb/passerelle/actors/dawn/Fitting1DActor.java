@@ -100,7 +100,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		if (data.containsKey(xAxis)) {
 			xAxisDS = DatasetFactory.createFromObject(data.get(xAxis)).clone();
 		} else {
-			xAxisDS = DoubleDataset.createRange(shape[fitDim],0,-1);
+			xAxisDS = DatasetFactory.createRange(DoubleDataset.class, shape[fitDim],0,-1);
 		}
 		
 		// get the general parameters from the first fit.
@@ -117,16 +117,16 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		for(int i = 0; i < fitFunction.getNoOfParameters(); i++) {
 			int[] lshape = shape.clone();
 			lshape[fitDim] = 1;
-			DoubleDataset parameterDS = new DoubleDataset(lshape);
+			DoubleDataset parameterDS = DatasetFactory.zeros(DoubleDataset.class, lshape);
 			parameterDS.squeeze();
 			parametersDS.add(parameterDS);
 		}
 		
-		Dataset functionsDS = new DoubleDataset(shape);
+		Dataset functionsDS = DatasetFactory.zeros(DoubleDataset.class, shape);
 		
 		int[] starts = shape.clone();
 		starts[fitDim] = 1;
-		DoubleDataset ind = DoubleDataset.ones(starts);
+		DoubleDataset ind = DatasetFactory.ones(DoubleDataset.class, starts);
 		IndexIterator iter = ind.getIterator(true);
 		int[] pos = iter.getPos();
 		boolean first = true;

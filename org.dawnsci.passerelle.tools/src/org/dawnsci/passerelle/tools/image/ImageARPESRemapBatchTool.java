@@ -66,7 +66,7 @@ public class ImageARPESRemapBatchTool extends AbstractBatchTool {
 			
 			Dataset differenceInts = Maths.floor(Maths.divide(differences, meanSteps));
 			
-			correctedData = new DoubleDataset(data.getShape());
+			correctedData = DatasetFactory.zeros(DoubleDataset.class, data.getShape());
 			for(int y = 0; y < correctedData.getShape()[0]; y++) {
 				int min = Math.max(differenceInts.getInt(y), 0);
 				int max = Math.min(correctedData.getShape()[1]+differenceInts.getInt(y), correctedData.getShape()[1]);

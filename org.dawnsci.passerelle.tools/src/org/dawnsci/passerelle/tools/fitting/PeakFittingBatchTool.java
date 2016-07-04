@@ -16,6 +16,7 @@ import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.fitting.functions.IPeak;
 import org.eclipse.dawnsci.analysis.api.monitor.IMonitor;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
 import org.eclipse.dawnsci.analysis.dataset.impl.DatasetUtils;
 import org.eclipse.dawnsci.analysis.dataset.impl.IntegerDataset;
 import org.eclipse.dawnsci.analysis.dataset.roi.LinearROI;
@@ -65,7 +66,7 @@ public class PeakFittingBatchTool extends AbstractBatchTool {
 		final List<IDataset> axes = getAxes(bean);
 		Dataset x  = axes!=null && !axes.isEmpty()
 				           ? DatasetUtils.convertToDataset(axes.get(0))
-				           : IntegerDataset.createRange(data.getSize());
+				           : DatasetFactory.createRange(IntegerDataset.class, data.getSize());
 
 		Dataset[] a= Generic1DFitter.selectInRange(x,data,p1[0],p2[0]);
 		x = a[0]; Dataset y=a[1];
