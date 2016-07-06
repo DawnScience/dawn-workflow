@@ -4,13 +4,10 @@ Bundle-Name: Common
 Bundle-SymbolicName: org.dawb.passerelle.common;singleton:=true
 Bundle-Version: 1.4.1.qualifier
 Bundle-Activator: org.dawb.passerelle.common.Activator
-Require-Bundle: org.eclipse.core.runtime,
- org.eclipse.core.resources;bundle-version="3.5.2",
- com.isencia.passerelle.engine,
+Require-Bundle: com.isencia.passerelle.engine,
  org.dawb.common.util,
  org.dawb.workbench.jmx;bundle-version="0.8.2",
  uk.ac.diamond.scisoft.analysis,
- org.eclipse.dawnsci.analysis.api;bundle-version="1.0.0",
  ptolemy.core;bundle-version="7.0.1",
  com.isencia.passerelle.resources;bundle-version="1.0.0",
  org.eclipse.gmf.runtime.common.core;bundle-version="1.7.0",
