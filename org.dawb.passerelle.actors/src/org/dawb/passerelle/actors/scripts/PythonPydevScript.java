@@ -35,7 +35,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.api.rpc.AnalysisRpcException;
 import org.eclipse.dawnsci.analysis.api.rpc.AnalysisRpcRemoteException;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.january.dataset.Dataset;
 import org.python.pydev.core.IInterpreterInfo;
 import org.python.pydev.shared_core.structure.Tuple;
 import org.python.pydev.shared_core.structure.Tuple3;

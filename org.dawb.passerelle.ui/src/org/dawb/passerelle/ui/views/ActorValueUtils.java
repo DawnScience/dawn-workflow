@@ -18,9 +18,9 @@ import java.util.Map.Entry;
 import org.dawb.passerelle.common.message.IVariable;
 import org.dawb.passerelle.ui.views.ActorValueObject.ActorValueDataType;
 import org.dawb.workbench.jmx.UserDebugBean;
-import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
-import org.eclipse.dawnsci.analysis.api.dataset.ILazyDataset;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
+import org.eclipse.january.dataset.IDataset;
+import org.eclipse.january.dataset.ILazyDataset;
 
 class ActorValueUtils {
 

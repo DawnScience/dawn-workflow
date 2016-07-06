@@ -27,7 +27,7 @@ import org.dawb.passerelle.actors.scripts.PythonScript;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dawnsci.analysis.api.io.ILoaderService;
-import org.eclipse.dawnsci.analysis.api.metadata.IMetadata;
+import org.eclipse.january.metadata.IMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

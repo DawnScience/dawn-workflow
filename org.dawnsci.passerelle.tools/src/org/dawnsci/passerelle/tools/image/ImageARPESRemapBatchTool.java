@@ -13,14 +13,14 @@ import java.util.List;
 
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.AbstractBatchTool;
-import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
-import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.Maths;
 import org.eclipse.dawnsci.analysis.dataset.impl.function.MapToRotatedCartesian;
 import org.eclipse.dawnsci.analysis.dataset.roi.ROIBase;
 import org.eclipse.dawnsci.analysis.dataset.roi.RectangularROI;
+import org.eclipse.january.dataset.Dataset;
+import org.eclipse.january.dataset.DatasetFactory;
+import org.eclipse.january.dataset.DoubleDataset;
+import org.eclipse.january.dataset.IDataset;
+import org.eclipse.january.dataset.Maths;
 
 import ptolemy.kernel.util.NamedObj;
 

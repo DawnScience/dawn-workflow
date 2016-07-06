@@ -22,13 +22,13 @@ import java.util.Map;
 import org.dawb.passerelle.common.DatasetConstants;
 import org.dawnsci.jexl.ExpressionUtils;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent.VALUE_TYPE;
-import org.eclipse.dawnsci.analysis.api.metadata.IMetadata;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
+import org.eclipse.january.dataset.Dataset;
+import org.eclipse.january.dataset.DatasetFactory;
+import org.eclipse.january.dataset.IDataset;
+import org.eclipse.january.metadata.IMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
