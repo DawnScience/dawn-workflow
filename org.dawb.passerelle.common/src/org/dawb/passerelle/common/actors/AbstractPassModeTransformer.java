@@ -28,7 +28,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -179,7 +178,7 @@ public abstract class AbstractPassModeTransformer extends Actor implements IVari
 		
 		if (dataSetNaming.getVisibility()!=Settable.NONE) {
 			if (NAME_MODE.get(2).equals(dataSetNaming.getExpression())) {
-				ret.add(new Variable(getName(), VARIABLE_TYPE.ARRAY, new AbstractDatasetProvider(), Dataset.class));
+				ret.add(new Variable(getName(), VARIABLE_TYPE.ARRAY, new AbstractDatasetProvider(), IDataset.class));
 			}
 		}
 		return ret;

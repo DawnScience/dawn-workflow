@@ -29,6 +29,8 @@ import org.dawb.passerelle.jython.ActorInterpreterUtils;
 import org.dawnsci.python.rpc.PythonService;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
+import org.eclipse.dawnsci.analysis.api.rpc.AnalysisRpcException;
+import org.eclipse.dawnsci.analysis.api.rpc.AnalysisRpcRemoteException;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
 import org.python.core.PyObject;
 import org.python.core.PyProxy;
@@ -42,8 +44,6 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
-import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcException;
-import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcRemoteException;
 import uk.ac.diamond.scisoft.python.JythonInterpreterUtils;
 
 import com.isencia.passerelle.actor.v5.Actor;

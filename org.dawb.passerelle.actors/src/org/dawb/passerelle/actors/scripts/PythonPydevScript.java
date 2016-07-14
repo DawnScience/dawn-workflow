@@ -33,6 +33,8 @@ import org.dawnsci.python.rpc.PythonRunScriptService;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
+import org.eclipse.dawnsci.analysis.api.rpc.AnalysisRpcException;
+import org.eclipse.dawnsci.analysis.api.rpc.AnalysisRpcRemoteException;
 import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
 import org.python.pydev.core.IInterpreterInfo;
 import org.python.pydev.shared_core.structure.Tuple;
@@ -46,8 +48,6 @@ import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.Attribute;
 import ptolemy.kernel.util.IllegalActionException;
-import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcException;
-import uk.ac.diamond.scisoft.analysis.rpc.AnalysisRpcRemoteException;
 
 import com.isencia.passerelle.actor.v5.Actor;
 import com.isencia.passerelle.util.ptolemy.ResourceParameter;
