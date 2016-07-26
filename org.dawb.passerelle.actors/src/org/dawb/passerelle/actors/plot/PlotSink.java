@@ -13,10 +13,10 @@ import java.util.List;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageSink;
 import org.dawb.passerelle.common.message.MessageUtils;
-import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
+import org.eclipse.january.dataset.Dataset;
+import org.eclipse.january.dataset.DatasetFactory;
+import org.eclipse.january.dataset.IDataset;
 
 import ptolemy.data.BooleanToken;
 import ptolemy.data.expr.Parameter;

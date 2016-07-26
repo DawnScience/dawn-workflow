@@ -18,12 +18,12 @@ import java.util.Map;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.DataMessageException;
 import org.dawb.passerelle.common.message.MessageUtils;
-import org.eclipse.dawnsci.analysis.api.dataset.Slice;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
-import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.IndexIterator;
+import org.eclipse.january.dataset.Dataset;
+import org.eclipse.january.dataset.DatasetFactory;
+import org.eclipse.january.dataset.DoubleDataset;
+import org.eclipse.january.dataset.IndexIterator;
+import org.eclipse.january.dataset.Slice;
 
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
@@ -100,7 +100,7 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		if (data.containsKey(xAxis)) {
 			xAxisDS = DatasetFactory.createFromObject(data.get(xAxis)).clone();
 		} else {
-			xAxisDS = DoubleDataset.createRange(shape[fitDim],0,-1);
+			xAxisDS = DatasetFactory.createRange(DoubleDataset.class, shape[fitDim],0,-1);
 		}
 		
 		// get the general parameters from the first fit.
@@ -117,16 +117,16 @@ public class Fitting1DActor extends AbstractDataMessageTransformer {
 		for(int i = 0; i < fitFunction.getNoOfParameters(); i++) {
 			int[] lshape = shape.clone();
 			lshape[fitDim] = 1;
-			DoubleDataset parameterDS = new DoubleDataset(lshape);
+			DoubleDataset parameterDS = DatasetFactory.zeros(DoubleDataset.class, lshape);
 			parameterDS.squeeze();
 			parametersDS.add(parameterDS);
 		}
 		
-		Dataset functionsDS = new DoubleDataset(shape);
+		Dataset functionsDS = DatasetFactory.zeros(DoubleDataset.class, shape);
 		
 		int[] starts = shape.clone();
 		starts[fitDim] = 1;
-		DoubleDataset ind = DoubleDataset.ones(starts);
+		DoubleDataset ind = DatasetFactory.ones(DoubleDataset.class, starts);
 		IndexIterator iter = ind.getIterator(true);
 		int[] pos = iter.getPos();
 		boolean first = true;

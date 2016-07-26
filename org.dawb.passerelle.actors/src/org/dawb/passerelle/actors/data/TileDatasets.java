@@ -19,20 +19,19 @@ import org.dawb.common.util.list.PrimitiveArrayEncoder;
 import org.dawb.common.util.text.NumberUtils;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.MessageUtils;
-import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.DatasetUtils;
-import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.IntegerDataset;
+import org.eclipse.january.dataset.Dataset;
+import org.eclipse.january.dataset.DatasetFactory;
+import org.eclipse.january.dataset.DatasetUtils;
+import org.eclipse.january.dataset.IDataset;
+
+import com.isencia.passerelle.actor.ProcessingException;
 
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import ptolemy.kernel.util.Settable;
-
-import com.isencia.passerelle.actor.ProcessingException;
 
 /**
  * A tile designed to work in a similar way to the numpy tile:
@@ -116,9 +115,9 @@ public class TileDatasets extends AbstractDataMessageTransformer {
 					// Use fill here, as much faster than tile...
 					Dataset data;
 					if (num instanceof Integer) {
-						data = new IntegerDataset(tileSize);
+						data = DatasetFactory.zeros(tileSize, Dataset.INT32);
 					} else {
-						data = new DoubleDataset(tileSize);
+						data = DatasetFactory.zeros(tileSize, Dataset.FLOAT64);
 					}
 				    data.fill(num);
 					tiled.put(name, data);

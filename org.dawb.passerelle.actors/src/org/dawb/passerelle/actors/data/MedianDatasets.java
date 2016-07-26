@@ -14,10 +14,10 @@ import java.util.List;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer2Port;
 import org.dawb.passerelle.common.message.MessageUtils;
-import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
-import org.eclipse.dawnsci.analysis.dataset.impl.CollectionStats;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.january.dataset.CollectionStats;
+import org.eclipse.january.dataset.Dataset;
+import org.eclipse.january.dataset.IDataset;
 
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;

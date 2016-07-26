@@ -17,21 +17,21 @@ import org.dawb.passerelle.common.message.MessageUtils;
 import org.dawb.passerelle.common.parameter.roi.ROIParameter;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
 import org.eclipse.dawnsci.analysis.api.roi.IROI;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.DatasetFactory;
-import org.eclipse.dawnsci.analysis.dataset.impl.DatasetUtils;
-import org.eclipse.dawnsci.analysis.dataset.impl.DoubleDataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.InterpolatorUtils;
-import org.eclipse.dawnsci.analysis.dataset.impl.Maths;
 import org.eclipse.dawnsci.analysis.dataset.roi.RectangularROI;
+import org.eclipse.january.dataset.Dataset;
+import org.eclipse.january.dataset.DatasetFactory;
+import org.eclipse.january.dataset.DatasetUtils;
+import org.eclipse.january.dataset.DoubleDataset;
+import org.eclipse.january.dataset.InterpolatorUtils;
+import org.eclipse.january.dataset.Maths;
+
+import com.isencia.passerelle.actor.ProcessingException;
 
 import ptolemy.data.expr.StringParameter;
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
 import uk.ac.diamond.scisoft.analysis.fitting.functions.AFunction;
-
-import com.isencia.passerelle.actor.ProcessingException;
 
 public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 
@@ -199,7 +199,7 @@ public class RegionSelectAndScale extends AbstractDataMessageTransformer {
 		
 		// recreate K axis correctly for the process
 		
-		Dataset newK  = new DoubleDataset(kAxis);
+		Dataset newK  = DatasetFactory.createFromObject(DoubleDataset.class, kAxis);
 		newK = newK.reshape(newK.getShape()[0],1);
 		newK = DatasetUtils.tile(newK, regrid.getShape()[0]);
 		newK = DatasetUtils.transpose(newK);

@@ -31,7 +31,7 @@ import org.dawnsci.io.spec.MultiScanDataParser;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.january.dataset.Dataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

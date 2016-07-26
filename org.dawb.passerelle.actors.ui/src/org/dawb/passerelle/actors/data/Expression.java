@@ -19,10 +19,10 @@ import org.dawb.passerelle.actors.flow.ExpressionContainer;
 import org.dawb.passerelle.actors.flow.ExpressionParameter;
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer;
 import org.dawb.passerelle.common.message.MessageUtils;
-import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.expressions.IExpressionEngine;
 import org.eclipse.dawnsci.analysis.api.expressions.IExpressionService;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
+import org.eclipse.january.dataset.IDataset;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

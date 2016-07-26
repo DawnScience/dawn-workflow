@@ -13,11 +13,11 @@ import java.util.List;
 
 import org.dawb.passerelle.common.actors.AbstractDataMessageTransformer2Port;
 import org.dawb.passerelle.common.message.MessageUtils;
-import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
 import org.eclipse.dawnsci.analysis.api.message.DataMessageComponent;
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
-import org.eclipse.dawnsci.analysis.dataset.impl.DatasetUtils;
-import org.eclipse.dawnsci.analysis.dataset.impl.Maths;
+import org.eclipse.january.dataset.Dataset;
+import org.eclipse.january.dataset.DatasetUtils;
+import org.eclipse.january.dataset.IDataset;
+import org.eclipse.january.dataset.Maths;
 
 import ptolemy.kernel.CompositeEntity;
 import ptolemy.kernel.util.IllegalActionException;
@@ -51,8 +51,8 @@ public class DivideDatasets extends AbstractDataMessageTransformer2Port {
 		// or we get integer math.
 		final List<IDataset>  sets1 = MessageUtils.getDatasets(port1Cache);
 		Dataset       a     = Maths.add(sets1, isCreateClone());
-		if (a.getDtype()!=Dataset.FLOAT32 && 
-			a.getDtype()!=Dataset.FLOAT64) {
+		if (a.getDType()!=Dataset.FLOAT32 && 
+			a.getDType()!=Dataset.FLOAT64) {
 		    
 			final String name = a.getName();
 			a   = DatasetUtils.cast(a, getFloatType(a));
@@ -81,7 +81,7 @@ public class DivideDatasets extends AbstractDataMessageTransformer2Port {
 	}
 
 	private int getFloatType(Dataset b) {
-		final int type = b.getDtype();
+		final int type = b.getDType();
 		
 		switch (type) {
 		case Dataset.INT8:

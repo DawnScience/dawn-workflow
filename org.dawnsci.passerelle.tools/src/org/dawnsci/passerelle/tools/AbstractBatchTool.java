@@ -12,7 +12,7 @@ import java.util.List;
 
 import org.dawb.workbench.jmx.UserPlotBean;
 import org.dawnsci.passerelle.tools.util.BatchToolUtils;
-import org.eclipse.dawnsci.analysis.api.dataset.IDataset;
+import org.eclipse.january.dataset.IDataset;
 
 
 public abstract class AbstractBatchTool implements IBatchTool {

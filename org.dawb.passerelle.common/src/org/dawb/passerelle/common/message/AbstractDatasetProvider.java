@@ -11,7 +11,7 @@ package org.dawb.passerelle.common.message;
 
 import java.util.Arrays;
 
-import org.eclipse.dawnsci.analysis.dataset.impl.Dataset;
+import org.eclipse.january.dataset.Dataset;
 
 
 /**
