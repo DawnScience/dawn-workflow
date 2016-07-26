@@ -297,7 +297,7 @@ public class PythonScript extends AbstractScriptTransformer {
 			PyObject ob = interpreter.get(name);
 			
 			Dataset ds = (Dataset)ob.__tojava__(Dataset.class);
-			if (ds instanceof PyProxy) ds = ds.getView();
+			if (ds instanceof PyProxy) ds = ds.getView(true);
 			
 			ds.setName(name);
 			data.put(name, ds);
