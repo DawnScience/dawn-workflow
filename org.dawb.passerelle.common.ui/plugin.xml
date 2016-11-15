@@ -99,14 +99,16 @@
    </extension>
    -->
    <extension
-         point="org.dawnsci.introRegister">
-      <introPageRegister
+         point="org.dawnsci.webintro.item">
+      <introAction
             class="org.dawb.passerelle.common.perspective.WorkflowIntroLauncher"
-            description="Designing scientific algorithms in a visual way."
-            icon="icons/Workflow128x128.png"
-            id="org.dawb.passerelle.common.ui.introPageRegister"
-            name="Workflows">
-      </introPageRegister>
+            description="Launches the Workflows perspective"
+            icon="intro/graphics/workflow_intro52.png"
+            id="org.dawb.passerelle.common.ui.workflowIntroAction"
+            name="Workflows"
+            ordering="5"
+            parent_id="dawn">
+      </introAction>
    </extension>
 
 </plugin>
