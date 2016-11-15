@@ -1,14 +1,25 @@
 package org.dawb.passerelle.actors.data.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.dawb.passerelle.common.parameter.JSONCellEditorParameter;
 import org.dawb.passerelle.common.parameter.Marshaller;
-import org.dawnsci.processing.ui.model.OperationModelDialog;
+import org.dawnsci.processing.ui.ServiceHolder;
+import org.dawnsci.processing.ui.api.IOperationModelWizard;
+import org.dawnsci.processing.ui.api.IOperationSetupWizardPage;
+import org.dawnsci.processing.ui.model.OperationModelWizard;
+import org.dawnsci.processing.ui.model.OperationModelWizardDialog;
+import org.eclipse.dawnsci.analysis.api.processing.IOperationInputData;
 import org.eclipse.dawnsci.analysis.api.processing.model.IOperationModel;
 import org.eclipse.jface.dialogs.Dialog;
+import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventAdmin;
 
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
@@ -55,27 +66,24 @@ public class OperationModelParameter extends JSONCellEditorParameter<IOperationM
 		final DialogCellEditor editor = new DialogCellEditor((Composite)control) {
 			@Override
 			protected Object openDialogBox(Control cellEditorWindow) {
-				
-				final OperationModelDialog dialog = new OperationModelDialog(cellEditorWindow.getShell());
-				dialog.create();
-				dialog.getShell().setSize(600,450); // As needed
-				dialog.getShell().setText("Edit Model");
-				
-				IOperationModelInstanceProvider prov = (IOperationModelInstanceProvider)getContainer();
-				try {
-					dialog.setModel(OperationModelParameter.this.getValue(prov.getModelClass()));
-				} catch (Exception e) {
-					e.printStackTrace();
-					return null;
-				}
-				
-		        final int ok = dialog.open();
-		        if (ok == Dialog.OK) {
-		            Object model = getValueFromBean(dialog.getModel());
-		            return model;
-		        }
-		        
-		        return null;
+				MessageDialog.openInformation(cellEditorWindow.getShell(), "Dialog Information", "The OperationWizard Dialog has not been implemented yet.");
+				return null;
+				//TODO
+//				IOperationModelInstanceProvider prov = (IOperationModelInstanceProvider)getContainer();
+//				IOperationModel modelEditor = OperationModelParameter.this.getValue(prov.getModelClass());
+//				
+//				IOperationSetupWizardPage wizardPage = ServiceHolder.getOperationUIService().getWizardPage(null);
+//
+//				OperationModelWizardDialog dialog = new OperationModelWizardDialog(cellEditorWindow.getShell(), wizardPage);
+//				dialog.create();
+//				if (dialog.open() == Dialog.OK) {
+//					EventAdmin eventAdmin = ServiceHolder.getEventAdmin();
+//					Map<String,IOperationInputData> props = new HashMap<>();
+//					eventAdmin.postEvent(new Event("org/dawnsci/events/processing/PROCESSUPDATE", props));
+//		            return getValueFromBean(modelEditor);
+//				}
+//				
+//		        return null;
 
 			}
 		};
