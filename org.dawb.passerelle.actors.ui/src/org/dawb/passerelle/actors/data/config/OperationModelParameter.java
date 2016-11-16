@@ -6,8 +6,6 @@ import java.util.Map;
 import org.dawb.passerelle.common.parameter.JSONCellEditorParameter;
 import org.dawb.passerelle.common.parameter.Marshaller;
 import org.dawnsci.processing.ui.ServiceHolder;
-import org.dawnsci.processing.ui.api.IOperationModelWizard;
-import org.dawnsci.processing.ui.api.IOperationSetupWizardPage;
 import org.dawnsci.processing.ui.model.OperationModelWizard;
 import org.dawnsci.processing.ui.model.OperationModelWizardDialog;
 import org.eclipse.dawnsci.analysis.api.processing.IOperationInputData;
@@ -18,8 +16,6 @@ import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.jface.viewers.DialogCellEditor;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
-import org.osgi.service.event.Event;
-import org.osgi.service.event.EventAdmin;
 
 import ptolemy.kernel.util.IllegalActionException;
 import ptolemy.kernel.util.NameDuplicationException;
